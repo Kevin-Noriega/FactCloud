@@ -1,0 +1,36 @@
+:root{
+  --primary: #5cc5d9;
+  --accent: #a8e6cf;
+  --dark: #2a3558;
+}
+body{
+  font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#f4f6f8;
+}
+.topbar{
+  background:var(--dark);
+}
+.topbar .navbar-brand{
+  color:var(--primary);
+}
+.sidebar{
+  width:220px;min-height:100vh;
+}
+.kpi{
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(111, 120, 148, 0.06);
+}
+.card{
+  border-radius:12px;
+}
+.list-group-item{
+  border-radius:8px;
+}
+.btn-primary{
+  background:var(--primary);border:none;
+}
+.btn-success{
+  background:#4eb177;border:none;
+}
+.btn {
+  white-space: nowrap; 
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>FactCloud - Reportes</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="css/style.css" rel="stylesheet" />
+    <link rel="icon" href="img/logo.jpg" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark topbar">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="dashboard.html"
+          >Fact<span class="text-success">Cloud</span></a
+        >
+        <div class="ms-auto">
+          <a class="btn btn-outline-light btn-sm" href="index.html"
+            >Cerrar sesión</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="d-flex">
+      <aside class="sidebar bg-white border-end">
+        <ul class="nav flex-column p-2">
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="facturas.html">Facturas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clientes.html">Clientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="productos.html">Inventario</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="reportes.html">Reportes</a>
+          </li>
+        </ul>
+      </aside>
+
+      <main class="flex-fill p-4">
+        <div class="container-fluid">
+          <h4 class="mb-3">Reportes</h4>
+          <div class="row g-3">
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">Ventas por mes</div>
+                <div class="card-body">
+                  <canvas id="chartVentasMes" height="160"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">Top productos</div>
+                <div class="card-body">
+                  <canvas id="chartTopProd" height="160"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
