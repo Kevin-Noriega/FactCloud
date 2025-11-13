@@ -12,11 +12,44 @@ function Dashboard() {
         return res.json();
       })
       .then(data => {
-        console.log("✅ Datos de clientes:", data);
-        setClientesCount(data.length); // cantidad de clientes
+        console.log("Datos de clientes:", data);
+        setClientesCount(data.length); 
       })
-      .catch(err => console.error("❌ Error:", err));
+      .catch(err => console.error("Error:", err));
   }, []);
+  
+  const [productosCount, setProductosCount] = useState(0);
+  
+  useEffect(() => {
+    fetch(`${API_URL}/productos`)
+      .then(res => {
+        if (!res.ok) throw new Error("Error al conectar con la API");
+        return res.json();
+      }
+      )
+      .then(data => {
+        console.log("Datos de productos:", data);
+        setProductosCount(data.length); 
+      }
+      )
+      .catch(err => console.error("Error:", err));
+  }
+, []);
+ 
+const [facturasCount, setFacturasCount] = useState(0);
+
+useEffect(() => {
+  fetch(`${API_URL}/facturas`)
+    .then(res => {
+      if (!res.ok) throw new Error("Error al conectar con la API");
+      return res.json();
+    })
+    .then(data => {
+      console.log("Datos de facturas:", data);
+      setFacturasCount(data.length); 
+    })
+    .catch(err => console.error("Error:", err));
+}, []);
 
   return (
     <div className="dashboard-page">
@@ -26,16 +59,16 @@ function Dashboard() {
         <div className="col-md-4">
           <div className="card text-white bg-primary shadow-sm p-3">
             <div className="card-body">
-              <h5 className="card-title">Facturas Pendientes</h5>
-              <p className="card-text fs-3 fw-bold">1</p>
+              <h5 className="card-title">Facturas registradas</h5>
+              <p className="card-text fs-3 fw-bold">{facturasCount}</p>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card text-dark bg-warning shadow-sm p-3">
             <div className="card-body">
-              <h5 className="card-title">Productos con Bajo Stock</h5>
-              <p className="card-text fs-3 fw-bold">1</p>
+              <h5 className="card-title">Productos registrados</h5>
+              <p className="card-text fs-3 fw-bold">{productosCount} </p>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
@@ -13,8 +13,7 @@ import Clientes from "./pages/Clientes";
 import Productos from "./pages/Productos";
 import Facturas from "./pages/Facturas";
 import Reportes from "./pages/Reportes";
-import RegistrarUsuario from "./components/RegistrarUsuario";
-import RegistrarCliente from "./components/RegistrarCliente";
+import RegistrarUsuario from "./pages/RegistrarUsuario";
 
 // Componente de página no encontrada
 const NotFound = () => (
@@ -38,8 +37,9 @@ function App() {
         <Route element={<MainLayout />}> 
           
           {/* Rutas Hijas (Se renderizan dentro de <Outlet /> en MainLayout) */}
+
+
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/registrar-cliente" element={<RegistrarCliente />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/facturas" element={<Facturas />} />

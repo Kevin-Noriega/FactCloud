@@ -1,29 +1,31 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../api/config";
 
 function Login() {
-  const [correo, setCorreo] = useState(""); // 🔹 Cambiado a correo
-  const [contraseña, setContraseña] = useState(""); // 🔹 Cambiado a contraseña
+  const [correo, setCorreo] = useState("");
+  const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
 
-  // 🔹 Función para manejar el envío del formulario y validar usuario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       console.log("📩 Verificando usuario...");
-      const response = await fetch("http://localhost:5119/api/Usuarios");
+      const response = await fetch(`${API_URL}/Usuarios`);
       const usuarios = await response.json();
 
-      // 🔹 Solo se trabaja con correoUsuario y contraseñaUsuario
+      console.log("📋 Usuarios obtenidos:", usuarios);
+
+      // ✅ CORREGIDO: Usar los nombres correctos del modelo C#
       const usuarioEncontrado = usuarios.find(
-        (u) => u.correoUsuario === correo && u.contraseñaUsuario === contraseña
+        (u) => u.correo === correo && u.contrasenaHash === contraseña
       );
 
       if (usuarioEncontrado) {
         alert("✅ Inicio de sesión exitoso");
         localStorage.setItem("usuario", JSON.stringify(usuarioEncontrado));
-        navigate("/dashboard"); // 🔹 Redirige si las credenciales son correctas
+        navigate("/dashboard");
       } else {
         alert("❌ Correo o contraseña incorrectos");
       }
@@ -123,13 +125,12 @@ function Login() {
 
         <form onSubmit={handleSubmit}>
           <div style={estilos.campo}>
-            <label style={estilos.label}>Correo</label>{" "}
-            {/* 🔹 Cambié "Usuario" por "Correo" */}
+            <label style={estilos.label}>Correo</label>
             <input
               type="email"
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
-              placeholder="Ingrese su correo"
+              placeholder="Ingrese su correo electronico"
               style={estilos.input}
               required
             />

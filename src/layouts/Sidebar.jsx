@@ -6,25 +6,23 @@ const navItems = [
   { to: "/clientes", label: "Clientes" },
   { to: "/productos", label: "Productos" },
   { to: "/facturas", label: "Facturación" },
-  { to: "/reportes", label: "Reportes" },
-];
+  { to: "/reportes", label: "Reportes" }]
 
 function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
 
-  // 🔹 Cargar los datos del usuario guardados en localStorage
+  // Cargar los datos del usuario guardados en localStorage
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
     if (usuarioGuardado) {
       setUsuario(JSON.parse(usuarioGuardado));
     } else {
-      navigate("/"); // Si no hay usuario logueado, redirigir al login
+      navigate("/"); 
     }
   }, [navigate]);
 
-  // 🔹 Cerrar sesión
   const handleLogout = () => {
     localStorage.removeItem("usuario");
     navigate("/");
@@ -55,7 +53,7 @@ function Sidebar() {
         </ul>
       </nav>
 
-      {/* 🔹 Usuario logueado */}
+      {/* Usuario logueado */}
       {usuario && (
         <div className="mt-auto pt-3 border-top border-secondary text-center">
           <p className="text-light mb-1 fw-semibold">
