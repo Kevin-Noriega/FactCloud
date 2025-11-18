@@ -1,37 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../api/config";
 
 function Login() {
-  const [correo, setCorreo] = useState(""); // 🔹 Cambiado a correo
-  const [contraseña, setContraseña] = useState(""); // 🔹 Cambiado a contraseña
+  const [correo, setCorreo] = useState("");
+  const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
 
-  // 🔹 Función para manejar el envío del formulario y validar usuario
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      console.log("📩 Verificando usuario...");
-      const response = await fetch("http://localhost:5119/api/Usuarios");
-      const usuarios = await response.json();
+  try {
+    const response = await fetch(`${API_URL}/Auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        correo: correo,
+        contrasena: contraseña
+      }),
+    });
 
-      // 🔹 Solo se trabaja con correoUsuario y contraseñaUsuario
-      const usuarioEncontrado = usuarios.find(
-        (u) => u.correoUsuario === correo && u.contraseñaUsuario === contraseña
-      );
-
-      if (usuarioEncontrado) {
-        alert("✅ Inicio de sesión exitoso");
-        localStorage.setItem("usuario", JSON.stringify(usuarioEncontrado));
-        navigate("/dashboard"); // 🔹 Redirige si las credenciales son correctas
-      } else {
-        alert("❌ Correo o contraseña incorrectos");
-      }
-    } catch (error) {
-      console.error("❌ Error al iniciar sesión:", error);
-      alert("Error al conectar con el servidor");
+    if (!response.ok) {
+      alert("❌ Correo o contraseña incorrectos");
+      return;
     }
-  };
+
+    const data = await response.json();
+
+    // data = { token: "...", usuario: {...} }
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+    alert("✅ Inicio de sesión exitoso");
+    navigate("/dashboard");
+
+  } catch (error) {
+    console.error("Error login:", error);
+    alert("❌ Error al conectar con el servidor");
+  }
+};
 
   const estilos = {
     fondo: {
@@ -123,13 +133,12 @@ function Login() {
 
         <form onSubmit={handleSubmit}>
           <div style={estilos.campo}>
-            <label style={estilos.label}>Correo</label>{" "}
-            {/* 🔹 Cambié "Usuario" por "Correo" */}
+            <label style={estilos.label}>Correo</label>
             <input
               type="email"
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
-              placeholder="Ingrese su correo"
+              placeholder="Ingrese su correo electronico"
               style={estilos.input}
               required
             />
