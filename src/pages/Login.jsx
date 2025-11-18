@@ -8,32 +8,40 @@ function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      console.log("📩 Verificando usuario...");
-      const response = await fetch(`${API_URL}/Usuarios`);
-      const usuarios = await response.json();
+  try {
+    const response = await fetch(`${API_URL}/Auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        correo: correo,
+        contrasena: contraseña
+      }),
+    });
 
-      console.log("📋 Usuarios obtenidos:", usuarios);
-
-      // ✅ CORREGIDO: Usar los nombres correctos del modelo C#
-      const usuarioEncontrado = usuarios.find(
-        (u) => u.correo === correo && u.contrasenaHash === contraseña
-      );
-
-      if (usuarioEncontrado) {
-        alert("✅ Inicio de sesión exitoso");
-        localStorage.setItem("usuario", JSON.stringify(usuarioEncontrado));
-        navigate("/dashboard");
-      } else {
-        alert("❌ Correo o contraseña incorrectos");
-      }
-    } catch (error) {
-      console.error("❌ Error al iniciar sesión:", error);
-      alert("Error al conectar con el servidor");
+    if (!response.ok) {
+      alert("❌ Correo o contraseña incorrectos");
+      return;
     }
-  };
+
+    const data = await response.json();
+
+    // data = { token: "...", usuario: {...} }
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+    alert("✅ Inicio de sesión exitoso");
+    navigate("/dashboard");
+
+  } catch (error) {
+    console.error("Error login:", error);
+    alert("❌ Error al conectar con el servidor");
+  }
+};
 
   const estilos = {
     fondo: {

@@ -1,31 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 const unidadesMedidaDIAN = [
- { codigo: "94", label: "Unidad (UND)" },
-  { codigo: "KGM",label: "Kilogramo (KGM)" },
-  { codigo: "LTR",label: "Litro (LTR)" },
-  { codigo: "MTR",label: "Metro (MTR)" },
-  { codigo: "MTK",label: "Metro cuadrado (MTK)" },
-  { codigo: "CE", label:"Cien unidades (CE)" },
-  { codigo: "GRM",label: "Gramo (GRM)" },
-  { codigo: "MWH",label: "Megavatio hora (MWH)" },
-  { codigo: "HUR",label: "Hora (HUR)" },
-  { codigo: "CMK",label: "Centímetro cuadrado (CMK)" },
-  { codigo: "CMT",label: "Centímetro (CMT)" },
-  { codigo: "INH",label: "Pulgada (INH)" },
-  { codigo: "LTR",label: "Litro (LTR)" },
-  { codigo: "MLT",label: "Mililitro (MLT)" },
+  { codigo: "94", label: "Unidad (UND)" },
+  { codigo: "KGM", label: "Kilogramo (KGM)" },
+  { codigo: "LTR", label: "Litro (LTR)" },
+  { codigo: "MTR", label: "Metro (MTR)" },
+  { codigo: "MTK", label: "Metro cuadrado (MTK)" },
+  { codigo: "CE", label: "Cien unidades (CE)" },
+  { codigo: "GRM", label: "Gramo (GRM)" },
+  { codigo: "MWH", label: "Megavatio hora (MWH)" },
+  { codigo: "HUR", label: "Hora (HUR)" },
+  { codigo: "CMK", label: "Centímetro cuadrado (CMK)" },
+  { codigo: "CMT", label: "Centímetro (CMT)" },
+  { codigo: "INH", label: "Pulgada (INH)" },
+  { codigo: "LTR", label: "Litro (LTR)" },
+  { codigo: "MLT", label: "Mililitro (MLT)" },
   { codigo: "PR", label: "Par (PR)" },
-  { codigo: "SET",label: "Set (SET)" },
-  { codigo: "NIU",label: "Unidad internacional (NIU)" },
+  { codigo: "SET", label: "Set (SET)" },
+  { codigo: "NIU", label: "Unidad internacional (NIU)" },
 ];
 function Productos() {
+  const codigoBarrasRef = React.useRef(null);
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [productoEditando, setProductoEditando] = useState(null);
-    const [productoVer, setProductoVer] = useState(null);
+  const [productoVer, setProductoVer] = useState(null);
 
   const [producto, setProducto] = useState({
     nombre: "",
@@ -65,9 +66,11 @@ function Productos() {
     }
   };
 
-  useEffect(() => {
-    fetchProductos();
-  }, []);
+ // 🔹 1. Cargar productos al iniciar el componente
+useEffect(() => {
+  fetchProductos();
+}, []);
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -248,7 +251,7 @@ function Productos() {
       >
         {mostrarFormulario ? "Ocultar Formulario" : "Nuevo Producto"}
       </button>
-        {productoVer && (
+      {productoVer && (
         <div
           style={{
             position: "fixed",
@@ -283,19 +286,18 @@ function Productos() {
               <tbody>
                 <tr>
                   <th>Nombre</th>
-                  <td>
-                    {productoVer.nombre}
-                  </td>
+                  <td>{productoVer.nombre}</td>
                 </tr>
                 <tr>
                   <th>Descripcion</th>
-                  <td>
-                    {productoVer.descripcion}
-                  </td>
+                  <td>{productoVer.descripcion}</td>
                 </tr>
                 <tr>
                   <th>Precio</th>
-                  <td>{"$ "}{productoVer.precioUnitario.toLocaleString("es-CO")}</td>
+                  <td>
+                    {"$ "}
+                    {productoVer.precioUnitario.toLocaleString("es-CO")}
+                  </td>
                 </tr>
                 <tr>
                   <th>Categoria</th>
@@ -449,13 +451,16 @@ function Productos() {
                   />
                 </div>
                 <div className="col-md-3">
-                  <label className="form-label">Codigo de Barras</label>
+                  <label className="form-label">Código de Barras</label>
                   <input
+                    ref={codigoBarrasRef}
                     type="text"
                     name="codigoBarras"
                     className="form-control"
                     value={producto.codigoBarras}
                     onChange={handleChange}
+                    autoComplete="off"
+                    placeholder="Escanea el código aquí"
                   />
                 </div>
               </div>

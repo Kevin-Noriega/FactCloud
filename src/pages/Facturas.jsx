@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { API_URL } from "../api/config";
-import ModalFacturaPDF from '../components/ModalfacturaPDF.jsx'; 
+import ModalFacturaPDF from "../components/ModalfacturaPDF.jsx";
 
 function Facturas() {
+  // ✅ 1. TODOS LOS useState PRIMERO (AL INICIO)
+  const [codigoBarras, setCodigoBarras] = useState("");
   const [facturas, setFacturas] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [productos, setProductos] = useState([]);
@@ -11,29 +13,35 @@ function Facturas() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
   const [facturaParaPago, setFacturaParaPago] = useState(null);
-  
+  const [facturaVista, setFacturaVista] = useState(null);
+
+  // ⬇️ MOVIDO AQUÍ (estaba en línea 184)
+  const [productosSeleccionados, setProductosSeleccionados] = useState([]);
+
   const [factura, setFactura] = useState({
     clienteId: "",
     numeroFactura: "",
     prefijo: "FE",
-    observaciones: ""
+    observaciones: "",
   });
-  const [facturaVista, setFacturaVista] = useState(null);
 
-  const [productosSeleccionados, setProductosSeleccionados] = useState([]);
   const [pago, setPago] = useState({
     medioPago: "Efectivo",
     montoPagado: "",
     referencia: "",
-    observaciones: ""
+    observaciones: "",
   });
 
+  // ✅ 2. useRef
+  const barcodeInputRef = useRef(null);
+
+  // ✅ 3. FUNCIONES (después de los hooks)
   const fetchDatos = async () => {
     try {
       const [facturasRes, clientesRes, productosRes] = await Promise.all([
         fetch(`${API_URL}/Facturas`),
         fetch(`${API_URL}/Clientes`),
-        fetch(`${API_URL}/Productos`)
+        fetch(`${API_URL}/Productos`),
       ]);
 
       if (!facturasRes.ok || !clientesRes.ok || !productosRes.ok) {
@@ -56,23 +64,127 @@ function Facturas() {
     }
   };
 
-  useEffect(() => {
-    fetchDatos();
-  }, []);
+  // ⬇️ Ahora procesarCodigoBarras se declara ANTES de handleBarcodeInput
+  const procesarCodigoBarras = (codigoRaw) => {
+    const codigo = String(codigoRaw || "").trim();
+
+    if (!codigo) {
+      console.warn("❌ Código vacío ignorado");
+      return;
+    }
+
+    if (productos.length === 0) {
+      alert("⚠️ No hay productos cargados en el sistema.");
+      return;
+    }
+
+    // 🟦 Debug útil pero limpio
+    console.log("\n" + "=".repeat(40));
+    console.log("🔍 Código recibido:", codigo);
+
+    // Buscar producto normalizando ambos valores
+    const producto = productos.find((p) => {
+      const dbCode = String(p.codigoBarras || "").trim();
+      return dbCode === codigo;
+    });
+
+    // ❌ No encontrado
+    if (!producto) {
+      console.error("❌ No encontrado:", codigo);
+      alert(`❌ Producto no encontrado.\nCódigo: ${codigo}`);
+      return;
+    }
+
+    console.log("✅ Producto encontrado:", producto.nombre);
+
+    // 🟩 Agregar o incrementar producto
+    setProductosSeleccionados((prev) => {
+      const index = prev.findIndex(
+        (item) => Number(item.productoId) === Number(producto.id)
+      );
+
+      // ➕ Ya existe → aumentar cantidad
+      if (index !== -1) {
+        const listaActualizada = [...prev];
+        listaActualizada[index] = {
+          ...listaActualizada[index],
+          cantidad: Number(listaActualizada[index].cantidad) + 1,
+        };
+
+        console.log(
+          `➕ Cantidad aumentada: ${listaActualizada[index].descripcion} → ${listaActualizada[index].cantidad}`
+        );
+
+        return listaActualizada;
+      }
+
+      // 🆕 Nuevo producto
+      const nuevoItem = {
+        productoId: producto.id,
+        descripcion: producto.nombre,
+        cantidad: 1,
+        precioUnitario: producto.precioUnitario ?? 0,
+        unidadMedida: producto.unidadMedida ?? "Unidad",
+        porcentajeDescuento: producto.porcentajeDescuento ?? 0,
+        tarifaIVA: producto.tarifaIVA ?? 0,
+        tarifaINC: producto.tarifaINC ?? 0,
+      };
+
+      console.log("🆕 Agregado:", nuevoItem.descripcion);
+
+      return [...prev, nuevoItem];
+    });
+
+    // 🔄 Focus al input para escáner
+    setTimeout(() => barcodeInputRef.current?.focus(), 50);
+  };
+
+  // ⬇️ Ahora handleBarcodeInput está DESPUÉS de procesarCodigoBarras
+  const handleBarcodeInput = (e) => {
+    // ⛔ Si la lista está vacía, evitar errores
+    if (!productos || productos.length === 0) {
+      console.warn("⛔ No hay productos cargados en memoria todavía.");
+      return;
+    }
+
+    // ✔ Escaneo válido
+    if (e.key === "Enter" || e.keyCode === 13) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const codigo = e.target.value.trim();
+      console.log("🎯 CÓDIGO A PROCESAR:", codigo);
+
+      if (codigo.length === 0) {
+        console.log("⚠️ Código vacío al presionar Enter");
+      } else {
+        procesarCodigoBarras(codigo);
+      }
+
+      // Resetear input
+      setCodigoBarras("");
+      e.target.value = "";
+
+      // Mantener el auto-focus
+      setTimeout(() => {
+        barcodeInputRef.current?.focus();
+      }, 80);
+    }
+  };
 
   const agregarProducto = () => {
     setProductosSeleccionados([
       ...productosSeleccionados,
-      { 
-        productoId: "", 
+      {
+        productoId: "",
         descripcion: "",
-        cantidad: 1, 
+        cantidad: 1,
         precioUnitario: 0,
         unidadMedida: "Unidad",
         porcentajeDescuento: 0,
         tarifaIVA: 19,
-        tarifaINC: 0
-      }
+        tarifaINC: 0,
+      },
     ]);
   };
 
@@ -81,9 +193,12 @@ function Facturas() {
     nuevosProductos[index][campo] = valor;
 
     if (campo === "productoId") {
-      const productoSeleccionado = productos.find(p => p.id === parseInt(valor));
+      const productoSeleccionado = productos.find(
+        (p) => p.id === parseInt(valor)
+      );
       if (productoSeleccionado) {
-        nuevosProductos[index].precioUnitario = productoSeleccionado.precioUnitario;
+        nuevosProductos[index].precioUnitario =
+          productoSeleccionado.precioUnitario;
         nuevosProductos[index].descripcion = productoSeleccionado.nombre;
         nuevosProductos[index].unidadMedida = productoSeleccionado.unidadMedida;
         nuevosProductos[index].tarifaIVA = productoSeleccionado.tarifaIVA;
@@ -95,7 +210,9 @@ function Facturas() {
   };
 
   const eliminarProducto = (index) => {
-    setProductosSeleccionados(productosSeleccionados.filter((_, i) => i !== index));
+    setProductosSeleccionados(
+      productosSeleccionados.filter((_, i) => i !== index)
+    );
   };
 
   const calcularLinea = (item) => {
@@ -118,7 +235,7 @@ function Facturas() {
       baseImponible,
       valorIVA,
       valorINC,
-      totalLinea
+      totalLinea,
     };
   };
 
@@ -128,7 +245,7 @@ function Facturas() {
     let totalIVA = 0;
     let totalINC = 0;
 
-    productosSeleccionados.forEach(item => {
+    productosSeleccionados.forEach((item) => {
       const linea = calcularLinea(item);
       subtotal += linea.subtotalLinea;
       totalDescuentos += linea.valorDescuento;
@@ -143,7 +260,7 @@ function Facturas() {
       totalDescuentos,
       totalIVA,
       totalINC,
-      totalFactura
+      totalFactura,
     };
   };
 
@@ -152,7 +269,7 @@ function Facturas() {
       clienteId: "",
       numeroFactura: "",
       prefijo: "FV",
-      observaciones: ""
+      observaciones: "",
     });
     setProductosSeleccionados([]);
     setMostrarFormulario(false);
@@ -164,7 +281,7 @@ function Facturas() {
     try {
       const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
       if (!usuarioGuardado) {
-        alert("No se encontro un usuario autenticado.");
+        alert("No se encontró un usuario autenticado.");
         return;
       }
 
@@ -180,14 +297,15 @@ function Facturas() {
 
       const totales = calcularTotales();
       const fechaActual = new Date();
-      
+
       const payload = {
         usuarioId: usuarioGuardado.id,
         clienteId: parseInt(factura.clienteId),
-        numeroFactura: factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
+        numeroFactura:
+          factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
         prefijo: factura.prefijo,
         fechaEmision: fechaActual.toISOString(),
-        horaEmision: fechaActual.toTimeString().split(' ')[0],
+        horaEmision: fechaActual.toTimeString().split(" ")[0],
         subtotal: totales.subtotal,
         totalIVA: totales.totalIVA,
         totalINC: totales.totalINC,
@@ -199,7 +317,7 @@ function Facturas() {
         observaciones: factura.observaciones,
         estado: "Pendiente",
         enviadaDIAN: false,
-        detalleFacturas: productosSeleccionados.map(item => {
+        detalleFacturas: productosSeleccionados.map((item) => {
           const linea = calcularLinea(item);
           return {
             productoId: parseInt(item.productoId),
@@ -214,9 +332,9 @@ function Facturas() {
             valorIVA: linea.valorIVA,
             tarifaINC: parseFloat(item.tarifaINC) || 0,
             valorINC: linea.valorINC,
-            totalLinea: linea.totalLinea
+            totalLinea: linea.totalLinea,
           };
-        })
+        }),
       };
 
       const respuesta = await fetch(`${API_URL}/Facturas`, {
@@ -245,7 +363,7 @@ function Facturas() {
       medioPago: "Efectivo",
       montoPagado: fact.totalFactura,
       referencia: "",
-      observaciones: ""
+      observaciones: "",
     });
     setMostrarModalPago(true);
   };
@@ -255,7 +373,7 @@ function Facturas() {
 
     try {
       const montoPagado = parseFloat(pago.montoPagado);
-      
+
       if (montoPagado < facturaParaPago.totalFactura) {
         alert("El monto pagado no puede ser menor al total de la factura");
         return;
@@ -266,14 +384,17 @@ function Facturas() {
         estado: "Pagada",
         medioPago: pago.medioPago,
         formaPago: "Contado",
-        observaciones: pago.observaciones + ` | Referencia: ${pago.referencia}`
+        observaciones: pago.observaciones + ` | Referencia: ${pago.referencia}`,
       };
 
-      const respuesta = await fetch(`${API_URL}/Facturas/${facturaParaPago.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const respuesta = await fetch(
+        `${API_URL}/Facturas/${facturaParaPago.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!respuesta.ok) throw new Error("Error al registrar pago");
 
@@ -286,7 +407,68 @@ function Facturas() {
     }
   };
 
+  // 📌 1. Cargar productos desde la API solo una vez
+  useEffect(() => {
+    fetchDatos();
+  }, []);
 
+  // 📌 2. Debug útil: solo si necesitas verificar la carga
+  useEffect(() => {
+    if (productos.length === 0) return;
+
+    console.log("📦 Productos cargados:", productos.length);
+    console.log(
+      "Códigos de barras:",
+      productos.map((p) => p.codigoBarras).filter(Boolean)
+    );
+  }, [productos]);
+
+  // 📌 3. Productos que estás agregando a la factura
+  useEffect(() => {
+    if (productosSeleccionados.length === 0) return;
+    console.log("🧾 Productos en factura:", productosSeleccionados.length);
+  }, [productosSeleccionados]);
+
+  // 📌 4. Enfocar input cuando se muestre el formulario
+  useEffect(() => {
+    if (!mostrarFormulario) return;
+
+    setTimeout(() => {
+      barcodeInputRef.current?.focus();
+    }, 150);
+  }, [mostrarFormulario]);
+
+  useEffect(() => {
+    if (!mostrarFormulario) return;
+
+    const focusInput = () => {
+      const activeElement = document.activeElement;
+      const isFormElement =
+        activeElement?.tagName === "INPUT" ||
+        activeElement?.tagName === "SELECT" ||
+        activeElement?.tagName === "TEXTAREA";
+
+      if (!isFormElement && barcodeInputRef.current) {
+        barcodeInputRef.current.focus();
+      }
+    };
+
+    setTimeout(focusInput, 100);
+
+    const handleClick = (e) => {
+      if (!e.target.closest("input, select, textarea, button")) {
+        setTimeout(focusInput, 50);
+      }
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, [mostrarFormulario]);
+
+  // ✅ 5. Return condicional y JSX
   if (loading) {
     return (
       <div className="container mt-5">
@@ -335,13 +517,16 @@ function Facturas() {
                   <select
                     className="form-select"
                     value={factura.clienteId}
-                    onChange={(e) => setFactura({ ...factura, clienteId: e.target.value })}
+                    onChange={(e) =>
+                      setFactura({ ...factura, clienteId: e.target.value })
+                    }
                     required
                   >
                     <option value="">Seleccionar cliente</option>
                     {clientes.map((cliente) => (
                       <option key={cliente.id} value={cliente.id}>
-                        {cliente.nombre} {cliente.apellido} - {cliente.numeroIdentificacion}
+                        {cliente.nombre} {cliente.apellido} -{" "}
+                        {cliente.numeroIdentificacion}
                       </option>
                     ))}
                   </select>
@@ -352,7 +537,9 @@ function Facturas() {
                     type="text"
                     className="form-control"
                     value={factura.prefijo}
-                    onChange={(e) => setFactura({ ...factura, prefijo: e.target.value })}
+                    onChange={(e) =>
+                      setFactura({ ...factura, prefijo: e.target.value })
+                    }
                   />
                 </div>
                 <div className="col-md-3">
@@ -361,15 +548,33 @@ function Facturas() {
                     type="text"
                     className="form-control"
                     value={factura.numeroFactura}
-                    onChange={(e) => setFactura({ ...factura, numeroFactura: e.target.value })}
+                    onChange={(e) =>
+                      setFactura({ ...factura, numeroFactura: e.target.value })
+                    }
                     placeholder="Se generara automaticamente"
                   />
                 </div>
               </div>
+              <div className="mb-3">
+                <label className="form-label">Escanear producto</label>
+                <input
+                  ref={barcodeInputRef}
+                  type="text"
+                  value={codigoBarras}
+                  onChange={(e) => setCodigoBarras(e.target.value)}
+                  onKeyDown={handleBarcodeInput}
+                  placeholder="Escanea código de barras..."
+                  className="form-control"
+                  autoComplete="off"
+                  autoFocus
+                />
+              </div>
 
               <div className="mb-3">
                 <div className="d-flex justify-content-between align-items-center mb-2">
-                  <label className="form-label mb-0">Detalle de Productos</label>
+                  <label className="form-label mb-0">
+                    Detalle de Productos
+                  </label>
                   <button
                     type="button"
                     className="btn btn-sm btn-success"
@@ -407,12 +612,21 @@ function Facturas() {
                                 <select
                                   className="form-select form-select-sm"
                                   value={item.productoId}
-                                  onChange={(e) => actualizarProducto(index, "productoId", e.target.value)}
+                                  onChange={(e) =>
+                                    actualizarProducto(
+                                      index,
+                                      "productoId",
+                                      e.target.value
+                                    )
+                                  }
                                   required
                                 >
                                   <option value="">Seleccionar</option>
                                   {productos.map((producto) => (
-                                    <option key={producto.id} value={producto.id}>
+                                    <option
+                                      key={producto.id}
+                                      value={producto.id}
+                                    >
                                       {producto.nombre}
                                     </option>
                                   ))}
@@ -423,7 +637,13 @@ function Facturas() {
                                   type="number"
                                   className="form-control form-control-sm"
                                   value={item.cantidad}
-                                  onChange={(e) => actualizarProducto(index, "cantidad", e.target.value)}
+                                  onChange={(e) =>
+                                    actualizarProducto(
+                                      index,
+                                      "cantidad",
+                                      e.target.value
+                                    )
+                                  }
                                   min="1"
                                   required
                                 />
@@ -433,7 +653,13 @@ function Facturas() {
                                   type="number"
                                   className="form-control form-control-sm"
                                   value={item.precioUnitario}
-                                  onChange={(e) => actualizarProducto(index, "precioUnitario", e.target.value)}
+                                  onChange={(e) =>
+                                    actualizarProducto(
+                                      index,
+                                      "precioUnitario",
+                                      e.target.value
+                                    )
+                                  }
                                   step="0.01"
                                   required
                                 />
@@ -443,7 +669,13 @@ function Facturas() {
                                   type="number"
                                   className="form-control form-control-sm"
                                   value={item.porcentajeDescuento}
-                                  onChange={(e) => actualizarProducto(index, "porcentajeDescuento", e.target.value)}
+                                  onChange={(e) =>
+                                    actualizarProducto(
+                                      index,
+                                      "porcentajeDescuento",
+                                      e.target.value
+                                    )
+                                  }
                                   min="0"
                                   max="100"
                                   step="0.01"
@@ -454,7 +686,13 @@ function Facturas() {
                                   type="number"
                                   className="form-control form-control-sm"
                                   value={item.tarifaIVA}
-                                  onChange={(e) => actualizarProducto(index, "tarifaIVA", e.target.value)}
+                                  onChange={(e) =>
+                                    actualizarProducto(
+                                      index,
+                                      "tarifaIVA",
+                                      e.target.value
+                                    )
+                                  }
                                   step="0.01"
                                   required
                                 />
@@ -464,12 +702,21 @@ function Facturas() {
                                   type="number"
                                   className="form-control form-control-sm"
                                   value={item.tarifaINC}
-                                  onChange={(e) => actualizarProducto(index, "tarifaINC", e.target.value)}
+                                  onChange={(e) =>
+                                    actualizarProducto(
+                                      index,
+                                      "tarifaINC",
+                                      e.target.value
+                                    )
+                                  }
                                   step="0.01"
                                 />
                               </td>
                               <td className="text-end">
-                                ${linea.totalLinea.toLocaleString('es-CO', {minimumFractionDigits: 2})}
+                                $
+                                {linea.totalLinea.toLocaleString("es-CO", {
+                                  minimumFractionDigits: 2,
+                                })}
                               </td>
                               <td>
                                 <button
@@ -496,7 +743,9 @@ function Facturas() {
                     className="form-control"
                     rows="4"
                     value={factura.observaciones}
-                    onChange={(e) => setFactura({ ...factura, observaciones: e.target.value })}
+                    onChange={(e) =>
+                      setFactura({ ...factura, observaciones: e.target.value })
+                    }
                   ></textarea>
                 </div>
                 <div className="col-md-6">
@@ -507,25 +756,54 @@ function Facturas() {
                         <tbody>
                           <tr>
                             <td>Subtotal:</td>
-                            <td className="text-end">${totales.subtotal.toLocaleString('es-CO', {minimumFractionDigits: 2})}</td>
+                            <td className="text-end">
+                              $
+                              {totales.subtotal.toLocaleString("es-CO", {
+                                minimumFractionDigits: 2,
+                              })}
+                            </td>
                           </tr>
                           <tr>
                             <td>Descuentos:</td>
-                            <td className="text-end text-danger">-${totales.totalDescuentos.toLocaleString('es-CO', {minimumFractionDigits: 2})}</td>
+                            <td className="text-end text-danger">
+                              -$
+                              {totales.totalDescuentos.toLocaleString("es-CO", {
+                                minimumFractionDigits: 2,
+                              })}
+                            </td>
                           </tr>
                           <tr>
                             <td>IVA:</td>
-                            <td className="text-end">${totales.totalIVA.toLocaleString('es-CO', {minimumFractionDigits: 2})}</td>
+                            <td className="text-end">
+                              $
+                              {totales.totalIVA.toLocaleString("es-CO", {
+                                minimumFractionDigits: 2,
+                              })}
+                            </td>
                           </tr>
                           {totales.totalINC > 0 && (
                             <tr>
                               <td>INC:</td>
-                              <td className="text-end">${totales.totalINC.toLocaleString('es-CO', {minimumFractionDigits: 2})}</td>
+                              <td className="text-end">
+                                $
+                                {totales.totalINC.toLocaleString("es-CO", {
+                                  minimumFractionDigits: 2,
+                                })}
+                              </td>
                             </tr>
                           )}
                           <tr className="border-top">
-                            <td><strong>Total Factura:</strong></td>
-                            <td className="text-end"><strong className="text-success">${totales.totalFactura.toLocaleString('es-CO', {minimumFractionDigits: 2})}</strong></td>
+                            <td>
+                              <strong>Total Factura:</strong>
+                            </td>
+                            <td className="text-end">
+                              <strong className="text-success">
+                                $
+                                {totales.totalFactura.toLocaleString("es-CO", {
+                                  minimumFractionDigits: 2,
+                                })}
+                              </strong>
+                            </td>
                           </tr>
                         </tbody>
                       </table>
@@ -535,7 +813,11 @@ function Facturas() {
               </div>
 
               <div className="d-flex justify-content-end gap-2 mt-4">
-                <button type="button" className="btn btn-secondary" onClick={limpiarFormulario}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={limpiarFormulario}
+                >
                   Cancelar
                 </button>
                 <button type="submit" className="btn btn-info">
@@ -550,9 +832,7 @@ function Facturas() {
       <div className="card">
         <div className="card-body">
           {facturas.length === 0 ? (
-            <div className="alert alert-info">
-              No hay facturas registradas.
-            </div>
+            <div className="alert alert-info">No hay facturas registradas.</div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
@@ -572,38 +852,52 @@ function Facturas() {
                 <tbody>
                   {facturas.map((fact) => (
                     <tr key={fact.id}>
-                      <td><strong>{fact.numeroFactura || fact.id}</strong></td>
                       <td>
-                        {fact.cliente 
-                          ? `${fact.cliente.nombre} ${fact.cliente.apellido}`
-                          : 'N/A'}
+                        <strong>{fact.numeroFactura || fact.id}</strong>
                       </td>
-                      <td>{new Date(fact.fechaEmision).toLocaleDateString('es-CO')}</td>
-                      <td className="text-end">${fact.subtotal?.toLocaleString('es-CO') || '0'}</td>
-                      <td className="text-end">${fact.totalIVA?.toLocaleString('es-CO') || '0'}</td>
-                      <td className="text-end">${fact.totalINC?.toLocaleString('es-CO') || '0'}</td>
+                      <td>
+                        {fact.cliente
+                          ? `${fact.cliente.nombre} ${fact.cliente.apellido}`
+                          : "N/A"}
+                      </td>
+                      <td>
+                        {new Date(fact.fechaEmision).toLocaleDateString(
+                          "es-CO"
+                        )}
+                      </td>
+                      <td className="text-end">
+                        ${fact.subtotal?.toLocaleString("es-CO") || "0"}
+                      </td>
+                      <td className="text-end">
+                        ${fact.totalIVA?.toLocaleString("es-CO") || "0"}
+                      </td>
+                      <td className="text-end">
+                        ${fact.totalINC?.toLocaleString("es-CO") || "0"}
+                      </td>
                       <td className="text-end fw-bold text-success">
-                        ${fact.totalFactura?.toLocaleString('es-CO') || '0'}
+                        ${fact.totalFactura?.toLocaleString("es-CO") || "0"}
                       </td>
                       <td>
                         {fact.estado === "Pagada" ? (
                           <span className="badge bg-success">Pagada</span>
                         ) : (
-                          <span className="badge bg-warning text-dark">Pendiente</span>
+                          <span className="badge bg-warning text-dark">
+                            Pendiente
+                          </span>
                         )}
                       </td>
                       <td>
                         {fact.estado !== "Pagada" && (
-                          <button 
+                          <button
                             className="btn btn-sm btn-success me-1"
                             onClick={() => abrirModalPago(fact)}
                           >
                             Cobrar
                           </button>
                         )}
-                        <button 
+                        <button
                           className="btn btn-sm btn-primary"
-                            onClick={() => setFacturaVista(fact.id)}
+                          onClick={() => setFacturaVista(fact.id)}
                         >
                           PDF
                         </button>
@@ -616,35 +910,49 @@ function Facturas() {
           )}
         </div>
       </div>
-    {facturaVista && ( <ModalFacturaPDF facturaId={facturaVista} onClose={() => setFacturaVista(null)} />
-)}
-
-
+      {facturaVista && (
+        <ModalFacturaPDF
+          facturaId={facturaVista}
+          onClose={() => setFacturaVista(null)}
+        />
+      )}
 
       {mostrarModalPago && facturaParaPago && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header bg-success text-white">
-                <h5 className="modal-title">Registrar Pago - Factura {facturaParaPago.numeroFactura}</h5>
-                <button 
-                  type="button" 
-                  className="btn-close btn-close-white" 
+                <h5 className="modal-title">
+                  Registrar Pago - Factura {facturaParaPago.numeroFactura}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
                   onClick={() => setMostrarModalPago(false)}
                 ></button>
               </div>
               <div className="modal-body">
                 <div className="alert alert-info">
                   <p className="mb-1">
-                    <strong>Cliente:</strong> {facturaParaPago.cliente?.nombre} {facturaParaPago.cliente?.apellido}
+                    <strong>Cliente:</strong> {facturaParaPago.cliente?.nombre}{" "}
+                    {facturaParaPago.cliente?.apellido}
                   </p>
                   <p className="mb-1">
-                    <strong>Fecha:</strong> {new Date(facturaParaPago.fechaEmision).toLocaleDateString('es-CO')}
+                    <strong>Fecha:</strong>{" "}
+                    {new Date(facturaParaPago.fechaEmision).toLocaleDateString(
+                      "es-CO"
+                    )}
                   </p>
                   <p className="mb-0">
-                    <strong>Total a Pagar:</strong> 
+                    <strong>Total a Pagar:</strong>
                     <span className="fs-4 text-success ms-2">
-                      ${facturaParaPago.totalFactura.toLocaleString('es-CO', {minimumFractionDigits: 2})}
+                      $
+                      {facturaParaPago.totalFactura.toLocaleString("es-CO", {
+                        minimumFractionDigits: 2,
+                      })}
                     </span>
                   </p>
                 </div>
@@ -656,11 +964,15 @@ function Facturas() {
                       <select
                         className="form-select"
                         value={pago.medioPago}
-                        onChange={(e) => setPago({ ...pago, medioPago: e.target.value })}
+                        onChange={(e) =>
+                          setPago({ ...pago, medioPago: e.target.value })
+                        }
                         required
                       >
                         <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia">Transferencia Bancaria</option>
+                        <option value="Transferencia">
+                          Transferencia Bancaria
+                        </option>
                         <option value="Tarjeta Debito">Tarjeta Debito</option>
                         <option value="Tarjeta Credito">Tarjeta Credito</option>
                         <option value="Cheque">Cheque</option>
@@ -672,16 +984,23 @@ function Facturas() {
                         type="number"
                         className="form-control"
                         value={pago.montoPagado}
-                        onChange={(e) => setPago({ ...pago, montoPagado: e.target.value })}
+                        onChange={(e) =>
+                          setPago({ ...pago, montoPagado: e.target.value })
+                        }
                         step="0.01"
                         required
                       />
                     </div>
                   </div>
 
-                  {parseFloat(pago.montoPagado) > facturaParaPago.totalFactura && (
+                  {parseFloat(pago.montoPagado) >
+                    facturaParaPago.totalFactura && (
                     <div className="alert alert-warning">
-                      <strong>Cambio a Devolver:</strong> ${(parseFloat(pago.montoPagado) - facturaParaPago.totalFactura).toLocaleString('es-CO', {minimumFractionDigits: 2})}
+                      <strong>Cambio a Devolver:</strong> $
+                      {(
+                        parseFloat(pago.montoPagado) -
+                        facturaParaPago.totalFactura
+                      ).toLocaleString("es-CO", { minimumFractionDigits: 2 })}
                     </div>
                   )}
 
@@ -691,7 +1010,9 @@ function Facturas() {
                       type="text"
                       className="form-control"
                       value={pago.referencia}
-                      onChange={(e) => setPago({ ...pago, referencia: e.target.value })}
+                      onChange={(e) =>
+                        setPago({ ...pago, referencia: e.target.value })
+                      }
                     />
                   </div>
 
@@ -701,12 +1022,18 @@ function Facturas() {
                       className="form-control"
                       rows="2"
                       value={pago.observaciones}
-                      onChange={(e) => setPago({ ...pago, observaciones: e.target.value })}
+                      onChange={(e) =>
+                        setPago({ ...pago, observaciones: e.target.value })
+                      }
                     ></textarea>
                   </div>
 
                   <div className="d-flex justify-content-end gap-2">
-                    <button type="button" className="btn btn-secondary" onClick={() => setMostrarModalPago(false)}>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => setMostrarModalPago(false)}
+                    >
                       Cancelar
                     </button>
                     <button type="submit" className="btn btn-success">
