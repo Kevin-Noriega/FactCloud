@@ -23,7 +23,7 @@ function Login() {
       });
 
       if (!response.ok) {
-        alert("❌ Correo o contraseña incorrectos");
+        alert("Correo o contraseña incorrectos");
         return;
       }
 
@@ -34,7 +34,6 @@ function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      alert("✅ Inicio de sesión exitoso");
       navigate("/dashboard");
     } catch (error) {
       console.error("Error login:", error);
