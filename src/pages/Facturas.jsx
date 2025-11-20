@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API_URL } from "../api/config";
 import ModalFacturaPDF from "../components/ModalfacturaPDF.jsx";
+import ModalPago from "../components/ModalPago.jsx";
+import Select from "react-select";
 
 function Facturas() {
-  // ✅ 1. TODOS LOS useState PRIMERO (AL INICIO)
-  const [codigoBarras, setCodigoBarras] = useState("");
   const [facturas, setFacturas] = useState([]);
   const [clientes, setClientes] = useState([]);
   const [productos, setProductos] = useState([]);
@@ -13,18 +13,22 @@ function Facturas() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
   const [facturaParaPago, setFacturaParaPago] = useState(null);
-  const [facturaVista, setFacturaVista] = useState(null);
 
-  // ⬇️ MOVIDO AQUÍ (estaba en línea 184)
-  const [productosSeleccionados, setProductosSeleccionados] = useState([]);
+  const [codigoBarras, setCodigoBarras] = useState("");
+  const barcodeInputRef = useRef(null);
 
   const [factura, setFactura] = useState({
     clienteId: "",
     numeroFactura: "",
     prefijo: "FE",
     observaciones: "",
+    metodoPagoCodigo: "10",
+    fechaVencimiento: "",
   });
 
+  const [facturaVista, setFacturaVista] = useState(null);
+
+  const [productosSeleccionados, setProductosSeleccionados] = useState([]);
   const [pago, setPago] = useState({
     medioPago: "Efectivo",
     montoPagado: "",
@@ -32,10 +36,68 @@ function Facturas() {
     observaciones: "",
   });
 
-  // ✅ 2. useRef
-  const barcodeInputRef = useRef(null);
+  // ESCANER/BOTÓN SIEMPRE SUMA DE A 1
+  const agregarPorCodigoBarras = () => {
+    const codigo = codigoBarras.trim();
+    if (!codigo) return;
+    const producto = productos.find(
+      (p) => String(p.codigoBarras || "").trim() === codigo
+    );
+    if (!producto) {
+      alert(`Producto no encontrado.\nCódigo: ${codigo}`);
+      return;
+    }
+    setProductosSeleccionados((prev) => {
+      const idx = prev.findIndex(
+        (item) => Number(item.productoId) === Number(producto.id)
+      );
+      if (idx !== -1) {
+        const actualizada = [...prev];
+        actualizada[idx].cantidad = Number(actualizada[idx].cantidad || 0) + 1;
+        return actualizada;
+      }
+      return [
+        ...prev,
+        {
+          productoId: producto.id,
+          descripcion: producto.nombre,
+          cantidad: 1,
+          precioUnitario: producto.precioUnitario ?? 0,
+          unidadMedida: producto.unidadMedida ?? "Unidad",
+          porcentajeDescuento: 0,
+          tarifaIVA: 19,
+          tarifaINC: 0,
+        },
+      ];
+    });
+    setCodigoBarras("");
+    setTimeout(() => barcodeInputRef.current?.focus(), 50);
+  };
 
-  // ✅ 3. FUNCIONES (después de los hooks)
+  const handleBarcodeInput = (e) => {
+    if (e.key === "Enter" || e.keyCode === 13) {
+      e.preventDefault();
+      agregarPorCodigoBarras();
+    }
+  };
+
+  // AUTOCOMPLETA FECHA SI CAMBIAS A CRÉDITO, LIMPIA SI VUELVES A CONTADO
+  useEffect(() => {
+    if (factura.metodoPagoCodigo === "20" && !factura.fechaVencimiento) {
+      const hoy = new Date();
+      const venc = new Date();
+      venc.setDate(hoy.getDate() + 30);
+      setFactura((f) => ({
+        ...f,
+        fechaVencimiento: venc.toISOString().split("T")[0],
+      }));
+    }
+    if (factura.metodoPagoCodigo === "10" && factura.fechaVencimiento) {
+      setFactura((f) => ({ ...f, fechaVencimiento: "" }));
+    }
+    // eslint-disable-next-line
+  }, [factura.metodoPagoCodigo]);
+
   const fetchDatos = async () => {
     try {
       const [facturasRes, clientesRes, productosRes] = await Promise.all([
@@ -64,113 +126,9 @@ function Facturas() {
     }
   };
 
-  // ⬇️ Ahora procesarCodigoBarras se declara ANTES de handleBarcodeInput
-  const procesarCodigoBarras = (codigoRaw) => {
-    const codigo = String(codigoRaw || "").trim();
-
-    if (!codigo) {
-      console.warn("❌ Código vacío ignorado");
-      return;
-    }
-
-    if (productos.length === 0) {
-      alert("⚠️ No hay productos cargados en el sistema.");
-      return;
-    }
-
-    // 🟦 Debug útil pero limpio
-    console.log("\n" + "=".repeat(40));
-    console.log("🔍 Código recibido:", codigo);
-
-    // Buscar producto normalizando ambos valores
-    const producto = productos.find((p) => {
-      const dbCode = String(p.codigoBarras || "").trim();
-      return dbCode === codigo;
-    });
-
-    // ❌ No encontrado
-    if (!producto) {
-      console.error("❌ No encontrado:", codigo);
-      alert(`❌ Producto no encontrado.\nCódigo: ${codigo}`);
-      return;
-    }
-
-    console.log("✅ Producto encontrado:", producto.nombre);
-
-    // 🟩 Agregar o incrementar producto
-    setProductosSeleccionados((prev) => {
-      const index = prev.findIndex(
-        (item) => Number(item.productoId) === Number(producto.id)
-      );
-
-      // ➕ Ya existe → aumentar cantidad
-      if (index !== -1) {
-        const listaActualizada = [...prev];
-        listaActualizada[index] = {
-          ...listaActualizada[index],
-          cantidad: Number(listaActualizada[index].cantidad) + 1,
-        };
-
-        console.log(
-          `➕ Cantidad aumentada: ${listaActualizada[index].descripcion} → ${listaActualizada[index].cantidad}`
-        );
-
-        return listaActualizada;
-      }
-
-      // 🆕 Nuevo producto
-      const nuevoItem = {
-        productoId: producto.id,
-        descripcion: producto.nombre,
-        cantidad: 1,
-        precioUnitario: producto.precioUnitario ?? 0,
-        unidadMedida: producto.unidadMedida ?? "Unidad",
-        porcentajeDescuento: producto.porcentajeDescuento ?? 0,
-        tarifaIVA: producto.tarifaIVA ?? 0,
-        tarifaINC: producto.tarifaINC ?? 0,
-      };
-
-      console.log("🆕 Agregado:", nuevoItem.descripcion);
-
-      return [...prev, nuevoItem];
-    });
-
-    // 🔄 Focus al input para escáner
-    setTimeout(() => barcodeInputRef.current?.focus(), 50);
-  };
-
-  // ⬇️ Ahora handleBarcodeInput está DESPUÉS de procesarCodigoBarras
-  const handleBarcodeInput = (e) => {
-    // ⛔ Si la lista está vacía, evitar errores
-    if (!productos || productos.length === 0) {
-      console.warn("⛔ No hay productos cargados en memoria todavía.");
-      return;
-    }
-
-    // ✔ Escaneo válido
-    if (e.key === "Enter" || e.keyCode === 13) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const codigo = e.target.value.trim();
-      console.log("🎯 CÓDIGO A PROCESAR:", codigo);
-
-      if (codigo.length === 0) {
-        console.log("⚠️ Código vacío al presionar Enter");
-      } else {
-        procesarCodigoBarras(codigo);
-      }
-
-      // Resetear input
-      setCodigoBarras("");
-      e.target.value = "";
-
-      // Mantener el auto-focus
-      setTimeout(() => {
-        barcodeInputRef.current?.focus();
-      }, 80);
-    }
-  };
+  useEffect(() => {
+    fetchDatos();
+  }, []);
 
   const agregarProducto = () => {
     setProductosSeleccionados([
@@ -182,7 +140,7 @@ function Facturas() {
         precioUnitario: 0,
         unidadMedida: "Unidad",
         porcentajeDescuento: 0,
-        tarifaIVA: 19,
+        tarifaIVA: 0,
         tarifaINC: 0,
       },
     ]);
@@ -270,6 +228,8 @@ function Facturas() {
       numeroFactura: "",
       prefijo: "FV",
       observaciones: "",
+      metodoPagoCodigo: "10",
+      fechaVencimiento: "",
     });
     setProductosSeleccionados([]);
     setMostrarFormulario(false);
@@ -281,7 +241,7 @@ function Facturas() {
     try {
       const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
       if (!usuarioGuardado) {
-        alert("No se encontró un usuario autenticado.");
+        alert("No se encontro un usuario autenticado.");
         return;
       }
 
@@ -312,11 +272,24 @@ function Facturas() {
         totalDescuentos: totales.totalDescuentos,
         totalRetenciones: 0,
         totalFactura: totales.totalFactura,
-        formaPago: "Credito",
+        formaPago: factura.metodoPagoCodigo === "20" ? "Credito" : "Contado",
         medioPago: "Pendiente",
         observaciones: factura.observaciones,
         estado: "Pendiente",
         enviadaDIAN: false,
+        tipoFactura: "",
+        moneda: "COP",
+        metodoPagoCodigo: factura.metodoPagoCodigo || "",
+        fechaVencimiento: factura.fechaVencimiento?.trim()
+          ? factura.fechaVencimiento
+          : null,
+        tipoOperacion: "",
+        CUFE: "",
+        QR: "",
+        numeroResolucionDIAN: "",
+        rangoAutorizadoDesde: "",
+        rangoAutorizadoHasta: "",
+        ambienteDIAN: "",
         detalleFacturas: productosSeleccionados.map((item) => {
           const linea = calcularLinea(item);
           return {
@@ -333,6 +306,10 @@ function Facturas() {
             tarifaINC: parseFloat(item.tarifaINC) || 0,
             valorINC: linea.valorINC,
             totalLinea: linea.totalLinea,
+            codigoUNSPSC: "",
+            codigoInterno: "",
+            baseImponibleItem: "",
+            tipoImpuestoItem: "",
           };
         }),
       };
@@ -348,7 +325,6 @@ function Facturas() {
         throw new Error(errorTexto);
       }
 
-      alert("Factura creada correctamente. Estado: Pendiente de pago");
       limpiarFormulario();
       fetchDatos();
     } catch (error) {
@@ -390,7 +366,7 @@ function Facturas() {
       const respuesta = await fetch(
         `${API_URL}/Facturas/${facturaParaPago.id}`,
         {
-          method: "PATCH",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
@@ -407,68 +383,6 @@ function Facturas() {
     }
   };
 
-  // 📌 1. Cargar productos desde la API solo una vez
-  useEffect(() => {
-    fetchDatos();
-  }, []);
-
-  // 📌 2. Debug útil: solo si necesitas verificar la carga
-  useEffect(() => {
-    if (productos.length === 0) return;
-
-    console.log("📦 Productos cargados:", productos.length);
-    console.log(
-      "Códigos de barras:",
-      productos.map((p) => p.codigoBarras).filter(Boolean)
-    );
-  }, [productos]);
-
-  // 📌 3. Productos que estás agregando a la factura
-  useEffect(() => {
-    if (productosSeleccionados.length === 0) return;
-    console.log("🧾 Productos en factura:", productosSeleccionados.length);
-  }, [productosSeleccionados]);
-
-  // 📌 4. Enfocar input cuando se muestre el formulario
-  useEffect(() => {
-    if (!mostrarFormulario) return;
-
-    setTimeout(() => {
-      barcodeInputRef.current?.focus();
-    }, 150);
-  }, [mostrarFormulario]);
-
-  useEffect(() => {
-    if (!mostrarFormulario) return;
-
-    const focusInput = () => {
-      const activeElement = document.activeElement;
-      const isFormElement =
-        activeElement?.tagName === "INPUT" ||
-        activeElement?.tagName === "SELECT" ||
-        activeElement?.tagName === "TEXTAREA";
-
-      if (!isFormElement && barcodeInputRef.current) {
-        barcodeInputRef.current.focus();
-      }
-    };
-
-    setTimeout(focusInput, 100);
-
-    const handleClick = (e) => {
-      if (!e.target.closest("input, select, textarea, button")) {
-        setTimeout(focusInput, 50);
-      }
-    };
-
-    window.addEventListener("click", handleClick);
-
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
-  }, [mostrarFormulario]);
-
-  // ✅ 5. Return condicional y JSX
   if (loading) {
     return (
       <div className="container mt-5">
@@ -498,7 +412,7 @@ function Facturas() {
 
   return (
     <div className="container-fluid mt-4 px-4">
-      <h2 className="text-info mb-4">Facturacion Electronica</h2>
+      <h2 className="text-info mb-4">Facturación Electrónica</h2>
 
       <button
         className="btn btn-info text-white mb-4"
@@ -514,22 +428,31 @@ function Facturas() {
               <div className="row mb-3">
                 <div className="col-md-6">
                   <label className="form-label">Cliente</label>
-                  <select
-                    className="form-select"
-                    value={factura.clienteId}
-                    onChange={(e) =>
-                      setFactura({ ...factura, clienteId: e.target.value })
+                  <Select
+                    name="cliente"
+                    options={clientes.map((cli) => ({
+                      value: cli.id,
+                      label: `${cli.nombre} ${cli.apellido} - ${cli.numeroIdentificacion}`,
+                    }))}
+                    value={
+                      factura.clienteId
+                        ? clientes
+                            .map((cli) => ({
+                              value: cli.id,
+                              label: `${cli.nombre} ${cli.apellido} - ${cli.numeroIdentificacion}`,
+                            }))
+                            .find((opt) => opt.value === factura.clienteId)
+                        : null
                     }
-                    required
-                  >
-                    <option value="">Seleccionar cliente</option>
-                    {clientes.map((cliente) => (
-                      <option key={cliente.id} value={cliente.id}>
-                        {cliente.nombre} {cliente.apellido} -{" "}
-                        {cliente.numeroIdentificacion}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(opt) =>
+                      setFactura((prev) => ({
+                        ...prev,
+                        clienteId: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar cliente"
+                  />
                 </div>
                 <div className="col-md-3">
                   <label className="form-label">Prefijo</label>
@@ -543,7 +466,7 @@ function Facturas() {
                   />
                 </div>
                 <div className="col-md-3">
-                  <label className="form-label">Numero Factura</label>
+                  <label className="form-label">Número Factura</label>
                   <input
                     type="text"
                     className="form-control"
@@ -551,191 +474,252 @@ function Facturas() {
                     onChange={(e) =>
                       setFactura({ ...factura, numeroFactura: e.target.value })
                     }
-                    placeholder="Se generara automaticamente"
+                    placeholder="Se generará automáticamente"
                   />
                 </div>
               </div>
-              <div className="mb-3">
-                <label className="form-label">Escanear producto</label>
-                <input
-                  ref={barcodeInputRef}
-                  type="text"
-                  value={codigoBarras}
-                  onChange={(e) => setCodigoBarras(e.target.value)}
-                  onKeyDown={handleBarcodeInput}
-                  placeholder="Escanea código de barras..."
-                  className="form-control"
-                  autoComplete="off"
-                  autoFocus
-                />
-              </div>
+              {/* Escáner */}
+              <div className="mb-3 row align-items-center">
+                <div className="col-md-6">
+                  <label className="form-label">Escanear producto</label>
+                  <div className="input-group col-md-3 p-0">
+                    <input
+                      ref={barcodeInputRef}
+                      type="text"
+                      value={codigoBarras}
+                      onChange={(e) => setCodigoBarras(e.target.value)}
+                      onKeyDown={handleBarcodeInput}
+                      placeholder="Escanea código de barras..."
+                      className="form-control"
+                      autoComplete="off"
+                    />
 
-              <div className="mb-3">
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <label className="form-label mb-0">
-                    Detalle de Productos
-                  </label>
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-success"
-                    onClick={agregarProducto}
-                  >
-                    Agregar Producto
-                  </button>
+                    <div className="input-group-append ms-2">
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={agregarPorCodigoBarras}
+                      >
+                        Agregar
+                      </button>
+                    </div>
+                  </div>
                 </div>
-
-                {productosSeleccionados.length === 0 ? (
-                  <div className="alert alert-warning">
-                    No hay productos agregados. Haz clic en Agregar Producto.
-                  </div>
-                ) : (
-                  <div className="table-responsive">
-                    <table className="table table-sm table-bordered">
-                      <thead className="table-light">
-                        <tr>
-                          <th>Producto</th>
-                          <th>Cant</th>
-                          <th>Precio</th>
-                          <th>Desc %</th>
-                          <th>IVA %</th>
-                          <th>INC %</th>
-                          <th>Total</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {productosSeleccionados.map((item, index) => {
-                          const linea = calcularLinea(item);
-                          return (
-                            <tr key={index}>
-                              <td>
-                                <select
-                                  className="form-select form-select-sm"
-                                  value={item.productoId}
-                                  onChange={(e) =>
-                                    actualizarProducto(
-                                      index,
-                                      "productoId",
-                                      e.target.value
-                                    )
-                                  }
-                                  required
-                                >
-                                  <option value="">Seleccionar</option>
-                                  {productos.map((producto) => (
-                                    <option
-                                      key={producto.id}
-                                      value={producto.id}
-                                    >
-                                      {producto.nombre}
-                                    </option>
-                                  ))}
-                                </select>
-                              </td>
-                              <td style={{ width: "80px" }}>
-                                <input
-                                  type="number"
-                                  className="form-control form-control-sm"
-                                  value={item.cantidad}
-                                  onChange={(e) =>
-                                    actualizarProducto(
-                                      index,
-                                      "cantidad",
-                                      e.target.value
-                                    )
-                                  }
-                                  min="1"
-                                  required
-                                />
-                              </td>
-                              <td style={{ width: "100px" }}>
-                                <input
-                                  type="number"
-                                  className="form-control form-control-sm"
-                                  value={item.precioUnitario}
-                                  onChange={(e) =>
-                                    actualizarProducto(
-                                      index,
-                                      "precioUnitario",
-                                      e.target.value
-                                    )
-                                  }
-                                  step="0.01"
-                                  required
-                                />
-                              </td>
-                              <td style={{ width: "80px" }}>
-                                <input
-                                  type="number"
-                                  className="form-control form-control-sm"
-                                  value={item.porcentajeDescuento}
-                                  onChange={(e) =>
-                                    actualizarProducto(
-                                      index,
-                                      "porcentajeDescuento",
-                                      e.target.value
-                                    )
-                                  }
-                                  min="0"
-                                  max="100"
-                                  step="0.01"
-                                />
-                              </td>
-                              <td style={{ width: "80px" }}>
-                                <input
-                                  type="number"
-                                  className="form-control form-control-sm"
-                                  value={item.tarifaIVA}
-                                  onChange={(e) =>
-                                    actualizarProducto(
-                                      index,
-                                      "tarifaIVA",
-                                      e.target.value
-                                    )
-                                  }
-                                  step="0.01"
-                                  required
-                                />
-                              </td>
-                              <td style={{ width: "80px" }}>
-                                <input
-                                  type="number"
-                                  className="form-control form-control-sm"
-                                  value={item.tarifaINC}
-                                  onChange={(e) =>
-                                    actualizarProducto(
-                                      index,
-                                      "tarifaINC",
-                                      e.target.value
-                                    )
-                                  }
-                                  step="0.01"
-                                />
-                              </td>
-                              <td className="text-end">
-                                $
-                                {linea.totalLinea.toLocaleString("es-CO", {
-                                  minimumFractionDigits: 2,
-                                })}
-                              </td>
-                              <td>
-                                <button
-                                  type="button"
-                                  className="btn btn-sm btn-danger"
-                                  onClick={() => eliminarProducto(index)}
-                                >
-                                  X
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                <div className="col-md-3">
+                  <label className="form-label">Método de Pago</label>
+                  <select
+                    className="form-select"
+                    value={factura.metodoPagoCodigo}
+                    onChange={(e) =>
+                      setFactura({
+                        ...factura,
+                        metodoPagoCodigo: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="10">Contado</option>
+                    <option value="20">Crédito</option>
+                  </select>
+                </div>
+                <div className="col-md-3">
+                  <label className="form-label">
+                    Fecha Vencimiento (solo crédito)
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={factura.fechaVencimiento || ""}
+                    disabled={factura.metodoPagoCodigo !== "20"}
+                    onChange={(e) =>
+                      setFactura({
+                        ...factura,
+                        fechaVencimiento: e.target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
-
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <label className="form-label mb-0">Detalle de Productos</label>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-success"
+                  onClick={agregarProducto}
+                >
+                  Agregar Producto
+                </button>
+              </div>
+              {productosSeleccionados.length === 0 ? (
+                <div className="alert alert-warning">
+                  No hay productos agregados. Haz clic en Agregar Producto.
+                </div>
+              ) : (
+                <div className="table-responsive">
+                  <table className="table table-sm table-bordered">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Producto</th>
+                        <th>Cant</th>
+                        <th>Precio</th>
+                        <th>Desc %</th>
+                        <th>IVA %</th>
+                        <th>INC %</th>
+                        <th>Total</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {productosSeleccionados.map((item, index) => {
+                        const linea = calcularLinea(item);
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <Select
+                                menuPortalTarget={document.body}
+                                styles={{
+                                  menuPortal: (base) => ({
+                                    ...base,
+                                    zIndex: 9999,
+                                  }),
+                                }}
+                                name="producto"
+                                options={productos.map((pro) => ({
+                                  value: pro.id,
+                                  label: `${
+                                    pro.nombre
+                                  } - $${pro.precioUnitario.toLocaleString(
+                                    "es-CO"
+                                  )}`,
+                                }))}
+                                value={
+                                  item.productoId
+                                    ? productos
+                                        .map((pro) => ({
+                                          value: pro.id,
+                                          label: `${
+                                            pro.nombre
+                                          } - $${pro.precioUnitario.toLocaleString(
+                                            "es-CO"
+                                          )}`,
+                                        }))
+                                        .find(
+                                          (opt) => opt.value === item.productoId
+                                        )
+                                    : null
+                                }
+                                onChange={(opt) =>
+                                  actualizarProducto(
+                                    index,
+                                    "productoId",
+                                    opt ? opt.value : ""
+                                  )
+                                }
+                                isClearable
+                                placeholder="Seleccionar producto"
+                              />
+                            </td>
+                            <td style={{ width: "80px" }}>
+                              <input
+                                type="number"
+                                className="form-control form-control-sm"
+                                value={item.cantidad}
+                                onChange={(e) =>
+                                  actualizarProducto(
+                                    index,
+                                    "cantidad",
+                                    e.target.value
+                                  )
+                                }
+                                min="1"
+                                required
+                              />
+                            </td>
+                            <td style={{ width: "100px" }}>
+                              <input
+                                type="number"
+                                className="form-control form-control-sm"
+                                value={item.precioUnitario}
+                                onChange={(e) =>
+                                  actualizarProducto(
+                                    index,
+                                    "precioUnitario",
+                                    e.target.value
+                                  )
+                                }
+                                step="0.01"
+                                required
+                              />
+                            </td>
+                            <td style={{ width: "80px" }}>
+                              <input
+                                type="number"
+                                className="form-control form-control-sm"
+                                value={item.porcentajeDescuento}
+                                onChange={(e) =>
+                                  actualizarProducto(
+                                    index,
+                                    "porcentajeDescuento",
+                                    e.target.value
+                                  )
+                                }
+                                min="0"
+                                max="100"
+                                step="0.01"
+                              />
+                            </td>
+                            <td style={{ width: "80px" }}>
+                              <input
+                                type="number"
+                                className="form-control form-control-sm"
+                                value={item.tarifaIVA}
+                                onChange={(e) =>
+                                  actualizarProducto(
+                                    index,
+                                    "tarifaIVA",
+                                    e.target.value
+                                  )
+                                }
+                                step="0.01"
+                                required
+                              />
+                            </td>
+                            <td style={{ width: "80px" }}>
+                              <input
+                                type="number"
+                                className="form-control form-control-sm"
+                                value={item.tarifaINC}
+                                onChange={(e) =>
+                                  actualizarProducto(
+                                    index,
+                                    "tarifaINC",
+                                    e.target.value
+                                  )
+                                }
+                                step="0.01"
+                              />
+                            </td>
+                            <td className="text-end">
+                              $
+                              {linea.totalLinea.toLocaleString("es-CO", {
+                                minimumFractionDigits: 2,
+                              })}
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-danger"
+                                onClick={() => eliminarProducto(index)}
+                              >
+                                X
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
               <div className="row">
                 <div className="col-md-6">
                   <label className="form-label">Observaciones</label>
@@ -811,7 +795,6 @@ function Facturas() {
                   </div>
                 </div>
               </div>
-
               <div className="d-flex justify-content-end gap-2 mt-4">
                 <button
                   type="button"
@@ -910,6 +893,7 @@ function Facturas() {
           )}
         </div>
       </div>
+
       {facturaVista && (
         <ModalFacturaPDF
           facturaId={facturaVista}
@@ -918,133 +902,17 @@ function Facturas() {
       )}
 
       {mostrarModalPago && facturaParaPago && (
-        <div
-          className="modal show d-block"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header bg-success text-white">
-                <h5 className="modal-title">
-                  Registrar Pago - Factura {facturaParaPago.numeroFactura}
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close btn-close-white"
-                  onClick={() => setMostrarModalPago(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <div className="alert alert-info">
-                  <p className="mb-1">
-                    <strong>Cliente:</strong> {facturaParaPago.cliente?.nombre}{" "}
-                    {facturaParaPago.cliente?.apellido}
-                  </p>
-                  <p className="mb-1">
-                    <strong>Fecha:</strong>{" "}
-                    {new Date(facturaParaPago.fechaEmision).toLocaleDateString(
-                      "es-CO"
-                    )}
-                  </p>
-                  <p className="mb-0">
-                    <strong>Total a Pagar:</strong>
-                    <span className="fs-4 text-success ms-2">
-                      $
-                      {facturaParaPago.totalFactura.toLocaleString("es-CO", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </span>
-                  </p>
-                </div>
-
-                <form onSubmit={registrarPago}>
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <label className="form-label">Medio de Pago</label>
-                      <select
-                        className="form-select"
-                        value={pago.medioPago}
-                        onChange={(e) =>
-                          setPago({ ...pago, medioPago: e.target.value })
-                        }
-                        required
-                      >
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia">
-                          Transferencia Bancaria
-                        </option>
-                        <option value="Tarjeta Debito">Tarjeta Debito</option>
-                        <option value="Tarjeta Credito">Tarjeta Credito</option>
-                        <option value="Cheque">Cheque</option>
-                      </select>
-                    </div>
-                    <div className="col-md-6">
-                      <label className="form-label">Monto Pagado</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        value={pago.montoPagado}
-                        onChange={(e) =>
-                          setPago({ ...pago, montoPagado: e.target.value })
-                        }
-                        step="0.01"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {parseFloat(pago.montoPagado) >
-                    facturaParaPago.totalFactura && (
-                    <div className="alert alert-warning">
-                      <strong>Cambio a Devolver:</strong> $
-                      {(
-                        parseFloat(pago.montoPagado) -
-                        facturaParaPago.totalFactura
-                      ).toLocaleString("es-CO", { minimumFractionDigits: 2 })}
-                    </div>
-                  )}
-
-                  <div className="mb-3">
-                    <label className="form-label">Referencia de Pago</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={pago.referencia}
-                      onChange={(e) =>
-                        setPago({ ...pago, referencia: e.target.value })
-                      }
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Observaciones</label>
-                    <textarea
-                      className="form-control"
-                      rows="2"
-                      value={pago.observaciones}
-                      onChange={(e) =>
-                        setPago({ ...pago, observaciones: e.target.value })
-                      }
-                    ></textarea>
-                  </div>
-
-                  <div className="d-flex justify-content-end gap-2">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={() => setMostrarModalPago(false)}
-                    >
-                      Cancelar
-                    </button>
-                    <button type="submit" className="btn btn-success">
-                      Confirmar Pago
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ModalPago
+          factura={facturaParaPago}
+          onSuccess={() => {
+            setMostrarModalPago(false);
+            fetchDatos();
+          }}
+          onClose={() => setMostrarModalPago(false)}
+          registrarPago={registrarPago}
+          pago={pago}
+          setPago={setPago}
+        />
       )}
     </div>
   );

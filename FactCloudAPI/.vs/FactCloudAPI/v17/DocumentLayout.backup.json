@@ -1,0 +1,451 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Programacion\\FactCloudAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\models\\factura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\models\\factura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\models\\facturapagodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\models\\facturapagodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\controllers\\clientescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\models\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\models\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119182545_a\u00F1adirRegimenTributario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FactCloudAPI\\Migrations\\20251119182545_a\u00F1adirRegimenTributario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119173222_renombraDetallesfactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FactCloudAPI\\Migrations\\20251119173222_renombraDetallesfactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\controllers\\facturascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\controllers\\facturascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\models\\detallefactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\models\\detallefactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119171755_cambioFactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FactCloudAPI\\Migrations\\20251119171755_cambioFactura.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119164831_cambioVariable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:FactCloudAPI\\Migrations\\20251119164831_cambioVariable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\controllers\\productoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\controllers\\authcontoller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\controllers\\authcontoller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\factcloudapi.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\factcloudapi.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\factcloudapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\factcloudapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\migrations\\20251119052213_agregandoendpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\migrations\\20251119052213_agregandoendpoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\migrations\\20251119031549_corregir.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\migrations\\20251119031549_corregir.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\migrations\\20251119031047_actualizacionvariables.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\migrations\\20251119031047_actualizacionvariables.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|c:\\programacion\\factcloudapi\\factcloudapi\\migrations\\20251118224053_actualizaciontokes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95D1021A-F8E5-4400-9E01-970E32FBE5DD}|FactCloudAPI\\FactCloudAPI.csproj|solutionrelative:factcloudapi\\migrations\\20251118224053_actualizaciontokes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 7,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FacturaPagoDto.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\FacturaPagoDto.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Models\\FacturaPagoDto.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\FacturaPagoDto.cs",
+              "RelativeToolTip": "FactCloudAPI\\Models\\FacturaPagoDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T16:20:26.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "20251119182545_a\u00F1adirRegimenTributario.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119182545_a\u00F1adirRegimenTributario.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251119182545_a\u00F1adirRegimenTributario.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119182545_a\u00F1adirRegimenTributario.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251119182545_a\u00F1adirRegimenTributario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T18:25:45.897Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Factura.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Factura.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Models\\Factura.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Factura.cs",
+              "RelativeToolTip": "FactCloudAPI\\Models\\Factura.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwBgAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:48:35.977Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "EmailService.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Services\\EmailService.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Services\\EmailService.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Services\\EmailService.cs",
+              "RelativeToolTip": "FactCloudAPI\\Services\\EmailService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAwwCEAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T21:02:35.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DetalleFactura.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\DetalleFactura.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Models\\DetalleFactura.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\DetalleFactura.cs",
+              "RelativeToolTip": "FactCloudAPI\\Models\\DetalleFactura.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:57:28.66Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Cliente.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Cliente.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Models\\Cliente.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Cliente.cs",
+              "RelativeToolTip": "FactCloudAPI\\Models\\Cliente.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAcwFwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:47:42.718Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "FacturasController.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\FacturasController.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Controllers\\FacturasController.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\FacturasController.cs",
+              "RelativeToolTip": "FactCloudAPI\\Controllers\\FacturasController.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAADwvy8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:37:15.279Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Producto.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Producto.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Models\\Producto.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Producto.cs",
+              "RelativeToolTip": "FactCloudAPI\\Models\\Producto.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAowGkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:49:34.056Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ClientesController.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\ClientesController.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Controllers\\ClientesController.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\ClientesController.cs",
+              "RelativeToolTip": "FactCloudAPI\\Controllers\\ClientesController.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAowE8AAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:36:42.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ProductosController.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\ProductosController.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Controllers\\ProductosController.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\ProductosController.cs",
+              "RelativeToolTip": "FactCloudAPI\\Controllers\\ProductosController.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAswFoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:53:40.837Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "20251119173222_renombraDetallesfactura.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119173222_renombraDetallesfactura.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251119173222_renombraDetallesfactura.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119173222_renombraDetallesfactura.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251119173222_renombraDetallesfactura.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T17:32:22.313Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "FactCloudAPI\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAwwEAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:45:46.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "20251119171755_cambioFactura.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119171755_cambioFactura.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251119171755_cambioFactura.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119171755_cambioFactura.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251119171755_cambioFactura.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T17:17:55.665Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "20251119164831_cambioVariable.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119164831_cambioVariable.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251119164831_cambioVariable.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119164831_cambioVariable.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251119164831_cambioVariable.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T16:48:31.462Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AuthContoller.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\AuthContoller.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Controllers\\AuthContoller.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\AuthContoller.cs",
+              "RelativeToolTip": "FactCloudAPI\\Controllers\\AuthContoller.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAAAEAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T21:14:13.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "UsuariosController.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\UsuariosController.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Controllers\\UsuariosController.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Controllers\\UsuariosController.cs",
+              "RelativeToolTip": "FactCloudAPI\\Controllers\\UsuariosController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAYwAUAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:42:57.162Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "20251119052213_agregandoEndPoint.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119052213_agregandoEndPoint.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251119052213_agregandoEndPoint.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119052213_agregandoEndPoint.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251119052213_agregandoEndPoint.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T05:22:13.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Program.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Program.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Program.cs",
+              "RelativeToolTip": "FactCloudAPI\\Program.cs",
+              "ViewState": "AgIAADkAAAAAAAAAAAAYwFYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:15:06.307Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "20251119031549_Corregir.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119031549_Corregir.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251119031549_Corregir.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119031549_Corregir.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251119031549_Corregir.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T03:15:49.444Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "FactCloudAPI.http",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\FactCloudAPI.http",
+              "RelativeDocumentMoniker": "FactCloudAPI\\FactCloudAPI.http",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\FactCloudAPI.http",
+              "RelativeToolTip": "FactCloudAPI\\FactCloudAPI.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-11-18T21:20:04.581Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Usuario.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Models\\Usuario.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Models\\Usuario.cs",
+              "RelativeToolTip": "FactCloudAPI\\Models\\Usuario.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAAFYAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T20:51:03.558Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "FactCloudAPI\\appsettings.json",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\appsettings.json",
+              "RelativeToolTip": "FactCloudAPI\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-18T20:14:55.738Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "20251119031047_Actualizacionvariables.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119031047_Actualizacionvariables.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251119031047_Actualizacionvariables.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251119031047_Actualizacionvariables.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251119031047_Actualizacionvariables.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T03:10:47.717Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Properties\\launchSettings.json",
+              "RelativeToolTip": "FactCloudAPI\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-18T23:05:21.362Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "20251118224053_ActualizacionTokes.cs",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251118224053_ActualizacionTokes.cs",
+              "RelativeDocumentMoniker": "FactCloudAPI\\Migrations\\20251118224053_ActualizacionTokes.cs",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\Migrations\\20251118224053_ActualizacionTokes.cs",
+              "RelativeToolTip": "FactCloudAPI\\Migrations\\20251118224053_ActualizacionTokes.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T22:40:54.236Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "FactCloudAPI.csproj",
+              "DocumentMoniker": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\FactCloudAPI.csproj",
+              "RelativeDocumentMoniker": "FactCloudAPI\\FactCloudAPI.csproj",
+              "ToolTip": "C:\\Programacion\\FactCloudAPI\\FactCloudAPI\\FactCloudAPI.csproj",
+              "RelativeToolTip": "FactCloudAPI\\FactCloudAPI.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-18T20:12:56.094Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

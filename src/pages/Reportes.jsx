@@ -17,17 +17,17 @@ function Reportes() {
     try {
       let url = `${API_URL}/Facturas/Reportes/Ventas`;
       const params = new URLSearchParams();
-      
+
       if (fechaInicio) params.append("fechaInicio", fechaInicio);
       if (fechaFin) params.append("fechaFin", fechaFin);
-      
+
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
 
       const response = await fetch(url);
       if (!response.ok) throw new Error("Error al generar reporte");
-      
+
       const data = await response.json();
       setReporteVentas(data);
     } catch (error) {
@@ -42,9 +42,11 @@ function Reportes() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/Facturas/Reportes/TopClientes?top=10`);
+      const response = await fetch(
+        `${API_URL}/Facturas/Reportes/TopClientes?top=10`
+      );
       if (!response.ok) throw new Error("Error al cargar top clientes");
-      
+
       const data = await response.json();
       setTopClientes(data);
     } catch (error) {
@@ -59,9 +61,12 @@ function Reportes() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/Facturas/Reportes/ProductosMasVendidos?top=10`);
-      if (!response.ok) throw new Error("Error al cargar productos mas vendidos");
-      
+      const response = await fetch(
+        `${API_URL}/Facturas/Reportes/ProductosMasVendidos?top=10`
+      );
+      if (!response.ok)
+        throw new Error("Error al cargar productos mas vendidos");
+
       const data = await response.json();
       setProductosMasVendidos(data);
     } catch (error) {
@@ -102,21 +107,33 @@ function Reportes() {
               <div className="btn-group w-100" role="group">
                 <button
                   type="button"
-                  className={`btn ${tipoReporte === "ventas" ? "btn-primary" : "btn-outline-primary"}`}
+                  className={`btn ${
+                    tipoReporte === "ventas"
+                      ? "btn-primary"
+                      : "btn-outline-primary"
+                  }`}
                   onClick={() => setTipoReporte("ventas")}
                 >
                   Reporte de Ventas
                 </button>
                 <button
                   type="button"
-                  className={`btn ${tipoReporte === "clientes" ? "btn-primary" : "btn-outline-primary"}`}
+                  className={`btn ${
+                    tipoReporte === "clientes"
+                      ? "btn-primary"
+                      : "btn-outline-primary"
+                  }`}
                   onClick={() => setTipoReporte("clientes")}
                 >
                   Top Clientes
                 </button>
                 <button
                   type="button"
-                  className={`btn ${tipoReporte === "productos" ? "btn-primary" : "btn-outline-primary"}`}
+                  className={`btn ${
+                    tipoReporte === "productos"
+                      ? "btn-primary"
+                      : "btn-outline-primary"
+                  }`}
                   onClick={() => setTipoReporte("productos")}
                 >
                   Productos Mas Vendidos
@@ -160,11 +177,7 @@ function Reportes() {
         </div>
       </div>
 
-      {error && (
-        <div className="alert alert-danger">
-          Error: {error}
-        </div>
-      )}
+      {error && <div className="alert alert-danger">Error: {error}</div>}
 
       {loading && (
         <div className="text-center my-5">
@@ -179,10 +192,16 @@ function Reportes() {
             <div className="card-header bg-success text-white d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Resumen de Ventas</h5>
               <div>
-                <button className="btn btn-light btn-sm me-2" onClick={imprimirReporte}>
+                <button
+                  className="btn btn-light btn-sm me-2"
+                  onClick={imprimirReporte}
+                >
                   Imprimir
                 </button>
-                <button className="btn btn-light btn-sm" onClick={exportarExcel}>
+                <button
+                  className="btn btn-light btn-sm"
+                  onClick={exportarExcel}
+                >
                   Exportar Excel
                 </button>
               </div>
@@ -192,7 +211,9 @@ function Reportes() {
                 <div className="col-md-3">
                   <div className="card bg-light">
                     <div className="card-body">
-                      <h3 className="text-primary">{reporteVentas.totalFacturas}</h3>
+                      <h3 className="text-primary">
+                        {reporteVentas.totalFacturas}
+                      </h3>
                       <p className="mb-0">Total Facturas</p>
                     </div>
                   </div>
@@ -200,7 +221,9 @@ function Reportes() {
                 <div className="col-md-3">
                   <div className="card bg-light">
                     <div className="card-body">
-                      <h3 className="text-success">{reporteVentas.facturasPagadas}</h3>
+                      <h3 className="text-success">
+                        {reporteVentas.facturasPagadas}
+                      </h3>
                       <p className="mb-0">Facturas Pagadas</p>
                     </div>
                   </div>
@@ -208,7 +231,9 @@ function Reportes() {
                 <div className="col-md-3">
                   <div className="card bg-light">
                     <div className="card-body">
-                      <h3 className="text-warning">{reporteVentas.facturasPendientes}</h3>
+                      <h3 className="text-warning">
+                        {reporteVentas.facturasPendientes}
+                      </h3>
                       <p className="mb-0">Facturas Pendientes</p>
                     </div>
                   </div>
@@ -217,7 +242,7 @@ function Reportes() {
                   <div className="card bg-light">
                     <div className="card-body">
                       <h3 className="text-success">
-                        ${reporteVentas.totalVentas.toLocaleString('es-CO')}
+                        ${reporteVentas.totalVentas.toLocaleString("es-CO")}
                       </h3>
                       <p className="mb-0">Total Ventas</p>
                     </div>
@@ -230,7 +255,10 @@ function Reportes() {
                   <div className="card bg-light">
                     <div className="card-body">
                       <h4 className="text-success">
-                        ${reporteVentas.totalVentasPagadas.toLocaleString('es-CO')}
+                        $
+                        {reporteVentas.totalVentasPagadas.toLocaleString(
+                          "es-CO"
+                        )}
                       </h4>
                       <p className="mb-0">Ventas Pagadas</p>
                     </div>
@@ -240,7 +268,7 @@ function Reportes() {
                   <div className="card bg-light">
                     <div className="card-body">
                       <h4 className="text-info">
-                        ${reporteVentas.totalIVA.toLocaleString('es-CO')}
+                        ${reporteVentas.totalIVA.toLocaleString("es-CO")}
                       </h4>
                       <p className="mb-0">Total IVA Recaudado</p>
                     </div>
@@ -250,7 +278,10 @@ function Reportes() {
                   <div className="card bg-light">
                     <div className="card-body">
                       <h4 className="text-warning">
-                        ${reporteVentas.totalVentasPendientes.toLocaleString('es-CO')}
+                        $
+                        {reporteVentas.totalVentasPendientes.toLocaleString(
+                          "es-CO"
+                        )}
                       </h4>
                       <p className="mb-0">Ventas Pendientes</p>
                     </div>
@@ -274,6 +305,7 @@ function Reportes() {
                       <th>Cliente</th>
                       <th className="text-end">Subtotal</th>
                       <th className="text-end">IVA</th>
+                      <th className="text-end">INC</th>
                       <th className="text-end">Total</th>
                       <th>Estado</th>
                       <th>Medio Pago</th>
@@ -283,13 +315,34 @@ function Reportes() {
                     {reporteVentas.facturas.map((factura) => (
                       <tr key={factura.id}>
                         <td>{factura.numeroFactura}</td>
-                        <td>{new Date(factura.fechaEmision).toLocaleDateString('es-CO')}</td>
-                        <td>{factura.cliente?.nombre} {factura.cliente?.apellido}</td>
-                        <td className="text-end">${factura.subtotal.toLocaleString('es-CO')}</td>
-                        <td className="text-end">${factura.totalIVA.toLocaleString('es-CO')}</td>
-                        <td className="text-end fw-bold">${factura.totalFactura.toLocaleString('es-CO')}</td>
                         <td>
-                          <span className={`badge ${factura.estado === 'Pagada' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                          {new Date(factura.fechaEmision).toLocaleDateString(
+                            "es-CO"
+                          )}
+                        </td>
+                        <td>
+                          {factura.cliente?.nombre} {factura.cliente?.apellido}
+                        </td>
+                        <td className="text-end">
+                          ${factura.subtotal.toLocaleString("es-CO")}
+                        </td>
+                        <td className="text-end">
+                          ${factura.totalIVA.toLocaleString("es-CO")}
+                        </td>
+                        <td className="text-end">
+                          ${factura.totalINC.toLocaleString("es-CO")}
+                        </td>
+                        <td className="text-end fw-bold">
+                          ${factura.totalFactura.toLocaleString("es-CO")}
+                        </td>
+                        <td>
+                          <span
+                            className={`badge ${
+                              factura.estado === "Pagada"
+                                ? "bg-success"
+                                : "bg-warning text-dark"
+                            }`}
+                          >
                             {factura.estado}
                           </span>
                         </td>
@@ -309,7 +362,10 @@ function Reportes() {
           <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Top 10 Clientes</h5>
             <div>
-              <button className="btn btn-light btn-sm me-2" onClick={imprimirReporte}>
+              <button
+                className="btn btn-light btn-sm me-2"
+                onClick={imprimirReporte}
+              >
                 Imprimir
               </button>
               <button className="btn btn-light btn-sm" onClick={exportarExcel}>
@@ -331,11 +387,13 @@ function Reportes() {
                 <tbody>
                   {topClientes.map((cliente, index) => (
                     <tr key={cliente.clienteId}>
-                      <td><strong>{index + 1}</strong></td>
+                      <td>
+                        <strong>{index + 1}</strong>
+                      </td>
                       <td>{cliente.nombreCliente}</td>
                       <td className="text-center">{cliente.totalFacturas}</td>
                       <td className="text-end fw-bold text-success">
-                        ${cliente.totalCompras.toLocaleString('es-CO')}
+                        ${cliente.totalCompras.toLocaleString("es-CO")}
                       </td>
                     </tr>
                   ))}
@@ -346,47 +404,59 @@ function Reportes() {
         </div>
       )}
 
-      {tipoReporte === "productos" && productosMasVendidos.length > 0 && !loading && (
-        <div className="card">
-          <div className="card-header bg-warning d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Top 10 Productos Mas Vendidos</h5>
-            <div>
-              <button className="btn btn-light btn-sm me-2" onClick={imprimirReporte}>
-                Imprimir
-              </button>
-              <button className="btn btn-light btn-sm" onClick={exportarExcel}>
-                Exportar Excel
-              </button>
+      {tipoReporte === "productos" &&
+        productosMasVendidos.length > 0 &&
+        !loading && (
+          <div className="card">
+            <div className="card-header bg-warning d-flex justify-content-between align-items-center">
+              <h5 className="mb-0">Top 10 Productos Mas Vendidos</h5>
+              <div>
+                <button
+                  className="btn btn-light btn-sm me-2"
+                  onClick={imprimirReporte}
+                >
+                  Imprimir
+                </button>
+                <button
+                  className="btn btn-light btn-sm"
+                  onClick={exportarExcel}
+                >
+                  Exportar Excel
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="card-body">
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Posicion</th>
-                    <th>Producto</th>
-                    <th className="text-center">Cantidad Vendida</th>
-                    <th className="text-end">Total Ventas</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {productosMasVendidos.map((producto, index) => (
-                    <tr key={producto.productoId}>
-                      <td><strong>{index + 1}</strong></td>
-                      <td>{producto.nombreProducto}</td>
-                      <td className="text-center">{producto.cantidadVendida}</td>
-                      <td className="text-end fw-bold text-success">
-                        ${producto.totalVentas.toLocaleString('es-CO')}
-                      </td>
+            <div className="card-body">
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Posicion</th>
+                      <th>Producto</th>
+                      <th className="text-center">Cantidad Vendida</th>
+                      <th className="text-end">Total Ventas</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {productosMasVendidos.map((producto, index) => (
+                      <tr key={producto.productoId}>
+                        <td>
+                          <strong>{index + 1}</strong>
+                        </td>
+                        <td>{producto.nombreProducto}</td>
+                        <td className="text-center">
+                          {producto.cantidadVendida}
+                        </td>
+                        <td className="text-end fw-bold text-success">
+                          ${producto.totalVentas.toLocaleString("es-CO")}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 }

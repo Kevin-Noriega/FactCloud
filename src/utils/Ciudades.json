@@ -1,0 +1,6722 @@
+[
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 1,
+    "ciudad": "MEDELLIN"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 2,
+    "ciudad": "ABEJORRAL"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 4,
+    "ciudad": "ABRIAQUI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 21,
+    "ciudad": "ALEJANDRIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 30,
+    "ciudad": "AMAGA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 31,
+    "ciudad": "AMALFI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 34,
+    "ciudad": "ANDES"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 36,
+    "ciudad": "ANGELOPOLIS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 38,
+    "ciudad": "ANGOSTURA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 40,
+    "ciudad": "ANORI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 42,
+    "ciudad": "SANTAFE DE ANTIOQUIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 44,
+    "ciudad": "ANZA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 45,
+    "ciudad": "APARTADO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 51,
+    "ciudad": "ARBOLETES"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 55,
+    "ciudad": "ARGELIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 59,
+    "ciudad": "ARMENIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 79,
+    "ciudad": "BARBOSA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 86,
+    "ciudad": "BELMIRA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 88,
+    "ciudad": "BELLO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 91,
+    "ciudad": "BETANIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 93,
+    "ciudad": "BETULIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 101,
+    "ciudad": "CIUDAD BOLIVAR"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 107,
+    "ciudad": "BRICEÑO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 113,
+    "ciudad": "BURITICA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 120,
+    "ciudad": "CACERES"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 125,
+    "ciudad": "CAICEDO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 129,
+    "ciudad": "CALDAS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 134,
+    "ciudad": "CAMPAMENTO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 138,
+    "ciudad": "CAÑASGORDAS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 142,
+    "ciudad": "CARACOLI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 145,
+    "ciudad": "CARAMANTA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 147,
+    "ciudad": "CAREPA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 148,
+    "ciudad": "EL CARMEN DE VIBORAL"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 150,
+    "ciudad": "CAROLINA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 154,
+    "ciudad": "CAUCASIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 172,
+    "ciudad": "CHIGORODO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 190,
+    "ciudad": "CISNEROS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 197,
+    "ciudad": "COCORNA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 206,
+    "ciudad": "CONCEPCION"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 209,
+    "ciudad": "CONCORDIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 212,
+    "ciudad": "COPACABANA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 234,
+    "ciudad": "DABEIBA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 237,
+    "ciudad": "DON MATIAS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 240,
+    "ciudad": "EBEJICO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 250,
+    "ciudad": "EL BAGRE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 264,
+    "ciudad": "ENTRERRIOS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 266,
+    "ciudad": "ENVIGADO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 282,
+    "ciudad": "FREDONIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 284,
+    "ciudad": "FRONTINO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 306,
+    "ciudad": "GIRALDO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 308,
+    "ciudad": "GIRARDOTA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 310,
+    "ciudad": "GOMEZ PLATA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 313,
+    "ciudad": "GRANADA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 315,
+    "ciudad": "GUADALUPE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 318,
+    "ciudad": "GUARNE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 321,
+    "ciudad": "GUATAPE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 347,
+    "ciudad": "HELICONIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 353,
+    "ciudad": "HISPANIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 360,
+    "ciudad": "ITAGUI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 361,
+    "ciudad": "ITUANGO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 364,
+    "ciudad": "JARDIN"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 368,
+    "ciudad": "JERICO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 376,
+    "ciudad": "LA CEJA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 380,
+    "ciudad": "LA ESTRELLA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 390,
+    "ciudad": "LA PINTADA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 400,
+    "ciudad": "LA UNION"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 411,
+    "ciudad": "LIBORINA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 425,
+    "ciudad": "MACEO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 440,
+    "ciudad": "MARINILLA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 467,
+    "ciudad": "MONTEBELLO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 475,
+    "ciudad": "MURINDO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 480,
+    "ciudad": "MUTATA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 483,
+    "ciudad": "NARIÑO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 490,
+    "ciudad": "NECOCLI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 495,
+    "ciudad": "NECHI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 501,
+    "ciudad": "OLAYA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 541,
+    "ciudad": "PEÐOL"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 543,
+    "ciudad": "PEQUE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 576,
+    "ciudad": "PUEBLORRICO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 579,
+    "ciudad": "PUERTO BERRIO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 585,
+    "ciudad": "PUERTO NARE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 591,
+    "ciudad": "PUERTO TRIUNFO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 604,
+    "ciudad": "REMEDIOS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 607,
+    "ciudad": "RETIRO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 615,
+    "ciudad": "RIONEGRO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 628,
+    "ciudad": "SABANALARGA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 631,
+    "ciudad": "SABANETA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 642,
+    "ciudad": "SALGAR"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 647,
+    "ciudad": "SAN ANDRES DE CUERQUIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 649,
+    "ciudad": "SAN CARLOS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 652,
+    "ciudad": "SAN FRANCISCO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 656,
+    "ciudad": "SAN JERONIMO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 658,
+    "ciudad": "SAN JOSE DE LA MONTAÑA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 659,
+    "ciudad": "SAN JUAN DE URABA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 660,
+    "ciudad": "SAN LUIS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 664,
+    "ciudad": "SAN PEDRO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 665,
+    "ciudad": "SAN PEDRO DE URABA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 667,
+    "ciudad": "SAN RAFAEL"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 670,
+    "ciudad": "SAN ROQUE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 674,
+    "ciudad": "SAN VICENTE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 679,
+    "ciudad": "SANTA BARBARA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 686,
+    "ciudad": "SANTA ROSA DE OSOS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 690,
+    "ciudad": "SANTO DOMINGO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 697,
+    "ciudad": "EL SANTUARIO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 736,
+    "ciudad": "SEGOVIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 756,
+    "ciudad": "SONSON"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 761,
+    "ciudad": "SOPETRAN"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 789,
+    "ciudad": "TAMESIS"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 790,
+    "ciudad": "TARAZA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 792,
+    "ciudad": "TARSO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 809,
+    "ciudad": "TITIRIBI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 819,
+    "ciudad": "TOLEDO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 837,
+    "ciudad": "TURBO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 842,
+    "ciudad": "URAMITA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 847,
+    "ciudad": "URRAO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 854,
+    "ciudad": "VALDIVIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 856,
+    "ciudad": "VALPARAISO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 858,
+    "ciudad": "VEGACHI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 861,
+    "ciudad": "VENECIA"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 873,
+    "ciudad": "VIGIA DEL FUERTE"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 885,
+    "ciudad": "YALI"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 887,
+    "ciudad": "YARUMAL"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 890,
+    "ciudad": "YOLOMBO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 893,
+    "ciudad": "YONDO"
+  },
+  {
+    "codigoDepartamento": 5,
+    "departamento": "ANTIOQUIA",
+    "codigoCiudad": 895,
+    "ciudad": "ZARAGOZA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 1,
+    "ciudad": "BARRANQUILLA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 78,
+    "ciudad": "BARANOA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 137,
+    "ciudad": "CAMPO DE LA CRUZ"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 141,
+    "ciudad": "CANDELARIA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 296,
+    "ciudad": "GALAPA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 372,
+    "ciudad": "JUAN DE ACOSTA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 421,
+    "ciudad": "LURUACO"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 433,
+    "ciudad": "MALAMBO"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 436,
+    "ciudad": "MANATI"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 520,
+    "ciudad": "PALMAR DE VARELA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 549,
+    "ciudad": "PIOJO"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 558,
+    "ciudad": "POLONUEVO"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 560,
+    "ciudad": "PONEDERA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 573,
+    "ciudad": "PUERTO COLOMBIA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 606,
+    "ciudad": "REPELON"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 634,
+    "ciudad": "SABANAGRANDE"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 638,
+    "ciudad": "SABANALARGA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 675,
+    "ciudad": "SANTA LUCIA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 685,
+    "ciudad": "SANTO TOMAS"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 758,
+    "ciudad": "SOLEDAD"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 770,
+    "ciudad": "SUAN"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 832,
+    "ciudad": "TUBARA"
+  },
+  {
+    "codigoDepartamento": 8,
+    "departamento": "ATLANTICO",
+    "codigoCiudad": 849,
+    "ciudad": "USIACURI"
+  },
+  {
+    "codigoDepartamento": 11,
+    "departamento": "BOGOTA",
+    "codigoCiudad": 1,
+    "ciudad": "BOGOTA, D.C."
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 1,
+    "ciudad": "CARTAGENA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 6,
+    "ciudad": "ACHI"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 30,
+    "ciudad": "ALTOS DEL ROSARIO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 42,
+    "ciudad": "ARENAL"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 52,
+    "ciudad": "ARJONA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 62,
+    "ciudad": "ARROYOHONDO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 74,
+    "ciudad": "BARRANCO DE LOBA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 140,
+    "ciudad": "CALAMAR"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 160,
+    "ciudad": "CANTAGALLO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 188,
+    "ciudad": "CICUCO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 212,
+    "ciudad": "CORDOBA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 222,
+    "ciudad": "CLEMENCIA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 244,
+    "ciudad": "EL CARMEN DE BOLIVAR"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 248,
+    "ciudad": "EL GUAMO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 268,
+    "ciudad": "EL PEÑON"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 300,
+    "ciudad": "HATILLO DE LOBA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 430,
+    "ciudad": "MAGANGUE"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 433,
+    "ciudad": "MAHATES"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 440,
+    "ciudad": "MARGARITA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 442,
+    "ciudad": "MARIA LA BAJA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 458,
+    "ciudad": "MONTECRISTO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 468,
+    "ciudad": "MOMPOS"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 490,
+    "ciudad": "NOROSI"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 473,
+    "ciudad": "MORALES"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 549,
+    "ciudad": "PINILLOS"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 580,
+    "ciudad": "REGIDOR"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 600,
+    "ciudad": "RIO VIEJO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 620,
+    "ciudad": "SAN CRISTOBAL"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 647,
+    "ciudad": "SAN ESTANISLAO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 650,
+    "ciudad": "SAN FERNANDO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 654,
+    "ciudad": "SAN JACINTO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 655,
+    "ciudad": "SAN JACINTO DEL CAUCA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 657,
+    "ciudad": "SAN JUAN NEPOMUCENO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 667,
+    "ciudad": "SAN MARTIN DE LOBA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 670,
+    "ciudad": "SAN PABLO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 673,
+    "ciudad": "SANTA CATALINA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 683,
+    "ciudad": "SANTA ROSA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 688,
+    "ciudad": "SANTA ROSA DEL SUR"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 744,
+    "ciudad": "SIMITI"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 760,
+    "ciudad": "SOPLAVIENTO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 780,
+    "ciudad": "TALAIGUA NUEVO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 810,
+    "ciudad": "TIQUISIO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 836,
+    "ciudad": "TURBACO"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 838,
+    "ciudad": "TURBANA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 873,
+    "ciudad": "VILLANUEVA"
+  },
+  {
+    "codigoDepartamento": 13,
+    "departamento": "BOLIVAR",
+    "codigoCiudad": 894,
+    "ciudad": "ZAMBRANO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 1,
+    "ciudad": "TUNJA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 22,
+    "ciudad": "ALMEIDA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 47,
+    "ciudad": "AQUITANIA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 51,
+    "ciudad": "ARCABUCO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 87,
+    "ciudad": "BELEN"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 90,
+    "ciudad": "BERBEO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 92,
+    "ciudad": "BETEITIVA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 97,
+    "ciudad": "BOAVITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 104,
+    "ciudad": "BOYACA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 106,
+    "ciudad": "BRICEÑO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 109,
+    "ciudad": "BUENAVISTA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 114,
+    "ciudad": "BUSBANZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 131,
+    "ciudad": "CALDAS"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 135,
+    "ciudad": "CAMPOHERMOSO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 162,
+    "ciudad": "CERINZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 172,
+    "ciudad": "CHINAVITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 176,
+    "ciudad": "CHIQUINQUIRA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 180,
+    "ciudad": "CHISCAS"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 183,
+    "ciudad": "CHITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 185,
+    "ciudad": "CHITARAQUE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 187,
+    "ciudad": "CHIVATA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 189,
+    "ciudad": "CIENEGA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 204,
+    "ciudad": "COMBITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 212,
+    "ciudad": "COPER"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 215,
+    "ciudad": "CORRALES"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 218,
+    "ciudad": "COVARACHIA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 223,
+    "ciudad": "CUBARA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 224,
+    "ciudad": "CUCAITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 226,
+    "ciudad": "CUITIVA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 232,
+    "ciudad": "CHIQUIZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 236,
+    "ciudad": "CHIVOR"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 238,
+    "ciudad": "DUITAMA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 244,
+    "ciudad": "EL COCUY"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 248,
+    "ciudad": "EL ESPINO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 272,
+    "ciudad": "FIRAVITOBA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 276,
+    "ciudad": "FLORESTA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 293,
+    "ciudad": "GACHANTIVA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 296,
+    "ciudad": "GAMEZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 299,
+    "ciudad": "GARAGOA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 317,
+    "ciudad": "GUACAMAYAS"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 322,
+    "ciudad": "GUATEQUE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 325,
+    "ciudad": "GUAYATA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 332,
+    "ciudad": "GsICAN"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 362,
+    "ciudad": "IZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 367,
+    "ciudad": "JENESANO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 368,
+    "ciudad": "JERICO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 377,
+    "ciudad": "LABRANZAGRANDE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 380,
+    "ciudad": "LA CAPILLA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 401,
+    "ciudad": "LA VICTORIA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 403,
+    "ciudad": "LA UVITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 407,
+    "ciudad": "VILLA DE LEYVA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 425,
+    "ciudad": "MACANAL"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 442,
+    "ciudad": "MARIPI"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 455,
+    "ciudad": "MIRAFLORES"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 464,
+    "ciudad": "MONGUA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 466,
+    "ciudad": "MONGUI"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 469,
+    "ciudad": "MONIQUIRA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 476,
+    "ciudad": "MOTAVITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 480,
+    "ciudad": "MUZO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 491,
+    "ciudad": "NOBSA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 494,
+    "ciudad": "NUEVO COLON"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 500,
+    "ciudad": "OICATA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 507,
+    "ciudad": "OTANCHE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 511,
+    "ciudad": "PACHAVITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 514,
+    "ciudad": "PAEZ"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 516,
+    "ciudad": "PAIPA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 518,
+    "ciudad": "PAJARITO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 522,
+    "ciudad": "PANQUEBA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 531,
+    "ciudad": "PAUNA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 533,
+    "ciudad": "PAYA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 537,
+    "ciudad": "PAZ DE RIO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 542,
+    "ciudad": "PESCA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 550,
+    "ciudad": "PISBA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 572,
+    "ciudad": "PUERTO BOYACA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 580,
+    "ciudad": "QUIPAMA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 599,
+    "ciudad": "RAMIRIQUI"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 600,
+    "ciudad": "RAQUIRA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 621,
+    "ciudad": "RONDON"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 632,
+    "ciudad": "SABOYA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 638,
+    "ciudad": "SACHICA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 646,
+    "ciudad": "SAMACA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 660,
+    "ciudad": "SAN EDUARDO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 664,
+    "ciudad": "SAN JOSE DE PARE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 667,
+    "ciudad": "SAN LUIS DE GACENO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 673,
+    "ciudad": "SAN MATEO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 676,
+    "ciudad": "SAN MIGUEL DE SEMA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 681,
+    "ciudad": "SAN PABLO DE BORBUR"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 686,
+    "ciudad": "SANTANA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 690,
+    "ciudad": "SANTA MARIA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 693,
+    "ciudad": "SANTA ROSA DE VITERBO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 696,
+    "ciudad": "SANTA SOFIA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 720,
+    "ciudad": "SATIVANORTE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 723,
+    "ciudad": "SATIVASUR"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 740,
+    "ciudad": "SIACHOQUE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 753,
+    "ciudad": "SOATA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 755,
+    "ciudad": "SOCOTA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 757,
+    "ciudad": "SOCHA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 759,
+    "ciudad": "SOGAMOSO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 761,
+    "ciudad": "SOMONDOCO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 762,
+    "ciudad": "SORA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 763,
+    "ciudad": "SOTAQUIRA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 764,
+    "ciudad": "SORACA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 774,
+    "ciudad": "SUSACON"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 776,
+    "ciudad": "SUTAMARCHAN"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 778,
+    "ciudad": "SUTATENZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 790,
+    "ciudad": "TASCO"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 798,
+    "ciudad": "TENZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 804,
+    "ciudad": "TIBANA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 806,
+    "ciudad": "TIBASOSA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 808,
+    "ciudad": "TINJACA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 810,
+    "ciudad": "TIPACOQUE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 814,
+    "ciudad": "TOCA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 816,
+    "ciudad": "TOGsI"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 820,
+    "ciudad": "TOPAGA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 822,
+    "ciudad": "TOTA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 832,
+    "ciudad": "TUNUNGUA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 835,
+    "ciudad": "TURMEQUE"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 837,
+    "ciudad": "TUTA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 839,
+    "ciudad": "TUTAZA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 842,
+    "ciudad": "UMBITA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 861,
+    "ciudad": "VENTAQUEMADA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 879,
+    "ciudad": "VIRACACHA"
+  },
+  {
+    "codigoDepartamento": 15,
+    "departamento": "BOYACA",
+    "codigoCiudad": 897,
+    "ciudad": "ZETAQUIRA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 1,
+    "ciudad": "MANIZALES"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 13,
+    "ciudad": "AGUADAS"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 42,
+    "ciudad": "ANSERMA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 50,
+    "ciudad": "ARANZAZU"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 88,
+    "ciudad": "BELALCAZAR"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 174,
+    "ciudad": "CHINCHINA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 272,
+    "ciudad": "FILADELFIA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 380,
+    "ciudad": "LA DORADA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 388,
+    "ciudad": "LA MERCED"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 433,
+    "ciudad": "MANZANARES"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 442,
+    "ciudad": "MARMATO"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 444,
+    "ciudad": "MARQUETALIA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 446,
+    "ciudad": "MARULANDA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 486,
+    "ciudad": "NEIRA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 495,
+    "ciudad": "NORCASIA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 513,
+    "ciudad": "PACORA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 524,
+    "ciudad": "PALESTINA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 541,
+    "ciudad": "PENSILVANIA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 614,
+    "ciudad": "RIOSUCIO"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 616,
+    "ciudad": "RISARALDA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 653,
+    "ciudad": "SALAMINA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 662,
+    "ciudad": "SAMANA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 665,
+    "ciudad": "SAN JOSE"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 777,
+    "ciudad": "SUPIA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 867,
+    "ciudad": "VICTORIA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 873,
+    "ciudad": "VILLAMARIA"
+  },
+  {
+    "codigoDepartamento": 17,
+    "departamento": "CALDAS",
+    "codigoCiudad": 877,
+    "ciudad": "VITERBO"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 1,
+    "ciudad": "FLORENCIA"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 29,
+    "ciudad": "ALBANIA"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 94,
+    "ciudad": "BELEN DE LOS ANDAQUIES"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 150,
+    "ciudad": "CARTAGENA DEL CHAIRA"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 205,
+    "ciudad": "CURILLO"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 247,
+    "ciudad": "EL DONCELLO"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 256,
+    "ciudad": "EL PAUJIL"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 410,
+    "ciudad": "LA MONTAÑITA"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 460,
+    "ciudad": "MILAN"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 479,
+    "ciudad": "MORELIA"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 592,
+    "ciudad": "PUERTO RICO"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 610,
+    "ciudad": "SAN JOSE DEL FRAGUA"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 753,
+    "ciudad": "SAN VICENTE DEL CAGUAN"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 756,
+    "ciudad": "SOLANO"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 785,
+    "ciudad": "SOLITA"
+  },
+  {
+    "codigoDepartamento": 18,
+    "departamento": "CAQUETA",
+    "codigoCiudad": 860,
+    "ciudad": "VALPARAISO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 1,
+    "ciudad": "POPAYAN"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 22,
+    "ciudad": "ALMAGUER"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 50,
+    "ciudad": "ARGELIA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 75,
+    "ciudad": "BALBOA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 100,
+    "ciudad": "BOLIVAR"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 110,
+    "ciudad": "BUENOS AIRES"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 130,
+    "ciudad": "CAJIBIO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 137,
+    "ciudad": "CALDONO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 142,
+    "ciudad": "CALOTO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 212,
+    "ciudad": "CORINTO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 256,
+    "ciudad": "EL TAMBO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 290,
+    "ciudad": "FLORENCIA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 300,
+    "ciudad": "GUACHENE"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 318,
+    "ciudad": "GUAPI"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 355,
+    "ciudad": "INZA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 364,
+    "ciudad": "JAMBALO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 392,
+    "ciudad": "LA SIERRA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 397,
+    "ciudad": "LA VEGA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 418,
+    "ciudad": "LOPEZ"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 450,
+    "ciudad": "MERCADERES"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 455,
+    "ciudad": "MIRANDA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 473,
+    "ciudad": "MORALES"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 513,
+    "ciudad": "PADILLA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 517,
+    "ciudad": "PAEZ"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 532,
+    "ciudad": "PATIA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 533,
+    "ciudad": "PIAMONTE"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 548,
+    "ciudad": "PIENDAMO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 573,
+    "ciudad": "PUERTO TEJADA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 585,
+    "ciudad": "PURACE"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 622,
+    "ciudad": "ROSAS"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 693,
+    "ciudad": "SAN SEBASTIAN"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 698,
+    "ciudad": "SANTANDER DE QUILICHAO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 701,
+    "ciudad": "SANTA ROSA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 743,
+    "ciudad": "SILVIA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 760,
+    "ciudad": "SOTARA"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 780,
+    "ciudad": "SUAREZ"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 785,
+    "ciudad": "SUCRE"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 807,
+    "ciudad": "TIMBIO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 809,
+    "ciudad": "TIMBIQUI"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 821,
+    "ciudad": "TORIBIO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 824,
+    "ciudad": "TOTORO"
+  },
+  {
+    "codigoDepartamento": 19,
+    "departamento": "CAUCA",
+    "codigoCiudad": 845,
+    "ciudad": "VILLA RICA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 1,
+    "ciudad": "VALLEDUPAR"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 11,
+    "ciudad": "AGUACHICA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 13,
+    "ciudad": "AGUSTIN CODAZZI"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 32,
+    "ciudad": "ASTREA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 45,
+    "ciudad": "BECERRIL"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 60,
+    "ciudad": "BOSCONIA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 175,
+    "ciudad": "CHIMICHAGUA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 178,
+    "ciudad": "CHIRIGUANA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 228,
+    "ciudad": "CURUMANI"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 238,
+    "ciudad": "EL COPEY"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 250,
+    "ciudad": "EL PASO"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 295,
+    "ciudad": "GAMARRA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 310,
+    "ciudad": "GONZALEZ"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 383,
+    "ciudad": "LA GLORIA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 400,
+    "ciudad": "LA JAGUA DE IBIRICO"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 443,
+    "ciudad": "MANAURE"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 517,
+    "ciudad": "PAILITAS"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 550,
+    "ciudad": "PELAYA"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 570,
+    "ciudad": "PUEBLO BELLO"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 614,
+    "ciudad": "RIO DE ORO"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 621,
+    "ciudad": "LA PAZ"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 710,
+    "ciudad": "SAN ALBERTO"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 750,
+    "ciudad": "SAN DIEGO"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 770,
+    "ciudad": "SAN MARTIN"
+  },
+  {
+    "codigoDepartamento": 20,
+    "departamento": "CESAR",
+    "codigoCiudad": 787,
+    "ciudad": "TAMALAMEQUE"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 1,
+    "ciudad": "MONTERIA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 68,
+    "ciudad": "AYAPEL"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 79,
+    "ciudad": "BUENAVISTA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 90,
+    "ciudad": "CANALETE"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 162,
+    "ciudad": "CERETE"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 168,
+    "ciudad": "CHIMA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 182,
+    "ciudad": "CHINU"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 189,
+    "ciudad": "CIENAGA DE ORO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 300,
+    "ciudad": "COTORRA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 350,
+    "ciudad": "LA APARTADA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 417,
+    "ciudad": "LORICA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 419,
+    "ciudad": "LOS CORDOBAS"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 464,
+    "ciudad": "MOMIL"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 466,
+    "ciudad": "MONTELIBANO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 500,
+    "ciudad": "MOÑITOS"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 555,
+    "ciudad": "PLANETA RICA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 570,
+    "ciudad": "PUEBLO NUEVO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 574,
+    "ciudad": "PUERTO ESCONDIDO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 580,
+    "ciudad": "PUERTO LIBERTADOR"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 586,
+    "ciudad": "PURISIMA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 660,
+    "ciudad": "SAHAGUN"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 670,
+    "ciudad": "SAN ANDRES SOTAVENTO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 672,
+    "ciudad": "SAN ANTERO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 675,
+    "ciudad": "SAN BERNARDO DEL VIENTO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 678,
+    "ciudad": "SAN CARLOS"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 686,
+    "ciudad": "SAN PELAYO"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 807,
+    "ciudad": "TIERRALTA"
+  },
+  {
+    "codigoDepartamento": 23,
+    "departamento": "CORDOBA",
+    "codigoCiudad": 855,
+    "ciudad": "VALENCIA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 1,
+    "ciudad": "AGUA DE DIOS"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 19,
+    "ciudad": "ALBAN"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 35,
+    "ciudad": "ANAPOIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 40,
+    "ciudad": "ANOLAIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 53,
+    "ciudad": "ARBELAEZ"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 86,
+    "ciudad": "BELTRAN"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 95,
+    "ciudad": "BITUIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 99,
+    "ciudad": "BOJACA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 120,
+    "ciudad": "CABRERA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 123,
+    "ciudad": "CACHIPAY"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 126,
+    "ciudad": "CAJICA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 148,
+    "ciudad": "CAPARRAPI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 151,
+    "ciudad": "CAQUEZA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 154,
+    "ciudad": "CARMEN DE CARUPA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 168,
+    "ciudad": "CHAGUANI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 175,
+    "ciudad": "CHIA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 178,
+    "ciudad": "CHIPAQUE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 181,
+    "ciudad": "CHOACHI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 183,
+    "ciudad": "CHOCONTA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 200,
+    "ciudad": "COGUA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 214,
+    "ciudad": "COTA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 224,
+    "ciudad": "CUCUNUBA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 245,
+    "ciudad": "EL COLEGIO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 258,
+    "ciudad": "EL PEÑON"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 260,
+    "ciudad": "EL ROSAL"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 269,
+    "ciudad": "FACATATIVA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 279,
+    "ciudad": "FOMEQUE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 281,
+    "ciudad": "FOSCA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 286,
+    "ciudad": "FUNZA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 288,
+    "ciudad": "FUQUENE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 290,
+    "ciudad": "FUSAGASUGA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 293,
+    "ciudad": "GACHALA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 295,
+    "ciudad": "GACHANCIPA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 297,
+    "ciudad": "GACHETA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 299,
+    "ciudad": "GAMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 307,
+    "ciudad": "GIRARDOT"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 312,
+    "ciudad": "GRANADA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 317,
+    "ciudad": "GUACHETA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 320,
+    "ciudad": "GUADUAS"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 322,
+    "ciudad": "GUASCA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 324,
+    "ciudad": "GUATAQUI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 326,
+    "ciudad": "GUATAVITA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 328,
+    "ciudad": "GUAYABAL DE SIQUIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 335,
+    "ciudad": "GUAYABETAL"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 339,
+    "ciudad": "GUTIERREZ"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 368,
+    "ciudad": "JERUSALEN"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 372,
+    "ciudad": "JUNIN"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 377,
+    "ciudad": "LA CALERA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 386,
+    "ciudad": "LA MESA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 394,
+    "ciudad": "LA PALMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 398,
+    "ciudad": "LA PEÑA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 402,
+    "ciudad": "LA VEGA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 407,
+    "ciudad": "LENGUAZAQUE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 426,
+    "ciudad": "MACHETA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 430,
+    "ciudad": "MADRID"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 436,
+    "ciudad": "MANTA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 438,
+    "ciudad": "MEDINA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 473,
+    "ciudad": "MOSQUERA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 483,
+    "ciudad": "NARIÑO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 486,
+    "ciudad": "NEMOCON"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 488,
+    "ciudad": "NILO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 489,
+    "ciudad": "NIMAIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 491,
+    "ciudad": "NOCAIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 506,
+    "ciudad": "VENECIA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 513,
+    "ciudad": "PACHO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 518,
+    "ciudad": "PAIME"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 524,
+    "ciudad": "PANDI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 530,
+    "ciudad": "PARATEBUENO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 535,
+    "ciudad": "PASCA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 572,
+    "ciudad": "PUERTO SALGAR"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 580,
+    "ciudad": "PULI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 592,
+    "ciudad": "QUEBRADANEGRA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 594,
+    "ciudad": "QUETAME"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 596,
+    "ciudad": "QUIPILE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 599,
+    "ciudad": "APULO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 612,
+    "ciudad": "RICAURTE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 645,
+    "ciudad": "SAN ANTONIO DEL TEQUENDAMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 649,
+    "ciudad": "SAN BERNARDO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 653,
+    "ciudad": "SAN CAYETANO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 658,
+    "ciudad": "SAN FRANCISCO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 662,
+    "ciudad": "SAN JUAN DE RIO SECO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 718,
+    "ciudad": "SASAIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 736,
+    "ciudad": "SESQUILE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 740,
+    "ciudad": "SIBATE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 743,
+    "ciudad": "SILVANIA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 745,
+    "ciudad": "SIMIJACA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 754,
+    "ciudad": "SOACHA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 758,
+    "ciudad": "SOPO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 769,
+    "ciudad": "SUBACHOQUE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 772,
+    "ciudad": "SUESCA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 777,
+    "ciudad": "SUPATA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 779,
+    "ciudad": "SUSA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 781,
+    "ciudad": "SUTATAUSA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 785,
+    "ciudad": "TABIO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 793,
+    "ciudad": "TAUSA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 797,
+    "ciudad": "TENA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 799,
+    "ciudad": "TENJO"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 805,
+    "ciudad": "TIBACUY"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 807,
+    "ciudad": "TIBIRITA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 815,
+    "ciudad": "TOCAIMA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 817,
+    "ciudad": "TOCANCIPA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 823,
+    "ciudad": "TOPAIPI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 839,
+    "ciudad": "UBALA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 841,
+    "ciudad": "UBAQUE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 843,
+    "ciudad": "VILLA DE SAN DIEGO DE UBATE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 845,
+    "ciudad": "UNE"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 851,
+    "ciudad": "UTICA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 862,
+    "ciudad": "VERGARA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 867,
+    "ciudad": "VIANI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 871,
+    "ciudad": "VILLAGOMEZ"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 873,
+    "ciudad": "VILLAPINZON"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 875,
+    "ciudad": "VILLETA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 878,
+    "ciudad": "VIOTA"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 885,
+    "ciudad": "YACOPI"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 898,
+    "ciudad": "ZIPACON"
+  },
+  {
+    "codigoDepartamento": 25,
+    "departamento": "CUNDINAMARCA",
+    "codigoCiudad": 899,
+    "ciudad": "ZIPAQUIRA"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 1,
+    "ciudad": "QUIBDO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 6,
+    "ciudad": "ACANDI"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 25,
+    "ciudad": "ALTO BAUDO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 50,
+    "ciudad": "ATRATO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 73,
+    "ciudad": "BAGADO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 75,
+    "ciudad": "BAHIA SOLANO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 77,
+    "ciudad": "BAJO BAUDO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 99,
+    "ciudad": "BOJAYA"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 135,
+    "ciudad": "EL CANTON DEL SAN PABLO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 150,
+    "ciudad": "CARMEN DEL DARIEN"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 160,
+    "ciudad": "CERTEGUI"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 205,
+    "ciudad": "CONDOTO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 245,
+    "ciudad": "EL CARMEN DE ATRATO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 250,
+    "ciudad": "EL LITORAL DEL SAN JUAN"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 361,
+    "ciudad": "ISTMINA"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 372,
+    "ciudad": "JURADO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 413,
+    "ciudad": "LLORO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 425,
+    "ciudad": "MEDIO ATRATO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 430,
+    "ciudad": "MEDIO BAUDO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 450,
+    "ciudad": "MEDIO SAN JUAN"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 491,
+    "ciudad": "NOVITA"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 495,
+    "ciudad": "NUQUI"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 580,
+    "ciudad": "RIO IRO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 600,
+    "ciudad": "RIO QUITO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 615,
+    "ciudad": "RIOSUCIO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 660,
+    "ciudad": "SAN JOSE DEL PALMAR"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 745,
+    "ciudad": "SIPI"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 787,
+    "ciudad": "TADO"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 800,
+    "ciudad": "UNGUIA"
+  },
+  {
+    "codigoDepartamento": 27,
+    "departamento": "CHOCO",
+    "codigoCiudad": 810,
+    "ciudad": "UNION PANAMERICANA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 1,
+    "ciudad": "NEIVA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 6,
+    "ciudad": "ACEVEDO"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 13,
+    "ciudad": "AGRADO"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 16,
+    "ciudad": "AIPE"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 20,
+    "ciudad": "ALGECIRAS"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 26,
+    "ciudad": "ALTAMIRA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 78,
+    "ciudad": "BARAYA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 132,
+    "ciudad": "CAMPOALEGRE"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 206,
+    "ciudad": "COLOMBIA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 244,
+    "ciudad": "ELIAS"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 298,
+    "ciudad": "GARZON"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 306,
+    "ciudad": "GIGANTE"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 319,
+    "ciudad": "GUADALUPE"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 349,
+    "ciudad": "HOBO"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 357,
+    "ciudad": "IQUIRA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 359,
+    "ciudad": "ISNOS"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 378,
+    "ciudad": "LA ARGENTINA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 396,
+    "ciudad": "LA PLATA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 483,
+    "ciudad": "NATAGA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 503,
+    "ciudad": "OPORAPA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 518,
+    "ciudad": "PAICOL"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 524,
+    "ciudad": "PALERMO"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 530,
+    "ciudad": "PALESTINA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 548,
+    "ciudad": "PITAL"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 551,
+    "ciudad": "PITALITO"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 615,
+    "ciudad": "RIVERA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 660,
+    "ciudad": "SALADOBLANCO"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 668,
+    "ciudad": "SAN AGUSTIN"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 676,
+    "ciudad": "SANTA MARIA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 770,
+    "ciudad": "SUAZA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 791,
+    "ciudad": "TARQUI"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 797,
+    "ciudad": "TESALIA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 799,
+    "ciudad": "TELLO"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 801,
+    "ciudad": "TERUEL"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 807,
+    "ciudad": "TIMANA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 872,
+    "ciudad": "VILLAVIEJA"
+  },
+  {
+    "codigoDepartamento": 41,
+    "departamento": "HUILA",
+    "codigoCiudad": 885,
+    "ciudad": "YAGUARA"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 1,
+    "ciudad": "RIOHACHA"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 35,
+    "ciudad": "ALBANIA"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 78,
+    "ciudad": "BARRANCAS"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 90,
+    "ciudad": "DIBULLA"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 98,
+    "ciudad": "DISTRACCION"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 110,
+    "ciudad": "EL MOLINO"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 279,
+    "ciudad": "FONSECA"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 378,
+    "ciudad": "HATONUEVO"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 420,
+    "ciudad": "LA JAGUA DEL PILAR"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 430,
+    "ciudad": "MAICAO"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 560,
+    "ciudad": "MANAURE"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 650,
+    "ciudad": "SAN JUAN DEL CESAR"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 847,
+    "ciudad": "URIBIA"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 855,
+    "ciudad": "URUMITA"
+  },
+  {
+    "codigoDepartamento": 44,
+    "departamento": "LA GUAJIRA",
+    "codigoCiudad": 874,
+    "ciudad": "VILLANUEVA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 1,
+    "ciudad": "SANTA MARTA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 30,
+    "ciudad": "ALGARROBO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 53,
+    "ciudad": "ARACATACA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 58,
+    "ciudad": "ARIGUANI"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 161,
+    "ciudad": "CERRO SAN ANTONIO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 170,
+    "ciudad": "CHIBOLO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 189,
+    "ciudad": "CIENAGA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 205,
+    "ciudad": "CONCORDIA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 245,
+    "ciudad": "EL BANCO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 258,
+    "ciudad": "EL PIÑON"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 268,
+    "ciudad": "EL RETEN"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 288,
+    "ciudad": "FUNDACION"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 318,
+    "ciudad": "GUAMAL"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 460,
+    "ciudad": "NUEVA GRANADA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 541,
+    "ciudad": "PEDRAZA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 545,
+    "ciudad": "PIJIÑO DEL CARMEN"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 551,
+    "ciudad": "PIVIJAY"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 555,
+    "ciudad": "PLATO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 570,
+    "ciudad": "PUEBLOVIEJO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 605,
+    "ciudad": "REMOLINO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 660,
+    "ciudad": "SABANAS DE SAN ANGEL"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 675,
+    "ciudad": "SALAMINA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 692,
+    "ciudad": "SAN SEBASTIAN DE BUENAVISTA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 703,
+    "ciudad": "SAN ZENON"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 707,
+    "ciudad": "SANTA ANA"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 720,
+    "ciudad": "SANTA BARBARA DE PINTO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 745,
+    "ciudad": "SITIONUEVO"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 798,
+    "ciudad": "TENERIFE"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 960,
+    "ciudad": "ZAPAYAN"
+  },
+  {
+    "codigoDepartamento": 47,
+    "departamento": "MAGDALENA",
+    "codigoCiudad": 980,
+    "ciudad": "ZONA BANANERA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 1,
+    "ciudad": "VILLAVICENCIO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 6,
+    "ciudad": "ACACIAS"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 110,
+    "ciudad": "BARRANCA DE UPIA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 124,
+    "ciudad": "CABUYARO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 150,
+    "ciudad": "CASTILLA LA NUEVA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 223,
+    "ciudad": "CUBARRAL"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 226,
+    "ciudad": "CUMARAL"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 245,
+    "ciudad": "EL CALVARIO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 251,
+    "ciudad": "EL CASTILLO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 270,
+    "ciudad": "EL DORADO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 287,
+    "ciudad": "FUENTE DE ORO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 313,
+    "ciudad": "GRANADA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 318,
+    "ciudad": "GUAMAL"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 325,
+    "ciudad": "MAPIRIPAN"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 330,
+    "ciudad": "MESETAS"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 350,
+    "ciudad": "LA MACARENA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 370,
+    "ciudad": "URIBE"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 400,
+    "ciudad": "LEJANIAS"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 450,
+    "ciudad": "PUERTO CONCORDIA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 568,
+    "ciudad": "PUERTO GAITAN"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 573,
+    "ciudad": "PUERTO LOPEZ"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 577,
+    "ciudad": "PUERTO LLERAS"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 590,
+    "ciudad": "PUERTO RICO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 606,
+    "ciudad": "RESTREPO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 680,
+    "ciudad": "SAN CARLOS DE GUAROA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 683,
+    "ciudad": "SAN JUAN DE ARAMA"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 686,
+    "ciudad": "SAN JUANITO"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 689,
+    "ciudad": "SAN MARTIN"
+  },
+  {
+    "codigoDepartamento": 50,
+    "departamento": "META",
+    "codigoCiudad": 711,
+    "ciudad": "VISTAHERMOSA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 1,
+    "ciudad": "PASTO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 19,
+    "ciudad": "ALBAN"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 22,
+    "ciudad": "ALDANA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 36,
+    "ciudad": "ANCUYA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 51,
+    "ciudad": "ARBOLEDA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 79,
+    "ciudad": "BARBACOAS"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 83,
+    "ciudad": "BELEN"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 110,
+    "ciudad": "BUESACO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 203,
+    "ciudad": "COLON"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 207,
+    "ciudad": "CONSACA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 210,
+    "ciudad": "CONTADERO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 215,
+    "ciudad": "CORDOBA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 224,
+    "ciudad": "CUASPUD"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 227,
+    "ciudad": "CUMBAL"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 233,
+    "ciudad": "CUMBITARA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 240,
+    "ciudad": "CHACHAGsI"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 250,
+    "ciudad": "EL CHARCO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 254,
+    "ciudad": "EL PEÑOL"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 256,
+    "ciudad": "EL ROSARIO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 258,
+    "ciudad": "EL TABLON DE GOMEZ"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 260,
+    "ciudad": "EL TAMBO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 287,
+    "ciudad": "FUNES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 317,
+    "ciudad": "GUACHUCAL"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 320,
+    "ciudad": "GUAITARILLA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 323,
+    "ciudad": "GUALMATAN"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 352,
+    "ciudad": "ILES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 354,
+    "ciudad": "IMUES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 356,
+    "ciudad": "IPIALES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 378,
+    "ciudad": "LA CRUZ"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 381,
+    "ciudad": "LA FLORIDA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 385,
+    "ciudad": "LA LLANADA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 390,
+    "ciudad": "LA TOLA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 399,
+    "ciudad": "LA UNION"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 405,
+    "ciudad": "LEIVA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 411,
+    "ciudad": "LINARES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 418,
+    "ciudad": "LOS ANDES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 427,
+    "ciudad": "MAGsI"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 435,
+    "ciudad": "MALLAMA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 473,
+    "ciudad": "MOSQUERA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 480,
+    "ciudad": "NARIÑO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 490,
+    "ciudad": "OLAYA HERRERA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 506,
+    "ciudad": "OSPINA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 520,
+    "ciudad": "FRANCISCO PIZARRO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 540,
+    "ciudad": "POLICARPA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 560,
+    "ciudad": "POTOSI"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 565,
+    "ciudad": "PROVIDENCIA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 573,
+    "ciudad": "PUERRES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 585,
+    "ciudad": "PUPIALES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 612,
+    "ciudad": "RICAURTE"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 621,
+    "ciudad": "ROBERTO PAYAN"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 678,
+    "ciudad": "SAMANIEGO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 683,
+    "ciudad": "SANDONA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 685,
+    "ciudad": "SAN BERNARDO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 687,
+    "ciudad": "SAN LORENZO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 693,
+    "ciudad": "SAN PABLO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 694,
+    "ciudad": "SAN PEDRO DE CARTAGO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 696,
+    "ciudad": "SANTA BARBARA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 699,
+    "ciudad": "SANTACRUZ"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 720,
+    "ciudad": "SAPUYES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 786,
+    "ciudad": "TAMINANGO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 788,
+    "ciudad": "TANGUA"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 835,
+    "ciudad": "SAN ANDRES DE TUMACO"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 838,
+    "ciudad": "TUQUERRES"
+  },
+  {
+    "codigoDepartamento": 52,
+    "departamento": "NARIÑO",
+    "codigoCiudad": 885,
+    "ciudad": "YACUANQUER"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 1,
+    "ciudad": "CUCUTA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 3,
+    "ciudad": "ABREGO"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 51,
+    "ciudad": "ARBOLEDAS"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 99,
+    "ciudad": "BOCHALEMA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 109,
+    "ciudad": "BUCARASICA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 125,
+    "ciudad": "CACOTA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 128,
+    "ciudad": "CACHIRA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 172,
+    "ciudad": "CHINACOTA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 174,
+    "ciudad": "CHITAGA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 206,
+    "ciudad": "CONVENCION"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 223,
+    "ciudad": "CUCUTILLA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 239,
+    "ciudad": "DURANIA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 245,
+    "ciudad": "EL CARMEN"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 250,
+    "ciudad": "EL TARRA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 261,
+    "ciudad": "EL ZULIA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 313,
+    "ciudad": "GRAMALOTE"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 344,
+    "ciudad": "HACARI"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 347,
+    "ciudad": "HERRAN"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 377,
+    "ciudad": "LABATECA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 385,
+    "ciudad": "LA ESPERANZA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 398,
+    "ciudad": "LA PLAYA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 405,
+    "ciudad": "LOS PATIOS"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 418,
+    "ciudad": "LOURDES"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 480,
+    "ciudad": "MUTISCUA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 498,
+    "ciudad": "OCAÑA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 518,
+    "ciudad": "PAMPLONA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 520,
+    "ciudad": "PAMPLONITA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 553,
+    "ciudad": "PUERTO SANTANDER"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 599,
+    "ciudad": "RAGONVALIA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 660,
+    "ciudad": "SALAZAR"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 670,
+    "ciudad": "SAN CALIXTO"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 673,
+    "ciudad": "SAN CAYETANO"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 680,
+    "ciudad": "SANTIAGO"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 720,
+    "ciudad": "SARDINATA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 743,
+    "ciudad": "SILOS"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 800,
+    "ciudad": "TEORAMA"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 810,
+    "ciudad": "TIBU"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 820,
+    "ciudad": "TOLEDO"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 871,
+    "ciudad": "VILLA CARO"
+  },
+  {
+    "codigoDepartamento": 54,
+    "departamento": "NORTE DE SANTANDER",
+    "codigoCiudad": 874,
+    "ciudad": "VILLA DEL ROSARIO"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 1,
+    "ciudad": "ARMENIA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 111,
+    "ciudad": "BUENAVISTA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 130,
+    "ciudad": "CALARCA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 190,
+    "ciudad": "CIRCASIA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 212,
+    "ciudad": "CORDOBA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 272,
+    "ciudad": "FILANDIA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 302,
+    "ciudad": "GENOVA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 401,
+    "ciudad": "LA TEBAIDA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 470,
+    "ciudad": "MONTENEGRO"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 548,
+    "ciudad": "PIJAO"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 594,
+    "ciudad": "QUIMBAYA"
+  },
+  {
+    "codigoDepartamento": 63,
+    "departamento": "QUINDIO",
+    "codigoCiudad": 690,
+    "ciudad": "SALENTO"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 1,
+    "ciudad": "PEREIRA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 45,
+    "ciudad": "APIA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 75,
+    "ciudad": "BALBOA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 88,
+    "ciudad": "BELEN DE UMBRIA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 170,
+    "ciudad": "DOSQUEBRADAS"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 318,
+    "ciudad": "GUATICA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 383,
+    "ciudad": "LA CELIA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 400,
+    "ciudad": "LA VIRGINIA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 440,
+    "ciudad": "MARSELLA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 456,
+    "ciudad": "MISTRATO"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 572,
+    "ciudad": "PUEBLO RICO"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 594,
+    "ciudad": "QUINCHIA"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 682,
+    "ciudad": "SANTA ROSA DE CABAL"
+  },
+  {
+    "codigoDepartamento": 66,
+    "departamento": "RISARALDA",
+    "codigoCiudad": 687,
+    "ciudad": "SANTUARIO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 1,
+    "ciudad": "BUCARAMANGA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 13,
+    "ciudad": "AGUADA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 20,
+    "ciudad": "ALBANIA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 51,
+    "ciudad": "ARATOCA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 77,
+    "ciudad": "BARBOSA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 79,
+    "ciudad": "BARICHARA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 81,
+    "ciudad": "BARRANCABERMEJA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 92,
+    "ciudad": "BETULIA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 101,
+    "ciudad": "BOLIVAR"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 121,
+    "ciudad": "CABRERA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 132,
+    "ciudad": "CALIFORNIA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 147,
+    "ciudad": "CAPITANEJO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 152,
+    "ciudad": "CARCASI"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 160,
+    "ciudad": "CEPITA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 162,
+    "ciudad": "CERRITO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 167,
+    "ciudad": "CHARALA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 169,
+    "ciudad": "CHARTA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 176,
+    "ciudad": "CHIMA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 179,
+    "ciudad": "CHIPATA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 190,
+    "ciudad": "CIMITARRA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 207,
+    "ciudad": "CONCEPCION"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 209,
+    "ciudad": "CONFINES"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 211,
+    "ciudad": "CONTRATACION"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 217,
+    "ciudad": "COROMORO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 229,
+    "ciudad": "CURITI"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 235,
+    "ciudad": "EL CARMEN DE CHUCURI"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 245,
+    "ciudad": "EL GUACAMAYO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 250,
+    "ciudad": "EL PEÑON"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 255,
+    "ciudad": "EL PLAYON"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 264,
+    "ciudad": "ENCINO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 266,
+    "ciudad": "ENCISO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 271,
+    "ciudad": "FLORIAN"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 276,
+    "ciudad": "FLORIDABLANCA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 296,
+    "ciudad": "GALAN"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 298,
+    "ciudad": "GAMBITA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 307,
+    "ciudad": "GIRON"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 318,
+    "ciudad": "GUACA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 320,
+    "ciudad": "GUADALUPE"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 322,
+    "ciudad": "GUAPOTA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 324,
+    "ciudad": "GUAVATA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 327,
+    "ciudad": "GsEPSA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 344,
+    "ciudad": "HATO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 368,
+    "ciudad": "JESUS MARIA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 370,
+    "ciudad": "JORDAN"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 377,
+    "ciudad": "LA BELLEZA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 385,
+    "ciudad": "LANDAZURI"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 397,
+    "ciudad": "LA PAZ"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 406,
+    "ciudad": "LEBRIJA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 418,
+    "ciudad": "LOS SANTOS"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 425,
+    "ciudad": "MACARAVITA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 432,
+    "ciudad": "MALAGA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 444,
+    "ciudad": "MATANZA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 464,
+    "ciudad": "MOGOTES"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 468,
+    "ciudad": "MOLAGAVITA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 498,
+    "ciudad": "OCAMONTE"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 500,
+    "ciudad": "OIBA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 502,
+    "ciudad": "ONZAGA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 522,
+    "ciudad": "PALMAR"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 524,
+    "ciudad": "PALMAS DEL SOCORRO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 533,
+    "ciudad": "PARAMO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 547,
+    "ciudad": "PIEDECUESTA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 549,
+    "ciudad": "PINCHOTE"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 572,
+    "ciudad": "PUENTE NACIONAL"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 573,
+    "ciudad": "PUERTO PARRA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 575,
+    "ciudad": "PUERTO WILCHES"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 615,
+    "ciudad": "RIONEGRO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 655,
+    "ciudad": "SABANA DE TORRES"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 669,
+    "ciudad": "SAN ANDRES"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 673,
+    "ciudad": "SAN BENITO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 679,
+    "ciudad": "SAN GIL"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 682,
+    "ciudad": "SAN JOAQUIN"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 684,
+    "ciudad": "SAN JOSE DE MIRANDA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 686,
+    "ciudad": "SAN MIGUEL"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 689,
+    "ciudad": "SAN VICENTE DE CHUCURI"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 705,
+    "ciudad": "SANTA BARBARA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 720,
+    "ciudad": "SANTA HELENA DEL OPON"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 745,
+    "ciudad": "SIMACOTA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 755,
+    "ciudad": "SOCORRO"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 770,
+    "ciudad": "SUAITA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 773,
+    "ciudad": "SUCRE"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 780,
+    "ciudad": "SURATA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 820,
+    "ciudad": "TONA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 855,
+    "ciudad": "VALLE DE SAN JOSE"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 861,
+    "ciudad": "VELEZ"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 867,
+    "ciudad": "VETAS"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 872,
+    "ciudad": "VILLANUEVA"
+  },
+  {
+    "codigoDepartamento": 68,
+    "departamento": "SANTANDER",
+    "codigoCiudad": 895,
+    "ciudad": "ZAPATOCA"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 1,
+    "ciudad": "SINCELEJO"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 110,
+    "ciudad": "BUENAVISTA"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 124,
+    "ciudad": "CAIMITO"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 204,
+    "ciudad": "COLOSO"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 215,
+    "ciudad": "COROZAL"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 221,
+    "ciudad": "COVEÑAS"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 230,
+    "ciudad": "CHALAN"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 233,
+    "ciudad": "EL ROBLE"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 235,
+    "ciudad": "GALERAS"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 265,
+    "ciudad": "GUARANDA"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 400,
+    "ciudad": "LA UNION"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 418,
+    "ciudad": "LOS PALMITOS"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 429,
+    "ciudad": "MAJAGUAL"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 473,
+    "ciudad": "MORROA"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 508,
+    "ciudad": "OVEJAS"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 523,
+    "ciudad": "PALMITO"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 670,
+    "ciudad": "SAMPUES"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 678,
+    "ciudad": "SAN BENITO ABAD"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 702,
+    "ciudad": "SAN JUAN DE BETULIA"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 708,
+    "ciudad": "SAN MARCOS"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 713,
+    "ciudad": "SAN ONOFRE"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 717,
+    "ciudad": "SAN PEDRO"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 742,
+    "ciudad": "SAN LUIS DE SINCE"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 771,
+    "ciudad": "SUCRE"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 820,
+    "ciudad": "SANTIAGO DE TOLU"
+  },
+  {
+    "codigoDepartamento": 70,
+    "departamento": "SUCRE",
+    "codigoCiudad": 823,
+    "ciudad": "TOLU VIEJO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 1,
+    "ciudad": "IBAGUE"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 24,
+    "ciudad": "ALPUJARRA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 26,
+    "ciudad": "ALVARADO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 30,
+    "ciudad": "AMBALEMA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 43,
+    "ciudad": "ANZOATEGUI"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 55,
+    "ciudad": "ARMERO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 67,
+    "ciudad": "ATACO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 124,
+    "ciudad": "CAJAMARCA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 148,
+    "ciudad": "CARMEN DE APICALA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 152,
+    "ciudad": "CASABIANCA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 168,
+    "ciudad": "CHAPARRAL"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 200,
+    "ciudad": "COELLO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 217,
+    "ciudad": "COYAIMA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 226,
+    "ciudad": "CUNDAY"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 236,
+    "ciudad": "DOLORES"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 268,
+    "ciudad": "ESPINAL"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 270,
+    "ciudad": "FALAN"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 275,
+    "ciudad": "FLANDES"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 283,
+    "ciudad": "FRESNO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 319,
+    "ciudad": "GUAMO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 347,
+    "ciudad": "HERVEO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 349,
+    "ciudad": "HONDA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 352,
+    "ciudad": "ICONONZO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 408,
+    "ciudad": "LERIDA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 411,
+    "ciudad": "LIBANO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 443,
+    "ciudad": "MARIQUITA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 449,
+    "ciudad": "MELGAR"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 461,
+    "ciudad": "MURILLO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 483,
+    "ciudad": "NATAGAIMA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 504,
+    "ciudad": "ORTEGA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 520,
+    "ciudad": "PALOCABILDO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 547,
+    "ciudad": "PIEDRAS"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 555,
+    "ciudad": "PLANADAS"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 563,
+    "ciudad": "PRADO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 585,
+    "ciudad": "PURIFICACION"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 616,
+    "ciudad": "RIOBLANCO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 622,
+    "ciudad": "RONCESVALLES"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 624,
+    "ciudad": "ROVIRA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 671,
+    "ciudad": "SALDAÑA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 675,
+    "ciudad": "SAN ANTONIO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 678,
+    "ciudad": "SAN LUIS"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 686,
+    "ciudad": "SANTA ISABEL"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 770,
+    "ciudad": "SUAREZ"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 854,
+    "ciudad": "VALLE DE SAN JUAN"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 861,
+    "ciudad": "VENADILLO"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 870,
+    "ciudad": "VILLAHERMOSA"
+  },
+  {
+    "codigoDepartamento": 73,
+    "departamento": "TOLIMA",
+    "codigoCiudad": 873,
+    "ciudad": "VILLARRICA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 1,
+    "ciudad": "CALI"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 20,
+    "ciudad": "ALCALA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 36,
+    "ciudad": "ANDALUCIA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 41,
+    "ciudad": "ANSERMANUEVO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 54,
+    "ciudad": "ARGELIA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 100,
+    "ciudad": "BOLIVAR"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 109,
+    "ciudad": "BUENAVENTURA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 111,
+    "ciudad": "GUADALAJARA DE BUGA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 113,
+    "ciudad": "BUGALAGRANDE"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 122,
+    "ciudad": "CAICEDONIA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 126,
+    "ciudad": "CALIMA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 130,
+    "ciudad": "CANDELARIA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 147,
+    "ciudad": "CARTAGO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 233,
+    "ciudad": "DAGUA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 243,
+    "ciudad": "EL AGUILA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 246,
+    "ciudad": "EL CAIRO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 248,
+    "ciudad": "EL CERRITO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 250,
+    "ciudad": "EL DOVIO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 275,
+    "ciudad": "FLORIDA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 306,
+    "ciudad": "GINEBRA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 318,
+    "ciudad": "GUACARI"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 364,
+    "ciudad": "JAMUNDI"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 377,
+    "ciudad": "LA CUMBRE"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 400,
+    "ciudad": "LA UNION"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 403,
+    "ciudad": "LA VICTORIA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 497,
+    "ciudad": "OBANDO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 520,
+    "ciudad": "PALMIRA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 563,
+    "ciudad": "PRADERA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 606,
+    "ciudad": "RESTREPO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 616,
+    "ciudad": "RIOFRIO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 622,
+    "ciudad": "ROLDANILLO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 670,
+    "ciudad": "SAN PEDRO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 736,
+    "ciudad": "SEVILLA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 823,
+    "ciudad": "TORO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 828,
+    "ciudad": "TRUJILLO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 834,
+    "ciudad": "TULUA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 845,
+    "ciudad": "ULLOA"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 863,
+    "ciudad": "VERSALLES"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 869,
+    "ciudad": "VIJES"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 890,
+    "ciudad": "YOTOCO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 892,
+    "ciudad": "YUMBO"
+  },
+  {
+    "codigoDepartamento": 76,
+    "departamento": "VALLE DEL CAUCA",
+    "codigoCiudad": 895,
+    "ciudad": "ZARZAL"
+  },
+  {
+    "codigoDepartamento": 81,
+    "departamento": "ARAUCA",
+    "codigoCiudad": 1,
+    "ciudad": "ARAUCA"
+  },
+  {
+    "codigoDepartamento": 81,
+    "departamento": "ARAUCA",
+    "codigoCiudad": 65,
+    "ciudad": "ARAUQUITA"
+  },
+  {
+    "codigoDepartamento": 81,
+    "departamento": "ARAUCA",
+    "codigoCiudad": 220,
+    "ciudad": "CRAVO NORTE"
+  },
+  {
+    "codigoDepartamento": 81,
+    "departamento": "ARAUCA",
+    "codigoCiudad": 300,
+    "ciudad": "FORTUL"
+  },
+  {
+    "codigoDepartamento": 81,
+    "departamento": "ARAUCA",
+    "codigoCiudad": 591,
+    "ciudad": "PUERTO RONDON"
+  },
+  {
+    "codigoDepartamento": 81,
+    "departamento": "ARAUCA",
+    "codigoCiudad": 736,
+    "ciudad": "SARAVENA"
+  },
+  {
+    "codigoDepartamento": 81,
+    "departamento": "ARAUCA",
+    "codigoCiudad": 794,
+    "ciudad": "TAME"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 1,
+    "ciudad": "YOPAL"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 10,
+    "ciudad": "AGUAZUL"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 15,
+    "ciudad": "CHAMEZA"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 125,
+    "ciudad": "HATO COROZAL"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 136,
+    "ciudad": "LA SALINA"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 139,
+    "ciudad": "MANI"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 162,
+    "ciudad": "MONTERREY"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 225,
+    "ciudad": "NUNCHIA"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 230,
+    "ciudad": "OROCUE"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 250,
+    "ciudad": "PAZ DE ARIPORO"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 263,
+    "ciudad": "PORE"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 279,
+    "ciudad": "RECETOR"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 300,
+    "ciudad": "SABANALARGA"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 315,
+    "ciudad": "SACAMA"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 325,
+    "ciudad": "SAN LUIS DE PALENQUE"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 400,
+    "ciudad": "TAMARA"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 410,
+    "ciudad": "TAURAMENA"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 430,
+    "ciudad": "TRINIDAD"
+  },
+  {
+    "codigoDepartamento": 85,
+    "departamento": "CASANARE",
+    "codigoCiudad": 440,
+    "ciudad": "VILLANUEVA"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 1,
+    "ciudad": "MOCOA"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 219,
+    "ciudad": "COLON"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 320,
+    "ciudad": "ORITO"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 568,
+    "ciudad": "PUERTO ASIS"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 569,
+    "ciudad": "PUERTO CAICEDO"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 571,
+    "ciudad": "PUERTO GUZMAN"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 573,
+    "ciudad": "LEGUIZAMO"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 749,
+    "ciudad": "SIBUNDOY"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 755,
+    "ciudad": "SAN FRANCISCO"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 757,
+    "ciudad": "SAN MIGUEL"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 760,
+    "ciudad": "SANTIAGO"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 865,
+    "ciudad": "VALLE DEL GUAMUEZ"
+  },
+  {
+    "codigoDepartamento": 86,
+    "departamento": "PUTUMAYO",
+    "codigoCiudad": 885,
+    "ciudad": "VILLAGARZON"
+  },
+  {
+    "codigoDepartamento": 88,
+    "departamento": "SAN ANDRES",
+    "codigoCiudad": 1,
+    "ciudad": "SAN ANDRES"
+  },
+  {
+    "codigoDepartamento": 88,
+    "departamento": "SAN ANDRES",
+    "codigoCiudad": 564,
+    "ciudad": "PROVIDENCIA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 1,
+    "ciudad": "LETICIA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 263,
+    "ciudad": "EL ENCANTO"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 405,
+    "ciudad": "LA CHORRERA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 407,
+    "ciudad": "LA PEDRERA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 430,
+    "ciudad": "LA VICTORIA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 460,
+    "ciudad": "MIRITI - PARANA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 530,
+    "ciudad": "PUERTO ALEGRIA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 536,
+    "ciudad": "PUERTO ARICA"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 540,
+    "ciudad": "PUERTO NARIÑO"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 669,
+    "ciudad": "PUERTO SANTANDER"
+  },
+  {
+    "codigoDepartamento": 91,
+    "departamento": "AMAZONAS",
+    "codigoCiudad": 798,
+    "ciudad": "TARAPACA"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 1,
+    "ciudad": "INIRIDA"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 343,
+    "ciudad": "BARRANCO MINAS"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 663,
+    "ciudad": "MAPIRIPANA"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 883,
+    "ciudad": "SAN FELIPE"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 884,
+    "ciudad": "PUERTO COLOMBIA"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 885,
+    "ciudad": "LA GUADALUPE"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 886,
+    "ciudad": "CACAHUAL"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 887,
+    "ciudad": "PANA PANA"
+  },
+  {
+    "codigoDepartamento": 94,
+    "departamento": "GUAINIA",
+    "codigoCiudad": 888,
+    "ciudad": "MORICHAL"
+  },
+  {
+    "codigoDepartamento": 95,
+    "departamento": "GUAVIARE",
+    "codigoCiudad": 1,
+    "ciudad": "SAN JOSE DEL GUAVIARE"
+  },
+  {
+    "codigoDepartamento": 95,
+    "departamento": "GUAVIARE",
+    "codigoCiudad": 15,
+    "ciudad": "CALAMAR"
+  },
+  {
+    "codigoDepartamento": 95,
+    "departamento": "GUAVIARE",
+    "codigoCiudad": 25,
+    "ciudad": "EL RETORNO"
+  },
+  {
+    "codigoDepartamento": 95,
+    "departamento": "GUAVIARE",
+    "codigoCiudad": 200,
+    "ciudad": "MIRAFLORES"
+  },
+  {
+    "codigoDepartamento": 97,
+    "departamento": "VAUPES",
+    "codigoCiudad": 1,
+    "ciudad": "MITU"
+  },
+  {
+    "codigoDepartamento": 97,
+    "departamento": "VAUPES",
+    "codigoCiudad": 161,
+    "ciudad": "CARURU"
+  },
+  {
+    "codigoDepartamento": 97,
+    "departamento": "VAUPES",
+    "codigoCiudad": 511,
+    "ciudad": "PACOA"
+  },
+  {
+    "codigoDepartamento": 97,
+    "departamento": "VAUPES",
+    "codigoCiudad": 666,
+    "ciudad": "TARAIRA"
+  },
+  {
+    "codigoDepartamento": 97,
+    "departamento": "VAUPES",
+    "codigoCiudad": 777,
+    "ciudad": "PAPUNAUA"
+  },
+  {
+    "codigoDepartamento": 97,
+    "departamento": "VAUPES",
+    "codigoCiudad": 889,
+    "ciudad": "YAVARATE"
+  },
+  {
+    "codigoDepartamento": 99,
+    "departamento": "VICHADA",
+    "codigoCiudad": 1,
+    "ciudad": "PUERTO CARREÑO"
+  },
+  {
+    "codigoDepartamento": 99,
+    "departamento": "VICHADA",
+    "codigoCiudad": 524,
+    "ciudad": "LA PRIMAVERA"
+  },
+  {
+    "codigoDepartamento": 99,
+    "departamento": "VICHADA",
+    "codigoCiudad": 624,
+    "ciudad": "SANTA ROSALIA"
+  },
+  {
+    "codigoDepartamento": 99,
+    "departamento": "VICHADA",
+    "codigoCiudad": 773,
+    "ciudad": "CUMARIBO"
+  }
+]

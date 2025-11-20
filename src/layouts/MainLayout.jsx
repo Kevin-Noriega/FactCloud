@@ -18,7 +18,6 @@ function MainLayout() {
             <h5 className="mb-0 text-secondary">
                 Panel de Control
             </h5>
-            <span className="badge bg-success me-3">Online</span>
           </div>
         </header>
 

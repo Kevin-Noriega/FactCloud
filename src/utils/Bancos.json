@@ -1,0 +1,21 @@
+[
+  { "codigo": "NEQ", "nombre": "Nequi" },
+  { "codigo": "DVP", "nombre": "Daviplata" },
+  { "codigo": "BCA", "nombre": "Bancolombia" },
+  { "codigo": "DBV", "nombre": "Banco Davivienda" },
+  { "codigo": "BBO", "nombre": "Banco de Bogotá" },
+  { "codigo": "BBVA", "nombre": "BBVA Colombia" },
+  { "codigo": "BPO", "nombre": "Banco Popular" },
+  { "codigo": "BOCC", "nombre": "Banco Occidente" },
+  { "codigo": "AVV", "nombre": "Banco AV Villas" },
+  { "codigo": "ITC", "nombre": "Itaú Colombia" },
+  { "codigo": "SCOT", "nombre": "Scotiabank Colpatria" },
+  { "codigo": "COLP", "nombre": "Colpatria" },
+  { "codigo": "COOP", "nombre": "Coopcentral" },
+  { "codigo": "MOV", "nombre": "Movii" },
+  { "codigo": "LUL", "nombre": "Lulo Bank" },
+  { "codigo": "AGR", "nombre": "Banco Agrario" },
+  { "codigo": "GNB", "nombre": "Banco GNB Sudameris" },
+  { "codigo": "FAL", "nombre": "Falabella" },
+  { "codigo": "SER", "nombre": "Banco Serfinanza" }
+]

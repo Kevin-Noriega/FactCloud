@@ -1,0 +1,75 @@
+[
+  {
+    "codigo": "1",
+    "descripcion": "Instrumento de pago no definido"
+  },
+  {
+    "codigo": "2",
+    "descripcion": "Cheque"
+  },
+  {
+    "codigo": "3",
+    "descripcion": "Transferencia electrónica"
+  },
+  {
+    "codigo": "4",
+    "descripcion": "Consignación bancaria"
+  },
+  {
+    "codigo": "5",
+    "descripcion": "Tarjeta de crédito",
+      "items": [
+        "Tarjeta de crédito Visa",
+        "Tarjeta de crédito Mastercard",
+        "Tarjeta de crédito American Express",
+        "Tarjeta de crédito Diners"
+      ]
+  },
+  {
+    "codigo": "6",
+    "descripcion": "Tarjeta débito",
+      "items": [
+        "Tarjeta débito Visa",
+        "Tarjeta débito Mastercard"
+      ]
+  },
+  {
+    "codigo": "7",
+    "descripcion": "Efectivo"
+  },
+  {
+    "codigo": "8",
+    "descripcion": "Bono o vale"
+  },
+  {
+    "codigo": "10",
+    "descripcion": "Crédito"
+  },
+  {
+    "codigo": "29",
+    "descripcion": "Compensación"
+  },
+  {
+    "codigo": "48",
+    "descripcion": "Pago por billetera digital",
+      "items": [
+        "Nequi",
+        "Daviplata",
+        "Movii",
+        "Powwi",
+        "Tpaga"
+      ]
+  },
+  {
+    "codigo": "49",
+    "descripcion": "Pago por plataformas electrónicas"
+  },
+  {
+    "codigo": "50",
+    "descripcion": "Tarjeta prepago"
+  },
+  {
+    "codigo": "54",
+    "descripcion": "Pago mixto"
+  }
+]

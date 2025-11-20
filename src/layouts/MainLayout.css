@@ -4,6 +4,8 @@
 
 /* Sidebar: Fijo y siempre visible */
 .sidebar {
+    
+    background-color: #000000;
     width: 240px;
     min-width: 240px; 
     height: 100vh;
@@ -11,6 +13,7 @@
     top: 0;
     z-index: 1000;
 }
+
 
 /* Content Wrapper: Permite que el contenido principal ocupe el espacio restante */
 .content-wrapper {
@@ -37,5 +40,5 @@
 
 /* Hover sutil para el fondo gris oscuro */
 .nav-link:hover:not(.active) {
-    background-color: rgba(255, 255, 255, 0.15); 
+    background-color: #7f5af050; 
 }

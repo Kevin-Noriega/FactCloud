@@ -1,0 +1,6 @@
+{
+  "ambienteDIAN": [
+    { "codigo": "1", "descripcion": "Ambiente de producción" },
+    { "codigo": "2", "descripcion": "Ambiente de pruebas" }
+  ]
+}

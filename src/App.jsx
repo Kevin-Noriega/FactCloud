@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
-// Componentes de Layout
 import MainLayout from "./layouts/MainLayout"; 
 import Login from "./pages/Login";
 
@@ -14,8 +13,8 @@ import Productos from "./pages/Productos";
 import Facturas from "./pages/Facturas";
 import Reportes from "./pages/Reportes";
 import RegistrarUsuario from "./pages/RegistrarUsuario";
+import Perfil from "./pages/Perfil";
 
-// Componente de página no encontrada
 const NotFound = () => (
     <div className="text-center py-5">
         <h1 className="display-1 text-danger">404</h1>
@@ -29,14 +28,12 @@ function App() {
     <Router>
       <Routes>
         
-        {/* 1. Ruta de Login (Separada) */}
         <Route path="/" element={<Login />} />
-        <Route path="/registrar-usuario" element={<RegistrarUsuario/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registrarUsuario" element={<RegistrarUsuario/>} />
 
-        {/* 2. Ruta de Layout Principal (Parent Route con Sidebar) */}
         <Route element={<MainLayout />}> 
           
-          {/* Rutas Hijas (Se renderizan dentro de <Outlet /> en MainLayout) */}
 
 
           <Route path="/dashboard" element={<Dashboard />} />
@@ -44,11 +41,11 @@ function App() {
           <Route path="/productos" element={<Productos />} />
           <Route path="/facturas" element={<Facturas />} />
           <Route path="/reportes" element={<Reportes />} />
-          
-          {/* Ruta 404/Not Found, usando el mismo Layout */}
-          <Route path="*" element={<NotFound />} /> 
+          <Route path="/Perfil" element={<Perfil />} />
 
         </Route>
+          
+          <Route path="*" element={<NotFound />} /> 
         
       </Routes>
     </Router>

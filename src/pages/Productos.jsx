@@ -1,32 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
-const unidadesMedidaDIAN = [
-  { codigo: "94", label: "Unidad (UND)" },
-  { codigo: "KGM", label: "Kilogramo (KGM)" },
-  { codigo: "LTR", label: "Litro (LTR)" },
-  { codigo: "MTR", label: "Metro (MTR)" },
-  { codigo: "MTK", label: "Metro cuadrado (MTK)" },
-  { codigo: "CE", label: "Cien unidades (CE)" },
-  { codigo: "GRM", label: "Gramo (GRM)" },
-  { codigo: "MWH", label: "Megavatio hora (MWH)" },
-  { codigo: "HUR", label: "Hora (HUR)" },
-  { codigo: "CMK", label: "Centímetro cuadrado (CMK)" },
-  { codigo: "CMT", label: "Centímetro (CMT)" },
-  { codigo: "INH", label: "Pulgada (INH)" },
-  { codigo: "LTR", label: "Litro (LTR)" },
-  { codigo: "MLT", label: "Mililitro (MLT)" },
-  { codigo: "PR", label: "Par (PR)" },
-  { codigo: "SET", label: "Set (SET)" },
-  { codigo: "NIU", label: "Unidad internacional (NIU)" },
-];
+import Select from "react-select";
+import unidadesMedidaDIAN from "../utils/UnidadesMedidas.json";
+import tipoProductoDIAN from "../utils/TiposProducto.json";
+
 function Productos() {
-  const codigoBarrasRef = React.useRef(null);
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [productoEditando, setProductoEditando] = useState(null);
   const [productoVer, setProductoVer] = useState(null);
+  const [buscador, setBuscador] = useState("");
+  const [filtro, setFiltro] = useState("recientes");
+
+  const filtrados = productos
+    .filter((prod) => {
+      const query = buscador.trim().toLowerCase();
+      return (
+        !query ||
+        prod.nombre?.toLowerCase().includes(query) ||
+        prod.codigoBarras?.toLowerCase().includes(query)
+      );
+    })
+    .sort((a, b) => {
+      switch (filtro) {
+        case "recientes":
+          return new Date(b.fechaRegistro) - new Date(a.fechaRegistro);
+        case "antiguos":
+          return new Date(a.fechaRegistro) - new Date(b.fechaRegistro);
+        case "caros":
+          return b.precioUnitario - a.precioUnitario;
+        case "baratos":
+          return a.precioUnitario - b.precioUnitario;
+        default:
+          return 0;
+      }
+    });
 
   const [producto, setProducto] = useState({
     nombre: "",
@@ -49,7 +59,34 @@ function Productos() {
     cantidadMinima: 0,
     categoria: "",
     codigoBarras: "",
+    estado: true,
+
+    tipoProducto: "",
+    baseGravable: "",
+    retencionFuente: "",
+    retencionIVA: "",
+    retencionICA: "",
   });
+  // Conversiones a número
+  const baseGravable = producto.baseGravable
+    ? parseFloat(producto.baseGravable)
+    : 0;
+  const porcentajeFuente = producto.retencionFuente
+    ? parseFloat(producto.retencionFuente)
+    : 0;
+  const porcentajeIVA = producto.retencionIVA
+    ? parseFloat(producto.retencionIVA)
+    : 0;
+  const porcentajeICA = producto.retencionICA
+    ? parseFloat(producto.retencionICA)
+    : 0;
+
+  const valorRetencionFuente = +(
+    (baseGravable * porcentajeFuente) /
+    100
+  ).toFixed(2);
+  const valorRetencionIVA = +((baseGravable * porcentajeIVA) / 100).toFixed(2);
+  const valorRetencionICA = +((baseGravable * porcentajeICA) / 100).toFixed(2);
 
   const fetchProductos = async () => {
     try {
@@ -66,11 +103,9 @@ function Productos() {
     }
   };
 
- // 🔹 1. Cargar productos al iniciar el componente
-useEffect(() => {
-  fetchProductos();
-}, []);
-
+  useEffect(() => {
+    fetchProductos();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -87,7 +122,7 @@ useEffect(() => {
       codigoInterno: "",
       codigoUNSPSC: "",
       codigoEAN: "",
-      unidadMedida: "Unidad",
+      unidadMedida: "",
       marca: "",
       modelo: "",
       precioUnitario: "",
@@ -102,6 +137,12 @@ useEffect(() => {
       cantidadMinima: 0,
       categoria: "",
       codigoBarras: "",
+      estado: true,
+      tipoProducto: "",
+      baseGravable: "",
+      retencionFuente: "",
+      retencionIVA: "",
+      retencionICA: "",
     });
     setProductoEditando(null);
     setMostrarFormulario(false);
@@ -113,7 +154,7 @@ useEffect(() => {
     try {
       const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
       if (!usuarioGuardado) {
-        alert("No se encontro un usuario autenticado.");
+        alert("No se encontró un usuario autenticado.");
         return;
       }
 
@@ -138,17 +179,22 @@ useEffect(() => {
         cantidadMinima: parseInt(producto.cantidadMinima),
         categoria: producto.categoria,
         codigoBarras: producto.codigoBarras,
+        tipoProducto: producto.tipoProducto,
+        baseGravable: producto.baseGravable,
+        retencionFuente: producto.retencionFuente,
+        retencionIVA: producto.retencionIVA,
+        retencionICA: producto.retencionICA,
+        estado: producto.estado,
         usuarioId: usuarioGuardado.id,
       };
 
       const url = productoEditando
         ? `${API_URL}/Productos/${productoEditando}`
         : `${API_URL}/Productos`;
-
       const method = productoEditando ? "PUT" : "POST";
 
       const respuesta = await fetch(url, {
-        method: method,
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
@@ -158,11 +204,6 @@ useEffect(() => {
         throw new Error(errorTexto);
       }
 
-      alert(
-        productoEditando
-          ? "Producto actualizado correctamente"
-          : "Producto agregado correctamente"
-      );
       limpiarFormulario();
       fetchProductos();
     } catch (error) {
@@ -173,6 +214,7 @@ useEffect(() => {
 
   const editarProducto = (prod) => {
     setProducto({
+      id: productoEditando,
       nombre: prod.nombre,
       descripcion: prod.descripcion || "",
       codigoInterno: prod.codigoInterno || "",
@@ -193,13 +235,19 @@ useEffect(() => {
       cantidadMinima: prod.cantidadMinima,
       categoria: prod.categoria || "",
       codigoBarras: prod.codigoBarras || "",
+      tipoProducto: prod.tipoProducto || "",
+      baseGravable: prod.baseGravable || "",
+      retencionFuente: prod.retencionFuente || "",
+      retencionIVA: prod.retencionIVA || "",
+      retencionICA: prod.retencionICA || "",
+      estado: prod.estado,
     });
     setProductoEditando(prod.id);
     setMostrarFormulario(true);
   };
 
   const eliminarProducto = async (id) => {
-    if (!window.confirm("¿Estas seguro de eliminar este producto?")) return;
+    if (!window.confirm("¿Está seguro de eliminar este producto?")) return;
 
     try {
       const response = await fetch(`${API_URL}/Productos/${id}`, {
@@ -208,7 +256,6 @@ useEffect(() => {
 
       if (!response.ok) throw new Error("Error al eliminar producto");
 
-      alert("Producto eliminado correctamente");
       fetchProductos();
     } catch (error) {
       console.error("Error:", error);
@@ -244,13 +291,36 @@ useEffect(() => {
   return (
     <div className="container-fluid mt-4 px-4">
       <h2 className="text-success mb-4">Inventario de Productos</h2>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <button
+          className="btn btn-success"
+          onClick={() => setMostrarFormulario(!mostrarFormulario)}
+        >
+          {mostrarFormulario ? "Ocultar Formulario" : "Nuevo Producto"}
+        </button>
+        <div className="d-flex" style={{ gap: "1rem", width: "50%" }}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Buscar por nombre o código de barras…"
+            value={buscador}
+            onChange={(e) => setBuscador(e.target.value)}
+            style={{ flexGrow: 1 }}
+          />
+          <select
+            className="form-select"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+            style={{ width: "148px" }}
+          >
+            <option value="recientes">Más recientes</option>
+            <option value="antiguos">Más antiguos</option>
+            <option value="caros">Más caros</option>
+            <option value="baratos">Más baratos</option>
+          </select>
+        </div>
+      </div>
 
-      <button
-        className="btn btn-success mb-4"
-        onClick={() => setMostrarFormulario(!mostrarFormulario)}
-      >
-        {mostrarFormulario ? "Ocultar Formulario" : "Nuevo Producto"}
-      </button>
       {productoVer && (
         <div
           style={{
@@ -289,7 +359,7 @@ useEffect(() => {
                   <td>{productoVer.nombre}</td>
                 </tr>
                 <tr>
-                  <th>Descripcion</th>
+                  <th>Descripción</th>
                   <td>{productoVer.descripcion}</td>
                 </tr>
                 <tr>
@@ -300,11 +370,11 @@ useEffect(() => {
                   </td>
                 </tr>
                 <tr>
-                  <th>Categoria</th>
+                  <th>Categoría</th>
                   <td>{productoVer.categoria}</td>
                 </tr>
                 <tr>
-                  <th>Codigo de barras</th>
+                  <th>Código de barras</th>
                   <td>{productoVer.codigoBarras}</td>
                 </tr>
               </tbody>
@@ -317,7 +387,9 @@ useEffect(() => {
         <div className="card mb-4">
           <div className="card-body">
             <form onSubmit={handleSubmit}>
+              {/* Nombre y descripción */}
               <div className="row mb-3">
+                <h6 className="border-bottom pb-2 mb-3">Unidad y Precios</h6>
                 <div className="col-md-6">
                   <label className="form-label">Nombre del Producto</label>
                   <input
@@ -330,7 +402,7 @@ useEffect(() => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Descripcion Detallada</label>
+                  <label className="form-label">Descripción Detallada</label>
                   <input
                     type="text"
                     name="descripcion"
@@ -341,9 +413,10 @@ useEffect(() => {
                 </div>
               </div>
 
+              {/* Códigos */}
               <div className="row mb-3">
                 <div className="col-md-4">
-                  <label className="form-label">Codigo Interno</label>
+                  <label className="form-label">Código Interno</label>
                   <input
                     type="text"
                     name="codigoInterno"
@@ -353,7 +426,7 @@ useEffect(() => {
                   />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label">Codigo UNSPSC</label>
+                  <label className="form-label">Código UNSPSC</label>
                   <input
                     type="text"
                     name="codigoUNSPSC"
@@ -363,7 +436,7 @@ useEffect(() => {
                   />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label">Codigo EAN</label>
+                  <label className="form-label">Código EAN</label>
                   <input
                     type="text"
                     name="codigoEAN"
@@ -374,6 +447,7 @@ useEffect(() => {
                 </div>
               </div>
 
+              {/* Marca, modelo y categoría */}
               <div className="row mb-3">
                 <div className="col-md-4">
                   <label className="form-label">Marca</label>
@@ -396,7 +470,7 @@ useEffect(() => {
                   />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label">Categoria</label>
+                  <label className="form-label">Categoría</label>
                   <input
                     type="text"
                     name="categoria"
@@ -407,25 +481,135 @@ useEffect(() => {
                 </div>
               </div>
 
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <label className="form-label">Tipo Producto</label>
+                  <Select
+                    name="tipoProducto"
+                    options={tipoProductoDIAN.map((um) => ({
+                      value: um.descripcion,
+                      label: `${um.codigo} - ${um.descripcion}`,
+                    }))}
+                    value={
+                      producto.tipoProducto
+                        ? tipoProductoDIAN
+                            .map((um) => ({
+                              value: um.descripcion,
+                              label: `${um.codigo} - ${um.descripcion}`,
+                            }))
+                            .find((opt) => opt.value === producto.tipoProducto)
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setProducto((prev) => ({
+                        ...prev,
+                        tipoProducto: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar tipo de producto"
+                  />
+                </div>
+              </div>
+              {/* Base Gravable y Retenciones */}
+              <h6 className="border-bottom pb-2 mb-3 mt-4">
+                Base Gravable y Retenciones
+              </h6>
+              <div className="row mb-3">
+                <div className="col-md-3">
+                  <label className="form-label">Base Gravable</label>
+                  <input
+                    type="number"
+                    name="baseGravable"
+                    className="form-control"
+                    value={producto.baseGravable}
+                    onChange={handleChange}
+                    step="0.01"
+                    required
+                    placeholder="Ej: 100000"
+                  />
+                </div>
+                <div className="col-md-3">
+                  <label className="form-label">Retención Fuente (%)</label>
+                  <input
+                    type="number"
+                    name="retencionFuente"
+                    className="form-control"
+                    value={producto.retencionFuente}
+                    onChange={handleChange}
+                    step="0.01"
+                    placeholder="Ej: 2.5"
+                  />
+                  <small className="text-muted">
+                    Valor calculado: $
+                    {valorRetencionFuente.toLocaleString("es-CO")}
+                  </small>
+                </div>
+                <div className="col-md-3">
+                  <label className="form-label">Retención IVA (%)</label>
+                  <input
+                    type="number"
+                    name="retencionIVA"
+                    className="form-control"
+                    value={producto.retencionIVA}
+                    onChange={handleChange}
+                    step="0.01"
+                    placeholder="Ej: 15"
+                  />
+                  <small className="text-muted">
+                    Valor calculado: $
+                    {valorRetencionIVA.toLocaleString("es-CO")}
+                  </small>
+                </div>
+                <div className="col-md-3">
+                  <label className="form-label">Retención ICA (%)</label>
+                  <input
+                    type="number"
+                    name="retencionICA"
+                    className="form-control"
+                    value={producto.retencionICA}
+                    onChange={handleChange}
+                    step="0.01"
+                    placeholder="Ej: 6.9"
+                  />
+                  <small className="text-muted">
+                    Valor calculado: $
+                    {valorRetencionICA.toLocaleString("es-CO")}
+                  </small>
+                </div>
+              </div>
+
+              {/* Unidad de medida y precios */}
               <h6 className="border-bottom pb-2 mb-3">Unidad y Precios</h6>
 
               <div className="row mb-3">
                 <div className="col-md-3">
                   <label className="form-label">Unidad de Medida</label>
-                  <select
+                  <Select
                     name="unidadMedida"
-                    className="form-select"
-                    value={producto.unidadMedida}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Seleccionar</option>
-                    {unidadesMedidaDIAN.map((un) => (
-                      <option key={un.codigo} value={un.codigo}>
-                        {un.codigo} - {un.label}
-                      </option>
-                    ))}
-                  </select>
+                    options={unidadesMedidaDIAN.map((um) => ({
+                      value: um.nombre,
+                      label: `${um.codigo} - ${um.nombre}`,
+                    }))}
+                    value={
+                      producto.unidadMedida
+                        ? unidadesMedidaDIAN
+                            .map((um) => ({
+                              value: um.nombre,
+                              label: `${um.codigo} - ${um.nombre}`,
+                            }))
+                            .find((opt) => opt.value === producto.unidadMedida)
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setProducto((prev) => ({
+                        ...prev,
+                        unidadMedida: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar unidad de medida"
+                  />
                 </div>
                 <div className="col-md-3">
                   <label className="form-label">Precio Unitario</label>
@@ -453,20 +637,18 @@ useEffect(() => {
                 <div className="col-md-3">
                   <label className="form-label">Código de Barras</label>
                   <input
-                    ref={codigoBarrasRef}
                     type="text"
                     name="codigoBarras"
                     className="form-control"
                     value={producto.codigoBarras}
                     onChange={handleChange}
-                    autoComplete="off"
-                    placeholder="Escanea el código aquí"
                   />
                 </div>
               </div>
 
+              {/* Impuestos */}
               <h6 className="border-bottom pb-2 mb-3">
-                Impuestos - Configuracion DIAN
+                Impuestos - Configuración DIAN
               </h6>
 
               <div className="row mb-3">
@@ -553,6 +735,7 @@ useEffect(() => {
                 )}
               </div>
 
+              {/* Inventario */}
               <h6 className="border-bottom pb-2 mb-3">Inventario</h6>
 
               <div className="row mb-3">
@@ -579,6 +762,7 @@ useEffect(() => {
                 </div>
               </div>
 
+              {/* Botones */}
               <div className="d-flex justify-content-end gap-2">
                 <button
                   type="button"
@@ -598,9 +782,10 @@ useEffect(() => {
         </div>
       )}
 
+      {/* Tabla productos */}
       <div className="card">
         <div className="card-body">
-          {productos.length === 0 ? (
+          {filtrados.length === 0 ? (
             <div className="alert alert-info">
               No hay productos registrados.
             </div>
@@ -618,7 +803,7 @@ useEffect(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  {productos.map((prod) => (
+                  {filtrados.map((prod) => (
                     <tr key={prod.id}>
                       <td>{prod.id}</td>
                       <td>{prod.nombre}</td>
