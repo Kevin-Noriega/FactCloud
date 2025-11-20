@@ -1,0 +1,14 @@
+@FacturacionAPI_HostAddress = http://localhost:5119
+
+GET {{FacturacionAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{FacturacionAPI_HostAddress}}/api/Usuarios
+Content-Type: application/json
+
+###
+
+GET {{FacturacionAPI_HostAddress}}/api/Usuarios
+Accept: application/json

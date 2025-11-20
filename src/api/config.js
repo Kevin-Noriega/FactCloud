@@ -1,3 +1,2 @@
 // src/api/config.js
-export const API_URL = "https://localhost:7237/api";
-
+export const API_URL = "https://localhost:7149/api";

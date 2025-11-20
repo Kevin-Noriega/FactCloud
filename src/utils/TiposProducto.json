@@ -1,0 +1,12 @@
+[
+    {"codigo": "01", "descripcion": "Bien gravado"},
+    {"codigo": "02", "descripcion": "Bien no gravado"},
+    {"codigo": "03", "descripcion": "Bien exento"},
+    {"codigo": "04", "descripcion": "Bien excluido"},
+    {"codigo": "05", "descripcion": "Servicio gravado"},
+    {"codigo": "06", "descripcion": "Servicio no gravado"},
+    {"codigo": "07", "descripcion": "Servicio exento"},
+    {"codigo": "08", "descripcion": "Servicio excluido"},
+    {"codigo": "09", "descripcion": "Otros tipos especiales"}
+  ]
+

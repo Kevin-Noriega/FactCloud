@@ -1,126 +1,123 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../api/config";
+import logo from "../img/logoFC.png";
 
 function Login() {
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      console.log("📩 Verificando usuario...");
-      const response = await fetch(`${API_URL}/Usuarios`);
-      const usuarios = await response.json();
+      const response = await fetch(`${API_URL}/Auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          correo: correo,
+          contrasena: contraseña,
+        }),
+      });
 
-      console.log("📋 Usuarios obtenidos:", usuarios);
-
-      // ✅ CORREGIDO: Usar los nombres correctos del modelo C#
-      const usuarioEncontrado = usuarios.find(
-        (u) => u.correo === correo && u.contrasenaHash === contraseña
-      );
-
-      if (usuarioEncontrado) {
-        alert("✅ Inicio de sesión exitoso");
-        localStorage.setItem("usuario", JSON.stringify(usuarioEncontrado));
-        navigate("/dashboard");
-      } else {
+      if (!response.ok) {
         alert("❌ Correo o contraseña incorrectos");
+        return;
       }
+
+      const data = await response.json();
+
+      // data = { token: "...", usuario: {...} }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+      alert("✅ Inicio de sesión exitoso");
+      navigate("/dashboard");
     } catch (error) {
-      console.error("❌ Error al iniciar sesión:", error);
-      alert("Error al conectar con el servidor");
+      console.error("Error login:", error);
+      alert("❌ Error al conectar con el servidor");
     }
   };
+  const estiloAnimacion = document.createElement("style");
+  estiloAnimacion.innerHTML = `
+@keyframes moverFondo {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+`;
+  document.head.appendChild(estiloAnimacion);
 
   const estilos = {
     fondo: {
-      backgroundColor: "#0f172a",
+      background:
+        "linear-gradient(135deg, #0b1522, #0f1e32, #113a56, #2f78a2ff)",
+      backgroundSize: "600% 600%",
+      animation: "moverFondo 10s ease infinite",
       height: "100vh",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       fontFamily: "Segoe UI, sans-serif",
+      color: "white",
     },
     tarjeta: {
       backgroundColor: "#ffffff",
-      padding: "3rem 2.5rem",
-      borderRadius: "1rem",
+      padding: "25px 40px",
+      borderRadius: "16px",
       width: "380px",
       boxShadow: "0px 5px 20px rgba(0, 0, 0, 0.35)",
       textAlign: "center",
     },
-    titulo: {
-      color: "#15803d",
-      fontSize: "2rem",
-      fontWeight: "bold",
-      marginBottom: "0.5rem",
-      letterSpacing: "1px",
-    },
     subtitulo: {
       color: "#1e293b",
-      fontSize: "1.2rem",
-      marginBottom: "2rem",
+      fontSize: "19px",
+      marginBottom: "32px",
     },
     campo: {
       display: "flex",
       flexDirection: "column",
       textAlign: "left",
-      marginBottom: "1.3rem",
+      marginBottom: "21px",
     },
     label: {
       fontWeight: "600",
-      marginBottom: "0.4rem",
-      color: "#334155",
+      marginBottom: "6.4px",
+      color: "#000000ff",
     },
     input: {
       border: "1px solid #cbd5e1",
       borderRadius: "8px",
-      padding: "0.8rem",
-      fontSize: "1rem",
+      padding: "13px",
+      fontSize: "16px",
       outline: "none",
     },
     boton: {
       backgroundColor: "#16a34a",
       color: "#ffffff",
       border: "none",
-      padding: "0.9rem",
+      padding: "14px",
       width: "100%",
       fontWeight: "600",
       borderRadius: "8px",
       cursor: "pointer",
-      fontSize: "1rem",
-      marginTop: "0.5rem",
-      transition: "background 0.3s",
-    },
-    botonRegistro: {
-      backgroundColor: "#0ea5e9",
-      color: "#ffffff",
-      border: "none",
-      padding: "0.9rem",
-      width: "100%",
-      fontWeight: "600",
-      borderRadius: "8px",
-      cursor: "pointer",
-      fontSize: "1rem",
-      marginTop: "0.8rem",
-      transition: "background 0.3s",
+      fontSize: "16px",
+      marginTop: "8px",
+      transition: "background 300ms",
     },
     footer: {
-      marginTop: "2rem",
+      marginTop: "2px",
       color: "#64748b",
-      fontSize: "0.9rem",
+      fontSize: "14px",
     },
   };
-
   return (
     <div style={estilos.fondo}>
       <div style={estilos.tarjeta}>
-        <h1 style={estilos.titulo}>
-          Fact<span style={{ color: "#22c55e" }}>Cloud</span>
-        </h1>
+        <img src={logo} alt="logo FactCloud" className="pb-3" />
         <h2 style={estilos.subtitulo}>Iniciar Sesión</h2>
 
         <form onSubmit={handleSubmit}>
@@ -157,15 +154,15 @@ function Login() {
             Ingresar
           </button>
 
-          <button
-            type="button"
-            style={estilos.botonRegistro}
-            onClick={() => navigate("/registrar-usuario")}
-            onMouseOver={(e) => (e.target.style.backgroundColor = "#0284c7")}
-            onMouseOut={(e) => (e.target.style.backgroundColor = "#0ea5e9")}
-          >
-            Registrarse
-          </button>
+          <p style={{ marginTop: "15px", color: "#475569" }}>
+            ¿No tienes cuenta?{" "}
+            <span
+              style={{ color: "#00a2ff", fontWeight: "600", cursor: "pointer" }}
+              onClick={() => navigate("/registrarUsuario")}
+            >
+              Regístrate aquí
+            </span>
+          </p>
         </form>
 
         <p style={estilos.footer}>© 2025 FACTCLOUD</p>

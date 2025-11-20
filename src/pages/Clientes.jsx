@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
-import ciudades from "./Ciudades.json";
-
-const tiposDocumentoDIAN = [
-  {  label: "Cédula de Ciudadanía" },
-  { label: "NIT" },
-  { label: "Cédula de Extranjería" },
-  { label: "CE" },
-  { label: "Pasaporte" },
-];
+import tipoIdentificacion from "../utils/TiposDocumentos.json";
+import Select from "react-select";
+import actividadesCIIU from "../utils/ActividadesEconomicasCIIU.json";
+import regimenTributarioDIAN from "../utils/RegimenTributario.json";
+import regimenFiscalDIAN from "../utils/RegimenFiscal.json";
+import {
+  obtenerSiglas,
+  departamentosOptions,
+  ciudadesOptionsPorDepartamento,
+} from "../utils/Helpers";
 
 function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -36,13 +37,18 @@ function Clientes() {
     ciudad: "",
     direccion: "",
     codigoPostal: "",
-    responsabilidadFiscal: "",
+    regimenFiscal: "",
     retenedorIVA: false,
     retenedorICA: false,
     retenedorRenta: false,
     autoretenedorRenta: false,
+    estado: true,
+    municipioCodigo: "",
+    departamentoCodigo: "",
+    pais: "CO",
+    nombreComercial: "",
+    actividadEconomicaCIIU: "",
   });
-
   useEffect(() => {
     fetchClientes();
   }, []);
@@ -69,30 +75,25 @@ function Clientes() {
     }));
   };
 
-  const handleDepartamentoChange = (e) => {
-    setCliente((prev) => ({
-      ...prev,
-      departamento: e.target.value,
-      ciudad: "",
-    }));
-  };
-
   const limpiarFormulario = () => {
     setCliente({
       nombre: "",
       apellido: "",
-      tipoIdentificacion: "13",
+      tipoIdentificacion: "",
       numeroIdentificacion: "",
       digitoVerificacion: "",
-      tipoPersona: "Natural",
-      regimenTributario: "Simplificado",
+      tipoPersona: "",
+      regimenTributario: "",
+      regimenFiscal: "",
       correo: "",
       telefono: "",
       departamento: "",
       ciudad: "",
+      municipioCodigo: "",
+      departamentoCodigo: "",
       direccion: "",
       codigoPostal: "",
-      responsabilidadFiscal: "",
+
       retenedorIVA: false,
       retenedorICA: false,
       retenedorRenta: false,
@@ -110,31 +111,58 @@ function Clientes() {
         alert("No se encontró un usuario autenticado.");
         return;
       }
+
       const payload = {
-        ...cliente,
+        nombre: cliente.nombre,
+        apellido: cliente.apellido,
+        tipoIdentificacion: cliente.tipoIdentificacion,
+        numeroIdentificacion: cliente.numeroIdentificacion,
+        digitoVerificacion:
+          cliente.digitoVerificacion !== "" &&
+          cliente.digitoVerificacion !== null
+            ? parseInt(cliente.digitoVerificacion, 10)
+            : null,
+        tipoPersona: cliente.tipoPersona,
+        regimenTributario: cliente.regimenTributario,
+        regimenFiscal: cliente.regimenFiscal,
+        correo: cliente.correo,
+        telefono: cliente.telefono || "",
+        departamento: cliente.departamento,
+        ciudad: cliente.ciudad,
+        direccion: cliente.direccion,
+        codigoPostal: cliente.codigoPostal || "",
+
+        retenedorIVA: !!cliente.retenedorIVA,
+        retenedorICA: !!cliente.retenedorICA,
+        retenedorRenta: !!cliente.retenedorRenta,
+        autoretenedorRenta: !!cliente.autoretenedorRenta,
+        estado: typeof cliente.estado === "boolean" ? cliente.estado : true,
+        municipioCodigo: cliente.municipioCodigo || "",
+        departamentoCodigo: cliente.departamentoCodigo || "",
+        pais: cliente.pais || "CO",
+        nombreComercial: cliente.nombreComercial || "",
+        actividadEconomicaCIIU: cliente.actividadEconomicaCIIU || "",
         usuarioId: usuarioGuardado.id,
-        digitoVerificacion: cliente.digitoVerificacion
-          ? parseInt(cliente.digitoVerificacion)
-          : null,
       };
+
+      console.log("Payload que se envía al backend:", payload);
+
       const url = clienteEditando
         ? `${API_URL}/Clientes/${clienteEditando}`
         : `${API_URL}/Clientes`;
       const method = clienteEditando ? "PUT" : "POST";
+
       const respuesta = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       if (!respuesta.ok) {
         const texto = await respuesta.text();
         throw new Error(texto);
       }
-      alert(
-        clienteEditando
-          ? "Cliente actualizado correctamente"
-          : "Cliente agregado correctamente"
-      );
+
       limpiarFormulario();
       fetchClientes();
     } catch (error) {
@@ -144,25 +172,35 @@ function Clientes() {
 
   const editarCliente = (cli) => {
     setCliente({
-      nombre: cli.nombre,
-      apellido: cli.apellido,
-      tipoIdentificacion: cli.tipoIdentificacion,
-      numeroIdentificacion: cli.numeroIdentificacion,
-      digitoVerificacion: cli.digitoVerificacion || "",
-      tipoPersona: cli.tipoPersona,
-      regimenTributario: cli.regimenTributario,
-      correo: cli.correo,
+      id: clienteEditando,
+      nombre: cli.nombre || "",
+      apellido: cli.apellido || "",
+      tipoIdentificacion: cli.tipoIdentificacion || "",
+      numeroIdentificacion: cli.numeroIdentificacion || "",
+      digitoVerificacion: cli.digitoVerificacion ?? "",
+      tipoPersona: cli.tipoPersona || "",
+      regimenTributario: cli.regimenTributario || "",
+      correo: cli.correo || "",
       telefono: cli.telefono || "",
-      departamento: cli.departamento,
-      ciudad: cli.ciudad,
-      direccion: cli.direccion,
+      departamento: cli.departamento || "",
+      ciudad: cli.ciudad || "",
+      municipioCodigo: cli.municipioCodigo || "",
+      departamentoCodigo: cli.departamentoCodigo || "",
+      direccion: cli.direccion || "",
       codigoPostal: cli.codigoPostal || "",
-      responsabilidadFiscal: cli.responsabilidadFiscal || "",
-      retenedorIVA: cli.retenedorIVA,
-      retenedorICA: cli.retenedorICA,
-      retenedorRenta: cli.retenedorRenta,
-      autoretenedorRenta: cli.autoretenedorRenta,
+      regimenFiscal: cli.regimenFiscal || "",
+      retenedorIVA: !!cli.retenedorIVA,
+      retenedorICA: !!cli.retenedorICA,
+      retenedorRenta: !!cli.retenedorRenta,
+      autoretenedorRenta: !!cli.autoretenedorRenta,
+
+      pais: cli.pais || "CO",
+      nombreComercial: cli.nombreComercial || "",
+      actividadEconomicaCIIU: cli.actividadEconomicaCIIU || "",
+
+      estado: typeof cli.estado === "boolean" ? cli.estado : true,
     });
+
     setClienteEditando(cli.id);
     setMostrarFormulario(true);
   };
@@ -175,6 +213,7 @@ function Clientes() {
       });
       if (!respuesta.ok) throw new Error("Error al eliminar cliente");
       setMensajeExito("Cliente eliminado con éxito.");
+      setTimeout(() => setMensajeExito(""), 3000);
       setClienteEliminado(cli);
       setMostrarInfo(false);
       fetchClientes();
@@ -277,7 +316,7 @@ function Clientes() {
                 <tr>
                   <th>Identificación</th>
                   <td>
-                    {clienteVer.tipoIdentificacion} -{" "}
+                    {obtenerSiglas(clienteVer.tipoIdentificacion)} -{" "}
                     {clienteVer.numeroIdentificacion}
                   </td>
                 </tr>
@@ -405,32 +444,6 @@ function Clientes() {
           </div>
         </div>
       )}
-      {mensajeExito && (
-        <div
-          className="alert alert-danger d-flex justify-content-between align-items-center"
-          role="alert"
-        >
-          <span>{mensajeExito}</span>
-          <div>
-            {clienteEliminado && (
-              <button
-                className="btn btn-light btn-sm me-2"
-                onClick={() => setMostrarInfo((x) => !x)}
-              >
-                {mostrarInfo ? "Ocultar info" : "Ver cliente"}
-              </button>
-            )}
-            <button
-              className="btn btn-close"
-              onClick={() => {
-                setMensajeExito("");
-                setClienteEliminado(null);
-                setMostrarInfo(false);
-              }}
-            ></button>
-          </div>
-        </div>
-      )}
       {mostrarInfo && clienteEliminado && (
         <pre className="bg-light p-3 rounded border text-dark">
           {JSON.stringify(clienteEliminado, null, 2)}
@@ -453,42 +466,72 @@ function Clientes() {
                     onChange={handleChange}
                     required
                   >
+                    <option value="">Seleccionar</option>
                     <option value="Natural">Persona Natural</option>
                     <option value="Juridica">Persona Jurídica</option>
                   </select>
                 </div>
                 <div className="col-md-4">
                   <label className="form-label">Tipo de Identificación</label>
-                  <select
+                  <Select
                     name="tipoIdentificacion"
-                    className="form-select"
-                    value={cliente.tipoIdentificacion}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Seleccionar</option>
-                    {tiposDocumentoDIAN.map((op) => (
-                      <option key={op.codigo} value={op.codigo}>
-                        {op.codigo} - {op.label}
-                      </option>
-                    ))}
-                  </select>
+                    options={tipoIdentificacion.map((ti) => ({
+                      value: ti.nombre,
+                      label: `${ti.codigo} - ${ti.nombre}`,
+                    }))}
+                    value={
+                      cliente.tipoIdentificacion
+                        ? tipoIdentificacion
+                            .map((ti) => ({
+                              value: ti.nombre,
+                              label: `${ti.codigo} - ${ti.nombre}`,
+                            }))
+                            .find(
+                              (opt) => opt.value === cliente.tipoIdentificacion
+                            )
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setCliente((prev) => ({
+                        ...prev,
+                        tipoIdentificacion: opt ? opt.value : "",
+                        tipoIdentificacionNombre: opt ? opt.nombre : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar tipo de identificacion"
+                  />
                 </div>
                 <div className="col-md-4">
                   <label className="form-label">Régimen Tributario</label>
-                  <select
+
+                  <Select
                     name="regimenTributario"
-                    className="form-select"
-                    value={cliente.regimenTributario}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="Simplificado">Régimen Simplificado</option>
-                    <option value="Comun">Régimen Común</option>
-                    <option value="Gran Contribuyente">
-                      Gran Contribuyente
-                    </option>
-                  </select>
+                    options={regimenTributarioDIAN.map((rt) => ({
+                      value: rt.descripcion,
+                      label: `${rt.codigo} - ${rt.descripcion}`,
+                    }))}
+                    value={
+                      cliente.regimenTributario
+                        ? regimenTributarioDIAN
+                            .map((rt) => ({
+                              value: rt.descripcion,
+                              label: `${rt.codigo} - ${rt.descripcion}`,
+                            }))
+                            .find(
+                              (opt) => opt.value === cliente.regimenTributario
+                            )
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setCliente((prev) => ({
+                        ...prev,
+                        regimenTributario: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar Regimen tributario"
+                  />
                 </div>
               </div>
               <div className="row mb-3">
@@ -516,23 +559,81 @@ function Clientes() {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Responsabilidad Fiscal</label>
-                  <select
-                    name="responsabilidadFiscal"
-                    className="form-select"
-                    value={cliente.responsabilidadFiscal}
-                    onChange={handleChange}
-                  >
-                    <option value="">Seleccionar</option>
-                    <option value="O-13">O-13 Gran Contribuyente</option>
-                    <option value="O-15">O-15 Autoretenedor</option>
-                    <option value="O-23">O-23 Agente de retención IVA</option>
-                    <option value="R-99-PN">
-                      R-99-PN No responsable de IVA
-                    </option>
-                  </select>
+                  <label className="form-label">Regimen Fiscal</label>
+                  <Select
+                    name="regimenFiscal"
+                    options={regimenFiscalDIAN.map((rf) => ({
+                      value: rf.descripcion,
+                      label: `${rf.codigo} - ${rf.descripcion}`,
+                    }))}
+                    value={
+                      cliente.regimenFiscal
+                        ? regimenFiscalDIAN
+                            .map((rf) => ({
+                              value: rf.descripcion,
+                              label: `${rf.codigo} - ${rf.descripcion}`,
+                            }))
+                            .find((opt) => opt.value === cliente.regimenFiscal)
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setCliente((prev) => ({
+                        ...prev,
+                        regimenFiscal: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar Regimen fiscal"
+                  />
                 </div>
               </div>
+              <h6 className="border-bottom pb-2 mb-3 mt-4">
+                Datos comerciales
+              </h6>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label">Nombre Comercial</label>
+                  <input
+                    type="text"
+                    name="nombreComercial"
+                    className="form-control"
+                    value={cliente.nombreComercial}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Actividad Económica CIIU</label>
+                  <Select
+                    name="actividadEconomicaCIIU"
+                    options={actividadesCIIU.map((act) => ({
+                      value: act.codigo,
+                      label: `${act.codigo} - ${act.descripcion}`,
+                    }))}
+                    value={
+                      cliente.actividadEconomicaCIIU
+                        ? actividadesCIIU
+                            .map((act) => ({
+                              value: act.codigo,
+                              label: `${act.codigo} - ${act.descripcion}`,
+                            }))
+                            .find(
+                              (opt) =>
+                                opt.value === cliente.actividadEconomicaCIIU
+                            )
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setCliente((prev) => ({
+                        ...prev,
+                        actividadEconomicaCIIU: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar actividad CIIU"
+                  />
+                </div>
+              </div>
+
               <h6 className="border-bottom pb-2 mb-3 mt-4">
                 Información Personal
               </h6>
@@ -592,38 +693,61 @@ function Clientes() {
               <div className="row mb-3">
                 <div className="col-md-6">
                   <label className="form-label">Departamento</label>
-                  <select
+                  <Select
                     name="departamento"
-                    className="form-select"
-                    value={cliente.departamento}
-                    onChange={handleDepartamentoChange}
+                    options={departamentosOptions}
+                    value={
+                      cliente.departamentoCodigo
+                        ? departamentosOptions.find(
+                            (opt) =>
+                              String(opt.departamentoCodigo) ===
+                              String(cliente.departamentoCodigo)
+                          ) || null
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setCliente((prev) => ({
+                        ...prev,
+                        departamento: opt ? opt.value : "",
+                        departamentoCodigo: opt ? opt.departamentoCodigo : "",
+                        ciudad: "",
+                        municipioCodigo: "",
+                      }))
+                    }
+                    placeholder="Seleccionar departamento"
+                    isClearable
                     required
-                  >
-                    <option value="">Seleccionar departamento</option>
-                    {Object.keys(ciudades).map((dep) => (
-                      <option key={dep} value={dep}>
-                        {dep}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
                 <div className="col-md-6">
                   <label className="form-label">Ciudad o Municipio</label>
-                  <select
+                  <Select
                     name="ciudad"
-                    className="form-select"
-                    value={cliente.ciudad}
-                    onChange={handleChange}
-                    required
-                    disabled={!cliente.departamento}
-                  >
-                    <option value="">Seleccionar ciudad</option>
-                    {(ciudades[cliente.departamento] || []).map((ciudad) => (
-                      <option key={ciudad} value={ciudad}>
-                        {ciudad}
-                      </option>
-                    ))}
-                  </select>
+                    options={ciudadesOptionsPorDepartamento(
+                      cliente.departamento
+                    )}
+                    value={
+                      cliente.municipioCodigo
+                        ? ciudadesOptionsPorDepartamento(
+                            cliente.departamento
+                          ).find(
+                            (opt) =>
+                              String(opt.municipioCodigo) ===
+                              String(cliente.municipioCodigo)
+                          ) || null
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setCliente((prev) => ({
+                        ...prev,
+                        ciudad: opt ? opt.value : "",
+                        municipioCodigo: opt ? opt.municipioCodigo : "",
+                      }))
+                    }
+                    placeholder="Seleccionar ciudad"
+                    isClearable
+                    isDisabled={!cliente.departamento}
+                  />
                 </div>
               </div>
               <div className="row mb-3">

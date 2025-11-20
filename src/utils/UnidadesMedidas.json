@@ -1,0 +1,70 @@
+[
+  {
+    "codigo": "94",
+    "nombre": "Unidad (UND)"
+  },
+  {
+    "codigo": "KGM",
+    "nombre": "Kilogramo (KGM)"
+  },
+  {
+    "codigo": "LTR",
+    "nombre": "Litro (LTR)"
+  },
+  {
+    "codigo": "MTR",
+    "nombre": "Metro (MTR)"
+  },
+  {
+    "codigo": "MTK",
+    "nombre": "Metro cuadrado (MTK)"
+  },
+  {
+    "codigo": "CE",
+    "nombre": "Cien unidades (CE)"
+  },
+  {
+    "codigo": "GRM",
+    "nombre": "Gramo (GRM)"
+  },
+  {
+    "codigo": "MWH",
+    "nombre": "Megavatio hora (MWH)"
+  },
+  {
+    "codigo": "HUR",
+    "nombre": "Hora (HUR)"
+  },
+  {
+    "codigo": "CMK",
+    "nombre": "Centímetro cuadrado (CMK)"
+  },
+  {
+    "codigo": "CMT",
+    "nombre": "Centímetro (CMT)"
+  },
+  {
+    "codigo": "INH",
+    "nombre": "Pulgada (INH)"
+  },
+  {
+    "codigo": "LTR",
+    "nombre": "Litro (LTR)"
+  },
+  {
+    "codigo": "MLT",
+    "nombre": "Mililitro (MLT)"
+  },
+  {
+    "codigo": "PR",
+    "nombre": "Par (PR)"
+  },
+  {
+    "codigo": "SET",
+    "nombre": "Set (SET)"
+  },
+  {
+    "codigo": "NIU",
+    "nombre": "Unidad internacional (NIU)"
+  }
+]

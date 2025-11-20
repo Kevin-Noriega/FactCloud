@@ -1,0 +1,47 @@
+[
+  {
+    "codigo": "13",
+    "nombre": "Cédula de Ciudadanía",
+    "sigla": "CC"
+  },
+  {
+    "codigo": "21",
+    "nombre": "Tarjeta de Extranjería",
+    "sigla": "TE"
+  },
+  {
+    "codigo": "22",
+    "nombre": "Cédula de Extranjería",
+    "sigla": "CE"
+  },
+  {
+    "codigo": "31",
+    "nombre": "NIT",
+    "sigla": "NIT"
+  },
+  {
+    "codigo": "41",
+    "nombre": "Pasaporte",
+    "sigla": "PP"
+  },
+  {
+    "codigo": "42",
+    "nombre": "Tipo de documento extranjero",
+    "sigla": "PE"
+  },
+  {
+    "codigo": "47",
+    "nombre": "PEP",
+    "sigla": "PEP"
+  },
+  {
+    "codigo": "50",
+    "nombre": "NIT de otro país",
+    "sigla": "NITEX"
+  },
+  {
+    "codigo": "91",
+    "nombre": "NUIP",
+    "sigla": "NUIP"
+  }
+]
