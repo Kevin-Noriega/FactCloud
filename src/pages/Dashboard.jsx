@@ -19,32 +19,58 @@ function Dashboard() {
   }, []);
 
   const cargarDatos = async () => {
-    try {
-      const resClientes = await fetch(`${API_URL}/clientes`);
-      const dataClientes = await resClientes.json();
-      setClientesCount(dataClientes.length);
+  try {
+    const token = localStorage.getItem("token");
 
-      const resProductos = await fetch(`${API_URL}/productos`);
-      const dataProductos = await resProductos.json();
-      setProductosCount(dataProductos.length);
 
-      const resFacturas = await fetch(`${API_URL}/facturas`);
-      const dataFacturas = await resFacturas.json();
-      setFacturasCount(dataFacturas.length);
+    const [resClientes, resProductos, resFacturas] = await Promise.all([
+      fetch(`${API_URL}/clientes`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      }),
+      fetch(`${API_URL}/productos`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      }),
+      fetch(`${API_URL}/facturas`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      })
+    ]);
 
-      const pendientes = dataFacturas.filter(
-        (f) => f.estado === "Pendiente" || f.estado === "Emitida"
-      ).length;
-      setFacturasPendientes(pendientes);
+    // Convertir respuestas a JSON
+    const [dataClientes, dataProductos, dataFacturas] = await Promise.all([
+      resClientes.json(),
+      resProductos.json(),
+      resFacturas.json()
+    ]);
 
-      const total = dataFacturas.reduce((sum, f) => sum + f.totalFactura, 0);
-      setTotalVentas(total);
-    } catch (error) {
-      console.error("Error al cargar datos:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Actualizar estados
+    setClientesCount(dataClientes.length);
+    setProductosCount(dataProductos.length);
+    setFacturasCount(dataFacturas.length);
+
+    const pendientes = dataFacturas.filter(
+      (f) => f.estado === "Pendiente" || f.estado === "Emitida"
+    ).length;
+    setFacturasPendientes(pendientes);
+
+    const total = dataFacturas.reduce((sum, f) => sum + f.totalFactura, 0);
+    setTotalVentas(total);
+
+  } catch (error) {
+    console.error("Error al cargar datos:", error);
+    alert("Error al cargar los datos del dashboard");
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (loading) {
     return (
@@ -311,7 +337,6 @@ function Dashboard() {
                         Facturación electrónica obligatoria
                       </small>
                     </div>
-                    <span className="badge bg-primary">Nuevo</span>
                   </div>
                 </a>
 

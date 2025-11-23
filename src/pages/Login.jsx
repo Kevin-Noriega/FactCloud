@@ -7,40 +7,47 @@ function Login() {
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await fetch(`${API_URL}/Auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          correo: correo,
-          contrasena: contraseña,
-        }),
-      });
+  try {
+    const response = await fetch(`${API_URL}/Auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        correo: correo,
+        contrasena: contraseña,
+      }),
+    });
 
-      if (!response.ok) {
-        alert("❌ Correo o contraseña incorrectos");
-        return;
-      }
-
-      const data = await response.json();
-
-      // data = { token: "...", usuario: {...} }
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
-      alert("✅ Inicio de sesión exitoso");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error login:", error);
-      alert("❌ Error al conectar con el servidor");
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert(errorData.message || "Correo o contraseña incorrectos");
+      return;
     }
-  };
+
+    const data = await response.json();
+
+    // Validar que el token existe
+    if (!data.token || !data.usuario) {
+      alert("Error: respuesta del servidor incompleta");
+      return;
+    }
+
+    // Guardar en localStorage
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+
+    navigate("/dashboard");
+  } catch (error) {
+    console.error("Error login:", error);
+    alert("Error al conectar con el servidor");
+  }
+};
+
   const estiloAnimacion = document.createElement("style");
   estiloAnimacion.innerHTML = `
 @keyframes moverFondo {

@@ -10,12 +10,14 @@ function Facturas() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+    const [buscador, setBuscador] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
   const [facturaParaPago, setFacturaParaPago] = useState(null);
-
+  const [facturaVista, setFacturaVista] = useState(null);
   const [codigoBarras, setCodigoBarras] = useState("");
   const barcodeInputRef = useRef(null);
+    const [filtro, setFiltro] = useState("recientes");
 
   const [factura, setFactura] = useState({
     clienteId: "",
@@ -26,7 +28,23 @@ function Facturas() {
     fechaVencimiento: "",
   });
 
-  const [facturaVista, setFacturaVista] = useState(null);
+const filtrados = facturas
+    .filter((fac) => {
+      const query = buscador.trim().toLowerCase();
+      return (
+        !query ||
+        fac.numeroFactura?.toLowerCase().includes(query)
+      );
+    })    .sort((a, b) => {
+      switch (filtro) {
+        case "recientes":
+          return new Date(b.fechaRegistro) - new Date(a.fechaRegistro);
+        case "antiguos":
+          return new Date(a.fechaRegistro) - new Date(b.fechaRegistro);
+        default:
+          return 0;
+      }
+    });
 
   const [productosSeleccionados, setProductosSeleccionados] = useState([]);
   const [pago, setPago] = useState({
@@ -81,7 +99,6 @@ function Facturas() {
     }
   };
 
-  // AUTOCOMPLETA FECHA SI CAMBIAS A CRÉDITO, LIMPIA SI VUELVES A CONTADO
   useEffect(() => {
     if (factura.metodoPagoCodigo === "20" && !factura.fechaVencimiento) {
       const hoy = new Date();
@@ -100,11 +117,34 @@ function Facturas() {
 
   const fetchDatos = async () => {
     try {
-      const [facturasRes, clientesRes, productosRes] = await Promise.all([
-        fetch(`${API_URL}/Facturas`),
-        fetch(`${API_URL}/Clientes`),
-        fetch(`${API_URL}/Productos`),
-      ]);
+      const token = localStorage.getItem("token");
+    
+    
+    if (!token) {
+      alert("No estás autenticado. Por favor inicia sesión.");
+      return;
+    }
+
+    const [facturasRes, clientesRes, productosRes] = await Promise.all([
+      fetch(`${API_URL}/Facturas`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+      }),
+      fetch(`${API_URL}/Clientes`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+      }),
+      fetch(`${API_URL}/Productos`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+      }),
+    ]);
 
       if (!facturasRes.ok || !clientesRes.ok || !productosRes.ok) {
         throw new Error("Error al cargar datos");
@@ -262,7 +302,7 @@ function Facturas() {
         usuarioId: usuarioGuardado.id,
         clienteId: parseInt(factura.clienteId),
         numeroFactura:
-          factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
+        factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
         prefijo: factura.prefijo,
         fechaEmision: fechaActual.toISOString(),
         horaEmision: fechaActual.toTimeString().split(" ")[0],
@@ -313,10 +353,13 @@ function Facturas() {
           };
         }),
       };
-
+      const token = localStorage.getItem("token");
       const respuesta = await fetch(`${API_URL}/Facturas`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
         body: JSON.stringify(payload),
       });
 
@@ -413,14 +456,33 @@ function Facturas() {
   return (
     <div className="container-fluid mt-4 px-4">
       <h2 className="text-info mb-4">Facturación Electrónica</h2>
-
+     <div className="d-flex justify-content-between align-items-center mb-3">
       <button
-        className="btn btn-info text-white mb-4"
+        className="btn btn-info text-white "
         onClick={() => setMostrarFormulario(!mostrarFormulario)}
       >
         {mostrarFormulario ? "Ocultar Formulario" : "Nueva Factura"}
       </button>
-
+       <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Buscar por numero de factura"
+            value={buscador}
+            onChange={(e) => setBuscador(e.target.value)}
+            style={{ flexGrow: 1 }}
+          />
+           <select
+            className="form-select"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+            style={{ width: "148px" }}
+          >
+            <option value="recientes">Más recientes</option>
+            <option value="antiguos">Más antiguos</option>
+          </select>
+          </div>
+      </div>
       {mostrarFormulario && (
         <div className="card mb-4">
           <div className="card-body">
@@ -814,7 +876,7 @@ function Facturas() {
 
       <div className="card">
         <div className="card-body">
-          {facturas.length === 0 ? (
+          {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay facturas registradas.</div>
           ) : (
             <div className="table-responsive">
@@ -833,7 +895,7 @@ function Facturas() {
                   </tr>
                 </thead>
                 <tbody>
-                  {facturas.map((fact) => (
+                  {filtrados.map((fact) => (
                     <tr key={fact.id}>
                       <td>
                         <strong>{fact.numeroFactura || fact.id}</strong>

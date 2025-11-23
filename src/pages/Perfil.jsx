@@ -34,7 +34,7 @@ function Perfil() {
 
   useEffect(() => {
     fetchPerfil();
-  });
+  },[]);
 
   async function fetchPerfil() {
     try {

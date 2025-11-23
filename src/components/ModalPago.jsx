@@ -64,7 +64,7 @@ function ModalPago({ factura, onSuccess, onClose }) {
 
       if (!respuesta.ok) {
         const errorData = await respuesta.text();
-        console.error("❌ Respuesta del servidor:", errorData);
+        console.error("Respuesta del servidor:", errorData);
         throw new Error("Error al registrar pago");
       }
 
