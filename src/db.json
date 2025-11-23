@@ -1,0 +1,17 @@
+
+{
+  "clientes": [
+    { "id": 1, "nombre": "Carlos Pérez", "correo": "carlos@mail.com", "telefono": "3001234567" },
+    { "id": 2, "nombre": "Ana López", "correo": "ana@mail.com", "telefono": "3109876543" },
+    { "id": 3, "nombre": "María Rodríguez", "correo": "maria@mail.com", "telefono": "3015551212" }
+  ],
+  "productos": [
+    { "id": 1, "nombre": "Laptop Dell Latitude", "precio": 3000000, "stock": 5, "categoria": "Electrónica", "activo": true },
+    { "id": 2, "nombre": "Monitor LG 27 pulgadas", "precio": 850000, "stock": 12, "categoria": "Periféricos", "activo": true },
+    { "id": 3, "nombre": "Teclado Mecánico RGB", "precio": 320000, "stock": 20, "categoria": "Periféricos", "activo": false }
+  ],
+  "facturas": [
+    { "id": "FAC-001", "cliente": "Carlos Pérez", "fecha": "2025-10-10", "total": 3320000, "estado": "Pagada" },
+    { "id": "FAC-002", "cliente": "Ana López", "fecha": "2025-10-12", "total": 1500000, "estado": "Pendiente" }
+  ]
+}

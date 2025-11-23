@@ -30,13 +30,10 @@ function Login() {
 
     const data = await response.json();
 
-    // Validar que el token existe
     if (!data.token || !data.usuario) {
       alert("Error: respuesta del servidor incompleta");
       return;
     }
-
-    // Guardar en localStorage
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
