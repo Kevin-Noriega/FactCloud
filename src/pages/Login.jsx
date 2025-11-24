@@ -8,6 +8,14 @@ function Login() {
   const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
+    console.log(
+      "JSON enviado:",
+      JSON.stringify({
+        Correo: correo,
+        Contrasena: contraseña,
+      })
+    );
+
     e.preventDefault();
 
     try {
@@ -17,29 +25,30 @@ function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          correo: correo,
-          contrasena: contraseña,
+          Correo: correo,
+          Contrasena: contraseña,
         }),
       });
 
       if (!response.ok) {
-        alert("Correo o contraseña incorrectos");
+        alert("❌ Correo o contraseña incorrectos");
         return;
       }
 
-      const data = await response.json();
+      const data = await response.json(); 
 
       // data = { token: "...", usuario: {...} }
-
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
+      alert("✅ Inicio de sesión exitoso");
       navigate("/dashboard");
     } catch (error) {
       console.error("Error login:", error);
       alert("❌ Error al conectar con el servidor");
     }
   };
+
   const estiloAnimacion = document.createElement("style");
   estiloAnimacion.innerHTML = `
 @keyframes moverFondo {
