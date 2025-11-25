@@ -8,9 +8,12 @@ function Productos() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [mensajeExito, setMensajeExito] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [productoEditando, setProductoEditando] = useState(null);
+  const [productoAEliminar, setProductoAEliminar] = useState(null);
   const [productoVer, setProductoVer] = useState(null);
+  const [, setProductoEliminado] = useState(null);
   const [buscador, setBuscador] = useState("");
   const [filtro, setFiltro] = useState("recientes");
 
@@ -29,7 +32,7 @@ function Productos() {
           return new Date(b.fechaRegistro) - new Date(a.fechaRegistro);
         case "antiguos":
           return new Date(a.fechaRegistro) - new Date(b.fechaRegistro);
-        case "caros":
+        case "precio elevado":
           return b.precioUnitario - a.precioUnitario;
         case "baratos":
           return a.precioUnitario - b.precioUnitario;
@@ -90,7 +93,14 @@ function Productos() {
 
   const fetchProductos = async () => {
     try {
-      const response = await fetch(`${API_URL}/Productos`);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/Productos`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
       const data = await response.json();
       setProductos(data);
@@ -159,6 +169,7 @@ function Productos() {
       }
 
       const payload = {
+        ...(productoEditando && { id: productoEditando }),
         nombre: producto.nombre,
         descripcion: producto.descripcion,
         codigoInterno: producto.codigoInterno,
@@ -187,15 +198,21 @@ function Productos() {
         estado: producto.estado,
         usuarioId: usuarioGuardado.id,
       };
+      if (productoEditando) {
+        payload.id = productoEditando;
+      }
 
+      const token = localStorage.getItem("token");
       const url = productoEditando
         ? `${API_URL}/Productos/${productoEditando}`
         : `${API_URL}/Productos`;
       const method = productoEditando ? "PUT" : "POST";
-
       const respuesta = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(payload),
       });
 
@@ -203,64 +220,86 @@ function Productos() {
         const errorTexto = await respuesta.text();
         throw new Error(errorTexto);
       }
-
+      setMensajeExito(
+        productoEditando
+          ? "Producto modificado con éxito."
+          : "Producto agregado con éxito."
+      );
+      setTimeout(() => setMensajeExito(""), 3000);
       limpiarFormulario();
       fetchProductos();
     } catch (error) {
-      console.error("Error:", error);
       alert("Error al guardar producto: " + error.message);
     }
   };
-
-  const editarProducto = (prod) => {
+  const editarProducto = (pro) => {
+    const { id } = pro; 
     setProducto({
-      id: productoEditando,
-      nombre: prod.nombre,
-      descripcion: prod.descripcion || "",
-      codigoInterno: prod.codigoInterno || "",
-      codigoUNSPSC: prod.codigoUNSPSC || "",
-      codigoEAN: prod.codigoEAN || "",
-      unidadMedida: prod.unidadMedida,
-      marca: prod.marca || "",
-      modelo: prod.modelo || "",
-      precioUnitario: prod.precioUnitario,
-      costo: prod.costo || "",
-      tipoImpuesto: prod.tipoImpuesto,
-      tarifaIVA: prod.tarifaIVA,
-      productoExcluido: prod.productoExcluido,
-      productoExento: prod.productoExento,
-      gravaINC: prod.gravaINC,
-      tarifaINC: prod.tarifaINC || 0,
-      cantidadDisponible: prod.cantidadDisponible,
-      cantidadMinima: prod.cantidadMinima,
-      categoria: prod.categoria || "",
-      codigoBarras: prod.codigoBarras || "",
-      tipoProducto: prod.tipoProducto || "",
-      baseGravable: prod.baseGravable || "",
-      retencionFuente: prod.retencionFuente || "",
-      retencionIVA: prod.retencionIVA || "",
-      retencionICA: prod.retencionICA || "",
-      estado: prod.estado,
+      nombre: pro.nombre || "",
+      descripcion: pro.descripcion || "",
+      codigoInterno: pro.codigoInterno || "",
+      codigoUNSPSC: pro.codigoUNSPSC || "",
+      codigoEAN: pro.codigoEAN || "",
+      unidadMedida: pro.unidadMedida || "Unidad",
+      marca: pro.marca || "",
+      modelo: pro.modelo || "",
+      precioUnitario: pro.precioUnitario || "",
+      costo: pro.costo || "",
+      tipoImpuesto: pro.tipoImpuesto || "IVA",
+      tarifaIVA: pro.tarifaIVA ?? 19,
+      productoExcluido: !!pro.productoExcluido,
+      productoExento: !!pro.productoExento,
+      gravaINC: !!pro.gravaINC,
+      tarifaINC: pro.tarifaINC ?? 0,
+      cantidadDisponible: pro.cantidadDisponible || "",
+      cantidadMinima: pro.cantidadMinima ?? 0,
+      categoria: pro.categoria || "",
+      codigoBarras: pro.codigoBarras || "",
+      estado: typeof pro.estado === "boolean" ? pro.estado : true,
+
+      tipoProducto: pro.tipoProducto || "",
+      baseGravable: pro.baseGravable || "",
+      retencionFuente: pro.retencionFuente || "",
+      retencionIVA: pro.retencionIVA || "",
+      retencionICA: pro.retencionICA || "",
     });
-    setProductoEditando(prod.id);
+
+    setProductoEditando(id);
     setMostrarFormulario(true);
   };
 
   const eliminarProducto = async (id) => {
-    if (!window.confirm("¿Está seguro de eliminar este producto?")) return;
-
     try {
-      const response = await fetch(`${API_URL}/Productos/${id}`, {
-        method: "DELETE",
+      const pro = productos.find((p) => p.id === id);
+
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${API_URL}/Productos/desactivar/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estado: false }),
       });
 
-      if (!response.ok) throw new Error("Error al eliminar producto");
+      if (!response.ok) {
+        const errorTxt = await response.text();
+        throw new Error(errorTxt);
+      }
 
+      setMensajeExito("Producto eliminado con éxito.");
+      setTimeout(() => setMensajeExito(""), 3000);
+
+      setProductoEliminado(pro);
       fetchProductos();
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error al eliminar producto");
+      console.error("Error al eliminar producto:", error);
+      setMensajeExito("");
+      alert("Error al eliminar producto: " + error.message);
     }
+
+    setProductoAEliminar(null);
   };
 
   if (loading) {
@@ -291,6 +330,23 @@ function Productos() {
   return (
     <div className="container-fluid mt-4 px-4">
       <h2 className="text-success mb-4">Inventario de Productos</h2>
+      {mensajeExito && (
+        <div
+          className="alert alert-danger d-flex justify-content-between align-items-center"
+          role="alert"
+        >
+          <span>{mensajeExito}</span>
+          <div>
+            <button
+              className="btn btn-close"
+              onClick={() => {
+                setMensajeExito("");
+                setProductoEliminado(null);
+              }}
+            ></button>
+          </div>
+        </div>
+      )}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <button
           className="btn btn-success"
@@ -298,7 +354,7 @@ function Productos() {
         >
           {mostrarFormulario ? "Ocultar Formulario" : "Nuevo Producto"}
         </button>
-        <div className="d-flex" style={{ gap: "1rem", width: "50%" }}>
+        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
           <input
             type="text"
             className="form-control"
@@ -320,7 +376,6 @@ function Productos() {
           </select>
         </div>
       </div>
-
       {productoVer && (
         <div
           style={{
@@ -382,7 +437,48 @@ function Productos() {
           </div>
         </div>
       )}
-
+      {productoAEliminar && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.3)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1055,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 10,
+              padding: 32,
+              minWidth: 320,
+              boxShadow: "0 2px 20px #3336",
+            }}
+          >
+            <h5 className="mb-3">¿Está seguro de eliminar este producto?</h5>
+            <div className="d-flex gap-2 justify-content-end">
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => setProductoAEliminar(null)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => eliminarProducto(productoAEliminar)}
+              >
+                Sí, eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}{" "}
       {mostrarFormulario && (
         <div className="card mb-4">
           <div className="card-body">
@@ -781,7 +877,6 @@ function Productos() {
           </div>
         </div>
       )}
-
       {/* Tabla productos */}
       <div className="card">
         <div className="card-body">
@@ -825,7 +920,7 @@ function Productos() {
                         </button>
                         <button
                           className="btn btn-sm btn-danger"
-                          onClick={() => eliminarProducto(prod.id)}
+                          onClick={() => setProductoAEliminar(prod.id)}
                         >
                           Eliminar
                         </button>

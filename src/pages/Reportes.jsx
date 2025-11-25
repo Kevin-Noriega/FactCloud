@@ -25,7 +25,13 @@ function Reportes() {
         url += `?${params.toString()}`;
       }
 
-      const response = await fetch(url);
+      const response = await fetch(url,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
       if (!response.ok) throw new Error("Error al generar reporte");
 
       const data = await response.json();
@@ -38,13 +44,22 @@ function Reportes() {
     }
   };
 
+const token = localStorage.getItem("token");
   const cargarTopClientes = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(
         `${API_URL}/Facturas/Reportes/TopClientes?top=10`
+        ,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  }
       );
+
       if (!response.ok) throw new Error("Error al cargar top clientes");
 
       const data = await response.json();
@@ -62,7 +77,13 @@ function Reportes() {
     setError(null);
     try {
       const response = await fetch(
-        `${API_URL}/Facturas/Reportes/ProductosMasVendidos?top=10`
+        `${API_URL}/Facturas/Reportes/ProductosMasVendidos?top=10`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  }
       );
       if (!response.ok)
         throw new Error("Error al cargar productos mas vendidos");

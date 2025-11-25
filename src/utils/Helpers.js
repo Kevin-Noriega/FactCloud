@@ -27,7 +27,7 @@ export function ciudadesOptionsPorDepartamento(departamento) {
     .map(c => ({
       value: c.ciudad,                          // nombre (para mostrar / guardar como nombre)
       label: `${c.codigoCiudad} - ${c.ciudad}`,
-      municipioCodigo: String(c.codigoCiudad)
+      ciudadCodigo: String(c.codigoCiudad)
     }));
 }
 /// Convierte números hasta billones y maneja decimales

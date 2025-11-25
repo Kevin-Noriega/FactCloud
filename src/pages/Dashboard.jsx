@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { API_URL } from "../api/config";
 import { Link } from "react-router-dom";
 import facturas from "../img/factura.png";
 import productos from "../img/productos.png";
 import clientes from "../img/clientes.png";
 import ganancias from "../img/ganancias.png";
+import { ToastContainer } from "react-toastify";
 
 function Dashboard() {
   const [clientesCount, setClientesCount] = useState(0);
@@ -14,22 +15,43 @@ function Dashboard() {
   const [totalVentas, setTotalVentas] = useState(0);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     cargarDatos();
   }, []);
 
   const cargarDatos = async () => {
     try {
-      const resClientes = await fetch(`${API_URL}/clientes`);
-      const dataClientes = await resClientes.json();
+      const token = localStorage.getItem("token");
+      const [resClientes, resProductos, resFacturas] = await Promise.all([
+        fetch(`${API_URL}/clientes`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/productos`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/facturas`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      const [dataClientes, dataProductos, dataFacturas] = await Promise.all([
+        resClientes.json(),
+        resProductos.json(),
+        resFacturas.json(),
+      ]);
+
       setClientesCount(dataClientes.length);
-
-      const resProductos = await fetch(`${API_URL}/productos`);
-      const dataProductos = await resProductos.json();
       setProductosCount(dataProductos.length);
-
-      const resFacturas = await fetch(`${API_URL}/facturas`);
-      const dataFacturas = await resFacturas.json();
       setFacturasCount(dataFacturas.length);
 
       const pendientes = dataFacturas.filter(
@@ -39,8 +61,12 @@ function Dashboard() {
 
       const total = dataFacturas.reduce((sum, f) => sum + f.totalFactura, 0);
       setTotalVentas(total);
+
+      return pendientes; // Retornamos pendientes para usar después
     } catch (error) {
       console.error("Error al cargar datos:", error);
+      alert("Error al cargar los datos del dashboard");
+      return 0;
     } finally {
       setLoading(false);
     }
@@ -80,6 +106,17 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
 
       <div className="row g-4 mb-4">
         <div className="col-md-3">
@@ -311,7 +348,6 @@ function Dashboard() {
                         Facturación electrónica obligatoria
                       </small>
                     </div>
-                    <span className="badge bg-primary">Nuevo</span>
                   </div>
                 </a>
 

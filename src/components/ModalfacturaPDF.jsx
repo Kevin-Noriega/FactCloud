@@ -19,8 +19,13 @@ function ModalFacturaPDF({ facturaId, onClose }) {
 
   useEffect(() => {
     if (!facturaId) return;
-
-    fetch(`${API_URL}/Facturas/${facturaId}`)
+    const token = localStorage.getItem("token");
+    fetch(`${API_URL}/Facturas/${facturaId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         setFactura(data);
