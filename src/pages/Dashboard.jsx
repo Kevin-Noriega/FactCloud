@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { API_URL } from "../api/config";
 import { Link } from "react-router-dom";
 import facturas from "../img/factura.png";
 import productos from "../img/productos.png";
 import clientes from "../img/clientes.png";
 import ganancias from "../img/ganancias.png";
+import { ToastContainer } from "react-toastify";
 
 function Dashboard() {
   const [clientesCount, setClientesCount] = useState(0);
@@ -14,63 +15,62 @@ function Dashboard() {
   const [totalVentas, setTotalVentas] = useState(0);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     cargarDatos();
   }, []);
 
   const cargarDatos = async () => {
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
+      const [resClientes, resProductos, resFacturas] = await Promise.all([
+        fetch(`${API_URL}/clientes`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/productos`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/facturas`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
 
+      const [dataClientes, dataProductos, dataFacturas] = await Promise.all([
+        resClientes.json(),
+        resProductos.json(),
+        resFacturas.json(),
+      ]);
 
-    const [resClientes, resProductos, resFacturas] = await Promise.all([
-      fetch(`${API_URL}/clientes`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      }),
-      fetch(`${API_URL}/productos`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      }),
-      fetch(`${API_URL}/facturas`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      })
-    ]);
+      setClientesCount(dataClientes.length);
+      setProductosCount(dataProductos.length);
+      setFacturasCount(dataFacturas.length);
 
-    // Convertir respuestas a JSON
-    const [dataClientes, dataProductos, dataFacturas] = await Promise.all([
-      resClientes.json(),
-      resProductos.json(),
-      resFacturas.json()
-    ]);
+      const pendientes = dataFacturas.filter(
+        (f) => f.estado === "Pendiente" || f.estado === "Emitida"
+      ).length;
+      setFacturasPendientes(pendientes);
 
-    // Actualizar estados
-    setClientesCount(dataClientes.length);
-    setProductosCount(dataProductos.length);
-    setFacturasCount(dataFacturas.length);
+      const total = dataFacturas.reduce((sum, f) => sum + f.totalFactura, 0);
+      setTotalVentas(total);
 
-    const pendientes = dataFacturas.filter(
-      (f) => f.estado === "Pendiente" || f.estado === "Emitida"
-    ).length;
-    setFacturasPendientes(pendientes);
-
-    const total = dataFacturas.reduce((sum, f) => sum + f.totalFactura, 0);
-    setTotalVentas(total);
-
-  } catch (error) {
-    console.error("Error al cargar datos:", error);
-    alert("Error al cargar los datos del dashboard");
-  } finally {
-    setLoading(false);
-  }
-};
+      return pendientes; // Retornamos pendientes para usar después
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+      alert("Error al cargar los datos del dashboard");
+      return 0;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -106,6 +106,17 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
 
       <div className="row g-4 mb-4">
         <div className="col-md-3">
