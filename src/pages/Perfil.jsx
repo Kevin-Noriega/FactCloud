@@ -17,13 +17,11 @@ function Perfil() {
     nitNegocio: "",
     dvNitNegocio: "",
     direccionNegocio: "",
-    tipoRegimen: "",
     ciudadNegocio: "",
     departamentoNegocio: "",
     correoNegocio: "",
   });
 
-  // ✅ Función para obtener el token JWT
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token"); // o sessionStorage
     return {
@@ -56,6 +54,7 @@ function Perfil() {
         email: datos.correo || "",
         empresa: datos.nombreNegocio || "",
         telefono: datos.telefono || "",
+        tipoIdentificacion: datos.tipoIdentificacion ,
         logoNegocio: datos.logoNegocio || "",
         nitNegocio: datos.nitNegocio || "",
         dvNitNegocio: datos.dvNitNegocio || "",
@@ -77,7 +76,6 @@ function Perfil() {
         nitNegocio: usuarioNormalizado.nitNegocio,
         dvNitNegocio: usuarioNormalizado.dvNitNegocio,
         direccionNegocio: usuarioNormalizado.direccionNegocio,
-        tipoRegimen: usuarioNormalizado.tipoRegimen,
         ciudadNegocio: usuarioNormalizado.ciudadNegocio,
         departamentoNegocio: usuarioNormalizado.departamentoNegocio,
         correoNegocio: usuarioNormalizado.correoNegocio,
@@ -368,9 +366,9 @@ function Perfil() {
                     </div>
                     <div className="col-md-6">
                       <label className="text-muted small">
-                        Tipo de Régimen:
+                        Telefono:
                       </label>
-                      <p className="fw-bold">{usuario?.tipoRegimen || "N/A"}</p>
+                      <p className="fw-bold">{usuario?.telefonoNegocio}</p>
                     </div>
                   </div>
                   <div className="row mb-3">

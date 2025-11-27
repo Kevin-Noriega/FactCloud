@@ -306,6 +306,10 @@ const filtrados = clientes
               position: "relative",
             }}
           >
+            <button
+              className="btn-close position-absolute top-0 end-0 mt-2 me-2"
+              onClick={() => setClienteVer(null)}
+            />
             <h5 className="mb-3">Información del Cliente</h5>
             <table className="table mb-0">
               <tbody>

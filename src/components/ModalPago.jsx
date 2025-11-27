@@ -3,7 +3,7 @@ import { API_URL } from "../api/config";
 import bancos from "../utils/Bancos.json";
 import Select from "react-select";
 
-function ModalPago({ factura, onSuccess, onClose }) {
+function ModalPago({ factura, onSuccess, onClose,setMensajeExito }) {
   const generarReferenciaUnica = () => {
     const timestamp = Date.now();
     const random = Math.floor(Math.random() * 10000);
@@ -26,58 +26,61 @@ function ModalPago({ factura, onSuccess, onClose }) {
     setPago({ ...pago, [name]: value });
   };
 
-  const registrarPago = async (e) => {
-    e.preventDefault();
-    setCargando(true);
-    setMensaje("");
-
-    try {
-      const montoPagado = parseFloat(pago.montoPagado);
-
-      if (montoPagado < factura.totalFactura) {
-        setMensaje("El monto pagado no puede ser menor al total de la factura");
-        setCargando(false);
-        return;
-      }
-
-      const payload = {
-        Id: factura.id,
-        Estado: "Pagada",
-        MedioPago: pago.medioPago,
-        FormaPago: "Contado",
-        Observaciones: pago.observaciones,
-
-        Referencia: pago.referencia || "N/A",
-        BancoOrigen: pago.bancoOrigen || "N/A",
-        BancoDestino: pago.bancoDestino || "N/A",
-
-        MontoPagado: montoPagado,
-      };
-
-      console.log("Registrando pago:", payload);
-
-      const respuesta = await fetch(`${API_URL}/Facturas/${factura.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!respuesta.ok) {
-        const errorData = await respuesta.text();
-        console.error("Respuesta del servidor:", errorData);
-        throw new Error("Error al registrar pago");
-      }
-
-      alert("Pago registrado correctamente");
-      onSuccess?.();
-      onClose?.();
-    } catch (error) {
-      console.error("Error al registrar pago:", error);
-      setMensaje("Error al registrar pago: " + error.message);
-    } finally {
-      setCargando(false);
+const registrarPago = async (e) => {
+  e.preventDefault();
+  setCargando(true);
+  try {
+    const montoPagado = parseFloat(pago.montoPagado);
+    if (montoPagado < factura.totalFactura) {
+      setMensaje("El monto pagado no puede ser menor al total de la factura");
+      return;
     }
-  };
+
+    const payload = {
+        estado: "Pagada",
+  medioPago: pago.medioPago,
+  formaPago: "Contado",
+  montoPagado,
+  observaciones: `${pago.observaciones} | Referencia: ${pago.referencia}`,
+  fechaPago: new Date().toISOString(),
+  referencia: pago.referencia,
+  bancoOrigen: pago.bancoOrigen,
+  bancoDestino: pago.bancoDestino,
+    };
+
+    const token = localStorage.getItem("token");
+
+    const respuesta = await fetch(
+      `${API_URL}/Facturas/${factura.id}/pago`, // asegúrate que coincida con tu [HttpPatch("{id}/pago")]
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    console.log("Status =>", respuesta.status);
+
+    if (!respuesta.ok) {
+      const errorData = await respuesta.text();
+      console.error("Respuesta del servidor:", errorData);
+      throw new Error("Error al registrar pago");
+    }
+
+    setMensajeExito("Factura pagada con éxito.");
+    setTimeout(() => setMensajeExito(""), 3000);
+    onSuccess?.();
+    onClose?.();
+  } catch (error) {
+    console.error("Error al registrar pago:", error);
+    setMensaje("Error al registrar pago: " + error.message);
+  } finally {
+    setCargando(false);
+  }
+};
 
   const calcularCambio = () => {
     const montoPagado = parseFloat(pago.montoPagado) || 0;

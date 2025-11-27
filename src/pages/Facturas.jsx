@@ -4,7 +4,7 @@ import ModalFacturaPDF from "../components/ModalfacturaPDF.jsx";
 import ModalPago from "../components/ModalPago.jsx";
 import Select from "react-select";
 import { createConnection } from "../SignalR/SignalConector";
-import { toast } from "react-toastify";
+import { toast, ToastContainer} from "react-toastify";
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -12,6 +12,7 @@ function Facturas() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+    const [mensajeExito, setMensajeExito] = useState("");
   const [buscador, setBuscador] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
@@ -22,14 +23,63 @@ function Facturas() {
   const barcodeInputRef = useRef(null);
   const [filtro, setFiltro] = useState("recientes");
 
-  const [factura, setFactura] = useState({
+   const [factura, setFactura] = useState({
     clienteId: "",
     numeroFactura: "",
-    prefijo: "FE",
     observaciones: "",
     metodoPagoCodigo: "10",
     fechaVencimiento: "",
   });
+// fuera del return, dentro del componente Facturas
+const enviarFacturaPorCorreo = async (factId) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No estás autenticado. Inicia sesión de nuevo.");
+      return;
+    }
+
+    const resp = await fetch(
+      `${API_URL}/Facturas/${factId}/enviar-cliente`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Error al enviar factura");
+    }
+
+    setMensajeExito("Factura enviada al cliente por correo.");
+    setTimeout(() => setMensajeExito(""), 3000);
+  } catch (err) {
+    setMensajeExito(err.message);
+    setTimeout(() => setMensajeExito(""), 3000);
+  }
+};
+
+ 
+  const descargarXML = (fact) => {
+  if (!fact.xmlBase64) {
+    setMensajeExito("No hay XML generado para esta factura");
+    setTimeout(() => setMensajeExito(""), 3000);
+    return;
+  }
+
+  const xmlContent = atob(fact.xmlBase64);
+  const blob = new Blob([xmlContent], { type: "text/xml" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Factura-${fact.numeroFactura}.xml`;
+  a.click();
+};
 
   const filtrados = facturas
     .filter((fac) => {
@@ -101,6 +151,15 @@ function Facturas() {
   };
 
   useEffect(() => {
+    const usuarioData = JSON.parse(localStorage.getItem("usuario"));
+    if (usuarioData) {
+      setFactura((f) => ({
+    ...f,
+    prefijo: usuarioData.prefijoAutorizadoDIAN,
+  }));
+  
+    }
+
     if (factura.metodoPagoCodigo === "20" && !factura.fechaVencimiento) {
       const hoy = new Date();
       const venc = new Date();
@@ -153,7 +212,7 @@ function Facturas() {
       const facturasData = await facturasRes.json();
       const clientesData = await clientesRes.json();
       const productosData = await productosRes.json();
-
+      
       setFacturas(facturasData);
       setClientes(clientesData);
       setProductos(productosData);
@@ -184,7 +243,6 @@ function Facturas() {
         }
         console.log("Conectado a SignalR");
         conn.on("FacturaCreada", (data) => {
-          console.log("Notificación recibida:", data);
           toast.success(`Factura #${data.id} creada correctamente`);
           fetchDatos?.();
         });
@@ -306,7 +364,7 @@ function Facturas() {
     setFactura({
       clienteId: "",
       numeroFactura: "",
-      prefijo: "FV",
+      prefijo: "",
       observaciones: "",
       metodoPagoCodigo: "10",
       fechaVencimiento: "",
@@ -342,7 +400,7 @@ function Facturas() {
         usuarioId: usuarioGuardado.id,
         clienteId: parseInt(factura.clienteId),
         numeroFactura:
-          factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
+        factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
         prefijo: factura.prefijo,
         fechaEmision: fechaActual.toISOString(),
         horaEmision: fechaActual.toTimeString().split(" ")[0],
@@ -407,7 +465,7 @@ function Facturas() {
         const errorTexto = await respuesta.text();
         throw new Error(errorTexto);
       }
-
+      
       limpiarFormulario();
       fetchDatos();
     } catch (error) {
@@ -427,44 +485,6 @@ function Facturas() {
     setMostrarModalPago(true);
   };
 
-  const registrarPago = async (e) => {
-    e.preventDefault();
-
-    try {
-      const montoPagado = parseFloat(pago.montoPagado);
-
-      if (montoPagado < facturaParaPago.totalFactura) {
-        alert("El monto pagado no puede ser menor al total de la factura");
-        return;
-      }
-
-      const payload = {
-        id: facturaParaPago.id,
-        estado: "Pagada",
-        medioPago: pago.medioPago,
-        formaPago: "Contado",
-        observaciones: pago.observaciones + ` | Referencia: ${pago.referencia}`,
-      };
-
-      const respuesta = await fetch(
-        `${API_URL}/Facturas/${facturaParaPago.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!respuesta.ok) throw new Error("Error al registrar pago");
-
-      alert("Pago registrado correctamente");
-      setMostrarModalPago(false);
-      fetchDatos();
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al registrar pago: " + error.message);
-    }
-  };
 
   if (loading) {
     return (
@@ -496,6 +516,23 @@ function Facturas() {
   return (
     <div className="container-fluid mt-4 px-4">
       <h2 className="text-info mb-4">Facturación Electrónica</h2>
+      
+      {mensajeExito && (
+        <div
+          className="alert alert-danger d-flex justify-content-between align-items-center"
+          role="alert"
+        >
+          <span>{mensajeExito}</span>
+          <div>
+            <button
+              className="btn btn-close"
+              onClick={() => {
+                setMensajeExito("");
+              }}
+            ></button>
+          </div>
+        </div>
+      )}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <button
           className="btn btn-info text-white "
@@ -562,9 +599,13 @@ function Facturas() {
                     type="text"
                     className="form-control"
                     value={factura.prefijo}
-                    onChange={(e) =>
-                      setFactura({ ...factura, prefijo: e.target.value })
-                    }
+                    readOnly
+                    disabled
+                    style={{
+                      userSelect: "none",
+                      pointerEvents: "none",
+                      caretColor: "transparent",
+                    }}
                   />
                 </div>
                 <div className="col-md-3">
@@ -577,6 +618,13 @@ function Facturas() {
                       setFactura({ ...factura, numeroFactura: e.target.value })
                     }
                     placeholder="Se generará automáticamente"
+                    readOnly
+                    disabled
+                    style={{
+                      userSelect: "none",
+                      pointerEvents: "none",
+                      caretColor: "transparent",
+                    }}
                   />
                 </div>
               </div>
@@ -765,7 +813,7 @@ function Facturas() {
                                   )
                                 }
                                 min="0"
-                                max="100"
+                                max="100" 
                                 step="0.01"
                               />
                             </td>
@@ -913,12 +961,23 @@ function Facturas() {
           </div>
         </div>
       )}
-
+<ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="card">
         <div className="card-body">
           {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay facturas registradas.</div>
           ) : (
+            
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
                 <thead className="table-light">
@@ -981,11 +1040,22 @@ function Facturas() {
                           </button>
                         )}
                         <button
-                          className="btn btn-sm btn-primary"
+                          className="btn btn-sm btn-primary me-1"
                           onClick={() => setFacturaVista(fact.id)}
                         >
                           PDF
                         </button>
+                        <button className="btn btn-sm btn-danger me-1"  onClick={() => descargarXML(fact)}
+>
+  XML
+</button>
+<button
+  className="btn btn-sm btn-outline-primary me-1"
+  onClick={() => enviarFacturaPorCorreo(fact.id)}
+>
+  Email
+</button>
+
                       </td>
                     </tr>
                   ))}
@@ -1004,18 +1074,14 @@ function Facturas() {
       )}
 
       {mostrarModalPago && facturaParaPago && (
-        <ModalPago
-          factura={facturaParaPago}
-          onSuccess={() => {
-            setMostrarModalPago(false);
-            fetchDatos();
-          }}
-          onClose={() => setMostrarModalPago(false)}
-          registrarPago={registrarPago}
-          pago={pago}
-          setPago={setPago}
-        />
-      )}
+  <ModalPago
+    factura={facturaParaPago}
+    onSuccess={fetchDatos}
+    onClose={() => setMostrarModalPago(false)}
+    setMensajeExito={setMensajeExito}
+  />
+)}
+
     </div>
   );
 }
