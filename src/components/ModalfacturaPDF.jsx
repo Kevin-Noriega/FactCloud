@@ -12,6 +12,8 @@ function ModalFacturaPDF({ facturaId, onClose }) {
   const [factura, setFactura] = useState(null);
   const [usuario, setUsuario] = useState(null);
 
+
+
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
     if (usuarioGuardado) setUsuario(JSON.parse(usuarioGuardado));
@@ -95,6 +97,7 @@ function ModalFacturaPDF({ facturaId, onClose }) {
             <h5 className="modal-title" style={{ flex: 1 }}>
               Factura Electrónica PDF
             </h5>
+            
 
             <button
               className="btn btn-light btn-sm me-2"

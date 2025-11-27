@@ -7,6 +7,7 @@ import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 
 // Páginas principales
+import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Productos from "./pages/Productos";
@@ -28,7 +29,7 @@ function App() {
     <Router>
       <Routes>
         
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registrarUsuario" element={<RegistrarUsuario/>} />
 
