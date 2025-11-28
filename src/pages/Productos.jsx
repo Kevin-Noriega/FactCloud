@@ -46,7 +46,6 @@ function Productos() {
     descripcion: "",
     codigoInterno: "",
     codigoUNSPSC: "",
-    codigoEAN: "",
     unidadMedida: "Unidad",
     marca: "",
     modelo: "",
@@ -131,7 +130,6 @@ function Productos() {
       descripcion: "",
       codigoInterno: "",
       codigoUNSPSC: "",
-      codigoEAN: "",
       unidadMedida: "",
       marca: "",
       modelo: "",
@@ -174,7 +172,6 @@ function Productos() {
         descripcion: producto.descripcion,
         codigoInterno: producto.codigoInterno,
         codigoUNSPSC: producto.codigoUNSPSC,
-        codigoEAN: producto.codigoEAN,
         unidadMedida: producto.unidadMedida,
         marca: producto.marca,
         modelo: producto.modelo,
@@ -233,13 +230,12 @@ function Productos() {
     }
   };
   const editarProducto = (pro) => {
-    const { id } = pro; 
+    const { id } = pro;
     setProducto({
       nombre: pro.nombre || "",
       descripcion: pro.descripcion || "",
       codigoInterno: pro.codigoInterno || "",
       codigoUNSPSC: pro.codigoUNSPSC || "",
-      codigoEAN: pro.codigoEAN || "",
       unidadMedida: pro.unidadMedida || "Unidad",
       marca: pro.marca || "",
       modelo: pro.modelo || "",
@@ -486,7 +482,7 @@ function Productos() {
               {/* Nombre y descripción */}
               <div className="row mb-3">
                 <h6 className="border-bottom pb-2 mb-3">Unidad y Precios</h6>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="form-label">Nombre del Producto</label>
                   <input
                     type="text"
@@ -497,7 +493,7 @@ function Productos() {
                     required
                   />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="form-label">Descripción Detallada</label>
                   <input
                     type="text"
@@ -505,6 +501,34 @@ function Productos() {
                     className="form-control"
                     value={producto.descripcion}
                     onChange={handleChange}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Tipo Producto</label>
+                  <Select
+                    name="tipoProducto"
+                    options={tipoProductoDIAN.map((um) => ({
+                      value: um.descripcion,
+                      label: `${um.codigo} - ${um.descripcion}`,
+                    }))}
+                    value={
+                      producto.tipoProducto
+                        ? tipoProductoDIAN
+                            .map((um) => ({
+                              value: um.descripcion,
+                              label: `${um.codigo} - ${um.descripcion}`,
+                            }))
+                            .find((opt) => opt.value === producto.tipoProducto)
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setProducto((prev) => ({
+                        ...prev,
+                        tipoProducto: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar tipo de producto"
                   />
                 </div>
               </div>
@@ -531,13 +555,13 @@ function Productos() {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="col-md-4">
-                  <label className="form-label">Código EAN</label>
+                <div className="col-md-3">
+                  <label className="form-label">codigo EAN</label>
                   <input
                     type="text"
-                    name="codigoEAN"
+                    name="codigoBarras"
                     className="form-control"
-                    value={producto.codigoEAN}
+                    value={producto.codigoBarras}
                     onChange={handleChange}
                   />
                 </div>
@@ -577,36 +601,7 @@ function Productos() {
                 </div>
               </div>
 
-              <div className="row mb-3">
-                <div className="col-md-4">
-                  <label className="form-label">Tipo Producto</label>
-                  <Select
-                    name="tipoProducto"
-                    options={tipoProductoDIAN.map((um) => ({
-                      value: um.descripcion,
-                      label: `${um.codigo} - ${um.descripcion}`,
-                    }))}
-                    value={
-                      producto.tipoProducto
-                        ? tipoProductoDIAN
-                            .map((um) => ({
-                              value: um.descripcion,
-                              label: `${um.codigo} - ${um.descripcion}`,
-                            }))
-                            .find((opt) => opt.value === producto.tipoProducto)
-                        : null
-                    }
-                    onChange={(opt) =>
-                      setProducto((prev) => ({
-                        ...prev,
-                        tipoProducto: opt ? opt.value : "",
-                      }))
-                    }
-                    isClearable
-                    placeholder="Seleccionar tipo de producto"
-                  />
-                </div>
-              </div>
+              <div className="row mb-3"></div>
               {/* Base Gravable y Retenciones */}
               <h6 className="border-bottom pb-2 mb-3 mt-4">
                 Base Gravable y Retenciones
@@ -728,16 +723,6 @@ function Productos() {
                     value={producto.costo}
                     onChange={handleChange}
                     step="0.01"
-                  />
-                </div>
-                <div className="col-md-3">
-                  <label className="form-label">Código de Barras</label>
-                  <input
-                    type="text"
-                    name="codigoBarras"
-                    className="form-control"
-                    value={producto.codigoBarras}
-                    onChange={handleChange}
                   />
                 </div>
               </div>
