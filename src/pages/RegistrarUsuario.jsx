@@ -156,8 +156,7 @@ function RegistrarUsuario() {
 
   const estilos = {
     fondo: {
-      background:
-        "linear-gradient(135deg, #0b1522, #0f1e32, #113a56, #31607bff)",
+            background: "radial-gradient(circle at top, #101735, #050713)",
       backgroundSize: "600% 600%",
       animation: "moverFondo 15s ease infinite",
       minHeight: "100vh",

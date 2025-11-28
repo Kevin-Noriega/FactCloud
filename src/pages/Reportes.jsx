@@ -11,6 +11,32 @@ function Reportes() {
   const [error, setError] = useState(null);
   const [tipoReporte, setTipoReporte] = useState("ventas");
 
+  
+function descargarCsv(ruta, nombreArchivo) {
+  fetch(`${API_URL}${ruta}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((res) => res.blob())
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = nombreArchivo;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((err) => {
+      console.error("Error descargando CSV", err);
+      alert("No se pudo descargar el archivo CSV");
+    });
+}
+
+
   const generarReporteVentas = async () => {
     setLoading(true);
     setError(null);
@@ -106,13 +132,6 @@ const token = localStorage.getItem("token");
     }
   }, [tipoReporte]);
 
-  const exportarExcel = () => {
-    alert("Funcionalidad de exportar a Excel en desarrollo");
-  };
-
-  const imprimirReporte = () => {
-    window.print();
-  };
 
   return (
     <div className="container-fluid mt-4 px-4">
@@ -214,15 +233,11 @@ const token = localStorage.getItem("token");
               <h5 className="mb-0">Resumen de Ventas</h5>
               <div>
                 <button
-                  className="btn btn-light btn-sm me-2"
-                  onClick={imprimirReporte}
-                >
-                  Imprimir
-                </button>
-                <button
-                  className="btn btn-light btn-sm"
-                  onClick={exportarExcel}
-                >
+          className="btn btn-light btn-sm me-2"
+          onClick={() =>
+            descargarCsv("/reportes/ventas/csv", "reporte_ventas.csv")
+          }
+        >
                   Exportar Excel
                 </button>
               </div>
@@ -383,13 +398,11 @@ const token = localStorage.getItem("token");
           <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Top 10 Clientes</h5>
             <div>
-              <button
-                className="btn btn-light btn-sm me-2"
-                onClick={imprimirReporte}
-              >
-                Imprimir
-              </button>
-              <button className="btn btn-light btn-sm" onClick={exportarExcel}>
+                <button
+          className="btn btn-light btn-sm me-2"
+          onClick={() =>
+            descargarCsv("/reportes/top-clientes/csv", "top_clientes.csv")
+          }>
                 Exportar Excel
               </button>
             </div>
@@ -432,16 +445,15 @@ const token = localStorage.getItem("token");
             <div className="card-header bg-warning d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Top 10 Productos Mas Vendidos</h5>
               <div>
-                <button
-                  className="btn btn-light btn-sm me-2"
-                  onClick={imprimirReporte}
-                >
-                  Imprimir
-                </button>
-                <button
-                  className="btn btn-light btn-sm"
-                  onClick={exportarExcel}
-                >
+                 <button
+          className="btn btn-light btn-sm me-2"
+          onClick={() =>
+            descargarCsv(
+              "/reportes/productos-mas-vendidos/csv",
+              "productos_mas_vendidos.csv"
+            )
+          }
+        >
                   Exportar Excel
                 </button>
               </div>

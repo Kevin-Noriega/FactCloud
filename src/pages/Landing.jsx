@@ -1,369 +1,442 @@
-// src/pages/Landing.jsx
-import React from "react";
+import { useEffect, useState } from "react";
+import "./Landing.css";
+import FactCloudLogo from "../img/logo2.png"
+import dashboard from "../img/dashboard.png"
+import listadoFacturas from "../img/facturas.png";
+import novedades from "../img/novedades.png";
+import topVentas from "../img/reporteventa.png";
+import topClientes from "../img/topclientes.png";
+import productosVendidos from "../img/productosVendidos.png";
 
 export default function Landing() {
-  return (
-    <html lang="es">
-      <head>
-        <meta charSet="UTF-8" />
-        <title>FactCloud - Facturación Electrónica en la Nube</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </head>
-      <body>
-        <div className="page" style={styles.page}>
-          {/* HEADER */}
-          <header style={styles.header}>
-            <div style={styles.logo}>
-              <div style={styles.logoIcon}>F</div>
-              <span>FactCloud</span>
-            </div>
-            <nav style={styles.nav}>
-              <a href="#features">Características</a>
-              <a href="#como-funciona">Cómo funciona</a>
-              <a href="#contacto">Contacto</a>
-              <a href="/login">Ingresar</a>
-            </nav>
-          </header>
+  
+const [imagenZoom, setImagenZoom] = useState(null);
 
-          {/* HERO */}
-          <main style={styles.hero}>
-            <section>
-              <h1 style={styles.heroTitle}>
-                Facturación electrónica en la{" "}
-                <span style={styles.heroHighlight}>nube</span> para pymes
-                colombianas.
-              </h1>
-              <p style={styles.heroText}>
-                FactCloud centraliza tu facturación electrónica, envía
-                comprobantes por correo y mantiene el historial de ventas siempre
-                disponible, listo para DIAN.
-              </p>
+  useEffect(() => {
+    // guardar estilos anteriores
+    const prevBg = document.body.style.background;
+    const prevColor = document.body.style.color;
 
-              <div style={styles.heroBadges}>
-                <span style={styles.badge}>Envío automático por email</span>
-                <span style={styles.badge}>
-                  Historial de facturas en tiempo real
-                </span>
-                <span style={styles.badge}>
-                  Pensado para micro y pequeñas empresas
-                </span>
-              </div>
+    // aplicar solo para la landing
+    document.body.style.background =
+      "radial-gradient(circle at top, #101735, #050713)";
+    document.body.style.color = "#f9fafb";
 
-              <div style={styles.heroActions}>
-                <button style={styles.btnPrimary}>Probar FactCloud</button>
-                <button style={styles.btnOutline}>Ver demo de facturación</button>
-              </div>
-              <p style={styles.heroNote}>
-                Sin instalar nada. Solo necesitas un navegador y conexión a
-                internet.
-              </p>
-            </section>
-
-            {/* Tarjeta tipo preview de la app */}
-            <aside
-              style={styles.heroCard}
-              aria-label="Vista previa de una factura en FactCloud"
-            >
-              <div style={styles.cardHeader}>
-                <div>
-                  <strong style={{ fontSize: "0.85rem" }}>Factura #FC-01234</strong>
-                  <div style={{ fontSize: "0.72rem", color: "#9ca3af" }}>
-                    Cliente: Panadería La 24
-                  </div>
-                </div>
-                <span style={styles.pill}>Enviada por email</span>
-              </div>
-
-              <table style={styles.miniTable}>
-                <thead>
-                  <tr>
-                    <th style={styles.th}>Concepto</th>
-                    <th style={styles.th}>Cantidad</th>
-                    <th style={styles.th}>Valor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style={styles.td}>Productos de panadería</td>
-                    <td style={styles.td}>35</td>
-                    <td style={{ ...styles.td, ...styles.amount }}>$420.000</td>
-                  </tr>
-                  <tr>
-                    <td style={styles.td}>IVA (19%)</td>
-                    <td style={styles.td}>-</td>
-                    <td style={styles.td}>$79.800</td>
-                  </tr>
-                  <tr>
-                    <td style={styles.td}>
-                      <strong>Total factura</strong>
-                    </td>
-                    <td style={styles.td}>-</td>
-                    <td style={{ ...styles.td, ...styles.amount }}>$499.800</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <p
-                style={{
-                  marginTop: 10,
-                  fontSize: "0.76rem",
-                  color: "#9ca3af",
-                }}
-              >
-                FactCloud genera el PDF y el XML, los almacena en la nube y los
-                envía al cliente en segundos.
-              </p>
-            </aside>
-          </main>
-
-          {/* FEATURES */}
-          <section id="features" style={styles.section}>
-            <h2 style={styles.sectionTitle}>Todo lo que necesitas para facturar</h2>
-            <div style={styles.featuresGrid}>
-              <article style={styles.feature}>
-                <h3>Registro rápido de facturas</h3>
-                <p>
-                  Crea facturas en segundos con tus productos, clientes y formas
-                  de pago ya configurados. Pensado para puntos de venta pequeños.
-                </p>
-              </article>
-              <article style={styles.feature}>
-                <h3>Envío automático por correo</h3>
-                <p>
-                  Cada factura se envía al correo del cliente con su PDF y XML
-                  adjuntos, usando un servicio de correo transaccional confiable.
-                </p>
-              </article>
-              <article style={styles.feature}>
-                <h3>Historial y control</h3>
-                <p>
-                  Consulta qué facturas se enviaron, cuándo y a qué cliente, todo
-                  desde un solo panel en la nube.
-                </p>
-              </article>
-              <article style={styles.feature}>
-                <h3>Diseñado para Colombia</h3>
-                <p>
-                  Estructura pensada para integrarse con los requisitos de
-                  facturación electrónica y CUFE exigidos en el país.
-                </p>
-              </article>
-            </div>
-          </section>
-
-          {/* CÓMO FUNCIONA */}
-          <section id="como-funciona" style={styles.section}>
-            <h2 style={styles.sectionTitle}>Cómo funciona FactCloud</h2>
-            <p
-              style={{
-                fontSize: "0.9rem",
-                maxWidth: 640,
-                opacity: 0.9,
-              }}
-            >
-              1) Registras tus clientes y productos. 2) Generas la factura desde
-              el panel web. 3) FactCloud guarda el soporte en la nube y lo envía
-              por correo al cliente. 4) Puedes descargar los documentos o
-              consultarlos cuando los necesites.
-            </p>
-          </section>
-
-          {/* FOOTER */}
-          <footer id="contacto" style={styles.footer}>
-            <span>
-              © {new Date().getFullYear()} FactCloud S.A.S – Todos los derechos
-              reservados.
-            </span>
-            <span>Contacto: factcloud.soporte@example.com</span>
-          </footer>
-        </div>
-      </body>
-    </html>
-  );
-}
-
-const styles = {
-  page: {
-    maxWidth: "1100px",
-    margin: "0 auto",
-    padding: "24px 16px 40px",
-    fontFamily:
-      'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    background:
-      "radial-gradient(circle at top, #101735, #050713)",
-    color: "#f5f5f5",
-    lineHeight: 1.5,
-  },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: "32px",
-  },
-  logo: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    fontWeight: 700,
-    fontSize: "1.2rem",
-  },
-  logoIcon: {
-    width: "32px",
-    height: "32px",
-    borderRadius: "8px",
-    background: "linear-gradient(135deg, #00a2ff, #00ffb0)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "18px",
-    color: "#020817",
-  },
-  nav: {
-    display: "flex",
-    gap: "18px",
-    fontSize: "0.9rem",
-    opacity: 0.9,
-  },
-  hero: {
+    // limpiar al salir de la landing
+    return () => {
+      document.body.style.background = prevBg;
+      document.body.style.color = prevColor;
+    };
+  }, []);
+  const styles = {
+  examplesGrid: {
     display: "grid",
-    gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr)",
-    gap: "32px",
-    alignItems: "center",
-    marginBottom: "40px",
+    gridTemplateColumns: "repeat(3, 1fr)", // 3 columnas fijas
+    gap: "18px",
+    marginTop: "18px",
   },
-  heroTitle: {
-    fontSize: "clamp(2.1rem, 3vw + 1rem, 3rem)",
-    fontWeight: 700,
-    marginBottom: "10px",
+  exampleImage: {
+    borderRadius: "10px",
+    overflow: "hidden",
+    height: "180px", // mismo alto para todas
   },
-  heroHighlight: {
-    background: "linear-gradient(135deg, #00a2ff, #00ffb0)",
-    WebkitBackgroundClip: "text",
-    backgroundClip: "text",
-    color: "transparent",
-  },
-  heroText: {
-    fontSize: "0.98rem",
-    maxWidth: "32rem",
-    opacity: 0.9,
-    marginBottom: "18px",
-  },
-  heroBadges: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
-    marginBottom: "20px",
-    fontSize: "0.8rem",
-  },
-  badge: {
-    padding: "4px 10px",
-    borderRadius: "999px",
-    background: "rgba(0, 162, 255, 0.12)",
-    border: "1px solid rgba(0, 162, 255, 0.4)",
-  },
-  heroActions: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "12px",
-    marginBottom: "10px",
-  },
-  btnPrimary: {
-    background: "#0057ff",
-    borderRadius: "999px",
-    padding: "10px 20px",
-    border: "none",
-    color: "white",
-    fontSize: "0.94rem",
-    cursor: "pointer",
-    fontWeight: 600,
-    boxShadow: "0 8px 20px rgba(0, 87, 255, 0.4)",
-  },
-  btnOutline: {
-    borderRadius: "999px",
-    padding: "9px 18px",
-    border: "1px solid rgba(148, 163, 184, 0.7)",
-    background: "transparent",
-    color: "#e5e7eb",
-    fontSize: "0.9rem",
-    cursor: "pointer",
-  },
-  heroNote: {
-    fontSize: "0.8rem",
-    opacity: 0.8,
-  },
-  heroCard: {
-    background: "linear-gradient(145deg, #0b1220, #020617)",
-    borderRadius: "16px",
-    padding: "18px",
-    border: "1px solid rgba(148, 163, 184, 0.25)",
-    boxShadow: "0 20px 40px rgba(15, 23, 42, 0.7)",
-    fontSize: "0.78rem",
-  },
-  cardHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: "10px",
-    alignItems: "center",
-  },
-  pill: {
-    padding: "4px 8px",
-    borderRadius: "999px",
-    background: "rgba(22, 163, 74, 0.18)",
-    color: "#bbf7d0",
-    fontSize: "0.7rem",
-  },
-  miniTable: {
+  exampleImgTag: {
     width: "100%",
-    borderCollapse: "collapse",
-    marginTop: "8px",
-  },
-  th: {
-    padding: "6px 4px",
-    textAlign: "left",
-    fontSize: "0.7rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.04em",
-    color: "#9ca3af",
-    borderBottom: "1px solid rgba(55, 65, 81, 0.7)",
-  },
-  td: {
-    padding: "6px 4px",
-    textAlign: "left",
-    borderBottom: "1px solid rgba(31, 41, 55, 0.8)",
-    fontSize: "0.76rem",
-  },
-  amount: {
-    color: "#4ade80",
-    fontWeight: 600,
-  },
-  section: {
-    marginTop: "34px",
-  },
-  sectionTitle: {
-    fontSize: "1.1rem",
-    marginBottom: "12px",
-  },
-  featuresGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "18px",
-  },
-  feature: {
-    background: "rgba(15, 23, 42, 0.9)",
-    borderRadius: "12px",
-    padding: "14px 14px 16px",
-    border: "1px solid rgba(148, 163, 184, 0.18)",
-    fontSize: "0.86rem",
-  },
-  footer: {
-    borderTop: "1px solid rgba(30, 64, 175, 0.6)",
-    marginTop: "32px",
-    paddingTop: "14px",
-    fontSize: "0.75rem",
-    color: "#9ca3af",
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    gap: "10px",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "10px",
+    cursor: "pointer",
   },
 };
+
+  return (
+    <div className="landing">
+      {/* HEADER */}
+      <header className="landing__header">
+         <img 
+                  id="sidebar-logo"
+                  src={FactCloudLogo} 
+                  alt="logoFactCloud"
+                   style={{ width: "15%" }} 
+                />
+
+        <nav className="landing__nav">
+          <a href="#features">Características</a>
+          <a href="#como-funciona">Cómo funciona</a>
+          <a href="#ejemplos">Visualizaciones</a>
+          <a href="#contacto" className="btn-link btn-link--outline">
+            Contactar
+          </a>
+          <a href="/login" className="btn-link">
+            Ingresar
+          </a>
+        </nav>
+      </header>
+
+      {/* HERO */}
+      <main className="landing__hero">
+        <section className="landing__hero-text">
+          <h1>
+            Facturación electrónica en la{" "}
+            <span className="highlight">nube</span> para PYMES colombianas.
+          </h1>
+          <p className="hero-subtitle">
+            FactCloud centraliza tu facturación electrónica, envía comprobantes
+            por correo y mantiene el historial de ventas siempre disponible,
+            listo para DIAN.
+          </p>
+
+          <div className="hero-badges">
+            <span className="badge">Envío automático por email</span>
+            <span className="badge">Historial de facturas en tiempo real</span>
+            <span className="badge">Pensado para micro y pequeñas empresas</span>
+          </div>
+
+          <div className="hero-actions">
+            <button
+              className="btn btn-primary"
+              onClick={() => (window.location.href = "/login")}
+            >
+              Probar FactCloud
+            </button>
+            
+          </div>
+
+          <p className="hero-note">
+            Sin instalar nada. Solo necesitas un navegador y conexión a internet.
+          </p>
+        </section>
+
+        {/* Tarjeta tipo preview */}
+        <aside
+          className="landing__hero-card"
+          aria-label="Vista previa de una factura en FactCloud"
+        >
+          <div className="card-header">
+            <div>
+              <strong>Factura #FC-01234</strong>
+              <div className="card-header__subtitle">
+                Cliente: Panadería La 24
+              </div>
+            </div>
+            <span className="pill pill--green">Enviada por email</span>
+          </div>
+
+          <table className="mini-table">
+            <thead>
+              <tr>
+                <th>Concepto</th>
+                <th>Cantidad</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Productos de panadería</td>
+                <td>35</td>
+                <td className="amount">$420.000</td>
+              </tr>
+              <tr>
+                <td>IVA (19%)</td>
+                <td>-</td>
+                <td>$79.800</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Total factura</strong>
+                </td>
+                <td>-</td>
+                <td className="amount">$499.800</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p className="card-note">
+            FactCloud genera el PDF y el XML, los almacena en la nube y los envía
+            al cliente en segundos.
+          </p>
+        </aside>
+      </main>
+
+      {/* CARACTERÍSTICAS */}
+      <section id="features" className="section section--light">
+        <h2>Todo lo que necesitas para facturar</h2>
+        <p className="section-subtitle">
+          Funcionalidades pensadas para negocios pequeños que necesitan
+          facturación ordenada sin volverse expertos en sistemas.
+        </p>
+
+        <div className="features-grid">
+          <article className="feature-card">
+            <h3>Registro rápido de facturas</h3>
+            <p>
+              Crea facturas en segundos con tus productos, clientes y formas de
+              pago ya configurados. Ideal para puntos de venta con alta rotación.
+            </p>
+          </article>
+
+          <article className="feature-card">
+            <h3>Envío automático por correo</h3>
+            <p>
+              Cada factura se envía al correo del cliente con su PDF y XML
+              adjuntos, usando un servicio de correo transaccional confiable.
+            </p>
+          </article>
+
+          <article className="feature-card">
+            <h3>Historial y control</h3>
+            <p>
+              Consulta qué facturas se enviaron, a quién y cuándo, todo desde un
+              solo panel en la nube, filtrando por fechas y clientes.
+            </p>
+          </article>
+
+          <article className="feature-card">
+            <h3>Diseñado para Colombia</h3>
+            <p>
+              Estructura preparada para integrarse con requisitos de
+              facturación electrónica, CUFE y numeraciones de la DIAN.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      {/* CÓMO FUNCIONA */}
+      <section id="como-funciona" className="section">
+        <h2>Cómo funciona FactCloud</h2>
+        <div className="steps">
+          <div className="step">
+            <span className="step-number">1</span>
+            <h3>Configura tu negocio</h3>
+            <p>
+              Registra tus datos, resoluciones, productos y clientes una sola
+              vez. FactCloud guarda la configuración para futuras facturas.
+            </p>
+          </div>
+          <div className="step">
+            <span className="step-number">2</span>
+            <h3>Genera la factura</h3>
+            <p>
+              Desde el panel web seleccionas cliente, productos y forma de pago.
+              El sistema calcula automáticamente subtotales, IVA y total.
+            </p>
+          </div>
+          <div className="step">
+            <span className="step-number">3</span>
+            <h3>Envía y almacena</h3>
+            <p>
+              FactCloud envía la factura por correo al cliente, guarda el PDF y
+              XML en la nube y marca el estado de envío en el historial.
+            </p>
+          </div>
+        </div>
+      </section>
+<section id="visualizaciones" className="section section--light">
+  <h2>Visualizaciones de la plataforma</h2>
+  <p className="section-subtitle">
+    Módulos clave de FactCloud.
+  </p>
+
+  <div style={styles.examplesGrid}>
+    {/* 1. Dashboard general */}
+    <div className="example-card">
+      <div style={styles.exampleImage}>
+        <img
+          src={dashboard}
+          alt="Dashboard general de FactCloud"
+          style={styles.exampleImgTag}
+          onClick={() => setImagenZoom(dashboard)}
+        />
+      </div>
+      <p>
+        Panel principal con métricas de facturas, clientes, productos y
+        ventas totales en tiempo real.
+      </p>
+    </div>
+
+    {/* 2. Listado de facturas */}
+    <div className="example-card">
+      <div style={styles.exampleImage}>
+        <img
+          src={listadoFacturas}
+          alt="Listado de facturas"
+          style={styles.exampleImgTag}
+          onClick={() => setImagenZoom(listadoFacturas)}
+        />
+      </div>
+      <p>
+        Tabla de facturas con estados, totales y acceso rápido al envío por
+        correo a cada cliente.
+      </p>
+    </div>
+
+    {/* 3. Novedades */}
+    <div className="example-card">
+      <div style={styles.exampleImage}>
+        <img
+          src={novedades}
+          alt="Centro de ayuda y novedades"
+          style={styles.exampleImgTag}
+          onClick={() => setImagenZoom(novedades)}
+        />
+      </div>
+      <p>
+        Centro de ayuda con tutoriales rápidos, normatividad DIAN y
+        novedades de FactCloud para mantenerte actualizado.
+      </p>
+    </div>
+
+    {/* 4. Top ventas */}
+    <div className="example-card">
+      <div style={styles.exampleImage}>
+        <img
+          src={topVentas}
+          alt="Top de ventas"
+          style={styles.exampleImgTag}
+          onClick={() => setImagenZoom(topVentas)}
+        />
+      </div>
+      <p>
+        Vista de top ventas por día, mes o producto para identificar tus
+        mejores periodos de ingreso.
+      </p>
+    </div>
+
+    {/* 5. Top clientes */}
+    <div className="example-card">
+      <div style={styles.exampleImage}>
+        <img
+          src={topClientes}
+          alt="Top clientes"
+          style={styles.exampleImgTag}
+          onClick={() => setImagenZoom(topClientes)}
+        />
+      </div>
+      <p>
+        Ranking de clientes con mayor facturación y número de compras para
+        enfocar tus esfuerzos comerciales.
+      </p>
+    </div>
+
+    {/* 6. Productos más vendidos */}
+    <div className="example-card">
+      <div style={styles.exampleImage}>
+        <img
+          src={productosVendidos}
+          alt="Productos más vendidos"
+          style={styles.exampleImgTag}
+          onClick={() => setImagenZoom(productosVendidos)}
+        />
+      </div>
+      <p>
+        Listado de productos más vendidos y su participación en las ventas
+        totales del negocio.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+{imagenZoom && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.8)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 9999,
+    }}
+    onClick={() => setImagenZoom(null)}
+  >
+    <img
+      src={imagenZoom}
+      alt="Vista ampliada"
+      style={{
+        maxWidth: "90vw",
+        maxHeight: "90vh",
+        borderRadius: "12px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+      }}
+    />
+  </div>
+)}
+
+      {/* CONTACTO / CTA FINAL */}
+      <section id="contacto" className="section section--cta">
+        <div className="cta-content">
+          <div>
+            <h2>¿Te gustaría usar FactCloud en tu negocio?</h2>
+            <p>
+              Escríbenos para agendar una demo o para integrar FactCloud como
+              parte de tu proyecto de grado o solución empresarial.
+            </p>
+          </div>
+          <div className="cta-actions">
+            <a href="mailto:yeimararaujomedina@gmail.com" className="btn btn-secondary">
+              Hablar por correo
+            </a>
+            <a href="https://wa.me/573216878825" className="btn btn-secondary">
+              Hablar por WhatsApp
+            </a>
+          </div>
+        </div>
+      </section>
+      {/* FOOTER */}
+     <footer className="footer">
+  <div className="footer__top">
+    <div className="footer__brand">
+       <img 
+                  id="sidebar-logo"
+                  src={FactCloudLogo} 
+                  alt="logoFactCloud"
+                   style={{ width: "60%" }} 
+                />
+      <p>
+        Facturación electrónica en la nube para pequeños negocios colombianos.
+        Fácil de usar, siempre disponible.
+      </p>
+    </div>
+
+    <div className="footer__cols">
+      <div className="footer__col">
+        <h4>Producto</h4>
+        <a href="#features">Características</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#ejemplos">Visualizaciones de pantalla</a>
+      </div>
+
+      <div className="footer__col">
+        <h4>Recursos</h4>
+        <a href="/login">Ingresar al sistema</a>
+        <a href="#contacto">Soporte</a>
+      </div>
+
+      <div className="footer__col">
+        <h4>Contacto</h4>
+        <a href="mailto:yeimararaujomedina@gmail.com">
+          factcloud.soporte@factcloud.com
+        </a>
+        <a href="https://wa.me/573216878825" target="_blank" rel="noreferrer">
+          WhatsApp soporte
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div className="footer__bottom">
+    <span>
+      © {new Date().getFullYear()} FactCloud S.A.S – Todos los derechos
+      reservados.
+    </span>
+    <div className="footer__bottom-links">
+      <a href="#">Términos</a>
+      <a href="#">Privacidad</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+  );
+}
