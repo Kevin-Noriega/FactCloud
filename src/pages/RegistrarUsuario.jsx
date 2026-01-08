@@ -269,7 +269,7 @@ function RegistrarUsuario() {
               </div>
               <div style={estilos.fila}>
                 <div style={estilos.campo}>
-                  <label style={estilos.label}>Tipo de Persona</label>
+                  <label style={estilos.label}>Tipo de contribuyente</label>
                   <select
                     name="tipoPersona"
                     className="form-select"
@@ -278,8 +278,8 @@ function RegistrarUsuario() {
                     required
                   >
                     <option value="">Seleccionar</option>
-                    <option value="Natural">Persona Natural</option>
-                    <option value="Juridica">Persona Jurídica</option>
+                    <option value="Juridica">1 - Persona Jurídica y asimilidas</option>
+                    <option value="Natural">2 - Persona Natural y asimiladas</option>
                   </select>
                 </div>
 

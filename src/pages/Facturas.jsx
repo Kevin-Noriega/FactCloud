@@ -4,7 +4,7 @@ import ModalFacturaPDF from "../components/ModalfacturaPDF.jsx";
 import ModalPago from "../components/ModalPago.jsx";
 import Select from "react-select";
 import { createConnection } from "../SignalR/SignalConector";
-import { toast, ToastContainer} from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -12,7 +12,7 @@ function Facturas() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-    const [mensajeExito, setMensajeExito] = useState("");
+  const [mensajeExito, setMensajeExito] = useState("");
   const [buscador, setBuscador] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
@@ -23,47 +23,42 @@ function Facturas() {
   const barcodeInputRef = useRef(null);
   const [filtro, setFiltro] = useState("recientes");
 
-   const [factura, setFactura] = useState({
+  const [factura, setFactura] = useState({
     clienteId: "",
     numeroFactura: "",
     observaciones: "",
     metodoPagoCodigo: "10",
     fechaVencimiento: "",
   });
-// fuera del return, dentro del componente Facturas
-const enviarFacturaPorCorreo = async (factId) => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("No estás autenticado. Inicia sesión de nuevo.");
-      return;
-    }
 
-    const resp = await fetch(
-      `${API_URL}/Facturas/${factId}/enviar-cliente`,
-      {
+  const enviarFacturaPorCorreo = async (factId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("No estás autenticado. Inicia sesión de nuevo.");
+        return;
+      }
+
+      const resp = await fetch(`${API_URL}/Facturas/${factId}/enviar-cliente`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+      });
+
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(txt || "Error al enviar factura");
       }
-    );
 
-    if (!resp.ok) {
-      const txt = await resp.text();
-      throw new Error(txt || "Error al enviar factura");
+      setMensajeExito("Factura enviada al cliente por correo.");
+      setTimeout(() => setMensajeExito(""), 3000);
+    } catch (err) {
+      setMensajeExito(err.message);
+      setTimeout(() => setMensajeExito(""), 3000);
     }
-
-    setMensajeExito("Factura enviada al cliente por correo.");
-    setTimeout(() => setMensajeExito(""), 3000);
-  } catch (err) {
-    setMensajeExito(err.message);
-    setTimeout(() => setMensajeExito(""), 3000);
-  }
-};
-
- 
+  };
   const descargarXML = (fact) => {
   if (!fact.xmlBase64) {
     setMensajeExito("No hay XML generado para esta factura");
@@ -80,6 +75,7 @@ const enviarFacturaPorCorreo = async (factId) => {
   a.download = `Factura-${fact.numeroFactura}.xml`;
   a.click();
 };
+
 
   const filtrados = facturas
     .filter((fac) => {
@@ -105,7 +101,6 @@ const enviarFacturaPorCorreo = async (factId) => {
     observaciones: "",
   });
 
-  // ESCANER/BOTÓN SIEMPRE SUMA DE A 1
   const agregarPorCodigoBarras = () => {
     const codigo = codigoBarras.trim();
     if (!codigo) return;
@@ -154,10 +149,9 @@ const enviarFacturaPorCorreo = async (factId) => {
     const usuarioData = JSON.parse(localStorage.getItem("usuario"));
     if (usuarioData) {
       setFactura((f) => ({
-    ...f,
-    prefijo: usuarioData.prefijoAutorizadoDIAN,
-  }));
-  
+        ...f,
+        prefijo: usuarioData.prefijoAutorizadoDIAN,
+      }));
     }
 
     if (factura.metodoPagoCodigo === "20" && !factura.fechaVencimiento) {
@@ -172,6 +166,9 @@ const enviarFacturaPorCorreo = async (factId) => {
     if (factura.metodoPagoCodigo === "10" && factura.fechaVencimiento) {
       setFactura((f) => ({ ...f, fechaVencimiento: "" }));
     }
+    if (window.URL && window.URL.revokeObjectURL) {
+    // Limpia leaks
+  }
     // eslint-disable-next-line
   }, [factura.metodoPagoCodigo]);
 
@@ -212,7 +209,7 @@ const enviarFacturaPorCorreo = async (factId) => {
       const facturasData = await facturasRes.json();
       const clientesData = await clientesRes.json();
       const productosData = await productosRes.json();
-      
+
       setFacturas(facturasData);
       setClientes(clientesData);
       setProductos(productosData);
@@ -400,7 +397,7 @@ const enviarFacturaPorCorreo = async (factId) => {
         usuarioId: usuarioGuardado.id,
         clienteId: parseInt(factura.clienteId),
         numeroFactura:
-        factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
+          factura.numeroFactura || `${factura.prefijo}-${Date.now()}`,
         prefijo: factura.prefijo,
         fechaEmision: fechaActual.toISOString(),
         horaEmision: fechaActual.toTimeString().split(" ")[0],
@@ -465,7 +462,7 @@ const enviarFacturaPorCorreo = async (factId) => {
         const errorTexto = await respuesta.text();
         throw new Error(errorTexto);
       }
-      
+
       limpiarFormulario();
       fetchDatos();
     } catch (error) {
@@ -484,7 +481,6 @@ const enviarFacturaPorCorreo = async (factId) => {
     });
     setMostrarModalPago(true);
   };
-
 
   if (loading) {
     return (
@@ -516,7 +512,7 @@ const enviarFacturaPorCorreo = async (factId) => {
   return (
     <div className="container-fluid mt-4 px-4">
       <h2 className="text-info mb-4">Facturación Electrónica</h2>
-      
+
       {mensajeExito && (
         <div
           className="alert alert-danger d-flex justify-content-between align-items-center"
@@ -813,7 +809,7 @@ const enviarFacturaPorCorreo = async (factId) => {
                                   )
                                 }
                                 min="0"
-                                max="100" 
+                                max="100"
                                 step="0.01"
                               />
                             </td>
@@ -961,7 +957,7 @@ const enviarFacturaPorCorreo = async (factId) => {
           </div>
         </div>
       )}
-<ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -977,7 +973,6 @@ const enviarFacturaPorCorreo = async (factId) => {
           {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay facturas registradas.</div>
           ) : (
-            
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
                 <thead className="table-light">
@@ -1045,17 +1040,18 @@ const enviarFacturaPorCorreo = async (factId) => {
                         >
                           PDF
                         </button>
-                        <button className="btn btn-sm btn-danger me-1"  onClick={() => descargarXML(fact)}
->
-  XML
-</button>
-<button
-  className="btn btn-sm btn-outline-primary me-1"
-  onClick={() => enviarFacturaPorCorreo(fact.id)}
->
-  Email
-</button>
-
+                        <button
+                          className="btn btn-sm btn-danger me-1"
+                          onClick={() => descargarXML(fact)}
+                        >
+                          XML
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-primary me-1"
+                          onClick={() => enviarFacturaPorCorreo(fact.id)}
+                        >
+                         Enviar Email
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -1074,14 +1070,13 @@ const enviarFacturaPorCorreo = async (factId) => {
       )}
 
       {mostrarModalPago && facturaParaPago && (
-  <ModalPago
-    factura={facturaParaPago}
-    onSuccess={fetchDatos}
-    onClose={() => setMostrarModalPago(false)}
-    setMensajeExito={setMensajeExito}
-  />
-)}
-
+        <ModalPago
+          factura={facturaParaPago}
+          onSuccess={fetchDatos}
+          onClose={() => setMostrarModalPago(false)}
+          setMensajeExito={setMensajeExito}
+        />
+      )}
     </div>
   );
 }

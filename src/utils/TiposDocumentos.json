@@ -1,5 +1,15 @@
 [
   {
+    "codigo": "11",
+    "nombre": "Registro civil",
+    "sigla": "RC"
+  },
+  {
+    "codigo": "12",
+    "nombre": "Tarjeta de identidad",
+    "sigla": "TI"
+  },
+  {
     "codigo": "13",
     "nombre": "Cédula de Ciudadanía",
     "sigla": "CC"
@@ -26,7 +36,7 @@
   },
   {
     "codigo": "42",
-    "nombre": "Tipo de documento extranjero",
+    "nombre": "Documento de identificacion extranjero",
     "sigla": "PE"
   },
   {
