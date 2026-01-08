@@ -1,5 +1,9 @@
 [
     {
+        "codigo": "",
+        "responsabilidadFiscal": "No especificado"
+    },
+    {
         "codigo": "1",
         "responsabilidadFiscal": "Aporte especial para la administración de justicia"
     },

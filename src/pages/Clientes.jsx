@@ -434,7 +434,7 @@ const filtrados = clientes
               </h6>
               <div className="row mb-3">
                 <div className="col-md-4">
-                  <label className="form-label">Tipo de Persona</label>
+                  <label className="form-label">Tipo de contribuyente</label>
                   <select
                     name="tipoPersona"
                     className="form-select"
@@ -442,9 +442,9 @@ const filtrados = clientes
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Seleccionar</option>
-                    <option value="Natural">Persona Natural</option>
-                    <option value="Juridica">Persona Jurídica</option>
+                     <option value="">Seleccionar</option>
+                    <option value="Juridica">1 - Persona Jurídica y asimilidas</option>
+                    <option value="Natural">2 - Persona Natural y asimiladas</option>
                   </select>
                 </div>
                 <div className="col-md-4">
@@ -479,7 +479,7 @@ const filtrados = clientes
                   />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label">Régimen Tributario</label>
+                  <label className="form-label">Responsabilidad tributaria</label>
 
                   <Select
                     name="regimenTributario"
@@ -535,7 +535,7 @@ const filtrados = clientes
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Regimen Fiscal</label>
+                  <label className="form-label">Tipo de responsabilidad</label>
                   <Select
                     name="regimenFiscal"
                     options={regimenFiscalDIAN.map((rf) => ({
