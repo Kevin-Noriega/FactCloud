@@ -16,7 +16,6 @@ function Sidebar() {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
 
-  // Cargar los datos del usuario guardados en localStorage
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
     if (usuarioGuardado) {
@@ -27,7 +26,11 @@ function Sidebar() {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("usuario");
+    localStorage.removeItem("token");
+  localStorage.removeItem("usuario");
+  localStorage.removeItem("clientes");
+  localStorage.removeItem("productos");
+  localStorage.removeItem("facturas");
     navigate("/");
   };
 

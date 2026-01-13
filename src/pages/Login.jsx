@@ -7,6 +7,7 @@ function Login() {
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
+<<<<<<< HEAD
   const handleSubmit = async (e) => {
     console.log(
       "JSON enviado:",
@@ -48,6 +49,45 @@ function Login() {
       alert("❌ Error al conectar con el servidor");
     }
   };
+=======
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch(`${API_URL}/Auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        correo: correo,
+        contrasena: contraseña,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      alert(errorData.message || "Correo o contraseña incorrectos");
+      return;
+    }
+
+    const data = await response.json();
+
+    if (!data.token || !data.usuario) {
+      alert("Error: respuesta del servidor incompleta");
+      return;
+    }
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+
+    navigate("/dashboard");
+  } catch (error) {
+    console.error("Error login:", error);
+    alert("Error al conectar con el servidor");
+  }
+};
+>>>>>>> c2536dd26c65ee100470ae1e65555810b232f763
 
   const estiloAnimacion = document.createElement("style");
   estiloAnimacion.innerHTML = `
@@ -61,8 +101,7 @@ function Login() {
 
   const estilos = {
     fondo: {
-      background:
-        "linear-gradient(135deg, #0b1522, #0f1e32, #113a56, #2f78a2ff)",
+      background: "linear-gradient(135deg, #101735, #050713)",
       backgroundSize: "600% 600%",
       animation: "moverFondo 10s ease infinite",
       height: "100vh",

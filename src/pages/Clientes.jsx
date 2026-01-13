@@ -18,11 +18,31 @@ function Clientes() {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [clienteEditando, setClienteEditando] = useState(null);
   const [mensajeExito, setMensajeExito] = useState("");
-  const [clienteEliminado, setClienteEliminado] = useState(null);
-  const [mostrarInfo, setMostrarInfo] = useState(false);
+    const [buscador, setBuscador] = useState("");
+  const [, setClienteEliminado] = useState(null);
   const [clienteAEliminar, setClienteAEliminar] = useState(null);
   const [clienteVer, setClienteVer] = useState(null);
+    const [filtro, setFiltro] = useState("recientes");
 
+const filtrados = clientes
+    .filter((cli) => {
+      const query = buscador.trim().toLowerCase();
+      return (
+        !query ||
+        cli.nombre?.toLowerCase().includes(query) ||
+        cli.numeroIdentificacion?.toLowerCase().includes(query)
+      );
+    })
+    .sort((a, b) => {
+      switch (filtro) {
+        case "recientes":
+          return new Date(b.fechaRegistro) - new Date(a.fechaRegistro);
+        case "antiguos":
+          return new Date(a.fechaRegistro) - new Date(b.fechaRegistro);
+        default:
+          return 0;
+      }
+    });
   const [cliente, setCliente] = useState({
     nombre: "",
     apellido: "",
@@ -43,7 +63,7 @@ function Clientes() {
     retenedorRenta: false,
     autoretenedorRenta: false,
     estado: true,
-    municipioCodigo: "",
+    ciudadCodigo: "",
     departamentoCodigo: "",
     pais: "CO",
     nombreComercial: "",
@@ -55,7 +75,13 @@ function Clientes() {
 
   async function fetchClientes() {
     try {
-      const res = await fetch(`${API_URL}/Clientes`);
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API_URL}/Clientes`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
       const datos = await res.json();
       setClientes(datos);
@@ -89,7 +115,7 @@ function Clientes() {
       telefono: "",
       departamento: "",
       ciudad: "",
-      municipioCodigo: "",
+      ciudadCodigo: "",
       departamentoCodigo: "",
       direccion: "",
       codigoPostal: "",
@@ -113,15 +139,12 @@ function Clientes() {
       }
 
       const payload = {
+        ...(clienteEditando && { id: clienteEditando }), // <— SOLO en modo edición
         nombre: cliente.nombre,
         apellido: cliente.apellido,
         tipoIdentificacion: cliente.tipoIdentificacion,
         numeroIdentificacion: cliente.numeroIdentificacion,
-        digitoVerificacion:
-          cliente.digitoVerificacion !== "" &&
-          cliente.digitoVerificacion !== null
-            ? parseInt(cliente.digitoVerificacion, 10)
-            : null,
+        digitoVerificacion: cliente.digitoVerificacion || null,
         tipoPersona: cliente.tipoPersona,
         regimenTributario: cliente.regimenTributario,
         regimenFiscal: cliente.regimenFiscal,
@@ -131,13 +154,12 @@ function Clientes() {
         ciudad: cliente.ciudad,
         direccion: cliente.direccion,
         codigoPostal: cliente.codigoPostal || "",
-
         retenedorIVA: !!cliente.retenedorIVA,
         retenedorICA: !!cliente.retenedorICA,
         retenedorRenta: !!cliente.retenedorRenta,
         autoretenedorRenta: !!cliente.autoretenedorRenta,
-        estado: typeof cliente.estado === "boolean" ? cliente.estado : true,
-        municipioCodigo: cliente.municipioCodigo || "",
+        estado: cliente.estado ?? true,
+        ciudadCodigo: cliente.ciudadCodigo || "",
         departamentoCodigo: cliente.departamentoCodigo || "",
         pais: cliente.pais || "CO",
         nombreComercial: cliente.nombreComercial || "",
@@ -145,7 +167,7 @@ function Clientes() {
         usuarioId: usuarioGuardado.id,
       };
 
-      console.log("Payload que se envía al backend:", payload);
+      const token = localStorage.getItem("token");
 
       const url = clienteEditando
         ? `${API_URL}/Clientes/${clienteEditando}`
@@ -154,7 +176,10 @@ function Clientes() {
 
       const respuesta = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(payload),
       });
 
@@ -162,7 +187,13 @@ function Clientes() {
         const texto = await respuesta.text();
         throw new Error(texto);
       }
+      setMensajeExito(
+        clienteEditando
+          ? "Cliente modificado con éxito."
+          : "Cliente agregado con éxito."
+      );
 
+      setTimeout(() => setMensajeExito(""), 3000);
       limpiarFormulario();
       fetchClientes();
     } catch (error) {
@@ -171,51 +202,34 @@ function Clientes() {
   };
 
   const editarCliente = (cli) => {
+    const { id, ...resto } = cli;
+
     setCliente({
-      id: clienteEditando,
-      nombre: cli.nombre || "",
-      apellido: cli.apellido || "",
-      tipoIdentificacion: cli.tipoIdentificacion || "",
-      numeroIdentificacion: cli.numeroIdentificacion || "",
-      digitoVerificacion: cli.digitoVerificacion ?? "",
-      tipoPersona: cli.tipoPersona || "",
-      regimenTributario: cli.regimenTributario || "",
-      correo: cli.correo || "",
-      telefono: cli.telefono || "",
-      departamento: cli.departamento || "",
-      ciudad: cli.ciudad || "",
-      municipioCodigo: cli.municipioCodigo || "",
-      departamentoCodigo: cli.departamentoCodigo || "",
-      direccion: cli.direccion || "",
-      codigoPostal: cli.codigoPostal || "",
-      regimenFiscal: cli.regimenFiscal || "",
-      retenedorIVA: !!cli.retenedorIVA,
-      retenedorICA: !!cli.retenedorICA,
-      retenedorRenta: !!cli.retenedorRenta,
-      autoretenedorRenta: !!cli.autoretenedorRenta,
-
-      pais: cli.pais || "CO",
-      nombreComercial: cli.nombreComercial || "",
-      actividadEconomicaCIIU: cli.actividadEconomicaCIIU || "",
-
-      estado: typeof cli.estado === "boolean" ? cli.estado : true,
+      ...resto,
     });
 
-    setClienteEditando(cli.id);
+    setClienteEditando(id);
     setMostrarFormulario(true);
   };
 
   const eliminarCliente = async (id) => {
     try {
       const cli = clientes.find((c) => c.id === id);
-      const respuesta = await fetch(`${API_URL}/Clientes/${id}`, {
-        method: "DELETE",
+      const token = localStorage.getItem("token");
+      const respuesta = await fetch(`${API_URL}/Clientes/desactivar/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (!respuesta.ok) throw new Error("Error al eliminar cliente");
+
       setMensajeExito("Cliente eliminado con éxito.");
       setTimeout(() => setMensajeExito(""), 3000);
+
       setClienteEliminado(cli);
-      setMostrarInfo(false);
+
       fetchClientes();
     } catch {
       setMensajeExito("");
@@ -255,20 +269,12 @@ function Clientes() {
         >
           <span>{mensajeExito}</span>
           <div>
-            {clienteEliminado && (
-              <button
-                className="btn btn-light btn-sm me-2"
-                onClick={() => setMostrarInfo((x) => !x)}
-              >
-                {mostrarInfo ? "Ocultar info" : "Ver cliente"}
-              </button>
-            )}
+            
             <button
               className="btn btn-close"
               onClick={() => {
                 setMensajeExito("");
                 setClienteEliminado(null);
-                setMostrarInfo(false);
               }}
             ></button>
           </div>
@@ -349,59 +355,33 @@ function Clientes() {
           </div>
         </div>
       )}
-      {mostrarInfo && clienteEliminado && (
-        <pre className="bg-light p-3 rounded border text-dark">
-          {JSON.stringify(clienteEliminado, null, 2)}
-        </pre>
-      )}
+      <div className="d-flex justify-content-between align-items-center mb-3">
       <button
-        className="btn btn-primary mb-4"
+        className="btn btn-primary "
         onClick={() => setMostrarFormulario(!mostrarFormulario)}
       >
         {mostrarFormulario ? "Ocultar Formulario" : "Nuevo Cliente"}
       </button>
-      {clienteAEliminar && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.3)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1055,
-          }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              borderRadius: 10,
-              padding: 32,
-              minWidth: 320,
-              boxShadow: "0 2px 20px #3336",
-            }}
+      <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Buscar por nombre o ID"
+            value={buscador}
+            onChange={(e) => setBuscador(e.target.value)}
+            style={{ flexGrow: 1 }}
+          />
+           <select
+            className="form-select"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+            style={{ width: "148px" }}
           >
-            <h5 className="mb-3">¿Está seguro de eliminar este cliente?</h5>
-            <div className="d-flex gap-2 justify-content-end">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setClienteAEliminar(null)}
-              >
-                Cancelar
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => eliminarCliente(clienteAEliminar)}
-              >
-                Sí, eliminar
-              </button>
-            </div>
+            <option value="recientes">Más recientes</option>
+            <option value="antiguos">Más antiguos</option>
+          </select>
           </div>
-        </div>
-      )}{" "}
+          </div>
       {clienteAEliminar && (
         <div
           style={{
@@ -444,11 +424,7 @@ function Clientes() {
           </div>
         </div>
       )}
-      {mostrarInfo && clienteEliminado && (
-        <pre className="bg-light p-3 rounded border text-dark">
-          {JSON.stringify(clienteEliminado, null, 2)}
-        </pre>
-      )}
+      
       {mostrarFormulario && (
         <div className="card mb-4">
           <div className="card-body">
@@ -458,7 +434,7 @@ function Clientes() {
               </h6>
               <div className="row mb-3">
                 <div className="col-md-4">
-                  <label className="form-label">Tipo de Persona</label>
+                  <label className="form-label">Tipo de contribuyente</label>
                   <select
                     name="tipoPersona"
                     className="form-select"
@@ -466,9 +442,9 @@ function Clientes() {
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Seleccionar</option>
-                    <option value="Natural">Persona Natural</option>
-                    <option value="Juridica">Persona Jurídica</option>
+                     <option value="">Seleccionar</option>
+                    <option value="Juridica">1 - Persona Jurídica y asimilidas</option>
+                    <option value="Natural">2 - Persona Natural y asimiladas</option>
                   </select>
                 </div>
                 <div className="col-md-4">
@@ -503,7 +479,7 @@ function Clientes() {
                   />
                 </div>
                 <div className="col-md-4">
-                  <label className="form-label">Régimen Tributario</label>
+                  <label className="form-label">Responsabilidad tributaria</label>
 
                   <Select
                     name="regimenTributario"
@@ -559,7 +535,7 @@ function Clientes() {
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label">Regimen Fiscal</label>
+                  <label className="form-label">Tipo de responsabilidad</label>
                   <Select
                     name="regimenFiscal"
                     options={regimenFiscalDIAN.map((rf) => ({
@@ -711,7 +687,7 @@ function Clientes() {
                         departamento: opt ? opt.value : "",
                         departamentoCodigo: opt ? opt.departamentoCodigo : "",
                         ciudad: "",
-                        municipioCodigo: "",
+                        ciudadCodigo: "",
                       }))
                     }
                     placeholder="Seleccionar departamento"
@@ -727,13 +703,13 @@ function Clientes() {
                       cliente.departamento
                     )}
                     value={
-                      cliente.municipioCodigo
+                      cliente.ciudadCodigo
                         ? ciudadesOptionsPorDepartamento(
                             cliente.departamento
                           ).find(
                             (opt) =>
-                              String(opt.municipioCodigo) ===
-                              String(cliente.municipioCodigo)
+                              String(opt.ciudadCodigo) ===
+                              String(cliente.ciudadCodigo)
                           ) || null
                         : null
                     }
@@ -741,7 +717,7 @@ function Clientes() {
                       setCliente((prev) => ({
                         ...prev,
                         ciudad: opt ? opt.value : "",
-                        municipioCodigo: opt ? opt.municipioCodigo : "",
+                        ciudadCodigo: opt ? opt.ciudadCodigo : "",
                       }))
                     }
                     placeholder="Seleccionar ciudad"
@@ -844,7 +820,7 @@ function Clientes() {
       )}
       <div className="card">
         <div className="card-body">
-          {clientes.length === 0 ? (
+          {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay clientes registrados.</div>
           ) : (
             <div className="table-responsive">
@@ -861,7 +837,7 @@ function Clientes() {
                   </tr>
                 </thead>
                 <tbody>
-                  {clientes.map((cli) => (
+                  {filtrados.map((cli) => (
                     <tr key={cli.id}>
                       <td>{cli.id}</td>
                       <td>

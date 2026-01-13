@@ -2,10 +2,24 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from "../api/config";
-import ciudades from "../utils/Ciudades.json";
 import logo from "../img/logoFC.png";
+import {
+  departamentosOptions,
+  ciudadesOptionsPorDepartamento,
+} from "../utils/Helpers";
+import tipoIdentificacion from "../utils/TiposDocumentos.json";
+import actividadesCIIU from "../utils/ActividadesEconomicasCIIU.json";
+import regimenTributarioDIAN from "../utils/RegimenTributario.json";
+import regimenFiscalDIAN from "../utils/RegimenFiscal.json";
+import ambienteDIAN from "../utils/AmbienteDIAN.json";
+import responsabilidadesRUT from "../utils/ResponsabilidadesRUT.json";
 
 function RegistrarUsuario() {
+  const [paso, setPaso] = useState(1);
+
+  const siguiente = () => setPaso((p) => Math.min(p + 1, 4));
+  const anterior = () => setPaso((p) => Math.max(p - 1, 1));
+
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState({
     nombreUsuario: "",
@@ -13,78 +27,48 @@ function RegistrarUsuario() {
     correoUsuario: "",
     telefonoUsuario: "",
     contraseñaUsuario: "",
+    tipoIdentificacion: "",
+    numeroIdentificacion: "",
+    tipoPersona:"",
+
     nitNegocioUsuario: "",
     dvNit: "",
     nombreNegocioUsuario: "",
-    tipoRegimen: "",
+
     direccionNegocio: "",
-    ciudadNegocio: "",
     departamentoNegocio: "",
+    departamentoCodigo: "",
+    ciudadNegocio: "",
+    ciudadCodigo: "",
+    codigoPostal: "",
+    pais: "CO",
+
+    telefonoNegocio: "",
     correoNegocio: "",
+    actividadEconomicaCIIU: "",
+    responsabilidadesRut:"",
     logoNegocioUsuario: "",
     estado: true,
 
-    //faltante
-    tipoIdentificacion: "",
-    codigoPostal: "",
-    municipioCodigo: "",
-    departamentoCodigo: "",
-    telefonoNegocio: "",
-    actividadEconomicaCIIU: "",
     regimenFiscal: "",
-    responsabilidadesRUT: "",
-    pais: "CO",
-    softwareProveedor: "",
-    softwarePIN: "",
+    regimenTributario: "",
+
+    softwareProveedor: "FACTCLOUD",
+    softwarePIN: "109990",
+
     prefijoAutorizadoDIAN: "",
     numeroResolucionDIAN: "",
     fechaResolucionDIAN: "",
+    fechaVigenciaInicio:"",
+    fechaVigenciaFinal: "",
     rangoNumeracionDesde: "",
     rangoNumeracionHasta: "",
     ambienteDIAN: "",
   });
 
-  const opcionesDepartamentos = Object.keys(ciudades).map((dep) => ({
-    label: dep,
-    value: dep,
-  }));
-
-  const opcionesCiudades = usuario.departamentoNegocio
-    ? ciudades[usuario.departamentoNegocio].map((c) => ({
-        label: c,
-        value: c,
-      }))
-    : [];
-
-  const opcionesTipoRegimen = [
-    { label: "Simplificado", value: "Simplificado" },
-    { label: "Común", value: "Común" },
-  ];
-
-  const opcionesEstado = [
-    { label: "Activo", value: true },
-    { label: "Inactivo", value: false },
-  ];
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUsuario({ ...usuario, [name]: value });
-  };
-
-  const handleSelectChange = (field, selectedOption) => {
-    setUsuario({
-      ...usuario,
-      [field]: selectedOption ? selectedOption.value : "",
-    });
-  };
-
-  const handleDepartamentoChangeSelect = (selectedOption) => {
-    const depto = selectedOption ? selectedOption.value : "";
-    setUsuario({
-      ...usuario,
-      departamentoNegocio: depto,
-      ciudadNegocio: "",
-    });
   };
 
   const handleSubmit = async (e) => {
@@ -105,7 +89,29 @@ function RegistrarUsuario() {
       ciudadNegocio: usuario.ciudadNegocio,
       correoNegocio: usuario.correoNegocio,
       logoNegocio: usuario.logoNegocioUsuario,
+      tipoPersona: usuario.tipoPersona,
       estado: usuario.estado,
+      tipoIdentificacion: usuario.tipoIdentificacion,
+      numeroIdentificacion: usuario.numeroIdentificacion,
+      codigoPostal: usuario.codigoPostal,
+      ciudadCodigo: usuario.ciudadCodigo,
+      departamentoCodigo: usuario.departamentoCodigo,
+      telefonoNegocio: usuario.telefonoNegocio,
+      actividadEconomicaCIIU: usuario.actividadEconomicaCIIU,
+      regimenFiscal: usuario.regimenFiscal,
+      regimenTributario: usuario.regimenTributario || "NO_APLICA",
+      responsabilidadesRut: usuario.responsabilidadesRut,
+      pais: "CO",
+      fechaVigenciaInicio: usuario.fechaVigenciaInicio,
+    fechaVigenciaFinal: usuario.fechaVigenciaFinal,
+      softwareProveedor: usuario.softwareProveedor,
+      softwarePIN: usuario.softwarePIN,
+      prefijoAutorizadoDIAN: usuario.prefijoAutorizadoDIAN,
+      numeroResolucionDIAN: usuario.numeroResolucionDIAN,
+      fechaResolucionDIAN: usuario.fechaResolucionDIAN,
+      rangoNumeracionDesde: usuario.rangoNumeracionDesde,
+      rangoNumeracionHasta: usuario.rangoNumeracionHasta,
+      ambienteDIAN: usuario.ambienteDIAN,
     };
 
     try {
@@ -120,7 +126,15 @@ function RegistrarUsuario() {
       if (response.ok) {
         navigate("/login");
       } else {
-        const errorData = await response.json();
+        const text = await response.text();
+        let errorData = null;
+
+        try {
+          errorData = text ? JSON.parse(text) : null;
+        } catch {
+          errorData = text;
+        }
+
         console.error("Error al registrar usuario:", errorData);
         alert("Error al registrar usuario. Revisa los datos ingresados.");
       }
@@ -142,8 +156,7 @@ function RegistrarUsuario() {
 
   const estilos = {
     fondo: {
-      background:
-        "linear-gradient(135deg, #0b1522, #0f1e32, #113a56, #31607bff)",
+            background: "radial-gradient(circle at top, #101735, #050713)",
       backgroundSize: "600% 600%",
       animation: "moverFondo 15s ease infinite",
       minHeight: "100vh",
@@ -165,7 +178,6 @@ function RegistrarUsuario() {
       textAlign: "center",
       fontSize: "2rem",
       color: "#15803d",
-      marginBottom: "30px",
       fontWeight: "bold",
     },
     subtitulo: {
@@ -218,7 +230,6 @@ function RegistrarUsuario() {
       transition: "background 0.3s",
     },
   };
-
   return (
     <div style={estilos.fondo}>
       <div style={estilos.contenedor}>
@@ -226,221 +237,586 @@ function RegistrarUsuario() {
           <img src={logo} alt="logo FactCloud" className="pb-5" />
         </div>
 
-        <h3 style={estilos.subtitulo}>Registro de Usuario / Emisor</h3>
-
         <form onSubmit={handleSubmit}>
-          <div style={estilos.fila}>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Nombre</label>
-              <input
-                type="text"
-                name="nombreUsuario"
-                value={usuario.nombreUsuario}
-                onChange={handleChange}
-                style={estilos.input}
-                required
-              />
-            </div>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Apellido</label>
-              <input
-                type="text"
-                name="apellidoUsuario"
-                value={usuario.apellidoUsuario}
-                onChange={handleChange}
-                style={estilos.input}
-                required
-              />
-            </div>
-          </div>
+          {/*Datos de Contacto y Acceso*/}
+          {paso === 1 && (
+            <>
+              <h3 style={estilos.subtitulo}>Datos de Contacto y Acceso</h3>
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Nombre</label>
+                  <input
+                    type="text"
+                    name="nombreUsuario"
+                    value={usuario.nombreUsuario}
+                    onChange={handleChange}
+                    style={estilos.input}
+                    required
+                  />
+                </div>
 
-          <div style={estilos.fila}>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Correo</label>
-              <input
-                type="email"
-                name="correoUsuario"
-                value={usuario.correoUsuario}
-                onChange={handleChange}
-                style={estilos.input}
-                required
-              />
-            </div>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Teléfono</label>
-              <input
-                type="text"
-                name="telefonoUsuario"
-                value={usuario.telefonoUsuario}
-                onChange={handleChange}
-                style={estilos.input}
-              />
-            </div>
-          </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Apellido</label>
+                  <input
+                    type="text"
+                    name="apellidoUsuario"
+                    value={usuario.apellidoUsuario}
+                    onChange={handleChange}
+                    style={estilos.input}
+                    required
+                  />
+                </div>
+              </div>
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Tipo de contribuyente</label>
+                  <select
+                    name="tipoPersona"
+                    className="form-select"
+                    value={usuario.tipoPersona}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Seleccionar</option>
+                    <option value="Juridica">1 - Persona Jurídica y asimilidas</option>
+                    <option value="Natural">2 - Persona Natural y asimiladas</option>
+                  </select>
+                </div>
 
-          <div style={estilos.campo}>
-            <label style={estilos.label}>Contraseña</label>
-            <input
-              type="password"
-              name="contraseñaUsuario"
-              value={usuario.contraseñaUsuario}
-              onChange={handleChange}
-              style={estilos.input}
-              required
-            />
-          </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Tipo de Identificación</label>
+                 <Select
+  name="tipoIdentificacion"
+  options={tipoIdentificacion.map((ti) => ({
+    value: ti.codigo, // o ti.nombre si el backend lo espera así
+    label: `${ti.codigo} - ${ti.nombre}`,
+  }))}
+  value={
+    usuario.tipoIdentificacion
+      ? tipoIdentificacion
+          .map((ti) => ({
+            value: ti.codigo,
+            label: `${ti.codigo} - ${ti.nombre}`,
+          }))
+          .find((opt) => opt.value === usuario.tipoIdentificacion)
+      : null
+  }
+  onChange={(opt) =>
+    setUsuario((prev) => ({
+      ...prev,
+      tipoIdentificacion: opt ? opt.value : "",
+    }))
+  }
+  isClearable
+  placeholder="Seleccionar"
+/>
 
-          <hr style={{ margin: "25px 0" }} />
+                </div>
+                <div style={estilos.campo}>
+                  <label className="form-label">Número de Identificación</label>
+                  <input
+                    type="text"
+                    name="numeroIdentificacion"
+                    className="form-control"
+                    value={usuario.numeroIdentificacion}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
 
-          <h3 style={estilos.subtitulo}>Información del Negocio</h3>
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Correo</label>
+                  <input
+                    type="email"
+                    name="correoUsuario"
+                    value={usuario.correoUsuario}
+                    onChange={handleChange}
+                    style={estilos.input}
+                    required
+                  />
+                </div>
 
-          <div style={estilos.fila}>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>NIT del negocio</label>
-              <input
-                type="text"
-                name="nitNegocioUsuario"
-                value={usuario.nitNegocioUsuario}
-                onChange={handleChange}
-                style={estilos.input}
-              />
-            </div>
-            <div style={{ width: "200px" }}>
-              <label style={estilos.label}>DV</label>
-              <input
-                type="number"
-                name="dvNit"
-                value={usuario.dvNit}
-                onChange={handleChange}
-                style={estilos.input}
-              />
-            </div>
-          </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Teléfono</label>
+                  <input
+                    type="text"
+                    name="telefonoUsuario"
+                    value={usuario.telefonoUsuario}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+                 <div style={estilos.campo}>
+                  <label style={estilos.label}>Contraseña</label>
+                  <input
+                    type="password"
+                    name="contraseñaUsuario"
+                    value={usuario.contraseñaUsuario}
+                    onChange={handleChange}
+                    style={estilos.input}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="text-end">
+                <button className="btn btn-primary mt-4" onClick={siguiente}>
+                  Siguiente
+                </button>
+              </div>
+            </>
+          )}
 
-          <div style={estilos.campo}>
-            <label style={estilos.label}>Nombre del negocio</label>
-            <input
-              type="text"
-              name="nombreNegocioUsuario"
-              value={usuario.nombreNegocioUsuario}
-              onChange={handleChange}
-              style={estilos.input}
-            />
-          </div>
+          {paso === 2 && (
+            <>
+            {/*Identificación Tributaria y Legal*/}
+              <h3 style={estilos.subtitulo}>Identificación Tributaria y Legal</h3>
 
-          <div style={estilos.fila}>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Tipo de régimen</label>
-              <Select
-                options={opcionesTipoRegimen}
-                value={
-                  usuario.tipoRegimen
-                    ? opcionesTipoRegimen.find(
-                        (o) => o.value === usuario.tipoRegimen
-                      )
-                    : null
-                }
-                onChange={(opt) => handleSelectChange("tipoRegimen", opt)}
-                isClearable
-                placeholder="Selecciona..."
-              />
-            </div>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Dirección</label>
-              <input
-                type="text"
-                name="direccionNegocio"
-                value={usuario.direccionNegocio}
-                onChange={handleChange}
-                style={estilos.input}
-              />
-            </div>
-          </div>
+              
 
-          <div style={estilos.fila}>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Departamento</label>
-              <Select
-                options={opcionesDepartamentos}
-                value={
-                  usuario.departamentoNegocio
-                    ? {
-                        label: usuario.departamentoNegocio,
-                        value: usuario.departamentoNegocio,
-                      }
-                    : null
-                }
-                onChange={handleDepartamentoChangeSelect}
-                isClearable
-                placeholder="Seleccionar departamento"
-              />
-            </div>
-            <div style={estilos.campo}>
-              <label style={estilos.label}>Ciudad o Municipio</label>
-              <Select
-                options={opcionesCiudades}
-                value={
-                  usuario.ciudadNegocio
-                    ? {
-                        label: usuario.ciudadNegocio,
-                        value: usuario.ciudadNegocio,
-                      }
-                    : null
-                }
-                onChange={(opt) => handleSelectChange("ciudadNegocio", opt)}
-                isClearable
-                isDisabled={!usuario.departamentoNegocio}
-                placeholder="Seleccionar ciudad"
-              />
-            </div>
-          </div>
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>NIT del negocio</label>
+                  <input
+                    type="text"
+                    name="nitNegocioUsuario"
+                    value={usuario.nitNegocioUsuario}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
 
-          <div style={estilos.campo}>
-            <label style={estilos.label}>Correo de facturación</label>
-            <input
-              type="email"
-              name="correoNegocio"
-              value={usuario.correoNegocio}
-              onChange={handleChange}
-              style={estilos.input}
-            />
-          </div>
+                <div style={{ width: "200px" }}>
+                  <label style={estilos.label}>Dígito de verificación (DV)</label>
+                  <input
+                    type="number"
+                    name="dvNit"
+                    value={usuario.dvNit}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+                 <div style={estilos.campo}>
+                  <label style={estilos.label}>Nombre del negocio</label>
+                  <input
+                    type="text"
+                    name="nombreNegocioUsuario"
+                    value={usuario.nombreNegocioUsuario}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+                
+              </div>
 
-          <div style={estilos.campo}>
-            <label style={estilos.label}>Logo del negocio (URL)</label>
-            <input
-              type="text"
-              name="logoNegocioUsuario"
-              value={usuario.logoNegocioUsuario}
-              onChange={handleChange}
-              style={estilos.input}
-            />
-          </div>
+              <div style={estilos.fila}>
+               
+              </div>
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Régimen Fiscal</label>
 
-          <div style={estilos.campo}>
-            <label style={estilos.label}>Estado</label>
-            <Select
-              options={opcionesEstado}
-              value={
-                usuario.estado !== undefined
-                  ? opcionesEstado.find((o) => o.value === usuario.estado)
-                  : null
-              }
-              onChange={(opt) =>
-                setUsuario({ ...usuario, estado: opt ? opt.value : true })
-              }
-              placeholder="Selecciona estado"
-            />
-          </div>
+                  <Select
+                    name="regimenFiscal"
+                    options={regimenFiscalDIAN.map((rf) => ({
+                      value: rf.descripcion,
+                      label: `${rf.codigo} - ${rf.descripcion}`,
+                    }))}
+                    value={
+                      usuario.regimenFiscal
+                        ? regimenFiscalDIAN
+                            .map((rf) => ({
+                              value: rf.descripcion,
+                              label: `${rf.codigo} - ${rf.descripcion}`,
+                            }))
+                            .find((opt) => opt.value === usuario.regimenFiscal)
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setUsuario((prev) => ({
+                        ...prev,
+                        regimenFiscal: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar Regimen fiscal"
+                  />
+                </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>
+                    Actividad Económica (CIIU)
+                  </label>
+                  <Select
+                    name="actividadEconomicaCIIU"
+                    options={actividadesCIIU.map((act) => ({
+                      value: act.codigo,
+                      label: `${act.codigo} - ${act.descripcion}`,
+                    }))}
+                    value={
+                      usuario.actividadEconomicaCIIU
+                        ? actividadesCIIU
+                            .map((act) => ({
+                              value: act.codigo,
+                              label: `${act.codigo} - ${act.descripcion}`,
+                            }))
+                            .find(
+                              (opt) =>
+                                opt.value === usuario.actividadEconomicaCIIU
+                            )
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setUsuario((prev) => ({
+                        ...prev,
+                        actividadEconomicaCIIU: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar actividad CIIU"
+                  />
+                </div>
+              </div>
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Regimen Tributario</label>
+                  <Select
+                    name="regimenTributario"
+                    options={regimenTributarioDIAN.map((rt) => ({
+                      value: rt.descripcion,
+                      label: `${rt.codigo} - ${rt.descripcion}`,
+                    }))}
+                    value={
+                      usuario.regimenTributario
+                        ? regimenTributarioDIAN
+                            .map((rt) => ({
+                              value: rt.descripcion,
+                              label: `${rt.codigo} - ${rt.descripcion}`,
+                            }))
+                            .find(
+                              (opt) => opt.value === usuario.regimenTributario
+                            )
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setUsuario((prev) => ({
+                        ...prev,
+                        regimenTributario: opt ? opt.value : "",
+                      }))   
+                    }   
+                    isClearable   
+                    placeholder="Seleccionar"
+                  />
+                </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Ambiente DIAN</label>
+                  <Select
+                    name="ambienteDIAN"
+                    options={ambienteDIAN.map((rf) => ({
+                      value: rf.descripcion,
+                      label: `${rf.codigo} - ${rf.descripcion}`,
+                    }))}
+                    value={
+                      usuario.ambienteDIAN
+                        ? ambienteDIAN
+                            .map((rf) => ({
+                              value: rf.descripcion,
+                              label: `${rf.codigo} - ${rf.descripcion}`,
+                            }))
+                            .find((opt) => opt.value === usuario.ambienteDIAN)
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setUsuario((prev) => ({
+                        ...prev,
+                        ambienteDIAN: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar"
+                  />
+                </div>
 
-          <button
-            type="submit"
-            style={estilos.boton}
-            onMouseOver={(e) => (e.target.style.backgroundColor = "#047fc6ff")}
-            onMouseOut={(e) => (e.target.style.backgroundColor = "#00a2ff")}
-          >
-            Registrarse
-          </button>
+
+                </div>
+                
+                     <div style={estilos.campo}>
+
+                  <label style={estilos.label}>Responsabilidades RUT</label>
+                <Select
+  name="responsabilidadesRut"
+  isMulti
+  options={responsabilidadesRUT.map((rf) => ({
+    value: rf.codigo,
+    label: `${rf.codigo} - ${rf.responsabilidadFiscal}`,
+  }))}
+  value={responsabilidadesRUT
+    .filter(rf => usuario.responsabilidadesRut.includes(rf.codigo))
+    .map(rf => ({
+      value: rf.codigo,
+      label: `${rf.codigo} - ${rf.responsabilidadFiscal}`,
+    }))
+  }
+  onChange={(opts) =>
+    setUsuario((prev) => ({
+      ...prev,
+      responsabilidadesRut: opts ? opts.map((x) => x.value) : [],
+    }))
+  }
+  placeholder="Seleccionar responsabilidades"
+  closeMenuOnSelect={false}
+/>
+              </div>
+            
+
+              <div className="d-flex justify-content-between mt-4">
+                <button className="btn btn-secondary" onClick={anterior}>
+                  Anterior
+                </button>
+
+                <button className="btn btn-primary" onClick={siguiente}>
+                  Siguiente
+                </button>
+              </div>
+            </>
+          )}
+
+          {paso === 3 && (
+            <>
+            {/*Ubicación y Domicilio Fiscal*/}
+              <h3 style={estilos.subtitulo}>Ubicación y Domicilio Fiscal</h3>
+                <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Teléfono del negocio</label>
+                  <input
+                    type="text"
+                    name="telefonoNegocio"
+                    value={usuario.telefonoNegocio}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Correo de facturación</label>
+                  <input
+                    type="email"
+                    name="correoNegocio"
+                    value={usuario.correoNegocio}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+              </div>              
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Dirección</label>
+                  <input
+                    type="text"
+                    name="direccionNegocio"
+                    value={usuario.direccionNegocio}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Código Postal</label>
+                  <input
+                    type="text"
+                    name="codigoPostal"
+                    value={usuario.codigoPostal}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+              </div>
+
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Departamento</label>
+                  <Select
+                    name="departamentoNegocio"
+                    options={departamentosOptions}
+                    value={
+                      usuario.departamentoCodigo
+                        ? departamentosOptions.find(
+                            (o) =>
+                              o.departamentoCodigo ===
+                              usuario.departamentoCodigo
+                          ) || null
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setUsuario((prev) => ({
+                        ...prev,
+                        departamentoNegocio: opt ? opt.value : "",
+                        departamentoCodigo: opt ? opt.departamentoCodigo : "",
+                        ciudadNegocio: "",
+                        ciudadCodigo: "",
+                      }))
+                    }
+                    placeholder="Seleccionar departamento"
+                    isClearable
+                    required
+                  />
+                </div>
+
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Ciudad o Municipio</label>
+                  <Select
+                    name="ciudadNegocio"
+                    options={ciudadesOptionsPorDepartamento(
+                      usuario.departamentoNegocio
+                    )}
+                    value={
+                      usuario.ciudadCodigo
+                        ? ciudadesOptionsPorDepartamento(
+                            usuario.departamentoNegocio
+                          ).find(
+                            (opt) => opt.ciudadCodigo === usuario.ciudadCodigo
+                          )
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setUsuario((prev) => ({
+                        ...prev,
+                        ciudadNegocio: opt ? opt.value : "",
+                        ciudadCodigo: opt ? opt.ciudadCodigo : "",
+                      }))
+                    }
+                    placeholder="Seleccionar ciudad"
+                    isClearable
+                    isDisabled={!usuario.departamentoNegocio}
+                  />
+                </div>
+              </div>
+              
+              <div className="d-flex justify-content-between mt-4">
+                <button className="btn btn-secondary" onClick={anterior}>
+                  Anterior
+                </button>
+
+                <button className="btn btn-primary" onClick={siguiente}>
+                  Siguiente
+                </button>
+              </div>
+            </>
+          )}
+          {paso === 4 && (
+            <>
+             {/*Configuración de Facturación Electrónica*/}
+              <h3 style={estilos.subtitulo}>Configuración de Facturación Electrónica</h3>
+              <div style={estilos.campo}>
+                <label style={estilos.label}>Logo del negocio (URL)</label>
+                <input
+                  type="text"
+                  name="logoNegocioUsuario"
+                  value={usuario.logoNegocioUsuario}
+                  onChange={handleChange}
+                  style={estilos.input}
+                />
+              </div>
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Número de Resolución DIAN</label>
+                  <input
+                    type="text"
+                    name="numeroResolucionDIAN"
+                    value={usuario.numeroResolucionDIAN}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Fecha Resolución DIAN</label>
+                  <input
+                    type="date"
+                    name="fechaResolucionDIAN"
+                    value={usuario.fechaResolucionDIAN}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+              </div>
+
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Fecha vigencia - inicio</label>
+                  <input
+                    type="date"
+                    name="fechaVigenciaInicio"
+                    value={usuario.fechaVigenciaInicio}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Fecha vigencia - Fin</label>
+                  <input
+                    type="date"
+                    name="fechaVigenciaFinal"
+                    value={usuario.fechaVigenciaFinal}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+              </div>
+
+              <div style={estilos.fila}>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Prefijo Autorizado DIAN</label>
+                  <input
+                    type="text"
+                    name="prefijoAutorizadoDIAN"
+                    value={usuario.prefijoAutorizadoDIAN}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Rango Numeración - Desde</label>
+                  <input
+                    type="text"
+                    name="rangoNumeracionDesde"
+                    value={usuario.rangoNumeracionDesde}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+
+                <div style={estilos.campo}>
+                  <label style={estilos.label}>Rango Numeración - Hasta</label>
+                  <input
+                    type="text"
+                    name="rangoNumeracionHasta"
+                    value={usuario.rangoNumeracionHasta}
+                    onChange={handleChange}
+                    style={estilos.input}
+                  />
+                </div>
+              </div>
+              
+              <div className="d-flex justify-content-between mt-4">
+                <button className="btn btn-secondary" onClick={anterior}>
+                  Anterior
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  onMouseOver={(e) =>
+                    (e.target.style.backgroundColor = "#047fc6ff")
+                  }
+                  onMouseOut={(e) =>
+                    (e.target.style.backgroundColor = "#00a2ff")
+                  }
+                >
+                  Registrarse
+                </button>
+              </div>
+              </>
+          )}
+
           <div style={{ textAlign: "center" }}>
             <p
               style={{

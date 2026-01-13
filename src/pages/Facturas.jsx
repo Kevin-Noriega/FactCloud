@@ -3,6 +3,8 @@ import { API_URL } from "../api/config";
 import ModalFacturaPDF from "../components/ModalfacturaPDF.jsx";
 import ModalPago from "../components/ModalPago.jsx";
 import Select from "react-select";
+import { createConnection } from "../SignalR/SignalConector";
+import { toast, ToastContainer } from "react-toastify";
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -10,23 +12,86 @@ function Facturas() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [mensajeExito, setMensajeExito] = useState("");
+  const [buscador, setBuscador] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
   const [facturaParaPago, setFacturaParaPago] = useState(null);
-
+  const connectionRef = useRef(null);
+  const [facturaVista, setFacturaVista] = useState(null);
   const [codigoBarras, setCodigoBarras] = useState("");
   const barcodeInputRef = useRef(null);
+  const [filtro, setFiltro] = useState("recientes");
 
   const [factura, setFactura] = useState({
     clienteId: "",
     numeroFactura: "",
-    prefijo: "FE",
     observaciones: "",
     metodoPagoCodigo: "10",
     fechaVencimiento: "",
   });
 
-  const [facturaVista, setFacturaVista] = useState(null);
+  const enviarFacturaPorCorreo = async (factId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("No estás autenticado. Inicia sesión de nuevo.");
+        return;
+      }
+
+      const resp = await fetch(`${API_URL}/Facturas/${factId}/enviar-cliente`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(txt || "Error al enviar factura");
+      }
+
+      setMensajeExito("Factura enviada al cliente por correo.");
+      setTimeout(() => setMensajeExito(""), 3000);
+    } catch (err) {
+      setMensajeExito(err.message);
+      setTimeout(() => setMensajeExito(""), 3000);
+    }
+  };
+  const descargarXML = (fact) => {
+  if (!fact.xmlBase64) {
+    setMensajeExito("No hay XML generado para esta factura");
+    setTimeout(() => setMensajeExito(""), 3000);
+    return;
+  }
+
+  const xmlContent = atob(fact.xmlBase64);
+  const blob = new Blob([xmlContent], { type: "text/xml" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Factura-${fact.numeroFactura}.xml`;
+  a.click();
+};
+
+
+  const filtrados = facturas
+    .filter((fac) => {
+      const query = buscador.trim().toLowerCase();
+      return !query || fac.numeroFactura?.toLowerCase().includes(query);
+    })
+    .sort((a, b) => {
+      switch (filtro) {
+        case "recientes":
+          return new Date(b.fechaRegistro) - new Date(a.fechaRegistro);
+        case "antiguos":
+          return new Date(a.fechaRegistro) - new Date(b.fechaRegistro);
+        default:
+          return 0;
+      }
+    });
 
   const [productosSeleccionados, setProductosSeleccionados] = useState([]);
   const [pago, setPago] = useState({
@@ -36,7 +101,6 @@ function Facturas() {
     observaciones: "",
   });
 
-  // ESCANER/BOTÓN SIEMPRE SUMA DE A 1
   const agregarPorCodigoBarras = () => {
     const codigo = codigoBarras.trim();
     if (!codigo) return;
@@ -81,8 +145,15 @@ function Facturas() {
     }
   };
 
-  // AUTOCOMPLETA FECHA SI CAMBIAS A CRÉDITO, LIMPIA SI VUELVES A CONTADO
   useEffect(() => {
+    const usuarioData = JSON.parse(localStorage.getItem("usuario"));
+    if (usuarioData) {
+      setFactura((f) => ({
+        ...f,
+        prefijo: usuarioData.prefijoAutorizadoDIAN,
+      }));
+    }
+
     if (factura.metodoPagoCodigo === "20" && !factura.fechaVencimiento) {
       const hoy = new Date();
       const venc = new Date();
@@ -95,15 +166,40 @@ function Facturas() {
     if (factura.metodoPagoCodigo === "10" && factura.fechaVencimiento) {
       setFactura((f) => ({ ...f, fechaVencimiento: "" }));
     }
+    if (window.URL && window.URL.revokeObjectURL) {
+    // Limpia leaks
+  }
     // eslint-disable-next-line
   }, [factura.metodoPagoCodigo]);
 
   const fetchDatos = async () => {
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("No estás autenticado. Por favor inicia sesión.");
+        return;
+      }
+
       const [facturasRes, clientesRes, productosRes] = await Promise.all([
-        fetch(`${API_URL}/Facturas`),
-        fetch(`${API_URL}/Clientes`),
-        fetch(`${API_URL}/Productos`),
+        fetch(`${API_URL}/Facturas`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/Clientes`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/Productos`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
       ]);
 
       if (!facturasRes.ok || !clientesRes.ok || !productosRes.ok) {
@@ -125,9 +221,48 @@ function Facturas() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchDatos();
+  }, []);
+
+  useEffect(() => {
+    const conn = createConnection();
+    connectionRef.current = conn;
+
+    let isUnmounted = false;
+
+    conn
+      .start()
+      .then(() => {
+        if (isUnmounted) {
+          // Si el componente ya se desmontó, detenemos y salimos
+          return conn.stop();
+        }
+        console.log("Conectado a SignalR");
+        conn.on("FacturaCreada", (data) => {
+          toast.success(`Factura #${data.id} creada correctamente`);
+          fetchDatos?.();
+        });
+      })
+      .catch((err) => {
+        // Ignorar el error cuando viene de un stop() durante el start
+        if (err?.name === "AbortError") {
+          console.debug("SignalR abortado durante start (desmontaje).");
+          return;
+        }
+        console.error("Error al conectar SignalR:", err);
+      });
+
+    return () => {
+      isUnmounted = true;
+      if (connectionRef.current) {
+        console.log("Desconectando SignalR...");
+        connectionRef.current.off("FacturaCreada");
+        connectionRef.current
+          .stop()
+          .catch((err) => console.debug("Error al detener SignalR:", err));
+      }
+    };
   }, []);
 
   const agregarProducto = () => {
@@ -226,7 +361,7 @@ function Facturas() {
     setFactura({
       clienteId: "",
       numeroFactura: "",
-      prefijo: "FV",
+      prefijo: "",
       observaciones: "",
       metodoPagoCodigo: "10",
       fechaVencimiento: "",
@@ -313,10 +448,13 @@ function Facturas() {
           };
         }),
       };
-
+      const token = localStorage.getItem("token");
       const respuesta = await fetch(`${API_URL}/Facturas`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(payload),
       });
 
@@ -342,45 +480,6 @@ function Facturas() {
       observaciones: "",
     });
     setMostrarModalPago(true);
-  };
-
-  const registrarPago = async (e) => {
-    e.preventDefault();
-
-    try {
-      const montoPagado = parseFloat(pago.montoPagado);
-
-      if (montoPagado < facturaParaPago.totalFactura) {
-        alert("El monto pagado no puede ser menor al total de la factura");
-        return;
-      }
-
-      const payload = {
-        id: facturaParaPago.id,
-        estado: "Pagada",
-        medioPago: pago.medioPago,
-        formaPago: "Contado",
-        observaciones: pago.observaciones + ` | Referencia: ${pago.referencia}`,
-      };
-
-      const respuesta = await fetch(
-        `${API_URL}/Facturas/${facturaParaPago.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!respuesta.ok) throw new Error("Error al registrar pago");
-
-      alert("Pago registrado correctamente");
-      setMostrarModalPago(false);
-      fetchDatos();
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al registrar pago: " + error.message);
-    }
   };
 
   if (loading) {
@@ -414,13 +513,49 @@ function Facturas() {
     <div className="container-fluid mt-4 px-4">
       <h2 className="text-info mb-4">Facturación Electrónica</h2>
 
-      <button
-        className="btn btn-info text-white mb-4"
-        onClick={() => setMostrarFormulario(!mostrarFormulario)}
-      >
-        {mostrarFormulario ? "Ocultar Formulario" : "Nueva Factura"}
-      </button>
-
+      {mensajeExito && (
+        <div
+          className="alert alert-danger d-flex justify-content-between align-items-center"
+          role="alert"
+        >
+          <span>{mensajeExito}</span>
+          <div>
+            <button
+              className="btn btn-close"
+              onClick={() => {
+                setMensajeExito("");
+              }}
+            ></button>
+          </div>
+        </div>
+      )}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <button
+          className="btn btn-info text-white "
+          onClick={() => setMostrarFormulario(!mostrarFormulario)}
+        >
+          {mostrarFormulario ? "Ocultar Formulario" : "Nueva Factura"}
+        </button>
+        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Buscar por numero de factura"
+            value={buscador}
+            onChange={(e) => setBuscador(e.target.value)}
+            style={{ flexGrow: 1 }}
+          />
+          <select
+            className="form-select"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+            style={{ width: "148px" }}
+          >
+            <option value="recientes">Más recientes</option>
+            <option value="antiguos">Más antiguos</option>
+          </select>
+        </div>
+      </div>
       {mostrarFormulario && (
         <div className="card mb-4">
           <div className="card-body">
@@ -460,9 +595,13 @@ function Facturas() {
                     type="text"
                     className="form-control"
                     value={factura.prefijo}
-                    onChange={(e) =>
-                      setFactura({ ...factura, prefijo: e.target.value })
-                    }
+                    readOnly
+                    disabled
+                    style={{
+                      userSelect: "none",
+                      pointerEvents: "none",
+                      caretColor: "transparent",
+                    }}
                   />
                 </div>
                 <div className="col-md-3">
@@ -475,6 +614,13 @@ function Facturas() {
                       setFactura({ ...factura, numeroFactura: e.target.value })
                     }
                     placeholder="Se generará automáticamente"
+                    readOnly
+                    disabled
+                    style={{
+                      userSelect: "none",
+                      pointerEvents: "none",
+                      caretColor: "transparent",
+                    }}
                   />
                 </div>
               </div>
@@ -811,10 +957,20 @@ function Facturas() {
           </div>
         </div>
       )}
-
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="card">
         <div className="card-body">
-          {facturas.length === 0 ? (
+          {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay facturas registradas.</div>
           ) : (
             <div className="table-responsive">
@@ -833,7 +989,7 @@ function Facturas() {
                   </tr>
                 </thead>
                 <tbody>
-                  {facturas.map((fact) => (
+                  {filtrados.map((fact) => (
                     <tr key={fact.id}>
                       <td>
                         <strong>{fact.numeroFactura || fact.id}</strong>
@@ -879,10 +1035,22 @@ function Facturas() {
                           </button>
                         )}
                         <button
-                          className="btn btn-sm btn-primary"
+                          className="btn btn-sm btn-primary me-1"
                           onClick={() => setFacturaVista(fact.id)}
                         >
                           PDF
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger me-1"
+                          onClick={() => descargarXML(fact)}
+                        >
+                          XML
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-primary me-1"
+                          onClick={() => enviarFacturaPorCorreo(fact.id)}
+                        >
+                         Enviar Email
                         </button>
                       </td>
                     </tr>
@@ -904,14 +1072,9 @@ function Facturas() {
       {mostrarModalPago && facturaParaPago && (
         <ModalPago
           factura={facturaParaPago}
-          onSuccess={() => {
-            setMostrarModalPago(false);
-            fetchDatos();
-          }}
+          onSuccess={fetchDatos}
           onClose={() => setMostrarModalPago(false)}
-          registrarPago={registrarPago}
-          pago={pago}
-          setPago={setPago}
+          setMensajeExito={setMensajeExito}
         />
       )}
     </div>
