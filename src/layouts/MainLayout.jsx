@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom"; 
 import Sidebar from "./Sidebar";
-import "./MainLayout.css"; 
+import "../styles/MainLayout.css"; 
 
 function MainLayout() {
   return (
@@ -13,7 +13,7 @@ function MainLayout() {
       {/* 2. Contenido Principal con Header y Footer */}
       <div className="content-wrapper flex-grow-1">
         
-        <header className="navbar navbar-light bg-white shadow-sm sticky-top px-4 py-3 border-bottom">
+        <header className="navbar2 navbar-light bg-white shadow-sm sticky-top px-4 py-3 border-bottom">
           <div className="container-fluid">
             <h5 className="mb-0 text-secondary">
                 Panel de Control
