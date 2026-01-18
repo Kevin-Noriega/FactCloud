@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import FactCloudLogo from '../img/logo2.png';
-import "./Sidebar.css"; 
+import "../styles/Sidebar.css"; 
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard" },
