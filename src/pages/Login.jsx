@@ -7,6 +7,8 @@ function Login() {
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
+
+
  const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -44,6 +46,7 @@ function Login() {
     alert("Error al conectar con el servidor");
   }
 };
+
 
   const estiloAnimacion = document.createElement("style");
   estiloAnimacion.innerHTML = `

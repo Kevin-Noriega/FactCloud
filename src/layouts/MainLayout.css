@@ -1,0 +1,45 @@
+
+.layout-wrapper {
+    min-height: 100vh;
+}
+
+/* Sidebar: Fijo y siempre visible */
+.sidebar {
+    
+    background-color: #000000;
+    width: 240px;
+    min-width: 240px; 
+    height: 100vh;
+    position: sticky; 
+    top: 0;
+    z-index: 1000;
+}
+
+
+/* Content Wrapper: Permite que el contenido principal ocupe el espacio restante */
+.content-wrapper {
+    width: calc(100% - 240px); 
+    display: flex;
+    flex-direction: column; 
+    min-height: 100vh;
+}
+
+/* Header */
+.sticky-top {
+    position: sticky; 
+    top: 0;
+    z-index: 999;
+}
+
+/* Estilos de navegación limpia */
+.nav-link {
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Hover sutil para el fondo gris oscuro */
+.nav-link:hover:not(.active) {
+    background-color: #7f5af050; 
+}
