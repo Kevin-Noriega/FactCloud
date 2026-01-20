@@ -159,16 +159,6 @@ function Login() {
           >
             Ingresar
           </button>
-
-          <p style={{ marginTop: "15px", color: "#475569" }}>
-            ¿No tienes cuenta?{" "}
-            <span
-              style={{ color: "#00a2ff", fontWeight: "600", cursor: "pointer" }}
-              onClick={() => navigate("/registrarUsuario")}
-            >
-              Regístrate aquí
-            </span>
-          </p>
         </form>
 
         <p style={estilos.footer}>© 2025 FACTCLOUD</p>

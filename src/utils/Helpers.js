@@ -25,7 +25,7 @@ export function ciudadesOptionsPorDepartamento(departamento) {
   return ciudades
     .filter(c => c.departamento === departamento)
     .map(c => ({
-      value: c.ciudad,                          // nombre (para mostrar / guardar como nombre)
+      value: c.ciudad,
       label: `${c.codigoCiudad} - ${c.ciudad}`,
       ciudadCodigo: String(c.codigoCiudad)
     }));

@@ -3,9 +3,18 @@
   color: #F0F4F8;
   min-height: 100vh;
   padding-top: 20px;
+  Width: 240px;
+    min-width: 240px; 
+    height: 100vh;
+    top: 0;
+    z-index: 1000;
 }
 
 
+<<<<<<< HEAD:src/layouts/Sidebar.css
+=======
+
+>>>>>>> 385be158f383c345a12cce4a04686e53e4bd0985:src/styles/Sidebar.css
 /* Línea separadora */
 .sidebar hr {
   border-color: rgba(255, 255, 255, 0.08);
