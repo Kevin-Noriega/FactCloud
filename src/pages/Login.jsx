@@ -7,49 +7,8 @@ function Login() {
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
   const navigate = useNavigate();
-<<<<<<< HEAD
-  const handleSubmit = async (e) => {
-    console.log(
-      "JSON enviado:",
-      JSON.stringify({
-        Correo: correo,
-        Contrasena: contraseña,
-      })
-    );
 
-    e.preventDefault();
 
-    try {
-      const response = await fetch(`${API_URL}/Auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          Correo: correo,
-          Contrasena: contraseña,
-        }),
-      });
-
-      if (!response.ok) {
-        alert("❌ Correo o contraseña incorrectos");
-        return;
-      }
-
-      const data = await response.json(); 
-
-      // data = { token: "...", usuario: {...} }
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
-      alert("✅ Inicio de sesión exitoso");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error login:", error);
-      alert("❌ Error al conectar con el servidor");
-    }
-  };
-=======
  const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -87,7 +46,7 @@ function Login() {
     alert("Error al conectar con el servidor");
   }
 };
->>>>>>> c2536dd26c65ee100470ae1e65555810b232f763
+
 
   const estiloAnimacion = document.createElement("style");
   estiloAnimacion.innerHTML = `

@@ -1,15 +1,16 @@
-
 .sidebar {
-  background-color: #0f1e32 !important; 
+  background-color: #0f1e32 !important;
   color: #F0F4F8;
   min-height: 100vh;
   padding-top: 20px;
 }
 
+
 /* Línea separadora */
 .sidebar hr {
   border-color: rgba(255, 255, 255, 0.08);
 }
+
 
 #sidebar-nav .nav-link {
   color: #F0F4F8;
@@ -18,9 +19,11 @@
   transition: all 0.25s ease;
 }
 
+
 #sidebar-nav .nav-link:hover {
   background-color: #01588b;
 }
+
 
 #sidebar-nav .nav-link.active {
   background: linear-gradient(135deg, #00a2ff, #025b8f);
@@ -28,6 +31,7 @@
   font-weight: 600;
   box-shadow: 0 3px 12px #00588b;
 }
+
 
 .status-badge {
   background-color: #15a34a;
@@ -38,12 +42,14 @@
 }
 
 
+
 #sidebar-logout {
   border: 1px solid #ff4a4a;
   color: #ff4a4a;
   border-radius: 10px;
   transition: 0.25s ease;
 }
+
 
 #sidebar-logout:hover {
   background: #ff4a4a;
