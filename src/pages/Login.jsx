@@ -57,7 +57,7 @@ function Login() {
 
   const estilos = {
     fondo: {
-      background: "linear-gradient(135deg, #101735, #050713)",
+      background: "linear-gradient(135deg, var(--primary), var(--primary-dark)",
       backgroundSize: "600% 600%",
       animation: "moverFondo 10s ease infinite",
       height: "100vh",
