@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
+import { useUsuarios } from "../hooks/useUsuarios";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -7,6 +8,7 @@ function Perfil() {
   const [error, setError] = useState(null);
   const [editando, setEditando] = useState(false);
   const [mensajeExito, setMensajeExito] = useState("");
+  const { data: usuarios} = useUsuarios();
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -278,7 +280,7 @@ function Perfil() {
             >
               <div className="d-flex align-items-center">
                 <LogoEmpresa
-                  url={usuario?.logoNegocio}
+                  url={usuarios?.logoNegocio}
                   nombreEmpresa={usuario?.empresa}
                   size="100px"
                 />

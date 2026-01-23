@@ -6,9 +6,9 @@ import "./index.css";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/Auth";
 import PublicLayout from "./layouts/PublicLayout";
-import TopBar from "./components/TopBar";
-import NavBar from "./components/Navbar";
-import Footer from "./components/Footer";
+import TopBar from "./layouts/TopBar";
+import NavBar from "./layouts/Navbar";
+import Footer from "./layouts/Footer";
 
 // Páginas
 import Home from "./pages/Home";
@@ -38,13 +38,11 @@ function App() {
       <ScrollToHash />
 
       <Routes>
-        {/* 🔹 AUTH (sin navbar/footer) */}
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
         </Route>
 
-        {/* 🔹 PÚBLICO */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/planes" element={<Planes />} />
@@ -53,7 +51,6 @@ function App() {
           <Route path="/soporte" element={<Soporte />} />
         </Route>
 
-        {/* 🔹 PRIVADO (app logueada) */}
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/clientes" element={<Clientes />} />

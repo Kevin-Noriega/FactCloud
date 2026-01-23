@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import FactCloudLogo from "../img/logo2.png";
 import { useUsuarios } from "../hooks/useUsuarios";
-import "./Sidebar.css";
+import "../styles/Sidebar.css";
 
 
 const navItems = [
@@ -41,7 +41,6 @@ function Sidebar() {
 
   return (
     <div className="sidebar p-3 d-flex flex-column">
-      {/* LOGO + TÍTULO */}
       <img
         id="sidebar-logo"
         src={FactCloudLogo}
@@ -51,7 +50,6 @@ function Sidebar() {
       />
 
 
-      {/* NAVEGACIÓN */}
       <nav id="sidebar-nav" className="flex-grow-1">
         <ul className="nav nav-pills flex-column mb-auto">
           {navItems.map((item) => (
@@ -71,7 +69,6 @@ function Sidebar() {
       </nav>
 
 
-      {/* USUARIO LOGUEADO */}
       {usuarios && (
         <div
           id="sidebar-user"

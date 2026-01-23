@@ -1,128 +1,170 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import "./MainLayout.css";
+import {
+  BellFill,
+  GearFill,
+  Plus,
+  QuestionCircleFill,
+} from "react-bootstrap-icons";
+import { Outlet, Link } from "react-router-dom";
+import Sidebar from "../layouts/Sidebar";
+import "../styles/MainLayout.css";
 import FactCloudLogo from "../img/logo.png";
-import FactCloudFotoUsuario from "../img/FotoK.jpg";
-import notificaciones from "../img/notificacion.png";
 import { useUsuarios } from "../hooks/useUsuarios";
-import { useState } from "react";
-import ModalDashboard from "./ModalDashboard";
-import SearchBar from "../components/SearchBar";
-import "./Botones.css";
+import { useState, useEffect } from "react";
+import ModalDashboard from "../components/ModalDashboard";
+import SearchBar from "../layouts/SearchBar";
 
 function MainLayout() {
   const [mostrarModal, setMostrarModal] = useState(false);
-  const { data: usuarios = [], isLoading, isError, error } = useUsuarios();
+  const { data: usuarios, isLoading, isError, error } = useUsuarios();
 
-  if (isLoading){
-    return console.log("Cargando usuarios...");
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        Cargando...
+      </div>
+    );
   }
-  if (isError){
-    return console.log("Error al cargar usuarios:", error);
+
+  if (isError) {
+    return (
+      <div className="alert alert-danger m-4">Error: {error?.message}</div>
+    );
   }
+  const LogoEmpresa = ({ url, nombreEmpresa, sizeNav = "26px" }) => {
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+      if (url && url.trim() !== "") {
+        const img = new Image();
+        img.onload = () => setError(false);
+        img.onerror = () => setError(true);
+        img.src = url;
+      } else {
+        setError(true);
+      }
+    }, [url]);
+
+    if (!url || error) {
+      const iniciales = nombreEmpresa
+        ? nombreEmpresa
+            .split(" ")
+            .map((word) => word[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase()
+        : "FC";
+
+      return (
+        <div
+          style={{
+            width: sizeNav,
+            height: sizeNav,
+            borderRadius: "50%",
+            objectFit: "cover",
+            background: "linear-gradient(135deg, #00a2ff, #025b8f)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: `calc(${sizeNav} / 2.5)`,
+            fontWeight: "bold",
+            color: "#fff",
+          }}
+        >
+          {iniciales}
+        </div>
+      );
+    }
+    return (
+      <img
+        src={usuarios?.logoNegocio || usuarios?.foto}
+        alt={usuarios?.nombre || "Usuario"}
+        className="user-avatar"
+        style={{
+          width: sizeNav,
+          height: sizeNav,
+          borderRadius: "50%",
+          objectFit: "cover",
+        }}
+        onError={() => setError(true)}
+      />
+    );
+  };
 
   return (
     <div className="d-flex layout-wrapper">
-      {/* 1. Sidebar Fijo */}
       <Sidebar />
 
-      {/* 2. Contenido Principal con Header y Footer */}
-      <div className="content-wrapper flex-grow-1">
-        <header className="navbar navbar-light bg-white shadow-sm sticky-top px-4 py-3 border-bottom">
-          <div className="container-fluid d-flex align-items-center">
-            {/* IZQUIERDA - LOGO */}
-            <div
-              className="d-flex align-items-center"
-              style={{ width: "63px" }}
-            >
+      <div className="content-wrapper">
+        <header className="navbarFact navbar-light bg-white shadow-sm header-fixed px-4 py-3 border-bottom">
+          <div className="container-fluid d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center gap-3">
               <img
                 src={FactCloudLogo}
-                alt="logoFactCloud"
-                style={{ width: "60px" }}
+                alt="FactCloud Logo"
+                style={{ width: "60px", height: "auto" }}
               />
+              <h5 className="mb-0 text-secondary">
+                {usuarios?.nombreNegocio || "FactCloud"}
+              </h5>
             </div>
 
-            {/* CENTRO - TÍTULO */}
-            <div className="flex-grow-1">
-              <h5 className="mb-0 text-secondary">{usuarios.nombreNegocio}</h5>
+            <div className="flex-grow-1 mx-4" style={{ maxWidth: "500px" }}>
+              <SearchBar />
             </div>
+            <div className="d-flex align-items-center gap-2">
+              <button
+                onClick={() => setMostrarModal(true)}
+                className="fc-button btn-primary"
+              >
+                <Plus size={20} />
+                <span>Crear</span>
+              </button>
 
-            {/* DERECHA - ESPACIO (o acciones futuras) */}
-            <div className="d-flex align-items-center justify-content-between px-3 py-2 ">
-              {/* IZQUIERDA */}
-              <div className="d-flex align-items-center gap-3">
-                <i className="bi bi-bell fs-5 text-secondary" />
-                <i className="bi bi-gear fs-5 text-secondary" />
-              </div>
+              <button
+                onClick={() => setMostrarModal(true)}
+                className="fc-button user-button"
+                title="Notificaciones"
+              >
+                <BellFill size={20} />
+              </button>
 
-              {/* CENTRO */}
-              <div className="d-flex align-items-center gap-3">
-                <div
-                  style={{ flex: 1, display: "flex", justifyContent: "center" }}
-                >
-                  <SearchBar />
-                </div>
-                {/* boton de notificaciones */}
-                <button
-                  onClick={() => setMostrarModal(true)}
-                  className="fc-button user-button"
-                >
-                  <img
-                    src={notificaciones}
-                    alt="Usuario"
-                    className="user-avatar"
-                  />
-                </button>
-                {/* boton de crear */}
-                <button
-                  onClick={() => setMostrarModal(true)}
-                  className="fc-button"
-                >
-                  <span>Crear</span>
-                </button>
-                {/* boton de Ayuda */}
-                <div className="dropdown">
-                  <button
-                    onClick={() => setMostrarModal(true)}
-                    className="fc-button"
-                  >
-                    <span>Ayuda</span>
-                  </button>
-                </div>
+              <button
+                onClick={() => setMostrarModal(true)}
+                className="fc-button user-button"
+                title="Ayuda"
+              >
+                <QuestionCircleFill size={20} />
+              </button>
 
-                {/* botonde perfil */}
-                <div>
-                  <a className=" d-flex align-items-center text-decoration-none"></a>
-                  <button
-                    className="fc-button user-button"
-                  >
-                    <link to="/perfil"/>
-                    <img
-                      src={FactCloudFotoUsuario}
-                      alt="Usuario"
-                      className="user-avatar"
-                    />
-
-                    <span>Kevin Noriega</span>
-                  </button>
-                </div>
-              </div>
+              <Link
+                to="/configuracion"
+                className="fc-button user-button"
+                title="Configuración"
+              >
+                <GearFill size={20} />
+              </Link>
+              <Link to="/perfil" className="fc-button profile-button">
+                <LogoEmpresa
+                  url={usuarios?.logoNegocio}
+                  nombreEmpresa={usuarios?.empresa}
+                />
+                <span>{usuarios?.nombre || "Yeimar"}</span>
+              </Link>
             </div>
           </div>
         </header>
 
-        {/* 3. Área de Contenido de la Ruta */}
-        <main className="container-fluid py-4 main-content-area">
-          <Outlet /> {/* La ruta hija se renderiza aquí */}
+        <main className="main-content-area">
+          <Outlet />
         </main>
 
-        {/* Footer */}
         <footer className="bg-light text-center py-3 border-top mt-auto">
           <small className="text-muted">
-            © {new Date().getFullYear()} FACTCLOUD
+            © {new Date().getFullYear()} FactCloud - Sistema de Facturación
+            Electrónica
           </small>
         </footer>
+
         <ModalDashboard
           open={mostrarModal}
           onClose={() => setMostrarModal(false)}
