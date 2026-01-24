@@ -16,7 +16,7 @@
   --success-dark: #16a34a;
   --success-light: #bbf7d0;
 
-  --bg-dark: #f8fafc;
+  --bg-dark: #f1f1f1;
   --bg-card: #ffffff;
 
   --text: #0f172a;
@@ -25,7 +25,8 @@
   --border: #c7d2fe;
   
   --warning: #ffc107;
-  --danger: #dc3545;
+  --danger: #f0172c;
+  --danger-dark: #b92635;
 }
 
 html, body {
