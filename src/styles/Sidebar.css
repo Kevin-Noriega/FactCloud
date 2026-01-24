@@ -69,7 +69,6 @@
   transform: translateX(4px);
 }
 
-/* Link activo */
 #sidebar-nav .nav-link.active {
   background: var(--primary-dark);
   color: #ffffff !important;
