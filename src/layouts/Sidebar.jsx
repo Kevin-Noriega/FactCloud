@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import { useUsuarios } from "../hooks/useUsuarios";
 import { 
   HouseFill, 
   FileEarmarkTextFill, 
@@ -17,14 +16,6 @@ const navItems = [
 
 function Sidebar() {
   const location = useLocation();
-  const { data: usuarios = [], isLoading, isError, error } = useUsuarios();
-
-  if (isLoading) {
-    return console.log("Cargando usuarios...");
-  }
-  if (isError) {
-    return console.log("Error al cargar usuarios:", error);
-  }
 
   return (
     <div className="sidebar">

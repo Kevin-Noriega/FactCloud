@@ -1,4 +1,3 @@
-/* ==================== SIDEBAR BASE ==================== */
 .sidebar {
   position: fixed;
   left: 0;
@@ -7,7 +6,7 @@
   color: #F0F4F8;
   min-height: 100vh;
   height: 100vh;
-  width: 70px; /* Ancho colapsado (solo iconos) */
+  width: 70px; 
   padding: 20px 8px;
   z-index: 1000;
   overflow-x: hidden;
@@ -18,10 +17,9 @@
 }
 
 .sidebar:hover {
-  width: 240px; /* Ancho expandido */
+  width: 240px; 
 }
 
-/* ==================== NAVEGACIÓN ==================== */
 #sidebar-nav {
   margin-top: 80px;
   flex-grow: 1;
@@ -50,26 +48,22 @@
   position: relative;
 }
 
-/* Icono siempre visible */
 .nav-icon {
   flex-shrink: 0;
   min-width: 20px;
 }
 
-/* Label oculto por defecto */
 .nav-label {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* Mostrar label al hacer hover en el sidebar */
 .sidebar:hover .nav-label {
   opacity: 1;
   visibility: visible;
 }
 
-/* Hover en los links */
 #sidebar-nav .nav-link:hover {
   background-color: var(--primary-dark);
   transform: translateX(4px);
@@ -94,7 +88,6 @@
   border-radius: 0 4px 4px 0;
 }
 
-/* ==================== USER INFO ==================== */
 .sidebar-user {
   margin-top: auto;
   padding-top: 16px;
@@ -144,7 +137,6 @@
   visibility: visible;
 }
 
-/* ==================== SCROLLBAR ==================== */
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
@@ -162,7 +154,6 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
   .sidebar {
     width: 70px;
