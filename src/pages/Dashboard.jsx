@@ -84,27 +84,7 @@ function Dashboard() {
   return (
     <div className="container-fluid mt-4 px-4">
       <div className="row mb-4">
-        <div className="col-12">
-          <div
-            className="card bg-gradient-primary text-white shadow-lg border-0"
-            style={{ background: "linear-gradient(135deg, #00a2ff, #025b8f)" }}
-          >
-            <div className="card-body p-4">
-              <h2 className="mb-2">¡Bienvenido a FactCloud! </h2>
-              <p className="mb-0">
-                Sistema de Facturación Electrónica - Cumplimiento DIAN 2025
-              </p>
-              <small className="opacity-75">
-                {new Date().toLocaleDateString("es-CO", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </small>
-            </div>
-          </div>
-        </div>
+        
       </div>
       <ToastContainer
         position="top-right"

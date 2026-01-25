@@ -1,0 +1,46 @@
+/* CONTENEDOR DE LOS ACCESOS */
+.quick-actions-inside {
+  display: flex;              /* Activa Flexbox */
+  gap: 18px;                  /* Espacio entre cada acceso */
+  flex-wrap: wrap;            /* Permite que bajen a otra fila */
+  margin-top: 16px;           /* Separación del texto superior */
+}
+
+/* CADA ACCESO INDIVIDUAL */
+.quick-action-inside {
+  width: 22%;                 /* Fuerza 4 accesos por fila aprox */
+  display: flex;              /* Flex para alinear icono + texto */
+  flex-direction: column;     /* Icono arriba, texto abajo */
+  align-items: center;        /* Centra horizontalmente */
+  cursor: pointer;            /* Mano al pasar el mouse */
+  transition: 
+    transform 0.2s ease,
+    opacity 0.2s ease;        /* Animación suave */
+}
+
+/* EFECTO HOVER */
+.quick-action-inside:hover {
+  transform: translateY(-4px);/* Sube un poco */
+  opacity: 0.9;               /* Baja levemente la opacidad */
+}
+
+/* CÍRCULO DEL ICONO */
+.quick-action-inside .icon {
+  width: 56px;                /* Tamaño del círculo */
+  height: 56px;
+  border-radius: 50%;         /* Lo hace redondo */
+  background: rgba(255, 255, 255, 0.15); /* Fondo translúcido */
+  display: flex;              /* Centrado perfecto */
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;            /* Tamaño del ícono */
+  margin-bottom: 6px;         /* Espacio con el texto */
+}
+
+/* TEXTO DEL ACCESO */
+.quick-action-inside span {
+  font-size: 13px;            /* Texto pequeño tipo dashboard */
+  text-align: center;         /* Centrado */
+  line-height: 1.2;           /* Altura de línea compacta */
+}
+

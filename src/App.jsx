@@ -24,6 +24,7 @@ import Planes from "./pages/Planes";
 import ComoFunciona from "./pages/ComoFunciona";
 import DIAN from "./pages/DIAN";
 import Soporte from "./pages/Soporte";
+import QuickActions from "./components/AccesosDirectos";
 
 const NotFound = () => (
   <div className="text-center py-5">
@@ -52,7 +53,7 @@ function App() {
         </Route>
 
         <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<QuickActions />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/facturas" element={<Facturas />} />
