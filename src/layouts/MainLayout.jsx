@@ -1,128 +1,111 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import "./MainLayout.css";
-import FactCloudLogo from "../img/logo.png";
-import FactCloudFotoUsuario from "../img/FotoK.jpg";
-import notificaciones from "../img/notificacion.png";
-import { useUsuarios } from "../hooks/useUsuarios";
+import {
+  BellFill,
+  GearFill,
+  Plus,
+  QuestionCircleFill,
+  Search,
+} from "react-bootstrap-icons";
+import { Outlet, Link } from "react-router-dom";
 import { useState } from "react";
-import ModalDashboard from "./ModalDashboard";
-import SearchBar from "../components/SearchBar";
-import "../styles/Botones.css";
+import Sidebar from "../layouts/Sidebar";
+import ModalDashboard from "../components/ModalDashboard";
+import UserMenu from "../components/UserMenu";
+import { useUsuarios } from "../hooks/useUsuarios";
+import FactCloudLogo from "../img/logo.png";
+import "../styles/MainLayout.css";
 
 function MainLayout() {
   const [mostrarModal, setMostrarModal] = useState(false);
-  const { data: usuarios = [], isLoading, isError, error } = useUsuarios();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data: usuarios, isLoading, isError, error } = useUsuarios();
 
-  if (isLoading){
-    return console.log("Cargando usuarios...");
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        Cargando...
+      </div>
+    );
   }
-  if (isError){
-    return console.log("Error al cargar usuarios:", error);
+
+  if (isError) {
+    return (
+      <div className="alert alert-danger m-4">Error: {error?.message}</div>
+    );
   }
+
+  const nombreCompleto = `${usuarios?.nombre || ""} ${usuarios?.apellido || ""}`.trim() || "Usuario";
 
   return (
     <div className="d-flex layout-wrapper">
-      {/* 1. Sidebar Fijo */}
       <Sidebar />
 
-      {/* 2. Contenido Principal con Header y Footer */}
-      <div className="content-wrapper flex-grow-1">
-        <header className="navbar navbar-light bg-white shadow-sm sticky-top px-4 py-3 border-bottom">
-          <div className="container-fluid d-flex align-items-center">
-            {/* IZQUIERDA - LOGO */}
-            <div
-              className="d-flex align-items-center"
-              style={{ width: "63px" }}
-            >
+      <div className="content-wrapper">
+        <header className="navbarFact navbar-light bg-white shadow-sm header-fixed px-4 py-3 border-bottom">
+          <div className="container-fluid d-flex align-items-center justify-content-between">
+
+            <div className="d-flex align-items-center gap-2 flex-shrink-0">
               <img
                 src={FactCloudLogo}
-                alt="logoFactCloud"
-                style={{ width: "60px" }}
+                alt="FactCloud Logo"
+                className="fc-logo"
               />
+              <h5 className="mb-0 fw-bold d-none d-lg-block" style={{color:"var(--primary-dark)"}}>
+                {usuarios?.nombreNegocio || "FactCloud"}
+              </h5>
             </div>
 
-            {/* CENTRO - TÍTULO */}
-            <div className="flex-grow-1">
-              <h5 className="mb-0 text-secondary">{usuarios.nombreNegocio}</h5>
+            <div className="d-flex align-items-center gap-2 flex-shrink-0">
+                <div className="d-none d-md-block" style={{ width: "250px" }}>
+              <div className="search-bar-container">
+                <Search size={18} className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Buscar en FactCloud"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="search-input"
+                />
+              </div>
             </div>
+              <button className="fcButton" title="Notificaciones">
+                <BellFill size={16} />
+              </button>
 
-            {/* DERECHA - ESPACIO (o acciones futuras) */}
-            <div className="d-flex align-items-center justify-content-between px-3 py-2 ">
-              {/* IZQUIERDA */}
-              <div className="d-flex align-items-center gap-3">
-                <i className="bi bi-bell fs-5 text-secondary" />
-                <i className="bi bi-gear fs-5 text-secondary" />
-              </div>
+              <Link to="/configuracion" className="fcButton" title="Configuración">
+                <GearFill size={16} />
+              </Link>
 
-              {/* CENTRO */}
-              <div className="d-flex align-items-center gap-3">
-                <div
-                  style={{ flex: 1, display: "flex", justifyContent: "center" }}
-                >
-                  <SearchBar />
-                </div>
-                {/* boton de notificaciones */}
-                <button
-                  onClick={() => setMostrarModal(true)}
-                  className="fc-button user-button"
-                >
-                  <img
-                    src={notificaciones}
-                    alt="Usuario"
-                    className="user-avatar"
-                  />
-                </button>
-                {/* boton de crear */}
-                <button
-                  onClick={() => setMostrarModal(true)}
-                  className="fc-button"
-                >
-                  <span>Crear</span>
-                </button>
-                {/* boton de Ayuda */}
-                <div className="dropdown">
-                  <button
-                    onClick={() => setMostrarModal(true)}
-                    className="fc-button"
-                  >
-                    <span>Ayuda</span>
-                  </button>
-                </div>
+              <button className="fcButton" title="Ayuda">
+                <QuestionCircleFill size={16} />
+              </button>
 
-                {/* botonde perfil */}
-                <div>
-                  <a className=" d-flex align-items-center text-decoration-none"></a>
-                  <button
-                    className="fc-button user-button"
-                  >
-                    <link to="/perfil"/>
-                    <img
-                      src={FactCloudFotoUsuario}
-                      alt="Usuario"
-                      className="user-avatar"
-                    />
+              <button
+                onClick={() => setMostrarModal(true)}
+                className="fcButton btn-primary d-none d-sm-flex"
+              >
+                <Plus size={20} />
+                <span>Crear</span>
+              </button>
 
-                    <span>Kevin Noriega</span>
-                  </button>
-                </div>
-              </div>
+              <UserMenu
+                userName={nombreCompleto}
+                userEmail={usuarios?.correo || "hola@gmail.com"}
+                userAvatar={usuarios?.logoNegocio}
+              />
             </div>
           </div>
         </header>
 
-        {/* 3. Área de Contenido de la Ruta */}
-        <main className="container-fluid py-4 main-content-area">
-          <Outlet /> {/* La ruta hija se renderiza aquí */}
+        <main className="main-content-area">
+          <Outlet />
         </main>
 
-        {/* Footer */}
         <footer className="bg-light text-center py-3 border-top mt-auto">
           <small className="text-muted">
-            © {new Date().getFullYear()} FACTCLOUD
+            © {new Date().getFullYear()} FactCloud - Sistema de Facturación Electrónica
           </small>
         </footer>
+
         <ModalDashboard
           open={mostrarModal}
           onClose={() => setMostrarModal(false)}
