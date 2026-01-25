@@ -158,7 +158,7 @@ export default function Home() {
           <p className="section-header">Sin sorpresas. Sin costos ocultos. Cancela cuando quieras.
 
           </p>
-              <Stepper currentStep={1} />
+             {/* <Stepper currentStep={1} /> */}
               
           {isMobile && index > 0 && (
             <button className="arrow-left" onClick={prev}>

@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import FactCloudLogo from "../img/logo2.png";
 import { useUsuarios } from "../hooks/useUsuarios";
-import "./Sidebar.css";
+import "./../styles/Sidebar.css";
 
 
 const navItems = [

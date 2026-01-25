@@ -34,7 +34,7 @@ const NotFound = () => (
 function App() {
   return (
     <Router>
-      <TopBar />
+      {/*<TopBar />*/}
       <NavBar />
             <ScrollToHash />
       

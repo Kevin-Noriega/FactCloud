@@ -9,7 +9,7 @@ import { useUsuarios } from "../hooks/useUsuarios";
 import { useState } from "react";
 import ModalDashboard from "./ModalDashboard";
 import SearchBar from "../components/SearchBar";
-import "./Botones.css";
+import "../styles/Botones.css";
 
 function MainLayout() {
   const [mostrarModal, setMostrarModal] = useState(false);
