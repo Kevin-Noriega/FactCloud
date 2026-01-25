@@ -1,15 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToHash from "./components/ScrollToHash";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SignalRProvider } from "./contexts/SignalRContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/Auth";
 import PublicLayout from "./layouts/PublicLayout";
-import TopBar from "./layouts/TopBar";
-import NavBar from "./layouts/Navbar";
-import Footer from "./layouts/Footer";
-
 // Páginas
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -24,6 +22,15 @@ import Planes from "./pages/Planes";
 import ComoFunciona from "./pages/ComoFunciona";
 import DIAN from "./pages/DIAN";
 import Soporte from "./pages/Soporte";
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
 
 const NotFound = () => (
   <div className="text-center py-5">
@@ -34,9 +41,11 @@ const NotFound = () => (
 
 function App() {
   return (
+    <QueryClientProvider client={queryClient}>
     <Router>
+        <SignalRProvider>
       <ScrollToHash />
-
+     
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
@@ -62,7 +71,9 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+       </SignalRProvider>
     </Router>
+    </QueryClientProvider>
   );
 }
 

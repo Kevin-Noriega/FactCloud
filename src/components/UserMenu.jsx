@@ -1,11 +1,13 @@
 // components/UserMenu.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, BoxArrowRight } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import '../styles/UserMenu.css';
 
 const UserMenu = ({ userName, userEmail, userPlan, userAvatar }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+    const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -24,8 +26,15 @@ const UserMenu = ({ userName, userEmail, userPlan, userAvatar }) => {
   }, [isOpen]);
 
   const handleLogout = () => {
-    // Lógica de logout
-    console.log('Cerrando sesión...');
+   localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('authToken');
+    
+    sessionStorage.clear();
+    
+    navigate('/login');
+    
+    window.location.reload();
   };
 
   const getInitials = (name) => {
