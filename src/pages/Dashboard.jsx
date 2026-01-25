@@ -5,10 +5,9 @@ import { ToastContainer } from "react-toastify";
 import {
   FileEarmarkText,
   People,
-  Box,
+  BoxSeamFill, 
   CashStack,
   ExclamationTriangleFill,
-  PlayCircle,
   FileEarmarkPdf,
   Clock,
   BookmarkCheck,
@@ -97,7 +96,6 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      {/* Header Bienvenida */}
       <div className="dashboard-header">
         <div className="header-card">
           <div className="header-content">
@@ -134,8 +132,6 @@ function Dashboard() {
         draggable
         pauseOnHover
       />
-
-      {/* Stats Cards */}
       <div className="stats-grid">
         <div className="stat-card stat-card-primary">
           <div className="stat-icon">
@@ -175,13 +171,13 @@ function Dashboard() {
 
         <div className="stat-card stat-card-warning">
           <div className="stat-icon">
-            <Box size={32} />
+            < BoxSeamFill size={32} />
           </div>
           <div className="stat-content">
             <p className="stat-label">Productos</p>
             <h3 className="stat-value">{productosCount}</h3>
             <div className="stat-badge">
-              <Box size={14} className="me-1" />
+              <  BoxSeamFill  size={14} className="me-1" />
               En inventario
             </div>
           </div>
@@ -210,7 +206,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Alerta de Facturas Pendientes */}
       {facturasPendientes > 0 && (
         <div className="alert-pendientes">
           <div className="alert-icon">
@@ -230,12 +225,10 @@ function Dashboard() {
         </div>
       )}
 
-      {/* Tutoriales y Normatividad */}
       <div className="content-grid">
         <div className="tutorials-section">
           <div className="section-card">
             <div className="section-header">
-              <PlayCircle size={24} className="me-2" />
               <h5 className="section-title">Tutoriales Rápidos</h5>
             </div>
             <div className="tutorials-grid">
@@ -309,7 +302,6 @@ function Dashboard() {
         <div className="normativa-section">
           <div className="section-card">
             <div className="section-header">
-              <FileEarmarkPdf size={24} className="me-2" />
               <h5 className="section-title">Normatividad DIAN</h5>
             </div>
             <div className="normativa-list">

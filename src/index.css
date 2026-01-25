@@ -39,6 +39,7 @@ body.modal-open {
   --border: #c7d2fe;
   
   --warning: #ffc107;
+  --warning-dark: #e0a800;
   --danger: #f0172c;
   --danger-dark: #b92635;
   
