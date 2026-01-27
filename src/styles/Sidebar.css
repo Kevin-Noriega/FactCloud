@@ -5,10 +5,10 @@
   background-color: var(--primary) !important;
   color: #F0F4F8;
   min-height: 100vh;
-  height: 100vh;
+    height: 100vh;
   width: 70px; 
   padding: 20px 8px;
-  z-index: 1000;
+    z-index: 1000;
   overflow-x: hidden;
   overflow-y: auto;
   transition: width 0.3s ease;
@@ -65,100 +65,37 @@
 }
 
 #sidebar-nav .nav-link:hover {
-  background-color: var(--primary-dark);
-  transform: translateX(4px);
+  background-color: #01588b;
 }
+
 
 #sidebar-nav .nav-link.active {
-  background: var(--primary-dark);
+  background: linear-gradient(135deg, #00a2ff, #025b8f);
   color: #ffffff !important;
   font-weight: 600;
+  box-shadow: 0 3px 12px #00588b;
 }
 
-#sidebar-nav .nav-link.active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 70%;
-  background: #ffffff;
-  border-radius: 0 4px 4px 0;
-}
-
-.sidebar-user {
-  margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 8px;
-  white-space: nowrap;
-}
-
-.user-name {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #F0F4F8;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebar:hover .user-name {
-  opacity: 1;
-  visibility: visible;
-}
 
 .status-badge {
   background-color: #15a34a;
   color: white;
   padding: 4px 10px;
   border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  flex-shrink: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  font-size: 12px;
 }
 
-.sidebar:hover .status-badge {
-  opacity: 1;
-  visibility: visible;
+
+
+#sidebar-logout {
+  border: 1px solid #ff4a4a;
+  color: #ff4a4a;
+  border-radius: 10px;
+  transition: 0.25s ease;
 }
 
-.sidebar::-webkit-scrollbar {
-  width: 6px;
-}
 
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 70px;
-  }
-  
-  .sidebar:hover {
-    width: 200px;
-  }
+#sidebar-logout:hover {
+  background: #ff4a4a;
+  color: #fff;
 }

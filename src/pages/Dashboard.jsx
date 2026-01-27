@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import {
   FileEarmarkText,
   People,
-  BoxSeamFill, 
+  BoxSeamFill,
   CashStack,
   ExclamationTriangleFill,
   FileEarmarkPdf,
@@ -18,9 +18,10 @@ import {
   ArrowRight,
   GraphUpArrow,
   Calendar,
-  CheckCircleFill
+  CheckCircleFill,
 } from "react-bootstrap-icons";
 import "../styles/Dashboard.css";
+import QuickActions from "../components/AccesosDirectos";
 
 function Dashboard() {
   const [clientesCount, setClientesCount] = useState(0);
@@ -69,7 +70,7 @@ function Dashboard() {
       setFacturasCount(dataFacturas.length);
 
       const pendientes = dataFacturas.filter(
-        (f) => f.estado === "Pendiente" || f.estado === "Emitida"
+        (f) => f.estado === "Pendiente" || f.estado === "Emitida",
       ).length;
       setFacturasPendientes(pendientes);
 
@@ -113,9 +114,13 @@ function Dashboard() {
                   day: "numeric",
                 })}
               </div>
+
             </div>
             <div className="header-icon">
-              <GraphUpArrow size={80} />
+              <GraphUpArrow size={120} />
+            </div>
+            <div className="header-actions">
+              <QuickActions />
             </div>
           </div>
         </div>
@@ -171,13 +176,13 @@ function Dashboard() {
 
         <div className="stat-card stat-card-warning">
           <div className="stat-icon">
-            < BoxSeamFill size={32} />
+            <BoxSeamFill size={32} />
           </div>
           <div className="stat-content">
             <p className="stat-label">Productos</p>
             <h3 className="stat-value">{productosCount}</h3>
             <div className="stat-badge">
-              <  BoxSeamFill  size={14} className="me-1" />
+              <BoxSeamFill size={14} className="me-1" />
               En inventario
             </div>
           </div>
@@ -193,7 +198,9 @@ function Dashboard() {
           </div>
           <div className="stat-content">
             <p className="stat-label">Ventas Totales</p>
-            <h3 className="stat-value">${totalVentas.toLocaleString("es-CO")}</h3>
+            <h3 className="stat-value">
+              ${totalVentas.toLocaleString("es-CO")}
+            </h3>
             <div className="stat-badge">
               <GraphUpArrow size={14} className="me-1" />
               Este mes
@@ -213,10 +220,14 @@ function Dashboard() {
           </div>
           <div className="alert-content">
             <h4 className="alert-title">
-              Tienes {facturasPendientes} {facturasPendientes === 1 ? 'factura pendiente' : 'facturas pendientes'}
+              Tienes {facturasPendientes}{" "}
+              {facturasPendientes === 1
+                ? "factura pendiente"
+                : "facturas pendientes"}
             </h4>
             <p className="alert-text">
-              Recuerda enviarlas a la DIAN dentro de las 48 horas para cumplir con la normativa.
+              Recuerda enviarlas a la DIAN dentro de las 48 horas para cumplir
+              con la normativa.
             </p>
           </div>
           <Link to="/facturas" className="alert-button">
@@ -237,9 +248,12 @@ function Dashboard() {
                   <FileEarmarkText size={24} />
                 </div>
                 <div className="tutorial-content">
-                  <h6 className="tutorial-title">Cómo crear tu primera factura</h6>
+                  <h6 className="tutorial-title">
+                    Cómo crear tu primera factura
+                  </h6>
                   <p className="tutorial-description">
-                    Aprende a generar facturas electrónicas cumpliendo con la normativa DIAN.
+                    Aprende a generar facturas electrónicas cumpliendo con la
+                    normativa DIAN.
                   </p>
                   <a href="#" className="tutorial-link">
                     Ver tutorial
@@ -255,7 +269,8 @@ function Dashboard() {
                 <div className="tutorial-content">
                   <h6 className="tutorial-title">Enviar facturas a clientes</h6>
                   <p className="tutorial-description">
-                    Configura el envío automático de facturas por correo electrónico.
+                    Configura el envío automático de facturas por correo
+                    electrónico.
                   </p>
                   <a href="#" className="tutorial-link">
                     Ver tutorial
@@ -334,7 +349,9 @@ function Dashboard() {
                 </div>
                 <div className="normativa-content">
                   <p className="normativa-title">Plazo de 48 horas</p>
-                  <small className="normativa-subtitle">Para envío a la DIAN</small>
+                  <small className="normativa-subtitle">
+                    Para envío a la DIAN
+                  </small>
                 </div>
                 <ArrowRight size={18} className="normativa-arrow" />
               </a>
@@ -350,7 +367,9 @@ function Dashboard() {
                 </div>
                 <div className="normativa-content">
                   <p className="normativa-title">Artículo 617 E.T.</p>
-                  <small className="normativa-subtitle">Requisitos de factura</small>
+                  <small className="normativa-subtitle">
+                    Requisitos de factura
+                  </small>
                 </div>
                 <ArrowRight size={18} className="normativa-arrow" />
               </a>
@@ -366,7 +385,9 @@ function Dashboard() {
                 </div>
                 <div className="normativa-content">
                   <p className="normativa-title">Conservación 5 años</p>
-                  <small className="normativa-subtitle">Archivo de documentos</small>
+                  <small className="normativa-subtitle">
+                    Archivo de documentos
+                  </small>
                 </div>
                 <ArrowRight size={18} className="normativa-arrow" />
               </a>
@@ -393,7 +414,8 @@ function Dashboard() {
           <div className="help-content">
             <h6 className="help-title">¿Necesitas ayuda?</h6>
             <p className="help-description">
-              Consulta nuestra documentación completa o contacta con soporte técnico.
+              Consulta nuestra documentación completa o contacta con soporte
+              técnico.
             </p>
           </div>
           <div className="help-buttons">

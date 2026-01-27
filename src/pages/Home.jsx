@@ -114,7 +114,7 @@ export default function Home() {
                 width="30"
                 height="30"
                 fill="currentColor"
-                className="bi bi-check2-circle"
+                class="bi bi-check2-circle"
                 viewBox="0 0 16 16"
               >
                 <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
@@ -133,11 +133,11 @@ export default function Home() {
                 width="30"
                 height="30"
                 fill="currentColor"
-                className="bi bi-graph-up-arrow"
+                class="bi bi-graph-up-arrow"
                 viewBox="0 0 16 16"
               >
                 <path
-                  fillRule="evenodd"
+                  fill-rule="evenodd"
                   d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"
                 />
               </svg>
@@ -199,7 +199,7 @@ export default function Home() {
               width="18"
               height="18"
               fill="currentColor"
-              className="bi bi-check2-circle"
+              class="bi bi-check2-circle"
               viewBox="0 0 16 16"
             >
               <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
@@ -213,7 +213,7 @@ export default function Home() {
               width="18"
               height="18"
               fill="currentColor"
-              className="bi bi-person-lock"
+              class="bi bi-person-lock"
               viewBox="0 0 16 16"
             >
               <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m0 5.996V14H3s-1 0-1-1 1-4 6-4q.845.002 1.544.107a4.5 4.5 0 0 0-.803.918A11 11 0 0 0 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664zM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1" />
@@ -226,7 +226,7 @@ export default function Home() {
               width="18"
               height="18"
               fill="currentColor"
-              className="bi bi-cloud"
+              class="bi bi-cloud"
               viewBox="0 0 16 16"
             >
               <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z" />
