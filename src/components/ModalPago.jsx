@@ -51,7 +51,7 @@ const registrarPago = async (e) => {
     const token = localStorage.getItem("token");
 
     const respuesta = await fetch(
-      `${API_URL}/Facturas/${factura.id}/pago`, // asegúrate que coincida con tu [HttpPatch("{id}/pago")]
+      `${API_URL}/Facturas/${factura.id}/pago`, 
       {
         method: "PATCH",
         headers: {

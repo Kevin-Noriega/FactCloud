@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   BellFill,
   GearFill,
@@ -5,19 +6,29 @@ import {
   QuestionCircleFill,
   Search,
 } from "react-bootstrap-icons";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "../layouts/Sidebar";
 import ModalDashboard from "../components/ModalDashboard";
+import ModalConfiguracion from "../components/ModalConfiguracion";
+import ModalNotificaciones from "../components/ModalNotificaciones";
+import ModalAyuda from "../components/ModalAyuda";
 import UserMenu from "../components/UserMenu";
 import { useUsuarios } from "../hooks/useUsuarios";
+import { useNotificacionesNoLeidas } from "../hooks/useNotificaciones";
 import FactCloudLogo from "../img/logo.png";
 import "../styles/MainLayout.css";
 
 function MainLayout() {
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
+  const [mostrarConfiguracion, setMostrarConfiguracion] = useState(false);
+  const [mostrarAyuda, setMostrarAyuda] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const notifButtonRef = useRef(null);
+  
   const { data: usuarios, isLoading, isError, error } = useUsuarios();
+  const { data: noLeidas = 0 } = useNotificacionesNoLeidas();
 
   if (isLoading) {
     return (
@@ -55,28 +66,63 @@ function MainLayout() {
             </div>
 
             <div className="d-flex align-items-center gap-2 flex-shrink-0">
-                <div className="d-none d-md-block" style={{ width: "250px" }}>
-              <div className="search-bar-container">
-                <Search size={18} className="search-icon" />
-                <input
-                  type="text"
-                  placeholder="Buscar en FactCloud"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="search-input"
+              <div className="d-none d-md-block" style={{ width: "300px" }}>
+                <div className="search-bar-container">
+                  <Search size={18} className="search-icon" />
+                  <input
+                    type="text"
+                    placeholder="Buscar en FactCloud"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                  />
+                  {searchQuery && (
+                    <button
+                      className="search-clear"
+                      onClick={() => setSearchQuery("")}
+                      type="button"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Botón de notificaciones con dropdown */}
+              <div className="notif-container-wrapper">
+                <button 
+                  ref={notifButtonRef}
+                  className="fcButton notif-btn" 
+                  title="Notificaciones"
+                  onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
+                >
+                  <BellFill size={18} />
+                  {noLeidas > 0 && (
+                    <span className="header-notif-badge">{noLeidas}</span>
+                  )}
+                </button>
+
+                <ModalNotificaciones
+                  isOpen={mostrarNotificaciones}
+                  onClose={() => setMostrarNotificaciones(false)}
+                  buttonRef={notifButtonRef}
                 />
               </div>
-            </div>
-              <button className="fcButton" title="Notificaciones">
-                <BellFill size={16} />
+
+              <button 
+                className="fcButton" 
+                title="Configuración"
+                onClick={() => setMostrarConfiguracion(true)}
+              >
+                <GearFill size={18} />
               </button>
 
-              <Link to="/configuracion" className="fcButton" title="Configuración">
-                <GearFill size={16} />
-              </Link>
-
-              <button className="fcButton" title="Ayuda">
-                <QuestionCircleFill size={16} />
+              <button 
+                className="fcButton" 
+                title="Ayuda"
+                onClick={() => setMostrarAyuda(true)}
+              >
+                <QuestionCircleFill size={18} />
               </button>
 
               <button
@@ -109,6 +155,16 @@ function MainLayout() {
         <ModalDashboard
           open={mostrarModal}
           onClose={() => setMostrarModal(false)}
+        />
+
+        <ModalConfiguracion
+          isOpen={mostrarConfiguracion}
+          onClose={() => setMostrarConfiguracion(false)}
+        />
+
+        <ModalAyuda
+          isOpen={mostrarAyuda}
+          onClose={() => setMostrarAyuda(false)}
         />
       </div>
     </div>

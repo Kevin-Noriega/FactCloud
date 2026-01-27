@@ -88,7 +88,6 @@
   background: var(--success-dark);
 }
 
-/* MENU MOBILE */
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -108,8 +107,6 @@
   transition: all 0.3s;
 }
 
-
-/* RESPONSIVE */
 @media (max-width: 1090px) {
     
   .nav-links {

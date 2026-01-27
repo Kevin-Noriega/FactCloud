@@ -1,13 +1,11 @@
 import { useEffect } from "react";
 
 function ModalDashboard({ open, onClose }) {
-  //bloquear el scroll
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [open]);
 
-  //si no esta abierto no renderiza nada
   if (!open) return null;
   return (
     <>
@@ -46,13 +44,11 @@ function ModalDashboard({ open, onClose }) {
             overflowY: "auto",
           }}
         >
-          {/*  HEADER */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h5 className="mb-0">¿Qué deseas crear?</h5>
             <button className="btn-close" onClick={onClose} />
           </div>
 
-          {/*  BODY */}
           <div className="row g-3">
             <div className="col-12 col-md-3">
               <strong>Clientes</strong>

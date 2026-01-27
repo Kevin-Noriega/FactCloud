@@ -20,7 +20,6 @@ export default function TopBar() {
           ))}
         </div>
 
-        {/* DERECHA */}
         <div className="top-bar-right">
           <div className="country">
             <img

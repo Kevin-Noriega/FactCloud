@@ -1,6 +1,8 @@
+
 import { useNavigate } from "react-router-dom";
 import "../styles/QuickActions.css";
 import { quickActions } from "../utils/acessosDirectos";
+import * as Icons from "react-bootstrap-icons";
 
 const QuickActions = () => {
   const navigate = useNavigate();

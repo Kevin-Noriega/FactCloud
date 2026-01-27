@@ -246,7 +246,6 @@
 }
 
 
-/* SOCIAL PROOF */
 .social-proof {
   padding: 40px 24px 40px;
   text-align: center;
@@ -514,7 +513,6 @@
   box-shadow: 0 10px 30px rgba(59,130,246,0.4);
 }
 
-/* ANIMACIONES */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -531,7 +529,6 @@
   50% { transform: translateY(-20px); }
 }
 
-/* RESPONSIVE */
 @media (max-width: 1024px) {
   .discount-badge {
     right: -12%;

@@ -16,7 +16,6 @@
   flex: 1;
 }
 
-/* Círculos */
 .step-circle {
   width: 32px;
   height: 32px;
@@ -42,7 +41,6 @@
   color: white;
 }
 
-/* Texto */
 .step-label {
   margin-top: 8px;
   font-size: 14px;
@@ -60,7 +58,6 @@
   font-weight: 600;
 }
 
-/* Línea */
 .step-line {
   position: absolute;
   top: 16px;

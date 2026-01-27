@@ -5,18 +5,32 @@
   padding: 0;
   box-sizing: border-box;
 }
+body.modal-open,
+html.modal-open {
+  overflow: hidden !important;
+  height: 100%;
+  position: relative;
+}
+
+body.modal-open {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
 
 :root {
   --primary: #2563eb;
   --primary-dark: #1e40af;
   --primary-dim: #425696bb;
   --primary-light: #bcd5f5;
-
+  --secondary: #6c757d;
   --success: #22c55e;
   --success-dark: #16a34a;
   --success-light: #bbf7d0;
 
-  --bg-dark: #f1f1f1;
+  --bg-dark: #fdfdfd;
   --bg-card: #ffffff;
 
   --text: #0f172a;
@@ -25,8 +39,11 @@
   --border: #c7d2fe;
   
   --warning: #ffc107;
+  --warning-dark: #e0a800;
   --danger: #f0172c;
   --danger-dark: #b92635;
+  
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html, body {
