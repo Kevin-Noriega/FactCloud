@@ -34,18 +34,18 @@ const QuickActions = () => {
         <h4 className="mb-2">Acessos Directos!</h4>
 
         {/* ACCESOS DIRECTOS DENTRO DE LA BARRA */}
-        <div className="quick-actions-inside">
+    <div className="quick-actions-inside">
           {quickActions.map((action, index) => (
-            <div
-              key={index}
-              className="quick-action-inside"
-              onClick={() => navigate(action.route)}
-            >
+          <div
+            key={index}
+            className="quick-action-inside"
+            onClick={() => navigate(action.route)}
+          >
               <div className="icon">{action.icon}</div>
               <span>{action.title}</span>
             </div>
           ))}
-        </div>
+          </div>
       </div>
     </div>
   );
