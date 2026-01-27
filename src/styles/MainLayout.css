@@ -148,18 +148,13 @@
   transform: translateY(0);
 }
 
-.fcButton.btn-primary {
+.fcButton.fc-btn-primary {
   background: var(--primary);
   color: white;
-  border-color: var(--primary);
-  font-weight: 600;
 }
 
-.fcButton.btn-primary:hover {
+.fcButton.fc-btn-primary:hover {
   background: var(--primary-dark);
-  border-color: var(--primary-dark);
-  color: white;
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
 }
 .main-content-area {
   flex: 1;

@@ -1,54 +1,51 @@
 .modal-overlay-ayuda {
-  position: fixed;
+ position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  z-index: 9998;
-  animation: fadeInModal 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.75); 
+  backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 9999;
   padding: 20px;
-  overflow: hidden;
 }
 
 .modal-container-ayuda {
-  background: #ffffff; 
+  background-color: #ffffff; 
   border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 800px;
+  max-width: 700px;
   max-height: 90vh;
-  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.3);
   display: flex;
   flex-direction: column;
-  animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid #e5e7eb;
+  overflow: hidden;
 }
 
 .modal-header-ayuda {
+   background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+  color: white;
+  padding: 24px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 24px 28px;
-  border-bottom: 2px solid #e5e7eb;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  align-items: center;
+  border-bottom: none;
 }
 
 .modal-title-ayuda {
   display: flex;
   align-items: center;
-  color: #ffffff;
-  font-size: 22px;
+  gap: 12px;
+}
+.modal-title-ayuda h3 {
+  margin: 0;
+  font-size: 24px;
   font-weight: 700;
 }
 
-.modal-title-ayuda svg {
-  color: #ffffff; 
-}
 
 .modal-close-ayuda {
   background: rgba(255, 255, 255, 0.2);
@@ -67,12 +64,10 @@
 
 .modal-close-ayuda:hover {
   background: rgba(255, 255, 255, 0.3);
-  color: #fee;
-  transform: rotate(90deg);
 }
 
 .modal-body-ayuda {
-  padding: 28px;
+  padding: 24px;
   overflow-y: auto;
   flex: 1;
   background: #f9fafb; 
@@ -104,7 +99,7 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   background: #ffffff;
 }
@@ -141,11 +136,11 @@
 }
 
 .faq-item:hover {
-  border-color: #2563eb;
+  border-color: var(--primary);
 }
 
 .faq-item[open] {
-  border-color: #2563eb;
+  border-color: var(--primary);
   background: #eff6ff;
 }
 
@@ -168,7 +163,7 @@
 }
 
 .faq-icon {
-  color: #2563eb;
+  color: var(--primary);
   transition: transform 0.3s;
   flex-shrink: 0;
 }
@@ -181,7 +176,7 @@
   margin-left: auto;
   font-size: 12px;
   font-weight: 600;
-  color: #2563eb;
+  color: var(--primary);
   background: #dbeafe;
   padding: 4px 10px;
   border-radius: 12px;
@@ -248,9 +243,8 @@
 }
 
 .recurso-card:hover {
-  border-color: #2563eb;
-  background: #ffffff;
-  transform: translateY(-2px);
+  border-color: var(--primary-light);
+  background: white;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
 }
 
@@ -258,7 +252,7 @@
   width: 48px;
   height: 48px;
   background: #dbeafe;
-  color: #2563eb;
+  color: var(--primary);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -291,7 +285,7 @@
 }
 
 .recurso-card:hover .recurso-arrow {
-  color: #2563eb;
+  color: var(--primary);
   transform: translateX(4px);
 }
 
@@ -316,14 +310,11 @@
 }
 
 .contacto-card:hover {
-  border-color: #2563eb;
-  background: #ffffff;
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.15);
+  border-color: var(--primary-light);
 }
 
 .contacto-card svg {
-  color: #2563eb;
+  color: var(--primary);
   margin-bottom: 12px;
 }
 
@@ -347,7 +338,7 @@
 .btn-volver {
   background: transparent;
   border: 2px solid #e5e7eb;
-  color: #2563eb;
+  color: var(--primary);
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 14px;
@@ -358,9 +349,9 @@
 }
 
 .btn-volver:hover {
-  background: #2563eb;
+  background: var(--primary);
   color: white;
-  border-color: #2563eb;
+  border-color: var(--primary);
 }
 
 .form-title {
@@ -410,7 +401,7 @@
 .form-select-ayuda:focus,
 .form-textarea-ayuda:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
@@ -431,7 +422,7 @@
 }
 
 .form-file-ayuda:hover {
-  border-color: #2563eb;
+  border-color: var(--primary);
 }
 
 .form-hint {
@@ -441,7 +432,7 @@
 
 .btn-enviar-soporte {
   padding: 14px 28px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, var(--primary), #1d4ed8);
   color: white;
   border: none;
   border-radius: 10px;
@@ -457,9 +448,9 @@
 }
 
 .btn-enviar-soporte:hover {
-  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
 }
+
 
 @media (max-width: 768px) {
   .modal-container-ayuda {

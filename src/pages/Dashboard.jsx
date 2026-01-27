@@ -406,7 +406,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Ayuda y Novedades */}
       <div className="bottom-grid">
         <div className="help-card">
           <div className="help-icon">

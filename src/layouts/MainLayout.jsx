@@ -88,7 +88,6 @@ function MainLayout() {
                 </div>
               </div>
 
-              {/* Botón de notificaciones con dropdown */}
               <div className="notif-container-wrapper">
                 <button 
                   ref={notifButtonRef}
@@ -127,7 +126,7 @@ function MainLayout() {
 
               <button
                 onClick={() => setMostrarModal(true)}
-                className="fcButton btn-primary d-none d-sm-flex"
+                className="fcButton fc-btn-primary d-none d-sm-flex"
               >
                 <Plus size={20} />
                 <span>Crear</span>

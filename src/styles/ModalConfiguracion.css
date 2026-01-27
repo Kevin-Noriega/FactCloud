@@ -50,20 +50,20 @@
 .modal-close-config {
   background: rgba(255, 255, 255, 0.2);
   border: none;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  color: #ffffff; 
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
+  width: 36px;
+  height: 36px;
 }
 
 .modal-close-config:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
 }
 
 .modal-body-config {
