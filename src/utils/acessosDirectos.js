@@ -1,44 +1,44 @@
 
-
  export const quickActions = [
-    {
-        title: "Crea una Factura Electronica",
-        icon : "",
-        Route: "/factura-electronica",
-    },
-    {
-        title: "Crear Nota de Credito",
-        icon : "",
-        Route: "/crear-nota-credito",
-    },
-    {
-        title: "Crear Nota de Debito",
-        icon : "",
-        Route: "/crear-nota-debito",
-    },
-    {
-        title: "Crear un Documento Soporte",
-        icon : "",
-        Route: "/crear-documento-soporte",
-    },
-    {
-        title: "Crea un Producto",
-        icon : "",
-        Route: "/administrar-productos",
-    }, 
-    {
-        title: "Agregar un Tercero",
-        icon : "",
-        Route: "/administrar-clientes",
-    },
-    {
-        title: "Habilitacion DIAN",
-        icon : "",
-        Route: "/habilitacion-dian",
-    },
-    {
-        title: "Tienda FactCloud",
-        icon : "",
-        Route: "/tienda-factcloud",
-    }
+  {
+    title: "Crea una Factura Electrónica",
+    icon: "FileEarmarkText",
+    route: "/factura-electronica",
+  },
+  {
+    title: "Crear Nota de Crédito",
+    icon: "ArrowCounterclockwise",
+    route: "/crear-nota-credito",
+  },
+  {
+    title: "Crear Nota de Débito",
+    icon: "ArrowRepeat",
+    route: "/crear-nota-debito",
+  },
+  {
+    title: "Crear Documento Soporte",
+    icon: "FileCheck",
+    route: "/crear-documento-soporte",
+  },
+  {
+    title: "Crear Producto",
+    icon: "BoxSeam",
+    route: "/administrar-productos",
+  },
+  {
+    title: "Agregar Tercero",
+    icon: "PersonPlus",
+    route: "/administrar-clientes",
+  },
+  {
+    title: "Habilitación DIAN",
+    icon: "ShieldCheck",
+    route: "/habilitacion-dian",
+  },
+  {
+    title: "Tienda FactCloud",
+    icon: "Shop",
+    route: "/tienda-factcloud",
+  },
 ];
+

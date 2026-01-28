@@ -6,6 +6,14 @@
   margin-top: 16px;           /* Separación del texto superior */
 }
 
+.quick-action-inside span {
+  color: #ffffff;          /* Blanco */
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+
 /* CADA ACCESO INDIVIDUAL */
 .quick-action-inside {
   width: 22%;                 /* Fuerza 4 accesos por fila aprox */
