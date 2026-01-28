@@ -3,7 +3,7 @@
   {
     title: "Crea una Factura Electrónica",
     icon: "FileEarmarkText",
-    route: "/factura-electronica",
+    route: "/facturas",
   },
   {
     title: "Crear Nota de Crédito",
@@ -13,7 +13,7 @@
   {
     title: "Crear Nota de Débito",
     icon: "ArrowRepeat",
-    route: "/crear-nota-debito",
+    route: "/nota-debito",
   },
   {
     title: "Crear Documento Soporte",
@@ -23,12 +23,12 @@
   {
     title: "Crear Producto",
     icon: "BoxSeam",
-    route: "/administrar-productos",
+    route: "/productos",
   },
   {
     title: "Agregar Tercero",
     icon: "PersonPlus",
-    route: "/administrar-clientes",
+    route: "/clientes",
   },
   {
     title: "Habilitación DIAN",

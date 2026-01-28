@@ -27,9 +27,6 @@ export const SignalRProvider = ({ children }) => {
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${API_URL}/notificacionesHub`, {
         accessTokenFactory: () => token,
-        transport: signalR.HttpTransportType.WebSockets | 
-                   signalR.HttpTransportType.ServerSentEvents | 
-                   signalR.HttpTransportType.LongPolling,
       })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (retryContext) => {
@@ -55,7 +52,7 @@ export const SignalRProvider = ({ children }) => {
     newConnection.onclose((error) => {
       console.log("Conexión SignalR cerrada", error);
       setIsConnected(false);
-      
+
       reconnectTimeoutRef.current = setTimeout(() => {
         startConnection(newConnection);
       }, 5000);
@@ -63,10 +60,10 @@ export const SignalRProvider = ({ children }) => {
 
     newConnection.on("NuevaNotificacion", (notificacion) => {
       console.log("Nueva notificación recibida:", notificacion);
-      
+
       // Actualizar cache de React Query
       queryClient.invalidateQueries(["notificaciones"]);
-      
+
       // Mostrar notificación del navegador si está permitido
       if (Notification.permission === "granted") {
         new Notification(notificacion.titulo, {
@@ -110,7 +107,7 @@ export const SignalRProvider = ({ children }) => {
     } catch (error) {
       console.error("Error al conectar SignalR:", error);
       setIsConnected(false);
-      
+
       // Reintentar después de 5 segundos
       reconnectTimeoutRef.current = setTimeout(() => {
         startConnection(conn);

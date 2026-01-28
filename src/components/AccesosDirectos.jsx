@@ -9,7 +9,7 @@ const QuickActions = () => {
   return (
     <div className="quick-actions-inside">
       {quickActions.map((action, index) => {
-        const Icon = Icons[action.icon]; // 👈 magia aquí
+        const Icon = Icons[action.icon]; 
 
         return (
           <div
