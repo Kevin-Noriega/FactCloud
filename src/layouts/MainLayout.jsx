@@ -9,18 +9,17 @@ import {
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "../layouts/Sidebar";
-import ModalDashboard from "../components/ModalDashboard";
+import ModalCrear from "../components/ModalCrear";
 import ModalConfiguracion from "../components/ModalConfiguracion";
 import ModalNotificaciones from "../components/ModalNotificaciones";
 import ModalAyuda from "../components/ModalAyuda";
 import UserMenu from "../components/UserMenu";
 import { useUsuarios } from "../hooks/useUsuarios";
 import { useNotificacionesNoLeidas } from "../hooks/useNotificaciones";
-import FactCloudLogo from "../img/logo.png";
 import "../styles/MainLayout.css";
 
 function MainLayout() {
-  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarCrear, setMostrarCrear] = useState(false);
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
   const [mostrarConfiguracion, setMostrarConfiguracion] = useState(false);
   const [mostrarAyuda, setMostrarAyuda] = useState(false);
@@ -56,7 +55,7 @@ function MainLayout() {
 
             <div className="d-flex align-items-center gap-2 flex-shrink-0">
               <img
-                src={FactCloudLogo}
+                src="/img/Logo.png"
                 alt="FactCloud Logo"
                 className="fc-logo"
               />
@@ -125,7 +124,7 @@ function MainLayout() {
               </button>
 
               <button
-                onClick={() => setMostrarModal(true)}
+                onClick={() => setMostrarCrear(true)}
                 className="fcButton fc-btn-primary d-none d-sm-flex"
               >
                 <Plus size={20} />
@@ -151,9 +150,9 @@ function MainLayout() {
           </small>
         </footer>
 
-        <ModalDashboard
-          open={mostrarModal}
-          onClose={() => setMostrarModal(false)}
+        <ModalCrear
+          open={mostrarCrear}
+          onClose={() => setMostrarCrear(false)}
         />
 
         <ModalConfiguracion

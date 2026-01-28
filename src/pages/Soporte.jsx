@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import{ useState, useEffect } from "react";
 import "../styles/Soporte.css";
 import canalesAtencion from "../components/CanalesAtencion";
 import slaData from "../utils/Soporte/SlaData"
@@ -19,7 +19,6 @@ const Soporte = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí integrarías con tu backend ASP.NET
     console.log("Ticket creado:", formData);
     setSubmitted(true);
 
@@ -54,6 +53,11 @@ const Soporte = () => {
   return (
     <div className="soporte-page">
       <section className="hero-section">
+  <img 
+    src="/img/img_hero_Soporte.webp"
+    alt="Empresario usando FactCloud" 
+    className="hero-image"
+  />
         <div className="container">
           <span className="hero-badge">¿Necesitas Ayuda?</span>
           <h1>Centro de soporte</h1>

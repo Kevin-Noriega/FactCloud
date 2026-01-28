@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import FactCloudLogo from "../img/logoFC.png";
 import "../styles/NavBar.css";
 
 export default function NavBar() {
@@ -37,7 +36,7 @@ export default function NavBar() {
       <div className="nav-content">
         <Link to="/">
           <img
-            src={FactCloudLogo}
+            src="/img/LogoFC.png"
             alt="FactCloud"
             className="logo"
             style={{ cursor: "pointer" }}
@@ -75,6 +74,13 @@ export default function NavBar() {
           >
             DIAN
           </Link>
+          
+          <Link
+            to="/sobreNosotros"
+            className={isActive("/sobreNosotros") ? "nav-link active" : "nav-link"}
+          >
+            Nosotros
+          </Link>
 
           <Link
             to="/soporte"
@@ -82,7 +88,6 @@ export default function NavBar() {
           >
             Soporte
           </Link>
-          
 
           <div className="nav-divider"></div>
 

@@ -7,6 +7,14 @@ import caracteristicas from "../utils/Home/Caracteristicas";
 import faqsHome from "../utils/FAQS"
 import Stepper from "../components/Stepper";
 import "../Styles/Home.css";
+import {
+  CheckCircle,
+  GraphUpArrow,
+  PlayCircle,
+  PersonLock,
+  ArrowRight, 
+  Cloud
+} from "react-bootstrap-icons";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -83,43 +91,22 @@ export default function Home() {
               onClick={() => (window.location.href = "/register")}
             >
               Probar gratis 14 días
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M7 4l6 6-6 6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
+              <ArrowRight size={20} />
+
             </button>
             <button
               className="btn-secondary-hero"
               onClick={() => document.getElementById("demo").scrollIntoView()}
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M10 3a7 7 0 100 14 7 7 0 000-14zM8 10l4-2-4-2v4z" />
-              </svg>
+              <PlayCircle size={20} />
+
               Ver demo en vivo
             </button>
           </div>
           <div className="floating-card card-1">
             <div className="card-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                fill="currentColor"
-                class="bi bi-check2-circle"
-                viewBox="0 0 16 16"
-              >
-                <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
-                <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
-              </svg>
+              <CheckCircle size={30} />
+
             </div>
             <div className="card-text">
               <strong>Factura enviada</strong>
@@ -128,19 +115,8 @@ export default function Home() {
           </div>
           <div className="floating-card card-2">
             <div className="card-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                fill="currentColor"
-                class="bi bi-graph-up-arrow"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"
-                />
-              </svg>
+              <GraphUpArrow size={30} />
+
             </div>
             <div className="card-text">
               <strong>Ventas del mes</strong>
@@ -150,13 +126,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PLANES */}
       <section id="planes" className="pricing-section">
         <div className="container">
           <span className="section-label">Precios Transparentes</span>
           <h2>Planes que se ajustan a tu crecimiento</h2>
-          <p className="section-header">Sin sorpresas. Sin costos ocultos. Cancela cuando quieras.
-
+          <p className="section-header-planes">Sin sorpresas. Sin costos ocultos. Cancela cuando quieras.
           </p>
               <Stepper currentStep={1} />
               
@@ -189,58 +163,26 @@ export default function Home() {
         </section>
       </section>
 
-      {/* SOCIAL PROOF */}
       <section className="social-proof">
         <p className="social-text">Confiado por empresas en toda Colombia</p>
         <div className="trust-badges">
           <div className="badge">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              fill="currentColor"
-              class="bi bi-check2-circle"
-              viewBox="0 0 16 16"
-            >
-              <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
-              <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
-            </svg>{" "}
-            Autorizado DIAN
+            <CheckCircle size={18} /> Autorizado DIAN
           </div>
           <div className="badge">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              fill="currentColor"
-              class="bi bi-person-lock"
-              viewBox="0 0 16 16"
-            >
-              <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m0 5.996V14H3s-1 0-1-1 1-4 6-4q.845.002 1.544.107a4.5 4.5 0 0 0-.803.918A11 11 0 0 0 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664zM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1" />
-            </svg>{" "}
-            Datos encriptados
+            <PersonLock size={18} /> Datos encriptados
           </div>
           <div className="badge">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              fill="currentColor"
-              class="bi bi-cloud"
-              viewBox="0 0 16 16"
-            >
-              <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383m.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z" />
-            </svg>{" "}
-            100% en la nube
+           <Cloud size={18} /> 100% en la nube
+
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
       <section id="producto" className="features-section">
         <div className="container">
           <h2>Todo lo que necesitas en un solo lugar</h2>
-          <p className="section-header">
+          <p className="section-header-producto">
             Potencia tu negocio con herramientas profesionales
           </p>
 

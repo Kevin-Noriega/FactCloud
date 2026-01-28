@@ -37,7 +37,6 @@ export default function Registro() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones
     if (formData.email !== formData.confirmEmail) {
       alert("Los emails no coinciden");
       return;
@@ -54,8 +53,6 @@ export default function Registro() {
     }
 
     try {
-      // Aquí harías el registro del usuario
-      // const response = await api.register(formData);
 
       localStorage.setItem("userData", JSON.stringify({
         email: formData.email,
@@ -77,7 +74,6 @@ export default function Registro() {
 
       <div className="registro-container">
 
-        {/* Banner con plan seleccionado */}
         {selectedPlan && (
           <div className="plan-banner">
             <div className="plan-banner-content">
@@ -90,7 +86,6 @@ export default function Registro() {
         )}
 
         <div className="registro-content">
-          {/* Formulario de Registro */}
           <div className="registro-form-section">
             <button 
               onClick={() => navigate("/planes")} 
@@ -242,7 +237,6 @@ export default function Registro() {
             </form>
           </div>
 
-          {/* Resumen del Plan */}
           {selectedPlan && (
             <div className="resumen-compra">
               <h2>Resumen de compra</h2>

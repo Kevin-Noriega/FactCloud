@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import "../styles/Footer.css";
-import FactCloudLogoFooter from "../img/logoFCWhite.png";
 export default function Footer() {
     return (
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-brand">
             <img
-              src={FactCloudLogoFooter}
+              src="/img/logoFCwhite.png"
               alt="FactCloud"
               className="footer-logo"
             />

@@ -7,7 +7,6 @@ import {
 } from "react-bootstrap-icons";
 import "../styles/Chatbot.css";
 import { chatbotResponses } from "../utils/ChatBot";
-import ChatbotAvatar from "../img/LogoFC.png";
 
 function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
