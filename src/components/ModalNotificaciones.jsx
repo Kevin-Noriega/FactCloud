@@ -25,7 +25,6 @@ function ModalNotificaciones({ isOpen, onClose, buttonRef }) {
   const marcarTodasMutation = useMarcarTodasLeidas();
   const eliminarMutation = useEliminarNotificacion();
 
-  // Cerrar al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (

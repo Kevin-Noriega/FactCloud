@@ -416,7 +416,7 @@ function Perfil() {
               {!editando ? (
                 <>
                   <div className="info-section">
-                    <div className="section-header">
+                    <div className="section-header-perfil">
                       <h3 className="section-title">
                         Información Personal
                       </h3>
@@ -475,7 +475,7 @@ function Perfil() {
                   <div className="section-divider"></div>
 
                   <div className="info-section">
-                    <div className="section-header">
+                    <div className="section-header-perfil">
                       <h3 className="section-title">
                         Información Empresarial
                       </h3>
@@ -554,7 +554,7 @@ function Perfil() {
                 </>
               ) : (
                 <form onSubmit={handleSubmit} className="form-edit">
-                  <div className="section-header mb-4">
+                  <div className="section-header-perfil mb-4">
                     <h3 className="section-title">
                       <PencilSquare className="me-2" />
                       Editar Información

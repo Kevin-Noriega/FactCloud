@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../api/config";
-import logo from "../img/logoFC.png";
 import "../styles/Login.css";
 
 export default function Login() {
@@ -45,7 +44,7 @@ export default function Login() {
   return (
     <main className="login-page">
       <section className="login-card">
-        <img src={logo} alt="FactCloud" className="login-logo" />
+        <img src="/img/LogoFC.png" alt="FactCloud" className="login-logo" />
 
         <h1 className="login-title">Iniciar sesión</h1>
         <p className="login-subtitle">

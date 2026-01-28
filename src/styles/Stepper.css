@@ -6,6 +6,7 @@
   margin: 40px auto;
   padding: 0 20px;
   position: relative;
+  width: 100%;
 }
 
 .stepper-step {

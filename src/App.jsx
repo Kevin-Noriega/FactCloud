@@ -19,9 +19,11 @@ import Facturas from "./pages/Facturas";
 import Reportes from "./pages/Reportes";
 import Perfil from "./pages/Perfil";
 import Planes from "./pages/Planes";
+import SobreNosotros from "./pages/SobreNosotros";
 import ComoFunciona from "./pages/ComoFunciona";
 import DIAN from "./pages/DIAN";
 import Soporte from "./pages/Soporte";
+import NotaCredito from "./pages/NotaCredito";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -58,11 +60,13 @@ function App() {
           <Route path="/comoFunciona" element={<ComoFunciona />} />
           <Route path="/dian" element={<DIAN />} />
           <Route path="/soporte" element={<Soporte />} />
+           <Route path="/sobreNosotros" element={<SobreNosotros />} />
         </Route>
 
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/clientes" element={<Clientes />} />
+          <Route path= "/notaCredito" element={<NotaCredito/>}/>
           <Route path="/productos" element={<Productos />} />
           <Route path="/facturas" element={<Facturas />} />
           <Route path="/reportes" element={<Reportes />} />

@@ -7,8 +7,6 @@ export default function TopBar() {
   return (
     <div className="top-bar">
       <div className="top-bar-content">
-
-        {/* CONTACTOS IZQUIERDA */}
         <div className="top-bar-left">
           {canales.map((canal, idx) => (
             <div key={idx} className="topBar-contact">

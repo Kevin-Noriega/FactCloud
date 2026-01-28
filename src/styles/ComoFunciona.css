@@ -1,13 +1,13 @@
 .pasos-section {
-  padding: 100px 20px;
+  padding: 80px 20px;
   background: white;
 }
 
 .pasos-section h2 {
-  font-size: 2.5rem;
+  font-size: 30px;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
   color: var(--text-primary);
 }
 
@@ -20,9 +20,9 @@
 .pasos-timeline::before {
   content: "";
   position: absolute;
-  left: 60px;
-  top: 60px;
-  bottom: 60px;
+  left: 40px;
+  top: 40px;
+  bottom: 20px;
   width: 3px;
   background: linear-gradient(to bottom, var(--primary), var(--success));
   opacity: 0.3;
@@ -40,15 +40,15 @@
 }
 
 .paso-numero {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   background: linear-gradient(135deg, var(--primary) 0%, #7c4dff 100%);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 30px;
   font-weight: 700;
   flex-shrink: 0;
   box-shadow: 0 8px 24px rgba(0, 87, 255, 0.3);
@@ -59,12 +59,12 @@
 .paso-content {
   flex: 1;
   background: var(--bg-light);
-  padding: 32px;
+  padding: 15px 32px;
   border-radius: 12px;
 }
 
 .paso-content h3 {
-  font-size: 1.75rem;
+  font-size: 30px;
   font-weight: 600;
   margin-bottom: 12px;
   color: var(--text-primary);
@@ -102,59 +102,7 @@
   font-size: 1.2rem;
 }
 
-/* Ventajas */
-.ventajas-section {
-  padding: 100px 20px;
-  background: var(--bg-light);
-}
 
-.ventajas-section h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 64px;
-  color: var(--text-primary);
-}
-
-.ventajas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 32px;
-}
-
-.ventaja-card {
-  background: white;
-  padding: 40px 32px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s;
-}
-
-.ventaja-card:hover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-}
-
-.ventaja-metrica {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 16px;
-}
-
-.ventaja-card h3 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--text-primary);
-}
-
-.ventaja-card p {
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* Características */
 .caracteristicas-section {
   padding: 80px 20px;
   background: white;
@@ -287,7 +235,7 @@
 }
 
 
-/* Tecnología */.tecnologia-section {
+.tecnologia-section {
   padding: 80px 20px;
   background: #0a0e27;
   color: white;
@@ -308,7 +256,7 @@
   pointer-events: none;
 }
 
-.tecnologia-section .container {
+.tecnologia-container {
   max-width: 1200px;
   margin: 0 auto;
   position: relative;

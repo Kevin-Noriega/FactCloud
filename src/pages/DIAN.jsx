@@ -22,6 +22,11 @@ const DIAN = () => {
   return (
     <div className="dian-page">
       <section className="hero-section">
+        <img 
+    src="/img/img_hero_DIAN.webp" 
+    alt="FactCloud - Sistema de facturación electrónica" 
+    className="hero-image"
+  />
         <div className="container">
           <div className="hero-content">
             <span className="hero-badge">Información oficial DIAN</span>
@@ -33,6 +38,7 @@ const DIAN = () => {
             </p>
           </div>
         </div>
+        
       </section>
 
       <section className="tabs-section">

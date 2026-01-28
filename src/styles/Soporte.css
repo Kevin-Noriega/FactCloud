@@ -549,7 +549,6 @@
   color: var(--text-secondary);
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
   .ticket-layout {
     grid-template-columns: 1fr;
