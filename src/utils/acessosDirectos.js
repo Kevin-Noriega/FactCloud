@@ -8,7 +8,7 @@
   {
     title: "Crear Nota de Crédito",
     icon: "ArrowCounterclockwise",
-    route: "/crear-nota-credito",
+    route: "/notaCredito",
   },
   {
     title: "Crear Nota de Débito",

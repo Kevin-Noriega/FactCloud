@@ -23,6 +23,7 @@ import SobreNosotros from "./pages/SobreNosotros";
 import ComoFunciona from "./pages/ComoFunciona";
 import DIAN from "./pages/DIAN";
 import Soporte from "./pages/Soporte";
+import NotaDebito from "./pages/NotaDebito";
 import NotaCredito from "./pages/NotaCredito";
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,21 +1,36 @@
-import { createContext, useContext, useEffect, useState, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import * as signalR from "@microsoft/signalr";
 import { API_URL } from "../api/config";
 import { useQueryClient } from "@tanstack/react-query";
 
+/* ============================
+   CONTEXTO
+============================ */
 const SignalRContext = createContext();
 
 export const useSignalR = () => {
   const context = useContext(SignalRContext);
+
   if (!context) {
     throw new Error("useSignalR debe usarse dentro de SignalRProvider");
   }
+
   return context;
 };
 
+/* ============================
+   PROVIDER
+============================ */
 export const SignalRProvider = ({ children }) => {
   const [connection, setConnection] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+
   const queryClient = useQueryClient();
   const reconnectTimeoutRef = useRef(null);
 
@@ -23,7 +38,6 @@ export const SignalRProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    // Crear conexión
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${API_URL}/notificacionesHub`, {
         accessTokenFactory: () => token,
@@ -39,6 +53,9 @@ export const SignalRProvider = ({ children }) => {
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
+    /* ============================
+       EVENTOS DE CONEXIÓN
+    ============================ */
     newConnection.onreconnecting((error) => {
       console.log("Reconectando SignalR...", error);
       setIsConnected(false);
@@ -52,19 +69,18 @@ export const SignalRProvider = ({ children }) => {
     newConnection.onclose((error) => {
       console.log("Conexión SignalR cerrada", error);
       setIsConnected(false);
-
-      reconnectTimeoutRef.current = setTimeout(() => {
-        startConnection(newConnection);
-      }, 5000);
     });
 
+    /* ============================
+       EVENTOS DEL HUB
+    ============================ */
     newConnection.on("NuevaNotificacion", (notificacion) => {
       console.log("Nueva notificación recibida:", notificacion);
 
       // Actualizar cache de React Query
       queryClient.invalidateQueries(["notificaciones"]);
 
-      // Mostrar notificación del navegador si está permitido
+      // Notificación del navegador
       if (Notification.permission === "granted") {
         new Notification(notificacion.titulo, {
           body: notificacion.mensaje,
@@ -73,13 +89,12 @@ export const SignalRProvider = ({ children }) => {
         });
       }
 
-      // Reproducir sonido (opcional)
+      // Sonido
       const audio = new Audio("/notification-sound.mp3");
       audio.volume = 0.3;
       audio.play().catch(() => {});
     });
 
-    // Escuchar actualización de contador
     newConnection.on("ActualizarContadorNoLeidas", (count) => {
       console.log("Contador actualizado:", count);
       queryClient.setQueryData(["notificaciones-no-leidas"], count);
@@ -88,17 +103,23 @@ export const SignalRProvider = ({ children }) => {
     setConnection(newConnection);
     startConnection(newConnection);
 
-    // Cleanup
+    /* ============================
+       CLEANUP
+    ============================ */
     return () => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
+
       if (newConnection) {
         newConnection.stop();
       }
     };
   }, [queryClient]);
 
+  /* ============================
+     INICIAR CONEXIÓN
+  ============================ */
   const startConnection = async (conn) => {
     try {
       await conn.start();
@@ -108,14 +129,15 @@ export const SignalRProvider = ({ children }) => {
       console.error("Error al conectar SignalR:", error);
       setIsConnected(false);
 
-      // Reintentar después de 5 segundos
       reconnectTimeoutRef.current = setTimeout(() => {
         startConnection(conn);
       }, 5000);
     }
   };
 
-  // Solicitar permisos de notificaciones del navegador
+  /* ============================
+     PERMISOS DE NOTIFICACIÓN
+  ============================ */
   useEffect(() => {
     if (isConnected && Notification.permission === "default") {
       Notification.requestPermission();
