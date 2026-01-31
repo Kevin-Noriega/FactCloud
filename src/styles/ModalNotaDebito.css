@@ -1,0 +1,253 @@
+.modal-notadebito-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-notadebito-content {
+  background: white;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 1400px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-notadebito-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+}
+
+.modal-notadebito-header h5 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+}
+
+.modal-notadebito-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.modal-notadebito-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-notadebito-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-notadebito-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-notadebito-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.modal-notadebito-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.modal-notadebito-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.section-title-notadebito {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ffc107;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  margin-top: 20px;
+}
+
+.section-title-notadebito:first-child {
+  margin-top: 0;
+}
+
+.modal-notadebito-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.modal-notadebito-footer .btn {
+  min-width: 100px;
+}
+
+.modal-notadebito-body .form-label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.modal-notadebito-body .form-control,
+.modal-notadebito-body .form-select {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+}
+
+.modal-notadebito-body .form-control:focus,
+.modal-notadebito-body .form-select:focus {
+  border-color: #ffc107;
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+.totales-box-notadebito {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+}
+
+.totales-row-notadebito {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 0.95rem;
+}
+
+.totales-row-notadebito:last-child {
+  border-bottom: none;
+}
+
+.totales-net-notadebito {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  margin-top: 8px;
+  border-top: 2px solid #ffc107;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ff9800;
+}
+
+.modal-notadebito-body .table {
+  margin-bottom: 0;
+}
+
+.modal-notadebito-body .table thead {
+  background: #fff8e1;
+}
+
+.modal-notadebito-body .table th {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #795548;
+  border-color: #ffe082;
+}
+
+.modal-notadebito-body .table td {
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+.modal-notadebito-body .row.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+@media (max-width: 768px) {
+  .modal-notadebito-content {
+    width: 98%;
+    max-height: 95vh;
+  }
+
+  .modal-notadebito-header {
+    padding: 16px;
+  }
+
+  .modal-notadebito-body {
+    padding: 16px;
+  }
+
+  .modal-notadebito-header h5 {
+    font-size: 1.1rem;
+  }
+
+  .section-title-notadebito {
+    font-size: 0.95rem;
+  }
+
+  .totales-box-notadebito {
+    margin-top: 1rem;
+  }
+}
+
+.modal-notadebito-body .css-1pahdxg-control,
+.modal-notadebito-body .css-yk16xz-control {
+  border-radius: 6px;
+  border-color: #ced4da;
+  min-height: 38px;
+}
+
+.modal-notadebito-body .css-1pahdxg-control:hover,
+.modal-notadebito-body .css-yk16xz-control:hover {
+  border-color: #adb5bd;
+}
+
+.modal-notadebito-body .css-1pahdxg-control--is-focused,
+.modal-notadebito-body .css-yk16xz-control--is-focused {
+  border-color: #ffc107 !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25) !important;
+}
+
+.btn-warning.text-white {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  border: none;
+  color: white !important;
+}
+
+.btn-warning.text-white:hover {
+  background: linear-gradient(135deg, #ffb300 0%, #f57c00 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}

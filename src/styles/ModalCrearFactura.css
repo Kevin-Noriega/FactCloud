@@ -1,0 +1,200 @@
+.modal-factura-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-factura-content {
+  background: white;
+  border-radius: 12px;
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-factura-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modal-factura-header h5 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+}
+
+.modal-factura-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.modal-factura-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-factura-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-factura-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-factura-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.modal-factura-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.modal-factura-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.section-title-factura {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  margin-top: 20px;
+}
+
+.section-title-factura:first-child {
+  margin-top: 0;
+}
+
+.modal-factura-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.modal-factura-footer .btn {
+  min-width: 100px;
+}
+
+.modal-factura-body input:disabled,
+.modal-factura-body input[readonly] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.modal-factura-body .table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.modal-factura-body .table thead {
+  background-color: #f8f9fa;
+}
+
+.modal-factura-body .table th {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #495057;
+  padding: 12px 8px;
+}
+
+.modal-factura-body .table td {
+  vertical-align: middle;
+  padding: 8px;
+}
+
+.modal-factura-body .card.bg-light {
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.modal-factura-body .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+  .modal-factura-content {
+    width: 98%;
+    max-height: 95vh;
+  }
+
+  .modal-factura-header {
+    padding: 16px;
+  }
+
+  .modal-factura-body {
+    padding: 16px;
+  }
+
+  .modal-factura-header h5 {
+    font-size: 1.1rem;
+  }
+}
+
+.modal-factura-body .alert {
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.modal-factura-body .input-group .btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.modal-factura-body .form-select:focus,
+.modal-factura-body .form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}

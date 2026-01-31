@@ -1,199 +1,85 @@
-.nota-debito-info {
-  background: #eff6ff;
-  border-left: 4px solid #3b82f6;
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
+.page-header-notadebito {
   display: flex;
-  align-items: start;
-  gap: 0.75rem;
-}
-
-.page-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .page-header h2::before {
-    height: 1.5rem;
-  }
-
-  
-@media (max-width: 576px) {
-  .page-header h2 {
-    font-size: 1.25rem;
-  }
-}
-
-.payment-box {
-  width: 100%;
-  max-width: 800px;
-  border-top: 1px solid #ddd;
-  padding: 15px;
-  font-family: Arial, sans-serif;
-}
-
-.payment-title {
-  color: #007bff;
-  margin-bottom: 15px;
-}
-
-.payment-row {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
-  gap: 10px;
-}
-
-.payment-row span {
-  flex: 1;
-}
-
-.amount {
-  text-align: right;
-  width: 80px;
-}
-
-.payment-select,
-.payment-input {
-  flex: 1;
-  padding: 6px;
-}
-
-.payment-input {
-  text-align: right;
-}
-
-.delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: red;
-}
-
-.add-payment {
-  display: inline-block;
-  margin-top: 10px;
-  color: #2aa800;
-  text-decoration: none;
-}
-
-.add-payment:hover {
-  text-decoration: underline;
-}
-
-.payment-total {
-  display: flex;
-  justify-content: flex-end;
   align-items: center;
-  margin-top: 20px;
-  gap: 10px;
-  font-size: 20px;
+  margin-bottom: 1.5rem;
 }
 
-.total-value {
-  font-weight: bold;
+.nota-debito-info {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffe8a1 100%);
+  border-left: 4px solid #ffc107;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.1);
 }
 
-.check {
-  color: green;
-  font-size: 22px;
-}
-.totals-box {
-  width: 100%;
-  max-width: 500px;
-  margin-left: auto;
-  font-family: Arial, sans-serif;
+.nota-debito-info p {
+  margin: 0;
+  color: #856404;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
-.totals-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-bottom: 15px;
+.nota-debito-info strong {
+  color: #664d03;
+  font-weight: 600;
 }
 
-.totals-row span:first-child {
-  width: 140px;
-  text-align: right;
+.table-hover tbody tr:hover {
+  background-color: #fff9e6;
+  transition: background-color 0.2s ease;
 }
 
-.value {
-  width: 80px;
-  text-align: right;
-}
-
-.retention-select {
-  width: 120px;
-  padding: 4px;
-}
-
-.totals-net {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 15px;
-  margin-top: 30px;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.net-value {
-  width: 100px;
-  text-align: right;
-}
-.observations-box {
-  margin-top: 40px;
-  font-family: Arial, sans-serif;
-}
-
-.observations-box h3 {
-  color: #007bff;
-  margin-bottom: 10px;
-}
-
-.observations-textarea {
-  width: 100%;
-  min-height: 90px;
-  padding: 10px;
-  resize: vertical;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.file-upload {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.clip {
-  font-size: 16px;
-}
-.payment-totals-wrapper {
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-  width: 100%;
-}
-
-/* Izquierda más grande */
-.payment-box {
-  flex: 2;
-}
-
-/* Derecha más angosta */
-.totals-box {
-  flex: 1;
-}
-@media (max-width: 900px) {
-  .payment-totals-wrapper {
+@media (max-width: 768px) {
+  .page-header-notadebito {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
+
+  .page-header-notadebito .btn {
+    width: 100%;
+  }
+}
+
+.badge {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-sm {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.card {
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+  color: #0c5460;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
 }

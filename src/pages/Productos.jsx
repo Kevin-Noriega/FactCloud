@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
-import ModalProducto from "../components/ModalProductos";
+import ModalProducto from "../components/ModalCrearProducto";
 import "../styles/Productos.css";
+import {BoxSeam} from 'react-bootstrap-icons';
 
 function Productos() {
   const [productos, setProductos] = useState([]);
@@ -127,7 +128,7 @@ function Productos() {
 
   if (error) {
     return (
-      <div className="container mt-5">
+      <div className="container-error mt-5">
         <div className="alert alert-danger">
           <h5>Error al cargar productos</h5>
           <p>{error}</p>
@@ -140,8 +141,22 @@ function Productos() {
   }
 
   return (
-    <div className="container-fluid mt-4 px-4">
-      <h2 className="text-success mb-4">Inventario de Productos</h2>
+    <div className="productos-container container-fluid mt-4 px-4">
+      <div className="header-card">
+                <div className="header-content">
+                  <div className="header-text">
+                   <h2 className="header-title mb-4">Inventario de Productos</h2>
+                    <p className="header-subtitle">
+                    Gestiona, actualiza y controla tu inventario.
+                    </p>
+      
+                  </div>
+                  <div className="header-icon">
+                    <BoxSeam size={80} />
+                  </div>
+                </div>
+              </div>
+
 
       {mensajeExito && (
         <div className="alert alert-success alert-dismissible fade show">
@@ -154,7 +169,7 @@ function Productos() {
       )}
 
       <div className="productos-header">
-        <button className="btn btn-success" onClick={handleNuevoProducto}>
+        <button className="btn-crear" onClick={handleNuevoProducto}>
           Nuevo Producto
         </button>
         <div className="productos-filters">
@@ -251,7 +266,7 @@ function Productos() {
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
-                <thead className="table-light">
+                <thead className="table-header">
                   <tr>
                     <th>ID</th>
                     <th>Producto</th>
@@ -272,19 +287,19 @@ function Productos() {
                       <td>
                         <div className="btn-group-acciones">
                           <button
-                            className="btn btn-sm btn-secondary"
+                            className="btn btn-ver btn-sm"
                             onClick={() => setProductoVer(prod)}
                           >
                             Ver
                           </button>
                           <button
-                            className="btn btn-sm btn-info text-white"
+                            className="btn btn-editar btn-sm"
                             onClick={() => handleEditarProducto(prod)}
                           >
                             Editar
                           </button>
                           <button
-                            className="btn btn-sm btn-danger"
+                            className="btn btn-eliminar btn-sm"
                             onClick={() => setProductoAEliminar(prod.id)}
                           >
                             Eliminar

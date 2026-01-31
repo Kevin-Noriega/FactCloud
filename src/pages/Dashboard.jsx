@@ -98,14 +98,14 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <div className="header-card">
-          <div className="header-content">
-            <div className="header-text">
-              <h1 className="header-title">¡Bienvenido a FactCloud!</h1>
-              <p className="header-subtitle">
+        <div className="dashboard-header-card">
+          <div className="dashboard-header-content">
+            <div className="dashboard-header-text">
+              <h1 className="dashboard-header-title">¡Bienvenido a FactCloud!</h1>
+              <p className="dashboard-header-subtitle">
                 Sistema de Facturación Electrónica - Cumplimiento DIAN 2025
               </p>
-              <div className="header-date">
+              <div className="dashboard-header-date">
                 <Calendar className="me-2" size={16} />
                 {new Date().toLocaleDateString("es-CO", {
                   weekday: "long",
@@ -116,10 +116,10 @@ function Dashboard() {
               </div>
 
             </div>
-            <div className="header-icon">
+            <div className="dashboard-header-icon">
               <GraphUpArrow size={120} />
             </div>
-            <div className="header-actions">
+            <div className="dashboard-header-actions">
               <QuickActions />
             </div>
           </div>
