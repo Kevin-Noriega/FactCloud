@@ -92,7 +92,7 @@ function NotaDebito() {
   };
 
   return (
-    <div className="container py-4">
+    <div Name="container py-4">
       {/* HEADER */}
       <div className=" page-header">
         <h3 className="payment-title">Nota Débito (Ventas)</h3>
@@ -408,18 +408,18 @@ function NotaDebito() {
             </div>
 
             {/* observaciones */}
-            <div class="observations-box">
+            <div className="observations-box">
               <h3>Observaciones</h3>
 
               <textarea
                 placeholder="Observaciones"
-                class="observations-textarea"
+                className="observations-textarea"
               ></textarea>
 
-              <label class="file-upload">
+              <label className="file-upload">
                 Adjuntar archivo
                 <input type="file" hidden />
-                <span class="clip">📎</span>
+                <span className="clip">📎</span>
               </label>
             </div>
           </div>
