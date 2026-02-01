@@ -33,7 +33,6 @@
   object-fit: contain;
 }
 
-/* Búsqueda mejorada */
 .search-bar-container {
   position: relative;
   width: 100%;
@@ -96,8 +95,6 @@
   background: #d1d5db;
   color: #374151;
 }
-
-/* Badge de notificaciones en el header */
 .header-notif-badge {
   position: absolute;
   top: -4px;

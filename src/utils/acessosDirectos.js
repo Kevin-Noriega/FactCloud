@@ -13,7 +13,7 @@
   {
     title: "Crear Nota de Débito",
     icon: "ArrowRepeat",
-    route: "/nota-debito",
+    route: "/notadebito",
   },
   {
     title: "Crear Documento Soporte",
@@ -37,7 +37,7 @@
   },
   {
     title: "Tienda FactCloud",
-    icon: "Shop",
+    icon: "Cart",
     route: "/tienda-factcloud",
   },
 ];

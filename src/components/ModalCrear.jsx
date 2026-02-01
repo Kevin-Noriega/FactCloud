@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FileEarmarkText,
@@ -11,17 +11,57 @@ import {
 } from "react-bootstrap-icons";
 import "../styles/ModalCrear.css";
 
+// Importa tus modales específicos
+ import ModalCrearFactura from "../components/ModalCrearFactura";
+import ModalCrearCliente from "../components/ModalCrearCliente";
+import ModalCrearProducto from "../components/ModalCrearProducto";
+
 function ModalCrear({ open, onClose }) {
   const navigate = useNavigate();
+  const [modalActivo, setModalActivo] = useState(null);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [open]);
 
-  const handleNavigation = (path) => {
-    navigate(path);
+  useEffect(() => {
+    if (!open) {
+      setModalActivo(null);
+    }
+  }, [open]);
+
+  const handleNavigation = (path, tipoModal = null) => {
+    if (tipoModal) {
+      setModalActivo({ tipo: tipoModal, ruta: path });
+    } else {
+      navigate(path);
+      onClose();
+    }
+  };
+
+  const handleModalEspecificoClose = (shouldNavigate = false) => {
+    const rutaDestino = modalActivo?.ruta;
+
+    setModalActivo(null);
+
     onClose();
+
+    if (shouldNavigate && rutaDestino) {
+      navigate(rutaDestino);
+    }
+  };
+
+  const handleModalEspecificoSuccess = (mensaje) => {
+    console.log("Creado exitosamente:", mensaje);
+    const rutaDestino = modalActivo?.ruta;
+
+    setModalActivo(null);
+    onClose();
+
+    if (rutaDestino) {
+      navigate(rutaDestino);
+    }
   };
 
   if (!open) return null;
@@ -46,7 +86,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("/facturas")}
+                        onClick={() => handleNavigation("/facturas", "factura")}
                       >
                         <FileEarmarkText className="menu-icon-crear" />
                         <span>Factura de venta</span>
@@ -55,7 +95,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("/clientes")}
+                        onClick={() => handleNavigation("/clientes", "cliente")}
                       >
                         <People className="menu-icon-crear" />
                         <span>Clientes</span>
@@ -64,7 +104,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("/notaCredito")}
+                        onClick={() => handleNavigation("/notaCredito", "notaCredito")}
                       >
                         <FileText className="menu-icon-crear" />
                         <span>Nota crédito</span>
@@ -81,7 +121,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("/#")}
+                        onClick={() => handleNavigation("/documentoSoporte", "documentoSoporte")}
                       >
                         <FileText className="menu-icon-crear" />
                         <span>Documento soporte</span>
@@ -90,7 +130,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("/#")}
+                        onClick={() => handleNavigation("/proveedores", "proveedor")}
                       >
                         <Truck className="menu-icon-crear" />
                         <span>Proveedores</span>
@@ -107,7 +147,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("")}
+                        onClick={() => handleNavigation("/usuarios", "usuario")}
                       >
                         <Person className="menu-icon-crear" />
                         <span>Usuario</span>
@@ -116,7 +156,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("")}
+                        onClick={() => handleNavigation("/invitar-contador", "invitarContador")}
                       >
                         <PersonPlus className="menu-icon-crear" />
                         <span>Invitar contador</span>
@@ -133,7 +173,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavigation("/productos")}
+                        onClick={() => handleNavigation("/productos", "producto")}
                       >
                         <Box className="menu-icon-crear" />
                         <span>Producto / Servicio</span>
@@ -146,6 +186,28 @@ function ModalCrear({ open, onClose }) {
           </div>
         </div>
       </div>
+
+      {modalActivo?.tipo === "producto" && (
+        <ModalCrearProducto 
+          productoEditando={null}
+          onClose={() => handleModalEspecificoClose(false)}
+          onGuardadoExitoso={handleModalEspecificoSuccess}
+        />
+      )}
+
+      {modalActivo?.tipo === "factura" && (
+        <ModalCrearFactura 
+          onClose={() => handleModalEspecificoClose(false)}
+          onGuardadoExitoso={handleModalEspecificoSuccess}
+        />
+      )}
+
+      {modalActivo?.tipo === "cliente" && (
+        <ModalCrearCliente 
+          onClose={() => handleModalEspecificoClose(false)}
+          onGuardadoExitoso={handleModalEspecificoSuccess}
+        />
+      )}
     </>
   );
 }

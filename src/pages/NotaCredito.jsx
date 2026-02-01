@@ -1,190 +1,290 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles//NotaCredito.css";
+import React, { useEffect, useState } from "react";
+import { API_URL } from "../api/config";
+import ModalNotaCredito from "../components/ModalNotaCredito";
+import "../styles/NotaCredito.css";
 
 function NotaCredito() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    facturaId: "",
-    motivo: "",
-    tipo: "anulacion",
-    valor: 0,
-    observaciones: "",
-  });
+  const [notasCredito, setNotasCredito] = useState([]);
+  const [facturas, setFacturas] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mensajeExito, setMensajeExito] = useState("");
+  const [buscador, setBuscador] = useState("");
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [notaEditando, setNotaEditando] = useState(null);
+  const [filtro, setFiltro] = useState("recientes");
 
-  const [guardando, setGuardando] = useState(false);
+  const filtrados = notasCredito
+    .filter((nota) => {
+      const query = buscador.trim().toLowerCase();
+      return !query || nota.numeroNota?.toLowerCase().includes(query);
+    })
+    .sort((a, b) => {
+      switch (filtro) {
+        case "recientes":
+          return new Date(b.fechaRegistro) - new Date(a.fechaRegistro);
+        case "antiguos":
+          return new Date(a.fechaRegistro) - new Date(b.fechaRegistro);
+        default:
+          return 0;
+      }
+    });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setGuardando(true);
-    console.log("Nota crédito:", formData);
-    
-    setTimeout(() => {
-      setGuardando(false);
-      alert("Nota crédito generada exitosamente");
-      navigate(-1);
-    }, 1500);
+  const fetchDatos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("No estás autenticado. Por favor inicia sesión.");
+        return;
+      }
+
+      const [notasRes, facturasRes, productosRes] = await Promise.all([
+        fetch(`${API_URL}/NotasCredito`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/Facturas`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/Productos`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      if (!notasRes.ok || !facturasRes.ok || !productosRes.ok) {
+        throw new Error("Error al cargar datos");
+      }
+
+      const notasData = await notasRes.json();
+      const facturasData = await facturasRes.json();
+      const productosData = await productosRes.json();
+
+      setNotasCredito(notasData);
+      setFacturas(facturasData);
+      setProductos(productosData);
+      setError(null);
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <div className="container py-4">
-      <div className="page-header">
-        <h2>Nota Crédito</h2>
-        <button className="btn btn-secondary" onClick={() => navigate(-1)}>
-          Volver
-        </button>
-      </div>
+  useEffect(() => {
+    fetchDatos();
+  }, []);
 
-      <div className="row">
-        <div className="col-lg-8 mx-auto">
-          <div className="nota-credito-info">
-            <p>
-              <strong>Información importante:</strong> La nota crédito afectará 
-              directamente la factura seleccionada y modificará los registros contables. 
-              Este proceso es irreversible una vez validado con la DIAN.
-            </p>
-          </div>
+  const handleNotaCreada = (mensaje) => {
+    setMensajeExito(mensaje);
+    setTimeout(() => setMensajeExito(""), 3000);
+    fetchDatos();
+  };
 
-          <form onSubmit={handleSubmit} className="nota-credito-form">
-            <div className="nota-credito-card card">
-              <div className="card-body">
-                <div className="mb-4">
-                  <label className="form-label">Factura a Afectar</label>
-                  <select
-                    className="form-select"
-                    value={formData.facturaId}
-                    onChange={(e) =>
-                      setFormData({ ...formData, facturaId: e.target.value })
-                    }
-                    required
-                  >
-                    <option value="">Seleccionar factura...</option>
-                  </select>
-                </div>
+  const abrirModalNuevo = () => {
+    setNotaEditando(null);
+    setMostrarModal(true);
+  };
 
-                <div className="tipo-nota-container">
-                  <label className="tipo-nota-label">Tipo de Nota Crédito</label>
-                  <div className="tipo-nota-opciones">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="tipo"
-                        value="anulacion"
-                        checked={formData.tipo === "anulacion"}
-                        onChange={(e) =>
-                          setFormData({ ...formData, tipo: e.target.value })
-                        }
-                        id="anulacion"
-                      />
-                      <label className="form-check-label" htmlFor="anulacion">
-                        Anulación Total
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="tipo"
-                        value="devolucion"
-                        checked={formData.tipo === "devolucion"}
-                        onChange={(e) =>
-                          setFormData({ ...formData, tipo: e.target.value })
-                        }
-                        id="devolucion"
-                      />
-                      <label className="form-check-label" htmlFor="devolucion">
-                        Devolución Parcial
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="tipo"
-                        value="descuento"
-                        checked={formData.tipo === "descuento"}
-                        onChange={(e) =>
-                          setFormData({ ...formData, tipo: e.target.value })
-                        }
-                        id="descuento"
-                      />
-                      <label className="form-check-label" htmlFor="descuento">
-                        Descuento/Rebaja
-                      </label>
-                    </div>
-                  </div>
-                </div>
+  const descargarXML = (nota) => {
+    if (!nota.xmlBase64) {
+      setMensajeExito("No hay XML generado para esta nota");
+      setTimeout(() => setMensajeExito(""), 3000);
+      return;
+    }
 
-                <div className="mb-4">
-                  <label className="form-label">Motivo</label>
-                  <textarea
-                    className="form-control"
-                    rows="4"
-                    value={formData.motivo}
-                    onChange={(e) =>
-                      setFormData({ ...formData, motivo: e.target.value })
-                    }
-                    required
-                    placeholder="Describe detalladamente el motivo de la nota crédito. Ej: Devolución de producto defectuoso, error en facturación, descuento acordado..."
-                  />
-                </div>
+    const xmlContent = atob(nota.xmlBase64);
+    const blob = new Blob([xmlContent], { type: "text/xml" });
+    const url = URL.createObjectURL(blob);
 
-                <div className="mb-4">
-                  <label className="form-label">Valor</label>
-                  <div className="input-group-valor">
-                    <input
-                      type="number"
-                      className="form-control input-moneda"
-                      min="0"
-                      step="0.01"
-                      value={formData.valor}
-                      onChange={(e) =>
-                        setFormData({ ...formData, valor: e.target.value })
-                      }
-                      required
-                      placeholder="0.00"
-                    />
-                  </div>
-                </div>
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `NotaCredito-${nota.numeroNota}.xml`;
+    a.click();
+  };
 
-                <div className="mb-4">
-                  <label className="form-label" style={{ color: '#6b7280' }}>
-                    Observaciones <span style={{ color: '#9ca3af' }}>(Opcional)</span>
-                  </label>
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    value={formData.observaciones}
-                    onChange={(e) =>
-                      setFormData({ ...formData, observaciones: e.target.value })
-                    }
-                    placeholder="Información adicional relevante..."
-                  />
-                </div>
-
-                <div className="form-actions">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() => navigate(-1)}
-                    disabled={guardando}
-                  >
-                    Cancelar
-                  </button>
-                  <button 
-                    type="submit" 
-                    className={`btn btn-success ${guardando ? 'btn-loading' : ''}`}
-                    disabled={guardando}
-                  >
-                    {guardando ? 'Generando...' : 'Generar Nota Crédito'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
+  if (loading) {
+    return (
+      <div className="container mt-5">
+        <div className="text-center">
+          <div className="spinner-border text-success" role="status"></div>
+          <p className="mt-3">Cargando datos...</p>
         </div>
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-5">
+        <div className="alert alert-danger">
+          <h5>Error al cargar datos</h5>
+          <p>{error}</p>
+          <button className="btn btn-primary mt-2" onClick={fetchDatos}>
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container-fluid mt-4 px-4">
+      <div className="header-card">
+                      <div className="header-content">
+                        <div className="header-text">
+                         <h2 className="header-title mb-4">Gestión Nota Credito</h2>
+                          <p className="header-subtitle">
+                          Gestiona, actualiza y controla tu inventario.
+                          </p>
+            
+                        </div>
+                        <div className="header-icon">
+                        </div>
+                      </div>
+                    </div>
+      {mensajeExito && (
+        <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+          <span>{mensajeExito}</span>
+          <button
+            className="btn btn-close"
+            onClick={() => setMensajeExito("")}
+          />
+        </div>
+      )}
+
+      <div className="nota-credito-info mb-4">
+        <p>
+          <strong>Información importante:</strong> Las notas crédito son documentos que reducen el valor de una factura. 
+          Este proceso es irreversible una vez validado con la DIAN. Afecta directamente los registros contables.
+        </p>
+      </div>
+
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <button
+          className="btn btn-success text-white"
+          onClick={abrirModalNuevo}
+        >
+          Nueva Nota Crédito
+        </button>
+        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Buscar por número de nota"
+            value={buscador}
+            onChange={(e) => setBuscador(e.target.value)}
+            style={{ flexGrow: 1 }}
+          />
+          <select
+            className="form-select"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+            style={{ width: "148px" }}
+          >
+            <option value="recientes">Más recientes</option>
+            <option value="antiguos">Más antiguos</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-body">
+          {filtrados.length === 0 ? (
+            <div className="alert alert-info">No hay notas crédito registradas.</div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-hover table-bordered">
+                <thead className="table-light">
+                  <tr>
+                    <th>Número</th>
+                    <th>Factura</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Motivo</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtrados.map((nota) => (
+                    <tr key={nota.id}>
+                      <td><strong>{nota.numeroNota || nota.id}</strong></td>
+                      <td>{nota.numeroFactura}</td>
+                      <td>{nota.cliente?.nombre || "N/A"}</td>
+                      <td>
+                        {new Date(nota.fechaElaboracion).toLocaleDateString("es-CO")}
+                      </td>
+                      <td>
+                        <span className={`badge ${
+                          nota.tipo === "anulacion" ? "bg-danger" : 
+                          nota.tipo === "devolucion" ? "bg-warning text-dark" : 
+                          "bg-info"
+                        }`}>
+                          {nota.tipo === "anulacion" ? "Anulación" : 
+                           nota.tipo === "devolucion" ? "Devolución" : 
+                           "Descuento"}
+                        </span>
+                      </td>
+                      <td>{nota.motivoDIAN}</td>
+                      <td className="text-end fw-bold text-success">
+                        ${nota.totalNeto?.toLocaleString("es-CO") || "0"}
+                      </td>
+                      <td>
+                        {nota.estado === "Enviada" ? (
+                          <span className="badge bg-success">Enviada</span>
+                        ) : (
+                          <span className="badge bg-warning text-dark">Pendiente</span>
+                        )}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-primary me-1"
+                          onClick={() => console.log("Ver PDF")}
+                        >
+                          PDF
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger me-1"
+                          onClick={() => descargarXML(nota)}
+                        >
+                          XML
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+
+           {mostrarModal && (
+        <ModalNotaCredito
+        open={mostrarModal}
+        onClose={() => {
+          setMostrarModal(false);
+          setNotaEditando(null);
+        }}
+        notaEditando={notaEditando}
+        facturas={facturas}
+        productos={productos}
+        onSuccess={handleNotaCreada}
+      />
+      )}
     </div>
   );
 }

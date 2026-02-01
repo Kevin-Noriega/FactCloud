@@ -25,6 +25,7 @@ import DIAN from "./pages/DIAN";
 import Soporte from "./pages/Soporte";
 import NotaDebito from "./pages/NotaDebito";
 import NotaCredito from "./pages/NotaCredito";
+import Tienda from "./pages/Tienda";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -68,11 +69,12 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path= "/notaCredito" element={<NotaCredito/>}/>
+          <Route path="/notaDebito" element={<NotaDebito />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/facturas" element={<Facturas />} />
           <Route path="/reportes" element={<Reportes />} />
+          <Route path="/tienda" element={<Tienda/>} />
           <Route path="/perfil" element={<Perfil />} />
-          <Route path="/nota-debito" element={<NotaDebito />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

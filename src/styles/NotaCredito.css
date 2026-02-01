@@ -1,341 +1,92 @@
-.page-header {
+.page-header-notacredito {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #e5e7eb;
-}
-
-.page-header h2 {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #111827;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.page-header h2::before {
-  content: '';
-  width: 4px;
-  height: 2rem;
-  background: linear-gradient(135deg, #dc2626, #ef4444);
-  border-radius: 2px;
-}
-
-.nota-credito-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.nota-credito-card .card-body {
-  padding: 2rem;
-}
-
-.nota-credito-form .form-label {
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.nota-credito-form .form-label::after {
-  content: ' *';
-  color: #dc2626;
-}
-
-.nota-credito-form .form-control,
-.nota-credito-form .form-select {
-  border: 1.5px solid #d1d5db;
-  border-radius: 8px;
-  padding: 0.75rem;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-}
-
-.nota-credito-form .form-control:focus,
-.nota-credito-form .form-select:focus {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-  outline: none;
-}
-
-.nota-credito-form .form-control::placeholder {
-  color: #9ca3af;
-  font-style: italic;
-}
-
-.nota-credito-form textarea.form-control {
-  resize: vertical;
-  min-height: 100px;
-  line-height: 1.5;
-}
-
-.nota-credito-form .form-select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23374151' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 16px 12px;
-  cursor: pointer;
-}
-
-.tipo-nota-container {
-  background: #fef2f2;
-  border: 2px solid #fecaca;
-  border-radius: 10px;
-  padding: 1rem;
   margin-bottom: 1.5rem;
-}
-
-.tipo-nota-label {
-  font-weight: 600;
-  color: #dc2626;
-  margin-bottom: 0.75rem;
-  display: block;
-  font-size: 0.95rem;
-}
-
-.tipo-nota-opciones {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.tipo-nota-opciones .form-check {
-  background: #fff;
-  border: 2px solid #fecaca;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  flex: 1;
-  min-width: 150px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.tipo-nota-opciones .form-check:hover {
-  border-color: #dc2626;
-  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.1);
-}
-
-.tipo-nota-opciones .form-check-input:checked + .form-check-label {
-  color: #dc2626;
-  font-weight: 600;
-}
-
-.tipo-nota-opciones .form-check-input {
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-right: 0.5rem;
-  cursor: pointer;
-}
-
-.tipo-nota-opciones .form-check-input:checked {
-  background-color: #dc2626;
-  border-color: #dc2626;
-}
-
-.tipo-nota-opciones .form-check-label {
-  cursor: pointer;
-  font-size: 0.95rem;
-  color: #374151;
-  transition: color 0.2s ease;
 }
 
 .nota-credito-info {
-  background: #eff6ff;
-  border-left: 4px solid #3b82f6;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border-left: 4px solid #10b981;
   border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: start;
-  gap: 0.75rem;
-}
-
-.nota-credito-info::before {
-  content: 'ℹ';
-  font-size: 1.5rem;
-  color: #3b82f6;
-  font-weight: bold;
-  flex-shrink: 0;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
 }
 
 .nota-credito-info p {
   margin: 0;
-  color: #1e40af;
-  font-size: 0.9rem;
+  color: #065f46;
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
-.form-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 2rem;
-}
-
-.form-actions .btn {
-  padding: 0.75rem 2rem;
+.nota-credito-info strong {
+  color: #064e3b;
   font-weight: 600;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  min-width: 120px;
 }
 
-.form-actions .btn-secondary {
-  background: #fff;
-  border: 2px solid #d1d5db;
-  color: #374151;
+/* Tabla */
+.table-hover tbody tr:hover {
+  background-color: #f0fdf4;
+  transition: background-color 0.2s ease;
 }
 
-.form-actions .btn-secondary:hover {
-  background: #f3f4f6;
-  border-color: #9ca3af;
-  transform: translateY(-1px);
-}
-
-.form-actions .btn-success {
-  background: linear-gradient(135deg, #10b981, #059669);
-  border: none;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-}
-
-.form-actions .btn-success:hover {
-  background: linear-gradient(135deg, #059669, #047857);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-}
-
-.form-actions .btn-success:active {
-  transform: translateY(0);
-}
-
-.input-group-valor {
-  position: relative;
-}
-
-.input-group-valor .input-moneda {
-  padding-left: 2.5rem;
-}
-
-.input-group-valor::before {
-  content: '$';
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-weight: 600;
-  color: #6b7280;
-  z-index: 10;
-}
-
-@media (max-width: 768px) {
-  .page-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
-
-  .page-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .page-header h2::before {
-    height: 1.5rem;
-  }
-
-  .nota-credito-card .card-body {
-    padding: 1.5rem;
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-    gap: 0.5rem;
-  }
-
-  .form-actions .btn {
-    width: 100%;
-    min-width: auto;
-  }
-
-  .tipo-nota-opciones {
-    flex-direction: column;
-  }
-
-  .tipo-nota-opciones .form-check {
-    min-width: auto;
-  }
-}
-
-@media (max-width: 576px) {
-  .page-header h2 {
-    font-size: 1.25rem;
-  }
-
-  .nota-credito-form .form-label {
-    font-size: 0.85rem;
-  }
-
-  .nota-credito-form .form-control,
-  .nota-credito-form .form-select {
-    font-size: 0.9rem;
-    padding: 0.65rem;
-  }
-}
-
-.is-invalid {
-  border-color: #dc2626 !important;
-}
-
-.invalid-feedback {
-  display: block;
-  color: #dc2626;
+.badge {
+  padding: 0.35rem 0.65rem;
   font-size: 0.85rem;
-  margin-top: 0.25rem;
   font-weight: 500;
 }
 
-.was-validated .form-control:valid,
-.was-validated .form-select:valid {
-  border-color: #10b981;
-}
-
-.was-validated .form-control:valid:focus,
-.was-validated .form-select:valid:focus {
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
-
-.btn-loading {
-  position: relative;
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-.btn-loading::after {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  top: 50%;
-  left: 50%;
-  margin-left: -8px;
-  margin-top: -8px;
-  border: 2px solid transparent;
-  border-top-color: currentColor;
-  border-radius: 50%;
-  animation: spinner 0.6s linear infinite;
-}
-
-@keyframes spinner {
-  to {
-    transform: rotate(360deg);
+@media (max-width: 768px) {
+  .page-header-notacredito {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
+
+  .page-header-notacredito .btn {
+    width: 100%;
+  }
+}
+
+.card {
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+  color: #0c5460;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }

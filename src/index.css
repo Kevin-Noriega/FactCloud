@@ -217,3 +217,93 @@ html, body {
     opacity: 0.2;
   }
 }
+
+/*paginas sidebar*/
+.table thead th{
+  color: white;
+  background-color: var(--primary);
+}
+.btn-crear{
+  padding: 10px;
+  background: var(--success);
+  border-radius: 8px;
+  color: white ;
+  border: none;
+  transition: all 0.2s;
+  }
+
+.btn-crear:hover{
+  transform: translateY(-10%);
+  background: var(--success-dark);
+}
+.btn{
+  border-radius: 10px;
+}
+
+.btn-ver{
+  background: white;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+.btn-editar{
+  background: var(--primary);
+  color: white;
+  border: var(--primary);
+}
+.btn-eliminar{
+  background: var(--danger);
+  color: white;
+  border: var(--danger);
+}
+.btn-group-acciones {
+  display: flex;
+  gap: 6px;
+}
+
+.header-card {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  bottom: 20px;
+}
+
+.header-card::before {
+  content: '';
+  position: absolute;
+  top: -80%;
+  right: -8%;
+  width: 250px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.header-text {
+  flex: 1;
+  color: white;
+}
+
+.header-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.header-icon {
+  color: rgba(255, 255, 255, 0.2);
+}

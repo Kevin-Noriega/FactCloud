@@ -3,9 +3,9 @@ import { API_URL } from "../api/config";
 import Select from "react-select";
 import unidadesMedidaDIAN from "../utils/UnidadesMedidas.json";
 import tipoProductoDIAN from "../utils/TiposProducto.json";
-import "../styles/ModalProductos.css";
+import "../styles/ModalCrearProducto.css";
 
-function ModalProducto({ productoEditando, onClose, onGuardadoExitoso }) {
+function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
   const [producto, setProducto] = useState({
     esServicio: false,
     nombre: "",
@@ -741,4 +741,4 @@ function ModalProducto({ productoEditando, onClose, onGuardadoExitoso }) {
   );
 }
 
-export default ModalProducto;
+export default ModalCrearProducto;

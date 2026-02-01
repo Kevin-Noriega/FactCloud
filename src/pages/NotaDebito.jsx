@@ -1,439 +1,270 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { API_URL } from "../api/config";
+import ModalNotaDebito from "../components/ModalNotaDebito";
 import "../styles/NotaDebito.css";
-import Select from "react-select";
 
 function NotaDebito() {
-  const navigate = useNavigate();
+  const [notasDebito, setNotasDebito] = useState([]);
+  const [facturas, setFacturas] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mensajeExito, setMensajeExito] = useState("");
+  const [buscador, setBuscador] = useState("");
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [notaEditando, setNotaEditando] = useState(null);
+  const [filtro, setFiltro] = useState("recientes");
 
-  const [notaDebito, setNotaDebito] = useState({
-    factura: "",
-    tipo: "DF-2",
-    cliente: "",
-    contacto: "",
-    fechaElaboracion: "",
-    vendedor: "",
-    cufe: "",
-    motivoDIAN: "",
-    numeroFactura: "",
-    productos: [],
-    formasPago: [],
-  });
-  const [productosSeleccionados, setProductosSeleccionados] = useState([
-    {
-      productoId: "",
-      cantidad: 1,
-      precioUnitario: 0,
-      porcentajeDescuento: 0,
-      tarifaIVA: 19,
-      tarifaINC: 0,
-    },
-  ]);
-  const productos = [
-    {
-      id: 1,
-      nombre: "SUMINISTRO DE MATERIALES",
-      precioUnitario: 6025210.08,
-    },
-    {
-      id: 2,
-      nombre: "SERVICIO TÉCNICO",
-      precioUnitario: 150000,
-    },
-  ];
-  const actualizarProducto = (index, campo, valor) => {
-    const nuevosProductos = [...productosSeleccionados];
-    nuevosProductos[index][campo] = valor;
-
-    if (campo === "productoId") {
-      const productoSeleccionado = productos.find(
-        (p) => p.id === parseInt(valor),
-      );
-      if (productoSeleccionado) {
-        nuevosProductos[index].precioUnitario =
-          productoSeleccionado.precioUnitario;
-        nuevosProductos[index].descripcion = productoSeleccionado.nombre;
-        nuevosProductos[index].unidadMedida = productoSeleccionado.unidadMedida;
-        nuevosProductos[index].tarifaIVA = productoSeleccionado.tarifaIVA;
-        nuevosProductos[index].tarifaINC = productoSeleccionado.tarifaINC || 0;
+  const filtrados = notasDebito
+    .filter((nota) => {
+      const query = buscador.trim().toLowerCase();
+      return !query || nota.numeroNota?.toLowerCase().includes(query);
+    })
+    .sort((a, b) => {
+      switch (filtro) {
+        case "recientes":
+          return new Date(b.fechaRegistro) - new Date(a.fechaRegistro);
+        case "antiguos":
+          return new Date(a.fechaRegistro) - new Date(b.fechaRegistro);
+        default:
+          return 0;
       }
+    });
+
+  const fetchDatos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("No estás autenticado. Por favor inicia sesión.");
+        return;
+      }
+
+      const [notasRes, facturasRes, productosRes] = await Promise.all([
+        fetch(`${API_URL}/NotasDebito`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/Facturas`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+        fetch(`${API_URL}/Productos`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+
+      if (!notasRes.ok || !facturasRes.ok || !productosRes.ok) {
+        throw new Error("Error al cargar datos");
+      }
+
+      const notasData = await notasRes.json();
+      const facturasData = await facturasRes.json();
+      const productosData = await productosRes.json();
+
+      setNotasDebito(notasData);
+      setFacturas(facturasData);
+      setProductos(productosData);
+      setError(null);
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDatos();
+  }, []);
+
+  const handleNotaCreada = (mensaje) => {
+    setMensajeExito(mensaje);
+    setTimeout(() => setMensajeExito(""), 3000);
+    fetchDatos();
+  };
+
+  const abrirModalNuevo = () => {
+    setNotaEditando(null);
+    setMostrarModal(true);
+  };
+
+  const descargarXML = (nota) => {
+    if (!nota.xmlBase64) {
+      setMensajeExito("No hay XML generado para esta nota");
+      setTimeout(() => setMensajeExito(""), 3000);
+      return;
     }
 
-    setProductosSeleccionados(nuevosProductos);
+    const xmlContent = atob(nota.xmlBase64);
+    const blob = new Blob([xmlContent], { type: "text/xml" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `NotaDebito-${nota.numeroNota}.xml`;
+    a.click();
   };
 
-  const eliminarProducto = (index) => {
-    setProductosSeleccionados(
-      productosSeleccionados.filter((_, i) => i !== index),
+  if (loading) {
+    return (
+      <div className="container mt-5">
+        <div className="text-center">
+          <div className="spinner-border text-warning" role="status"></div>
+          <p className="mt-3">Cargando datos...</p>
+        </div>
+      </div>
     );
-  };
-  const calcularLinea = (item) => {
-    const cantidad = parseFloat(item.cantidad) || 0;
-    const precio = parseFloat(item.precioUnitario) || 0;
-    const descuento = parseFloat(item.porcentajeDescuento) || 0;
-    const tarifaIVA = parseFloat(item.tarifaIVA) || 0;
-    const tarifaINC = parseFloat(item.tarifaINC) || 0;
+  }
 
-    const subtotalLinea = cantidad * precio;
-    const valorDescuento = subtotalLinea * (descuento / 100);
-    const baseImponible = subtotalLinea - valorDescuento;
-    const valorIVA = baseImponible * (tarifaIVA / 100);
-    const valorINC = baseImponible * (tarifaINC / 100);
-    const totalLinea = baseImponible + valorIVA + valorINC;
-
-    return {
-      subtotalLinea,
-      valorDescuento,
-      baseImponible,
-      valorIVA,
-      valorINC,
-      totalLinea,
-    };
-  };
+  if (error) {
+    return (
+      <div className="container mt-5">
+        <div className="alert alert-danger">
+          <h5>Error al cargar datos</h5>
+          <p>{error}</p>
+          <button className="btn btn-primary mt-2" onClick={fetchDatos}>
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container py-4">
-      {/* HEADER */}
-      <div className=" page-header">
-        <h3 className="payment-title">Nota Débito (Ventas)</h3>
+    <div className="container-fluid mt-4 px-4">
+      <div className="page-header-notadebito">
+        <h2 className="text-warning mb-4">Notas Débito (Ventas)</h2>
         <button className="btn btn-outline-primary btn-sm">
           Ver tutoriales
         </button>
       </div>
 
-      {/* ALERTA */}
-      <div className="nota-debito-info  m-1b-4 p-3">
+      {mensajeExito && (
+        <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+          <span>{mensajeExito}</span>
+          <button
+            className="btn btn-close"
+            onClick={() => setMensajeExito("")}
+          />
+        </div>
+      )}
+
+      <div className="nota-debito-info mb-4">
         <p>
-          <strong>Información importante:</strong> Has elegido una factura
-          electrónica. Recuerda que no se pueden aplicar notas débito cuando la
-          factura cuenta con aceptación DIAN.
+          <strong>Información importante:</strong> Las notas débito son documentos que incrementan el valor de una factura. 
+          No se pueden aplicar cuando la factura cuenta con aceptación DIAN.
         </p>
       </div>
 
-      {/* DATOS GENERALES */}
-      <div className="card mb-4">
-        <div className="card-body">
-          <div className="row g-3">
-            <div className="col-md-4">
-              <label className="form-label">Factura</label>
-              <input className="form-control" />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label">Tipo</label>
-              <select className="form-select">
-                <option>DF-2 - Débito Facturación</option>
-              </select>
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label">Número</label>
-              <input className="form-control" disabled />
-            </div>
-
-            <div className="col-md-6">
-              <label className="form-label">Cliente</label>
-              <input className="form-control" />
-            </div>
-
-            <div className="col-md-6">
-              <label className="form-label">Contacto</label>
-              <input className="form-control" />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label">Fecha elaboración</label>
-              <input type="date" className="form-control" />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label">Vendedor</label>
-              <input className="form-control" />
-            </div>
-
-            <div className="col-md-4">
-              <label className="form-label">CUFE</label>
-              <input className="form-control" />
-            </div>
-
-            <div className="col-md-6">
-              <label className="form-label">Motivo DIAN</label>
-              <select className="form-select">
-                <option>Seleccionar...</option>
-              </select>
-            </div>
-            {/* TABLA PRODUCTOS */}
-            <div className="table-responsive">
-              <table className="table table-sm table-bordered">
-                <thead className="table-light">
-                  <tr>
-                    <th>Producto</th>
-                    <th>Cant</th>
-                    <th>Precio</th>
-                    <th>Desc %</th>
-                    <th>IVA %</th>
-                    <th>INC %</th>
-                    <th>Total</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {productosSeleccionados.map((item, index) => {
-                    const linea = calcularLinea(item);
-                    return (
-                      <tr key={index}>
-                        <td>
-                          <Select
-                            menuPortalTarget={document.body}
-                            styles={{
-                              menuPortal: (base) => ({
-                                ...base,
-                                zIndex: 9999,
-                              }),
-                            }}
-                            name="producto"
-                            options={productos.map((pro) => ({
-                              value: pro.id,
-                              label: `${
-                                pro.nombre
-                              } - $${pro.precioUnitario.toLocaleString(
-                                "es-CO",
-                              )}`,
-                            }))}
-                            value={
-                              item.productoId
-                                ? productos
-                                    .map((pro) => ({
-                                      value: pro.id,
-                                      label: `${
-                                        pro.nombre
-                                      } - $${pro.precioUnitario.toLocaleString(
-                                        "es-CO",
-                                      )}`,
-                                    }))
-                                    .find(
-                                      (opt) => opt.value === item.productoId,
-                                    )
-                                : null
-                            }
-                            onChange={(opt) =>
-                              actualizarProducto(
-                                index,
-                                "productoId",
-                                opt ? opt.value : "",
-                              )
-                            }
-                            isClearable
-                            placeholder="Seleccionar producto"
-                          />
-                        </td>
-                        <td style={{ width: "80px" }}>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            value={item.cantidad}
-                            onChange={(e) =>
-                              actualizarProducto(
-                                index,
-                                "cantidad",
-                                e.target.value,
-                              )
-                            }
-                            min="1"
-                            required
-                          />
-                        </td>
-                        <td style={{ width: "100px" }}>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            value={item.precioUnitario}
-                            onChange={(e) =>
-                              actualizarProducto(
-                                index,
-                                "precioUnitario",
-                                e.target.value,
-                              )
-                            }
-                            step="0.01"
-                            required
-                          />
-                        </td>
-                        <td style={{ width: "80px" }}>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            value={item.porcentajeDescuento}
-                            onChange={(e) =>
-                              actualizarProducto(
-                                index,
-                                "porcentajeDescuento",
-                                e.target.value,
-                              )
-                            }
-                            min="0"
-                            max="100"
-                            step="0.01"
-                          />
-                        </td>
-                        <td style={{ width: "80px" }}>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            value={item.tarifaIVA}
-                            onChange={(e) =>
-                              actualizarProducto(
-                                index,
-                                "tarifaIVA",
-                                e.target.value,
-                              )
-                            }
-                            step="0.01"
-                            required
-                          />
-                        </td>
-                        <td style={{ width: "80px" }}>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            value={item.tarifaINC}
-                            onChange={(e) =>
-                              actualizarProducto(
-                                index,
-                                "tarifaINC",
-                                e.target.value,
-                              )
-                            }
-                            step="0.01"
-                          />
-                        </td>
-                        <td className="text-end">
-                          $
-                          {linea.totalLinea.toLocaleString("es-CO", {
-                            minimumFractionDigits: 2,
-                          })}
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-danger"
-                            onClick={() => eliminarProducto(index)}
-                          >
-                            X
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            <div className="payment-totals-wrapper">
-              {/* FORMAS DE PAGO */}
-              <div className="payment-box">
-                <h3 className="payment-title">Formas de pago</h3>
-
-                <div className="payment-row">
-                  <span>Efectivo</span>
-                  <span className="amount">0.00</span>
-                  <button className="delete-btn">🗑</button>
-                </div>
-
-                <div className="payment-row">
-                  <span>Tarjeta Débito</span>
-                  <span className="amount">0.00</span>
-                  <button className="delete-btn">🗑</button>
-                </div>
-
-                <div className="payment-row">
-                  <select className="payment-select">
-                    <option>Selecciona forma de pago</option>
-                    <option>Transferencia</option>
-                    <option>Tarjeta Crédito</option>
-                    <option>Nequi</option>
-                  </select>
-
-                  <input
-                    type="number"
-                    className="payment-input"
-                    placeholder="0.00"
-                  />
-                  <button className="delete-btn">🗑</button>
-                </div>
-
-                <a href="#" className="add-payment">
-                  + Agregar otra forma de pago
-                </a>
-
-                <div className="payment-total">
-                  <strong>Total formas de pagos:</strong>
-                  <span className="total-value">0.00</span>
-                  <span className="check">✔</span>
-                </div>
-              </div>
-
-              {/* TOTALES */}
-              <div className="totals-box">
-                <div className="totals-row">
-                  <span>Total Bruto:</span>
-                  <span className="value">0.00</span>
-                </div>
-
-                <div className="totals-row">
-                  <span>Descuentos:</span>
-                  <span className="value">0.00</span>
-                </div>
-
-                <div className="totals-row">
-                  <span>Subtotal:</span>
-                  <span className="value">0.00</span>
-                </div>
-
-                <div className="totals-row">
-                  <span>RetelCA:</span>
-                  <select className="retention-select">
-                    <option value="">Seleccione</option>
-                    <option>1%</option>
-                    <option>2%</option>
-                    <option>3%</option>
-                  </select>
-                  <span className="value">0.00</span>
-                </div>
-
-                <div className="totals-net">
-                  <span>Total Neto:</span>
-                  <span className="net-value">0.00</span>
-                </div>
-              </div>
-            </div>
-
-            {/* observaciones */}
-            <div className="observations-box">
-              <h3>Observaciones</h3>
-
-              <textarea
-                placeholder="Observaciones"
-                className="observations-textarea"
-              ></textarea>
-
-              <label className="file-upload">
-                Adjuntar archivo
-                <input type="file" hidden />
-                <span className="clip">📎</span>
-              </label>
-            </div>
-          </div>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <button
+          className="btn btn-warning text-white"
+          onClick={abrirModalNuevo}
+        >
+          Nueva Nota Débito
+        </button>
+        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Buscar por número de nota"
+            value={buscador}
+            onChange={(e) => setBuscador(e.target.value)}
+            style={{ flexGrow: 1 }}
+          />
+          <select
+            className="form-select"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+            style={{ width: "148px" }}
+          >
+            <option value="recientes">Más recientes</option>
+            <option value="antiguos">Más antiguos</option>
+          </select>
         </div>
       </div>
 
-      {/* ACCIONES */}
-      <div className="d-flex justify-content-end gap-2 mt-4">
-        <button className="btn btn-secondary" onClick={() => navigate(-1)}>
-          Cancelar
-        </button>
-        <button className="btn btn-success">Guardar</button>
-        <button className="btn btn-success">Guardar y enviar</button>
+      <div className="card">
+        <div className="card-body">
+          {filtrados.length === 0 ? (
+            <div className="alert alert-info">No hay notas débito registradas.</div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-hover table-bordered">
+                <thead className="table-light">
+                  <tr>
+                    <th>Número</th>
+                    <th>Factura</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Motivo</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtrados.map((nota) => (
+                    <tr key={nota.id}>
+                      <td><strong>{nota.numeroNota || nota.id}</strong></td>
+                      <td>{nota.numeroFactura}</td>
+                      <td>{nota.cliente?.nombre || "N/A"}</td>
+                      <td>
+                        {new Date(nota.fechaElaboracion).toLocaleDateString("es-CO")}
+                      </td>
+                      <td>{nota.motivoDIAN}</td>
+                      <td className="text-end fw-bold text-warning">
+                        ${nota.totalNeto?.toLocaleString("es-CO") || "0"}
+                      </td>
+                      <td>
+                        {nota.estado === "Enviada" ? (
+                          <span className="badge bg-success">Enviada</span>
+                        ) : (
+                          <span className="badge bg-warning text-dark">Pendiente</span>
+                        )}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-primary me-1"
+                          onClick={() => console.log("Ver PDF")}
+                        >
+                          PDF
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger me-1"
+                          onClick={() => descargarXML(nota)}
+                        >
+                          XML
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
+
+      <ModalNotaDebito
+        open={mostrarModal}
+        onClose={() => {
+          setMostrarModal(false);
+          setNotaEditando(null);
+        }}
+        notaEditando={notaEditando}
+        facturas={facturas}
+        productos={productos}
+        onSuccess={handleNotaCreada}
+      />
     </div>
   );
 }

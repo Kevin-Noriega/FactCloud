@@ -1,13 +1,13 @@
 /* CONTENEDOR DE LOS ACCESOS */
 .quick-actions-inside {
   display: flex;              /* Activa Flexbox */
-  gap: 18px;                  /* Espacio entre cada acceso */
+  gap: 20px;                  /* Espacio entre cada acceso */
   flex-wrap: wrap;            /* Permite que bajen a otra fila */
   margin-top: 16px;           /* Separación del texto superior */
 }
 
 .quick-action-inside span {
-  color: #ffffff;          /* Blanco */
+  color: white;          /* Blanco */
   font-size: 13px;
   text-align: center;
   line-height: 1.2;
@@ -16,7 +16,7 @@
 
 /* CADA ACCESO INDIVIDUAL */
 .quick-action-inside {
-  width: 22%;                 /* Fuerza 4 accesos por fila aprox */
+  color: white;    
   display: flex;              /* Flex para alinear icono + texto */
   flex-direction: column;     /* Icono arriba, texto abajo */
   align-items: center;        /* Centra horizontalmente */
@@ -32,7 +32,6 @@
   opacity: 0.9;               /* Baja levemente la opacidad */
 }
 
-/* CÍRCULO DEL ICONO */
 .quick-action-inside .icon {
   width: 56px;                /* Tamaño del círculo */
   height: 56px;
@@ -45,10 +44,9 @@
   margin-bottom: 6px;         /* Espacio con el texto */
 }
 
-/* TEXTO DEL ACCESO */
 .quick-action-inside span {
-  font-size: 13px;            /* Texto pequeño tipo dashboard */
-  text-align: center;         /* Centrado */
-  line-height: 1.2;           /* Altura de línea compacta */
+  font-size: 13px;          
+  text-align: center;         
+  line-height: 1.2;           
 }
 
