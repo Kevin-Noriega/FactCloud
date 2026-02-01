@@ -92,7 +92,7 @@ function NotaDebito() {
   };
 
   return (
-    <div Name="container py-4">
+    <div className="container py-4">
       {/* HEADER */}
       <div className=" page-header">
         <h3 className="payment-title">Nota Débito (Ventas)</h3>
