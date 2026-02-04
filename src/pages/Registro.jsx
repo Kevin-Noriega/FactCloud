@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Stepper from "../components/Stepper";
 import "../styles/Registro.css";
 import { useCreateUsuario } from "../hooks/useCreateUsuario";
+import {ChevronLeft, 
+  CheckCircleFill} from 'react-bootstrap-icons';
 
 export default function Registro() {
   const navigate = useNavigate();
@@ -88,24 +90,20 @@ export default function Registro() {
   return (
     <div className="registro-page">
       <Stepper currentStep={2} />
+      <button 
+              onClick={() => navigate("/planes")} 
+              className="btn-back"
+            >
+              <ChevronLeft/>
+              Regresar
+            </button>
 
       <div className="registro-container">
-        {selectedPlan && (
-          <div className="plan-banner">
-            <div className="plan-banner-content">
-              <p className="plan-banner-title">
-                ¡COMPRA HOY! el plan {selectedPlan.planName}, y te{" "}
-                <strong>regalamos el doble de documento</strong>
-              </p>
-            </div>
-          </div>
-        )}
 
         <div className="registro-content">
           <div className="registro-form-section">
-            <button onClick={() => navigate("/planes")} className="btn-back">
-              ← Regresar
-            </button>
+            
+            
 
             <h1>Crea tu cuenta</h1>
             <p className="registro-subtitle">
@@ -116,14 +114,13 @@ export default function Registro() {
             <form onSubmit={handleSubmit} className="registro-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label>Tipo Documento *</label>
                   <select
                     name="tipoDocumento"
                     value={formData.tipoDocumento}
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Seleccionar</option>
+                    <option value="">Tipo Documento *</option>
                     <option value="CC">Cédula de Ciudadanía</option>
                     <option value="NIT">NIT</option>
                     <option value="CE">Cédula de Extranjería</option>
@@ -132,13 +129,12 @@ export default function Registro() {
                 </div>
 
                 <div className="form-group">
-                  <label>Número de documento *</label>
                   <input
                     type="text"
                     name="numeroDocumento"
                     value={formData.numeroDocumento}
                     onChange={handleChange}
-                    placeholder="123456789"
+                    placeholder="Número de documento *"
                     required
                   />
                 </div>
@@ -146,25 +142,23 @@ export default function Registro() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Nombres y apellidos *</label>
                   <input
                     type="text"
                     name="nombreCompleto"
                     value={formData.nombreCompleto}
                     onChange={handleChange}
-                    placeholder="Juan Pérez"
+                    placeholder="Nombres y apellidos *"
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Celular *</label>
                   <input
                     type="tel"
                     name="celular"
                     value={formData.celular}
                     onChange={handleChange}
-                    placeholder="3001234567"
+                    placeholder="Celular *"
                     required
                   />
                 </div>
@@ -172,25 +166,23 @@ export default function Registro() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>E-mail *</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="correo@ejemplo.com"
+                    placeholder="E-mail *"
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Confirmar e-mail *</label>
                   <input
                     type="email"
                     name="confirmEmail"
                     value={formData.confirmEmail}
                     onChange={handleChange}
-                    placeholder="correo@ejemplo.com"
+                    placeholder="confirmar E-mail *"
                     required
                   />
                 </div>
@@ -198,25 +190,23 @@ export default function Registro() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Contraseña *</label>
                   <input
                     type="password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="••••••••"
+                    placeholder="Contraseña *"
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Confirmar contraseña *</label>
                   <input
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    placeholder="••••••••"
+                    placeholder="Confirmar contraseña *"
                     required
                   />
                 </div>
@@ -232,13 +222,11 @@ export default function Registro() {
                   required
                 />
                 <label htmlFor="terminos">
-                  Al hacer clic, autorizo a que Siigo trate mis datos conforme a
-                  lo descrito en la{" "}
+                  Al hacer clic, autorizo a que Factcloud trate mis datos conforme a lo descrito en la{" "}
                   <a href="/politica-privacidad" target="_blank">
                     Política de Privacidad
                   </a>
-                  , cree una cuenta con mis datos en www.siigo.com y me ofrezca
-                  servicios propios y/o de terceros.
+                  , cree una cuenta con mis datos en www.factcloud.com y me ofrezca servicios propios y/o de terceros.
                 </label>
               </div>
 
@@ -257,6 +245,17 @@ export default function Registro() {
           </div>
 
           {selectedPlan && (
+            <div> 
+            <div className="plan-banner">
+            <div className="plan-banner-content">
+              <CheckCircleFill/>
+              <p className="plan-banner-title">
+                
+                ¡COMPRA HOY! el plan {selectedPlan.planName}, y te{" "}
+                <strong>regalamos el doble de documento</strong>
+              </p>
+            </div>
+          </div>
             <div className="resumen-compra">
               <h2>Resumen de compra</h2>
 
@@ -305,6 +304,7 @@ export default function Registro() {
                   </strong>
                 </div>
               </div>
+            </div>
             </div>
           )}
         </div>

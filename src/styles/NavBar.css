@@ -6,8 +6,8 @@
   z-index: 9999;
   background: white;
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
   height: 90px;
+  border-bottom: 1px solid var(--primary-light);
   
 }
 

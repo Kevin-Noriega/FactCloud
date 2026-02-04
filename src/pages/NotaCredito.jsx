@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import ModalNotaCredito from "../components/ModalNotaCredito";
-import "../styles/NotaCredito.css";
+import "../styles/sharedPage.css";
+import {ArrowCounterclockwise} from 'react-bootstrap-icons';
 
 function NotaCredito() {
   const [notasCredito, setNotasCredito] = useState([]);
@@ -116,7 +117,7 @@ function NotaCredito() {
   if (loading) {
     return (
       <div className="container mt-5">
-        <div className="text-center">
+        <div className="loading-container">
           <div className="spinner-border text-success" role="status"></div>
           <p className="mt-3">Cargando datos...</p>
         </div>
@@ -126,7 +127,7 @@ function NotaCredito() {
 
   if (error) {
     return (
-      <div className="container mt-5">
+      <div className="container-error mt-5">
         <div className="alert alert-danger">
           <h5>Error al cargar datos</h5>
           <p>{error}</p>
@@ -150,11 +151,13 @@ function NotaCredito() {
             
                         </div>
                         <div className="header-icon">
+                          <ArrowCounterclockwise size={80}/>
                         </div>
                       </div>
                     </div>
+
       {mensajeExito && (
-        <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+        <div className="alert alert-success alert-dismissible fade show">
           <span>{mensajeExito}</span>
           <button
             className="btn btn-close"
@@ -163,49 +166,59 @@ function NotaCredito() {
         </div>
       )}
 
-      <div className="nota-credito-info mb-4">
+      <div className="nota-info mb-4">
         <p>
           <strong>Información importante:</strong> Las notas crédito son documentos que reducen el valor de una factura. 
           Este proceso es irreversible una vez validado con la DIAN. Afecta directamente los registros contables.
         </p>
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="opcions-header">
         <button
-          className="btn btn-success text-white"
+          className="btn-crear"
           onClick={abrirModalNuevo}
         >
           Nueva Nota Crédito
         </button>
-        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+        <div className="filters">
           <input
             type="text"
             className="form-control"
             placeholder="Buscar por número de nota"
             value={buscador}
             onChange={(e) => setBuscador(e.target.value)}
-            style={{ flexGrow: 1 }}
           />
           <select
             className="form-select"
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
-            style={{ width: "148px" }}
           >
             <option value="recientes">Más recientes</option>
             <option value="antiguos">Más antiguos</option>
           </select>
         </div>
       </div>
-
-      <div className="card">
+           {mostrarModal && (
+        <ModalNotaCredito
+        open={mostrarModal}
+        onClose={() => {
+          setMostrarModal(false);
+          setNotaEditando(null);
+        }}
+        notaEditando={notaEditando}
+        facturas={facturas}
+        productos={productos}
+        onSuccess={handleNotaCreada}
+      />
+      )}
+      <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay notas crédito registradas.</div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
-                <thead className="table-light">
+                <thead className="table-header">
                   <tr>
                     <th>Número</th>
                     <th>Factura</th>
@@ -239,7 +252,7 @@ function NotaCredito() {
                         </span>
                       </td>
                       <td>{nota.motivoDIAN}</td>
-                      <td className="text-end fw-bold text-success">
+                      <td className="text-end  fw-bold text-success">
                         ${nota.totalNeto?.toLocaleString("es-CO") || "0"}
                       </td>
                       <td>
@@ -271,20 +284,6 @@ function NotaCredito() {
           )}
         </div>
       </div>
-
-           {mostrarModal && (
-        <ModalNotaCredito
-        open={mostrarModal}
-        onClose={() => {
-          setMostrarModal(false);
-          setNotaEditando(null);
-        }}
-        notaEditando={notaEditando}
-        facturas={facturas}
-        productos={productos}
-        onSuccess={handleNotaCreada}
-      />
-      )}
     </div>
   );
 }

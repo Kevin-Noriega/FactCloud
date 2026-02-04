@@ -6,7 +6,7 @@ import ModalCrearFactura from "../components/ModalCrearFactura.jsx";
 import { createConnection } from "../SignalR/SignalConector";
 import { toast, ToastContainer } from "react-toastify";
 import {FileEarmarkText} from 'react-bootstrap-icons';
-import "../styles/Facturas.css";
+import "../styles/sharedPage.css";
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -191,9 +191,9 @@ function Facturas() {
   if (loading) {
     return (
       <div className="container mt-5">
-        <div className="text-center">
-          <div className="spinner-border text-info" role="status"></div>
-          <p className="mt-3">Cargando datos...</p>
+        <div className="loading-container">
+          <div className="spinner-border text-success" role="status"></div>
+          <p className="mt-3">Cargando pdatos...</p>
         </div>
       </div>
     );
@@ -201,7 +201,7 @@ function Facturas() {
 
   if (error) {
     return (
-      <div className="container mt-5">
+      <div className="container-error mt-5">
         <div className="alert alert-danger">
           <h5>Error al cargar datos</h5>
           <p>{error}</p>
@@ -240,7 +240,7 @@ function Facturas() {
         </div>
       )}
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="opcions-header">
 
         <button
           className="btn-crear"
@@ -248,7 +248,7 @@ function Facturas() {
         >
           Nueva Factura
         </button>
-        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+        <div className="filters">
           <input
             type="text"
             className="form-control"
@@ -281,14 +281,14 @@ function Facturas() {
         pauseOnHover
       />
 
-      <div className="card">
+      <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay facturas registradas.</div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
-                <thead className="table-light">
+                <thead className="table-header">
                   <tr>
                     <th>Factura</th>
                     <th>Cliente</th>

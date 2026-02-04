@@ -440,7 +440,7 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Correo Electrónico</span>
-                          <p className="info-value">{usuario?.email || "N/A"}</p>
+                          <p className="info-value">{datosBackend?.correo|| "N/A"}</p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -449,7 +449,7 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Teléfono</span>
-                          <p className="info-value">{usuario?.telefono || "N/A"}</p>
+                          <p className="info-value">{datosBackend?.telefono || "N/A"}</p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -487,7 +487,7 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Razón Social</span>
-                          <p className="info-value">{usuario?.empresa || "N/A"}</p>
+                          <p className="info-value">{datosBackend?.nombreNegocio || "N/A"}</p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -497,7 +497,7 @@ function Perfil() {
                         <div>
                           <span className="info-label">NIT</span>
                           <p className="info-value">
-                            {usuario?.nitNegocio
+                            {datosBackend?.nitNegocio
                               ? `${usuario.nitNegocio}${
                                   usuario.dvNitNegocio ? `-${usuario.dvNitNegocio}` : ""
                                 }`
@@ -511,7 +511,7 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Dirección</span>
-                          <p className="info-value">{usuario?.direccionNegocio || "N/A"}</p>
+                          <p className="info-value">{datosBackend?.direccionNegocio || "N/A"}</p>
                         </div>
                       </div>
                       <div className="info-item">

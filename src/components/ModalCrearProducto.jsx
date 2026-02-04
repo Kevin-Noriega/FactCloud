@@ -266,9 +266,9 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
   };
 
   return (
-    <div className="modal-producto-overlay" onClick={onClose}>
-      <div className="modal-producto-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-producto-header">
+    <div className="modal-crearNuevo-overlay" onClick={onClose}>
+      <div className="modal-crearNuevo-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-crearNuevo-header">
           <h5>
             {productoEditando
               ? `Editar ${producto.esServicio ? 'Servicio' : 'Producto'}`
@@ -277,7 +277,7 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
           <button className="btn-close" onClick={onClose}></button>
         </div>
 
-        <div className="modal-producto-body">
+        <div className="modal-crearNuevo-body">
           <form onSubmit={handleSubmit}>
             <div className="tipo-selector">
               <div className="form-check form-check-inline">

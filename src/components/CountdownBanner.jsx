@@ -15,7 +15,7 @@ const getTimeLeft = (targetDate) => {
   };
 };
 
-  const targetDate = new Date("2026-01-31T07:06:59").getTime();
+  const targetDate = new Date("2026-03-31T07:06:59").getTime();
 export default function CountdownBanner() {
 
 const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(targetDate));

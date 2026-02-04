@@ -1,0 +1,222 @@
+.modal-overlay-documento {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-in;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.modal-documento {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  animation: slideUp 0.3s ease-out;
+}
+
+.modal-header-documento {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 2px solid var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: 16px 16px 0 0;
+  color: white;
+}
+
+.modal-header-documento h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.btn-close-documento {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.btn-close-documento:hover {
+  transform: scale(1.1);
+}
+
+.form-documento {
+  padding: 2rem;
+}
+
+.form-section-documento {
+  margin-bottom: 2rem;
+}
+
+.section-title-documento {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.form-label-documento {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-control-documento,
+.form-select-documento {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.form-control-documento:focus,
+.form-select-documento:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+textarea.form-control-documento {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.info-legal-documento {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-left: 4px solid #3b82f6;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-legal-documento p {
+  margin: 0;
+  color: #1e40af;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.info-legal-documento strong {
+  color: #1e3a8a;
+}
+
+.modal-actions-documento {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-cancelar-documento,
+.btn-guardar-documento {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.btn-cancelar-documento {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #6b7280;
+}
+
+.btn-cancelar-documento:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.btn-guardar-documento {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-guardar-documento:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-guardar-documento:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-documento {
+    max-width: 95%;
+    margin: 10px;
+  }
+
+  .modal-header-documento {
+    padding: 1rem 1.5rem;
+  }
+
+  .modal-header-documento h3 {
+    font-size: 1.25rem;
+  }
+
+  .form-documento {
+    padding: 1.5rem;
+  }
+
+  .modal-actions-documento {
+    flex-direction: column;
+  }
+
+  .btn-cancelar-documento,
+  .btn-guardar-documento {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import ModalProducto from "../components/ModalCrearProducto";
-import "../styles/Productos.css";
+import "../styles/sharedPage.css";
 import {BoxSeam} from 'react-bootstrap-icons';
 
 function Productos() {
@@ -120,7 +120,7 @@ function Productos() {
       <div className="container mt-5">
         <div className="loading-container">
           <div className="spinner-border text-success" role="status"></div>
-          <p className="mt-3">Cargando productos...</p>
+          <p className="mt-3">Cargando datos...</p>
         </div>
       </div>
     );
@@ -141,7 +141,7 @@ function Productos() {
   }
 
   return (
-    <div className="productos-container container-fluid mt-4 px-4">
+    <div className="container-fluid mt-4 px-4">
       <div className="header-card">
                 <div className="header-content">
                   <div className="header-text">
@@ -168,11 +168,11 @@ function Productos() {
         </div>
       )}
 
-      <div className="productos-header">
+      <div className="opcions-header">
         <button className="btn-crear" onClick={handleNuevoProducto}>
           Nuevo Producto
         </button>
-        <div className="productos-filters">
+        <div className="filters">
           <input
             type="text"
             className="form-control"
@@ -195,7 +195,7 @@ function Productos() {
 
       {productoVer && (
         <div className="modal-overlay" onClick={() => setProductoVer(null)}>
-          <div className="modal-ver-producto" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-ver" onClick={(e) => e.stopPropagation()}>
             <button
               className="btn-close position-absolute top-0 end-0 mt-2 me-2"
               onClick={() => setProductoVer(null)}
@@ -213,7 +213,7 @@ function Productos() {
                 </tr>
                 <tr>
                   <th>Precio</th>
-                  <td>$ {productoVer.precioUnitario.toLocaleString("es-CO")}</td>
+                  <td className="fw-bold text-success">$ {productoVer.precioUnitario.toLocaleString("es-CO")}</td>
                 </tr>
                 <tr>
                   <th>Categoría</th>
@@ -283,7 +283,8 @@ function Productos() {
                       <td>{prod.nombre}</td>
                       <td>{prod.categoria || "Sin categoría"}</td>
                       <td>{prod.cantidadDisponible}</td>
-                      <td>${prod.precioUnitario.toLocaleString("es-CO")}</td>
+                      <td className="text-end fw-bold text-success">
+                        ${prod.precioUnitario.toLocaleString("es-CO")}</td>
                       <td>
                         <div className="btn-group-acciones">
                           <button

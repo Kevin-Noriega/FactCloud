@@ -91,7 +91,6 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
       const factura = facturas.find((f) => f.id === notaEditando.facturaId);
       setFacturaSeleccionada(factura || null);
     } else if (!notaEditando && open) {
-      // Reset para nueva nota
       setNotaCredito({
         facturaId: "",
         tipo: "devolucion",
@@ -392,17 +391,16 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
 
   return (
     <>
-      <div className="modal-notacredito-overlay" onClick={onClose} />
-      <div className="modal-notacredito-content">
-        <div className="modal-notacredito-header">
+      <div className="modal-crearNuevo-overlay" onClick={onClose} />
+      <div className="modal-crearNuevo-content">
+        <div className="modal-crearNuevo-header">
           <h5>{notaEditando ? "Editar Nota Crédito" : "Nueva Nota Crédito"}</h5>
           <button className="btn-close" onClick={onClose} />
         </div>
 
-        <div className="modal-notacredito-body">
+        <div className="modal-crearNuevo-body">
           <form onSubmit={handleSubmit}>
-            {/* Información Básica */}
-            <h6 className="section-title-notacredito">Información Básica</h6>
+            <h6 className="section-title-crearNuevo">Información Básica</h6>
             <div className="row mb-3">
               <div className="col-md-4">
                 <label className="form-label">Factura *</label>

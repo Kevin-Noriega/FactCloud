@@ -198,9 +198,9 @@ function ModalCrearCliente({ open, onClose, clienteEditando, onSuccess }) {
   if (!open) return null;
 
   return (
-    <div className="modal-cliente-overlay" onClick={handleOverlayClick}>
-      <div className="modal-cliente-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-cliente-header">
+    <div className="modal-crearNuevo-overlay" onClick={handleOverlayClick}>
+      <div className="modal-crearNuevo-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-crearNuevo-header">
           <h5>{clienteEditando ? "Editar Cliente" : "Nuevo Cliente"}</h5>
           <button 
             type="button" 
@@ -210,7 +210,7 @@ function ModalCrearCliente({ open, onClose, clienteEditando, onSuccess }) {
           />
         </div>
 
-        <div className="modal-cliente-body">
+        <div className="modal-crearNuevo-body">
           <form onSubmit={handleSubmit}>
             <h6 className="section-title-cliente">Información de Identificación</h6>
             <div className="row mb-3">
