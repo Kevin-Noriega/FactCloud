@@ -10,8 +10,6 @@ import {
   Box,
 } from "react-bootstrap-icons";
 import "../styles/ModalCrear.css";
-
-// Importa tus modales específicos
  import ModalCrearFactura from "../components/ModalCrearFactura";
 import ModalCrearCliente from "../components/ModalCrearCliente";
 import ModalCrearProducto from "../components/ModalCrearProducto";
@@ -69,7 +67,6 @@ function ModalCrear({ open, onClose }) {
   return (
     <>
       <div className="modal-overlay-crear" onClick={onClose} />
-
       <div className="modal-container-crear">
         <div className="modal-content-crear" onClick={(e) => e.stopPropagation()}>
           <div className="modal-header-crear">

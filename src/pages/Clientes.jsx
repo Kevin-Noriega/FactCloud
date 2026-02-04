@@ -3,6 +3,7 @@ import { API_URL } from "../api/config";
 import { obtenerSiglas } from "../utils/Helpers";
 import ModalCliente from "../components/ModalCrearCliente"; 
 import {People} from 'react-bootstrap-icons';
+import "../styles/sharedPage.css";
 
 function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -23,6 +24,7 @@ function Clientes() {
         !query ||
         cli.nombre?.toLowerCase().includes(query) ||
         cli.numeroIdentificacion?.toLowerCase().includes(query)
+
       );
     })
     .sort((a, b) => {
@@ -35,10 +37,6 @@ function Clientes() {
           return 0;
       }
     });
-
-  useEffect(() => {
-    fetchClientes();
-  }, []);
 
   async function fetchClientes() {
     try {
@@ -59,6 +57,10 @@ function Clientes() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    fetchClientes();
+  }, []);
 
   const abrirModalNuevo = () => {
     setClienteEditando(null);
@@ -99,15 +101,17 @@ function Clientes() {
 
   if (loading)
     return (
-      <div className="container mt-5 text-center">
-        <div className="spinner-border text-primary" role="status"></div>
-        <p className="mt-3">Cargando clientes...</p>
+     <div className="container mt-5">
+        <div className="loading-container">
+          <div className="spinner-border text-success" role="status"></div>
+          <p className="mt-3">Cargando datos...</p>
+        </div>
       </div>
     );
 
   if (error)
     return (
-      <div className="container mt-5">
+      <div className="container-error mt-5">
         <div className="alert alert-danger">
           <h5>Error al cargar clientes</h5>
           <p>{error}</p>
@@ -139,40 +143,15 @@ function Clientes() {
         <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
           <span>{mensajeExito}</span>
           <button
-            className="btn btn-close"
+            className="btn-close"
             onClick={() => setMensajeExito("")}
           />
         </div>
       )}
 
       {clienteVer && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.4)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1200,
-          }}
-          onClick={() => setClienteVer(null)}
-        >
-          <div
-            style={{
-              background: "#fff",
-              borderRadius: 12,
-              minWidth: 340,
-              maxWidth: 480,
-              boxShadow: "0 2px 32px #0007",
-              padding: 30,
-              position: "relative",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="modal-overlay" onClick={() => setClienteVer(null)}>
+          <div className="modal-ver" onClick={(e) => e.stopPropagation()}>
             <button
               className="btn-close position-absolute top-0 end-0 mt-2 me-2"
               onClick={() => setClienteVer(null)}
@@ -220,11 +199,11 @@ function Clientes() {
         </div>
       )}
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="opcions-header">
         <button className="btn-crear" onClick={abrirModalNuevo}>
           Nuevo Cliente
         </button>
-        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+        <div className="filters">
           <input
             type="text"
             className="form-control"
@@ -246,23 +225,10 @@ function Clientes() {
       </div>
 
       {clienteAEliminar && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            background: "rgba(0,0,0,0.3)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1055,
-          }}
-        >
-          <div >
+        <div className="modal-overlay">
+          <div className="modal-eliminar">
             <h5 className="mb-3">¿Está seguro de eliminar este cliente?</h5>
-            <div className="d-flex gap-2 justify-content-end">
+            <div className="modal-actions">
               <button
                 className="btn btn-outline-secondary"
                 onClick={() => setClienteAEliminar(null)}
@@ -280,14 +246,14 @@ function Clientes() {
         </div>
       )}
 
-      <div className="card">
+      <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay clientes registrados.</div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
-                <thead className="table-light">
+                <thead className="table-header">
                   <tr>
                     <th>ID</th>
                     <th>Nombre</th>
@@ -304,7 +270,7 @@ function Clientes() {
                       <td>{cli.id}</td>
                       <td>{cli.nombre} {cli.apellido}</td>
                       <td>{cli.numeroIdentificacion}</td>
-                      <td>{cli.tipoPersona}</td>
+                      <td>{cli.tipoIdentificacion}</td>
                       <td>{cli.correo}</td>
                       <td>{cli.telefono || "N/A"}</td>
                       <td>

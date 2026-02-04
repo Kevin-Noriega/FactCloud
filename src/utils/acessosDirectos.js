@@ -18,7 +18,7 @@
   {
     title: "Crear Documento Soporte",
     icon: "FileCheck",
-    route: "/crear-documento-soporte",
+    route: "/DocumentoSoporte",
   },
   {
     title: "Crear Producto",

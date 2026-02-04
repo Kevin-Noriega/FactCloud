@@ -56,7 +56,7 @@ html, body {
 .hero-section {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
-  padding: 120px 20px 80px;
+  padding: 100px 20px 80px;
   text-align: center;
   margin-top: 120px;
   position: relative;
@@ -219,91 +219,75 @@ html, body {
 }
 
 /*paginas sidebar*/
-.table thead th{
-  color: white;
-  background-color: var(--primary);
-}
-.btn-crear{
-  padding: 10px;
-  background: var(--success);
-  border-radius: 8px;
-  color: white ;
-  border: none;
-  transition: all 0.2s;
-  }
 
-.btn-crear:hover{
-  transform: translateY(-10%);
-  background: var(--success-dark);
-}
-.btn{
-  border-radius: 10px;
-}
 
-.btn-ver{
-  background: white;
-  border: 1px solid var(--primary);
-  color: var(--primary);
-}
-.btn-editar{
-  background: var(--primary);
-  color: white;
-  border: var(--primary);
-}
-.btn-eliminar{
-  background: var(--danger);
-  color: white;
-  border: var(--danger);
-}
-.btn-group-acciones {
+/* Modales Crear*/
+.modal-crearNuevo-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  z-index: 1300;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-in;
 }
 
-.header-card {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border-radius: 16px;
-  padding: 20px;
-  position: relative;
+.modal-crearNuevo-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1100px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
   overflow: hidden;
-  bottom: 20px;
 }
 
-.header-card::before {
-  content: '';
-  position: absolute;
-  top: -80%;
-  right: -8%;
-  width: 250px;
-  height: 250px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-}
-
-.header-content {
+.modal-crearNuevo-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 1;
+  background: #f9fafb;
+  flex-shrink: 0;
 }
 
-.header-text {
+.modal-crearNuevo-header h5 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-crearNuevo-body {
+  padding: 2rem;
+  overflow-y: auto;
   flex: 1;
-  color: white;
 }
 
-.header-title {
-  font-size: 32px;
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.modal-crearNuevo-body::-webkit-scrollbar {
+  width: 8px;
 }
 
-.header-subtitle {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+.modal-crearNuevo-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
 }
 
-.header-icon {
-  color: rgba(255, 255, 255, 0.2);
+.modal-crearNuevo-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.modal-crearNuevo-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

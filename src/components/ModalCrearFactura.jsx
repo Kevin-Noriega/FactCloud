@@ -317,9 +317,9 @@ function ModalCrearFactura({ open, onClose, clientes, productos, onSuccess }) {
   const totales = calcularTotales();
 
   return (
-    <div className="modal-factura-overlay" onClick={handleOverlayClick}>
-      <div className="modal-factura-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-factura-header">
+    <div className="modal-crearNuevo-overlay" onClick={handleOverlayClick}>
+      <div className="modal-crearNuevo-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-crearNuevo-header">
           <h5>Nueva Factura de Venta</h5>
           <button 
             type="button" 
@@ -329,7 +329,7 @@ function ModalCrearFactura({ open, onClose, clientes, productos, onSuccess }) {
           />
         </div>
 
-        <div className="modal-factura-body">
+        <div className="modal-crearNuevo-body">
           <form onSubmit={handleSubmit}>
             <h6 className="section-title-factura">Información Básica</h6>
             <div className="row mb-3">

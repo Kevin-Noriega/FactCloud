@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import ModalNotaDebito from "../components/ModalNotaDebito";
-import "../styles/NotaDebito.css";
+import "../styles/sharedPage.css";
+import {ArrowRepeat} from 'react-bootstrap-icons';
 
 function NotaDebito() {
   const [notasDebito, setNotasDebito] = useState([]);
@@ -116,8 +117,8 @@ function NotaDebito() {
   if (loading) {
     return (
       <div className="container mt-5">
-        <div className="text-center">
-          <div className="spinner-border text-warning" role="status"></div>
+        <div className="loading-container">
+          <div className="spinner-border text-success" role="status"></div>
           <p className="mt-3">Cargando datos...</p>
         </div>
       </div>
@@ -126,7 +127,7 @@ function NotaDebito() {
 
   if (error) {
     return (
-      <div className="container mt-5">
+      <div className="container-error mt-5">
         <div className="alert alert-danger">
           <h5>Error al cargar datos</h5>
           <p>{error}</p>
@@ -140,12 +141,20 @@ function NotaDebito() {
 
   return (
     <div className="container-fluid mt-4 px-4">
-      <div className="page-header-notadebito">
-        <h2 className="text-warning mb-4">Notas Débito (Ventas)</h2>
-        <button className="btn btn-outline-primary btn-sm">
-          Ver tutoriales
-        </button>
-      </div>
+      <div className="header-card">
+                            <div className="header-content">
+                              <div className="header-text">
+                               <h2 className="header-title mb-4">Gestión Nota Debito</h2>
+                                <p className="header-subtitle">
+                                Gestiona, actualiza y controla tu inventario.
+                                </p>
+                  
+                              </div>
+                              <div className="header-icon">
+                                <ArrowRepeat size={80}/>
+                              </div>
+                            </div>
+                          </div>
 
       {mensajeExito && (
         <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
@@ -157,21 +166,20 @@ function NotaDebito() {
         </div>
       )}
 
-      <div className="nota-debito-info mb-4">
+      <div className="nota-info mb-4">
         <p>
           <strong>Información importante:</strong> Las notas débito son documentos que incrementan el valor de una factura. 
           No se pueden aplicar cuando la factura cuenta con aceptación DIAN.
         </p>
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="opcions-header">
         <button
-          className="btn btn-warning text-white"
-          onClick={abrirModalNuevo}
-        >
+          className="btn-crear"
+          onClick={abrirModalNuevo} >
           Nueva Nota Débito
         </button>
-        <div className="d-flex" style={{ gap: "20px", width: "40%" }}>
+        <div className="filters">
           <input
             type="text"
             className="form-control"
@@ -192,14 +200,14 @@ function NotaDebito() {
         </div>
       </div>
 
-      <div className="card">
+      <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay notas débito registradas.</div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
-                <thead className="table-light">
+                <thead className="table-header">
                   <tr>
                     <th>Número</th>
                     <th>Factura</th>
@@ -221,7 +229,7 @@ function NotaDebito() {
                         {new Date(nota.fechaElaboracion).toLocaleDateString("es-CO")}
                       </td>
                       <td>{nota.motivoDIAN}</td>
-                      <td className="text-end fw-bold text-warning">
+                      <td className="text-end  fw-bold text-success">
                         ${nota.totalNeto?.toLocaleString("es-CO") || "0"}
                       </td>
                       <td>

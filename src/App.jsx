@@ -8,6 +8,7 @@ import "./index.css";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/Auth";
 import PublicLayout from "./layouts/PublicLayout";
+import RegisterLayout from "./layouts/registerLayout";
 // Páginas
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -25,6 +26,7 @@ import DIAN from "./pages/DIAN";
 import Soporte from "./pages/Soporte";
 import NotaDebito from "./pages/NotaDebito";
 import NotaCredito from "./pages/NotaCredito";
+import DocumentoSoporte from "./pages/DocumentoSoporte";
 import Tienda from "./pages/Tienda";
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +55,10 @@ function App() {
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
+        </Route>
+
+        
+        <Route element={<RegisterLayout />}>
           <Route path="/registro" element={<Registro />} />
         </Route>
 
@@ -68,10 +74,11 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/clientes" element={<Clientes />} />
-          <Route path= "/notaCredito" element={<NotaCredito/>}/>
-          <Route path="/notaDebito" element={<NotaDebito />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/facturas" element={<Facturas />} />
+          <Route path= "/notaCredito" element={<NotaCredito/>}/>
+          <Route path="/notaDebito" element={<NotaDebito />} />
+          <Route path="/documentoSoporte" element={<DocumentoSoporte />} />          
           <Route path="/reportes" element={<Reportes />} />
           <Route path="/tienda" element={<Tienda/>} />
           <Route path="/perfil" element={<Perfil />} />
