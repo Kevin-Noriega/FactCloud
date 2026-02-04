@@ -28,6 +28,7 @@ import NotaDebito from "./pages/NotaDebito";
 import NotaCredito from "./pages/NotaCredito";
 import DocumentoSoporte from "./pages/DocumentoSoporte";
 import Tienda from "./pages/Tienda";
+import Checkout from "./pages/Checkout";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -36,7 +37,6 @@ const queryClient = new QueryClient({
     },
   },
 });
-
 
 const NotFound = () => (
   <div className="text-center py-5">
@@ -48,11 +48,11 @@ const NotFound = () => (
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-    <Router>
+      <Router>
         <SignalRProvider>
       <ScrollToHash />
      
-      <Routes>
+      
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
         </Route>
@@ -62,14 +62,12 @@ function App() {
           <Route path="/registro" element={<Registro />} />
         </Route>
 
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/planes" element={<Planes />} />
-          <Route path="/comoFunciona" element={<ComoFunciona />} />
-          <Route path="/dian" element={<DIAN />} />
-          <Route path="/soporte" element={<Soporte />} />
-           <Route path="/sobreNosotros" element={<SobreNosotros />} />
-        </Route>
+          <Routes>
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/registro" element={<Registro />} />
+              <Route path="/checkout" element={<Checkout />} />
+            </Route>
 
         <Route element={<MainLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -84,10 +82,22 @@ function App() {
           <Route path="/perfil" element={<Perfil />} />
         </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-       </SignalRProvider>
-    </Router>
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/clientes" element={<Clientes />} />
+              <Route path="/notaCredito" element={<NotaCredito />} />
+              <Route path="/notaDebito" element={<NotaDebito />} />
+              <Route path="/productos" element={<Productos />} />
+              <Route path="/facturas" element={<Facturas />} />
+              <Route path="/reportes" element={<Reportes />} />
+              <Route path="/tienda" element={<Tienda />} />
+              <Route path="/perfil" element={<Perfil />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </SignalRProvider>
+      </Router>
     </QueryClientProvider>
   );
 }

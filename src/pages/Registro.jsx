@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../components/Stepper";
 import "../styles/Registro.css";
+import { useCreateUsuario } from "../hooks/useCreateUsuario";
 import {ChevronLeft, 
   CheckCircleFill} from 'react-bootstrap-icons';
 
 export default function Registro() {
   const navigate = useNavigate();
+  const { mutateAsync, isPending } = useCreateUsuario();
+
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [formData, setFormData] = useState({
     tipoDocumento: "",
@@ -17,7 +20,7 @@ export default function Registro() {
     confirmEmail: "",
     password: "",
     confirmPassword: "",
-    aceptaTerminos: false
+    aceptaTerminos: false,
   });
 
   useEffect(() => {
@@ -30,9 +33,9 @@ export default function Registro() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -55,15 +58,29 @@ export default function Registro() {
     }
 
     try {
+      // 1️⃣ crear usuario base
+      const result = await mutateAsync({
+        nombre: formData.nombreCompleto,
+        apellido: formData.apellido || null,
+        telefono: formData.celular || null,
+        correo: formData.email,
+        password: formData.password,
+        tipoIdentificacion: formData.tipoDocumento,
+        numeroIdentificacion: formData.numeroDocumento,
+      });
 
-      localStorage.setItem("userData", JSON.stringify({
-        email: formData.email,
-        nombre: formData.nombreCompleto, 
-        documento: formData.numeroDocumento
-      }));
+      // 2️⃣ guardar lo mínimo para el checkout
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          userId: result.id,
+          email: formData.email,
+          nombre: formData.nombreCompleto,
+        }),
+      );
 
+      // 3️⃣ ir al pago
       navigate("/checkout");
-
     } catch (error) {
       console.error("Error en registro:", error);
       alert("Error al crear la cuenta. Intenta nuevamente.");
@@ -90,7 +107,8 @@ export default function Registro() {
 
             <h1>Crea tu cuenta</h1>
             <p className="registro-subtitle">
-              Es rápido y sencillo, ingresa los siguientes datos y explora todas las herramientas.
+              Es rápido y sencillo, ingresa los siguientes datos y explora todas
+              las herramientas.
             </p>
 
             <form onSubmit={handleSubmit} className="registro-form">
@@ -212,13 +230,16 @@ export default function Registro() {
                 </label>
               </div>
 
-              <button type="submit" className="btn-crear-cuenta">
-                Crear tu cuenta
+              <button
+                type="submit"
+                className="btn-crear-cuenta"
+                disabled={isPending}
+              >
+                {isPending ? "Creando cuenta..." : "Crear tu cuenta"}
               </button>
 
               <p className="login-link">
-                ¿Ya tienes cuenta?{" "}
-                <a href="/login">Inicia sesión</a>
+                ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
               </p>
             </form>
           </div>
@@ -272,10 +293,7 @@ export default function Registro() {
                 </div>
 
                 <div className="codigo-descuento">
-                  <input 
-                    type="text" 
-                    placeholder="Código de descuento"
-                  />
+                  <input type="text" placeholder="Código de descuento" />
                   <button className="btn-validar">Validar</button>
                 </div>
 
