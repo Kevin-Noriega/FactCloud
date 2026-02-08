@@ -9,6 +9,7 @@ import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/Auth";
 import PublicLayout from "./layouts/PublicLayout";
 import RegisterLayout from "./layouts/registerLayout";
+
 // Páginas
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -29,6 +30,7 @@ import NotaCredito from "./pages/NotaCredito";
 import DocumentoSoporte from "./pages/DocumentoSoporte";
 import Tienda from "./pages/Tienda";
 import Checkout from "./pages/Checkout";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -50,50 +52,45 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <SignalRProvider>
-      <ScrollToHash />
-     
-      
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-        </Route>
-
-        
-        <Route element={<RegisterLayout />}>
-          <Route path="/registro" element={<Registro />} />
-        </Route>
+          <ScrollToHash />
 
           <Routes>
+            {/* Rutas públicas */}
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/planes" element={<Planes />} />
+              <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+              <Route path="/como-funciona" element={<ComoFunciona />} />
+              <Route path="/dian" element={<DIAN />} />
+              <Route path="/soporte" element={<Soporte />} />
+            </Route>
+
+            {/* Rutas de autenticación */}
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<Login />} />
-              <Route path="/registro" element={<Registro />} />
               <Route path="/checkout" element={<Checkout />} />
             </Route>
 
-        <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/clientes" element={<Clientes />} />
-          <Route path="/productos" element={<Productos />} />
-          <Route path="/facturas" element={<Facturas />} />
-          <Route path= "/notaCredito" element={<NotaCredito/>}/>
-          <Route path="/notaDebito" element={<NotaDebito />} />
-          <Route path="/documentoSoporte" element={<DocumentoSoporte />} />          
-          <Route path="/reportes" element={<Reportes />} />
-          <Route path="/tienda" element={<Tienda/>} />
-          <Route path="/perfil" element={<Perfil />} />
-        </Route>
+            {/* Ruta de registro con su propio layout */}
+            <Route element={<RegisterLayout />}>
+              <Route path="/registro" element={<Registro />} />
+            </Route>
 
+            {/* Rutas protegidas (Dashboard) */}
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/clientes" element={<Clientes />} />
-              <Route path="/notaCredito" element={<NotaCredito />} />
-              <Route path="/notaDebito" element={<NotaDebito />} />
               <Route path="/productos" element={<Productos />} />
               <Route path="/facturas" element={<Facturas />} />
+              <Route path="/notaCredito" element={<NotaCredito />} />
+              <Route path="/notaDebito" element={<NotaDebito />} />
+              <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
               <Route path="/reportes" element={<Reportes />} />
               <Route path="/tienda" element={<Tienda />} />
               <Route path="/perfil" element={<Perfil />} />
             </Route>
 
+            {/* 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </SignalRProvider>
