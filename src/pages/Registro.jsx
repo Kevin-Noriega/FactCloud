@@ -2,20 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../components/Stepper";
 import "../styles/Registro.css";
-import { useCreateUsuario } from "../hooks/useCreateUsuario";
 import {ChevronLeft, 
   CheckCircleFill} from 'react-bootstrap-icons';
 
 export default function Registro() {
   const navigate = useNavigate();
-  const { mutateAsync, isPending } = useCreateUsuario();
-
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [formData, setFormData] = useState({
-    tipoDocumento: "",
-    numeroDocumento: "",
+    tipoIdentificacion: "",
+    numeroIdentificacion: "",
     nombreCompleto: "",
-    celular: "",
+    telefono: "",
     email: "",
     confirmEmail: "",
     password: "",
@@ -42,6 +39,7 @@ export default function Registro() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validaciones
     if (formData.email !== formData.confirmEmail) {
       alert("Los emails no coinciden");
       return;
@@ -58,35 +56,24 @@ export default function Registro() {
     }
 
     try {
-      // 1️⃣ crear usuario base
-      const result = await mutateAsync({
+      const registroData = {
+        tipoIdentificacion: formData.tipoIdentificacion,
+        numeroIdentificacion: formData.numeroIdentificacion,
         nombre: formData.nombreCompleto,
-        apellido: formData.apellido || null,
-        telefono: formData.celular || null,
-        correo: formData.email,
+        telefono: formData.telefono,
+        email: formData.email,
         password: formData.password,
-        tipoIdentificacion: formData.tipoDocumento,
-        numeroIdentificacion: formData.numeroDocumento,
-      });
+      };
 
-      // 2️⃣ guardar lo mínimo para el checkout
-      localStorage.setItem(
-        "userData",
-        JSON.stringify({
-          userId: result.id,
-          email: formData.email,
-          nombre: formData.nombreCompleto,
-        }),
-      );
 
-      // 3️⃣ ir al pago
+      localStorage.setItem("registroData", JSON.stringify(registroData));
+
       navigate("/checkout");
     } catch (error) {
-      console.error("Error en registro:", error);
-      alert("Error al crear la cuenta. Intenta nuevamente.");
+      console.error("Error guardando datos:", error);
+      alert("Error procesando los datos. Intenta nuevamente.");
     }
   };
-
   return (
     <div className="registro-page">
       <Stepper currentStep={2} />
@@ -115,8 +102,8 @@ export default function Registro() {
               <div className="form-row">
                 <div className="form-group">
                   <select
-                    name="tipoDocumento"
-                    value={formData.tipoDocumento}
+                    name="tipoIdentificacion"
+                    value={formData.tipoIdentificacion}
                     onChange={handleChange}
                     required
                   >
@@ -131,8 +118,8 @@ export default function Registro() {
                 <div className="form-group">
                   <input
                     type="text"
-                    name="numeroDocumento"
-                    value={formData.numeroDocumento}
+                    name="numeroIdentificacion"
+                    value={formData.numeroIdentificacion}
                     onChange={handleChange}
                     placeholder="Número de documento *"
                     required
@@ -155,10 +142,10 @@ export default function Registro() {
                 <div className="form-group">
                   <input
                     type="tel"
-                    name="celular"
-                    value={formData.celular}
+                    name="telefono"
+                    value={formData.telefono}
                     onChange={handleChange}
-                    placeholder="Celular *"
+                    placeholder="telefono *"
                     required
                   />
                 </div>
@@ -230,12 +217,8 @@ export default function Registro() {
                 </label>
               </div>
 
-              <button
-                type="submit"
-                className="btn-crear-cuenta"
-                disabled={isPending}
-              >
-                {isPending ? "Creando cuenta..." : "Crear tu cuenta"}
+              <button type="submit" className="btn-crear-cuenta">
+                Continuar al pago
               </button>
 
               <p className="login-link">
