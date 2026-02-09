@@ -12,8 +12,8 @@ import {
   Telephone,
   ChatDots
 } from "react-bootstrap-icons";
-import "../styles/ModalAyuda.css";
-import faqsAyuda from "../utils/FAQS"
+import "../../styles/ModalAyuda.css";
+import faqsAyuda from "../../utils/FAQS"
 
 function ModalAyuda({ isOpen, onClose }) {
   const [busqueda, setBusqueda] = useState("");

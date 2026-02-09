@@ -9,11 +9,12 @@ import {
   PersonPlus,
   Box,
 } from "react-bootstrap-icons";
-import "../styles/ModalCrear.css";
-import ModalCrearFactura from "../components/ModalCrearFactura";
-import ModalCrearCliente from "../components/ModalCrearCliente";
-import ModalCrearProducto from "../components/ModalCrearProducto";
-import ModalDocumentoSoporte from "../components/ModalDocumentoSoporte";
+import "../../styles/ModalCrear.css";
+import ModalCrearFactura from "./ModalCrearFactura";
+import ModalCrearCliente from "./ModalCrearCliente";
+import ModalCrearProducto from "./ModalCrearProducto";
+import ModalCrearNotaCredito from "./ModalNotaCredito";
+import ModalDocumentoSoporte from "./ModalDocumentoSoporte";
 
 function ModalCrear({ open, onClose }) {
   const navigate = useNavigate();
@@ -110,7 +111,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleAbrirModal("notaCredito", "/nota-credito")}
+                        onClick={() => handleAbrirModal("notaCredito", "/notaCredito")}
                       >
                         <FileText className="menu-icon-crear" />
                         <span>Nota crédito</span>

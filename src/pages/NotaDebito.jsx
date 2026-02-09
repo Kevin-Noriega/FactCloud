@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
-import ModalNotaDebito from "../components/ModalNotaDebito";
+import ModalNotaDebito from "../components/dashboard/ModalNotaDebito";
 import "../styles/sharedPage.css";
 import {ArrowRepeat} from 'react-bootstrap-icons';
 

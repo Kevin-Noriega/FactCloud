@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
-import ModalNotaCredito from "../components/ModalNotaCredito";
+import ModalNotaCredito from "../components/dashboard/ModalNotaCredito";
 import "../styles/sharedPage.css";
 import {ArrowCounterclockwise} from 'react-bootstrap-icons';
 

@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import { API_URL } from "../api/config";
-import "../styles/ModalNotaCredito.css";
-
-const tiposNotaCredito = [
-  { value: "anulacion", label: "Anulación Total" },
-  { value: "devolucion", label: "Devolución Parcial" },
-  { value: "descuento", label: "Descuento/Rebaja" },
-];
+import { API_URL } from "../../api/config";
+import "../../styles/ModalNotaDebito.css";
 
 const motivosDIAN = [
-  { value: "NC-1", label: "NC-1 - Devolución de parte de bienes" },
-  { value: "NC-2", label: "NC-2 - Anulación de factura electrónica" },
-  { value: "NC-3", label: "NC-3 - Rebaja total aplicada" },
-  { value: "NC-4", label: "NC-4 - Descuento total aplicado" },
-  { value: "NC-5", label: "NC-5 - Rescisión (retracto)" },
-  { value: "NC-6", label: "NC-6 - Otros" },
+  { value: "DF-1", label: "DF-1 - Intereses" },
+  { value: "DF-2", label: "DF-2 - Gastos de cobro" },
+  { value: "DF-3", label: "DF-3 - Cambio del valor" },
+  { value: "DF-4", label: "DF-4 - Otros" },
 ];
 
 const formasPagoOpciones = [
@@ -27,12 +19,12 @@ const formasPagoOpciones = [
   { value: "Daviplata", label: "Daviplata" },
 ];
 
-function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, onSuccess }) {
-  const [notaCredito, setNotaCredito] = useState({
+function ModalNotaDebito({ open, onClose, notaEditando, facturas, productos, onSuccess }) {
+  const [notaDebito, setNotaDebito] = useState({
     facturaId: "",
-    tipo: "devolucion",
-    motivoDIAN: "NC-1",
+    motivoDIAN: "DF-2",
     fechaElaboracion: new Date().toISOString().split("T")[0],
+    vendedor: "",
     cufe: "",
     observaciones: "",
     retelCA: 0,
@@ -70,18 +62,18 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
 
   useEffect(() => {
     if (notaEditando && open) {
-      setNotaCredito({
+      setNotaDebito({
         facturaId: notaEditando.facturaId || "",
-        tipo: notaEditando.tipo || "devolucion",
-        motivoDIAN: notaEditando.motivoDIAN || "NC-1",
+        motivoDIAN: notaEditando.motivoDIAN || "DF-2",
         fechaElaboracion: notaEditando.fechaElaboracion?.split("T")[0] || new Date().toISOString().split("T")[0],
+        vendedor: notaEditando.vendedor || "",
         cufe: notaEditando.cufe || "",
         observaciones: notaEditando.observaciones || "",
         retelCA: notaEditando.retelCA || 0,
       });
 
-      if (notaEditando.detalleNotaCredito && notaEditando.detalleNotaCredito.length > 0) {
-        setProductosSeleccionados(notaEditando.detalleNotaCredito);
+      if (notaEditando.detalleNotaDebito && notaEditando.detalleNotaDebito.length > 0) {
+        setProductosSeleccionados(notaEditando.detalleNotaDebito);
       }
 
       if (notaEditando.formasPago && notaEditando.formasPago.length > 0) {
@@ -91,11 +83,11 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
       const factura = facturas.find((f) => f.id === notaEditando.facturaId);
       setFacturaSeleccionada(factura || null);
     } else if (!notaEditando && open) {
-      setNotaCredito({
+      setNotaDebito({
         facturaId: "",
-        tipo: "devolucion",
-        motivoDIAN: "NC-1",
+        motivoDIAN: "DF-2",
         fechaElaboracion: new Date().toISOString().split("T")[0],
+        vendedor: "",
         cufe: "",
         observaciones: "",
         retelCA: 0,
@@ -119,15 +111,15 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
 
   const handleFacturaChange = (selectedOption) => {
     if (!selectedOption) {
-      setNotaCredito({ ...notaCredito, facturaId: "", cufe: "" });
+      setNotaDebito({ ...notaDebito, facturaId: "", cufe: "" });
       setFacturaSeleccionada(null);
       return;
     }
 
     const factura = facturas.find((f) => f.id === selectedOption.value);
     setFacturaSeleccionada(factura || null);
-    setNotaCredito({
-      ...notaCredito,
+    setNotaDebito({
+      ...notaDebito,
       facturaId: selectedOption.value,
       cufe: factura?.cufe || "",
     });
@@ -227,7 +219,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
       totalINC += linea.valorINC;
     });
 
-    const retelCA = subtotal * (parseFloat(notaCredito.retelCA) / 100);
+    const retelCA = subtotal * (parseFloat(notaDebito.retelCA) / 100);
     const totalNeto = subtotal + totalIVA + totalINC - retelCA;
 
     return {
@@ -269,7 +261,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!notaCredito.facturaId) {
+    if (!notaDebito.facturaId) {
       alert("Debes seleccionar una factura");
       return;
     }
@@ -311,12 +303,12 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
 
       const payload = {
         usuarioId: usuarioId,
-        facturaId: parseInt(notaCredito.facturaId),
-        numeroNota: notaEditando?.numeroNota || `NC-${Date.now()}`,
-        tipo: notaCredito.tipo,
-        motivoDIAN: notaCredito.motivoDIAN,
-        fechaElaboracion: notaCredito.fechaElaboracion,
-        cufe: notaCredito.cufe || "",
+        facturaId: parseInt(notaDebito.facturaId),
+        numeroNota: notaEditando?.numeroNota || `ND-${Date.now()}`,
+        motivoDIAN: notaDebito.motivoDIAN,
+        fechaElaboracion: notaDebito.fechaElaboracion,
+        vendedor: notaDebito.vendedor || "",
+        cufe: notaDebito.cufe || "",
         totalBruto: totales.totalBruto,
         totalDescuentos: totales.totalDescuentos,
         subtotal: totales.subtotal,
@@ -324,9 +316,9 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
         totalINC: totales.totalINC,
         retelCA: totales.retelCA,
         totalNeto: totales.totalNeto,
-        observaciones: notaCredito.observaciones || "",
+        observaciones: notaDebito.observaciones || "",
         estado: "Pendiente",
-        detalleNotaCredito: productosSeleccionados.map((item) => {
+        detalleNotaDebito: productosSeleccionados.map((item) => {
           const linea = calcularLinea(item);
           return {
             productoId: parseInt(item.productoId),
@@ -351,8 +343,8 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
       };
 
       const url = notaEditando
-        ? `${API_URL}/NotasCredito/${notaEditando.id}`
-        : `${API_URL}/NotasCredito`;
+        ? `${API_URL}/NotasDebito/${notaEditando.id}`
+        : `${API_URL}/NotasDebito`;
 
       const method = notaEditando ? "PUT" : "POST";
 
@@ -367,18 +359,18 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || "Error al guardar la nota crédito");
+        throw new Error(errorText || "Error al guardar la nota débito");
       }
 
       onSuccess(
         notaEditando
-          ? "Nota crédito actualizada exitosamente"
-          : "Nota crédito creada exitosamente"
+          ? "Nota débito actualizada exitosamente"
+          : "Nota débito creada exitosamente"
       );
       onClose();
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al guardar la nota crédito: " + error.message);
+      alert("Error al guardar la nota débito: " + error.message);
     }
   };
 
@@ -391,16 +383,16 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
 
   return (
     <>
-      <div className="modal-crearNuevo-overlay" onClick={onClose} />
-      <div className="modal-crearNuevo-content">
-        <div className="modal-crearNuevo-header">
-          <h5>{notaEditando ? "Editar Nota Crédito" : "Nueva Nota Crédito"}</h5>
+      <div className="modal-notadebito-overlay" onClick={onClose} />
+      <div className="modal-notadebito-content">
+        <div className="modal-notadebito-header">
+          <h5>{notaEditando ? "Editar Nota Débito" : "Nueva Nota Débito"}</h5>
           <button className="btn-close" onClick={onClose} />
         </div>
 
-        <div className="modal-crearNuevo-body">
+        <div className="modal-notadebito-body">
           <form onSubmit={handleSubmit}>
-            <h6 className="section-title-crearNuevo">Información Básica</h6>
+            <h6 className="section-title-notadebito">Información Básica</h6>
             <div className="row mb-3">
               <div className="col-md-4">
                 <label className="form-label">Factura *</label>
@@ -410,13 +402,13 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                     label: `${f.numeroFactura} - ${f.cliente?.nombre || ""} ${f.cliente?.apellido || ""}`,
                   }))}
                   value={
-                    notaCredito.facturaId
+                    notaDebito.facturaId
                       ? facturas
                           .map((f) => ({
                             value: f.id,
                             label: `${f.numeroFactura} - ${f.cliente?.nombre || ""} ${f.cliente?.apellido || ""}`,
                           }))
-                          .find((opt) => opt.value === parseInt(notaCredito.facturaId))
+                          .find((opt) => opt.value === parseInt(notaDebito.facturaId))
                       : null
                   }
                   onChange={handleFacturaChange}
@@ -427,30 +419,12 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
               </div>
 
               <div className="col-md-4">
-                <label className="form-label">Tipo de Nota *</label>
-                <select
-                  className="form-select"
-                  value={notaCredito.tipo}
-                  onChange={(e) =>
-                    setNotaCredito({ ...notaCredito, tipo: e.target.value })
-                  }
-                  required
-                >
-                  {tiposNotaCredito.map((t) => (
-                    <option key={t.value} value={t.value}>
-                      {t.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="col-md-4">
                 <label className="form-label">Motivo DIAN *</label>
                 <select
                   className="form-select"
-                  value={notaCredito.motivoDIAN}
+                  value={notaDebito.motivoDIAN}
                   onChange={(e) =>
-                    setNotaCredito({ ...notaCredito, motivoDIAN: e.target.value })
+                    setNotaDebito({ ...notaDebito, motivoDIAN: e.target.value })
                   }
                   required
                 >
@@ -461,53 +435,59 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                   ))}
                 </select>
               </div>
-            </div>
 
-            <div className="row mb-3">
               <div className="col-md-4">
                 <label className="form-label">Fecha Elaboración *</label>
                 <input
                   type="date"
                   className="form-control"
-                  value={notaCredito.fechaElaboracion}
+                  value={notaDebito.fechaElaboracion}
                   onChange={(e) =>
-                    setNotaCredito({
-                      ...notaCredito,
+                    setNotaDebito({
+                      ...notaDebito,
                       fechaElaboracion: e.target.value,
                     })
                   }
                   required
                 />
               </div>
-
-              {facturaSeleccionada && (
-                <>
-                  <div className="col-md-4">
-                    <label className="form-label">Cliente</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={`${facturaSeleccionada.cliente?.nombre || ""} ${
-                        facturaSeleccionada.cliente?.apellido || ""
-                      }`.trim()}
-                      disabled
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="form-label">Número Factura</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={facturaSeleccionada.numeroFactura || ""}
-                      disabled
-                    />
-                  </div>
-                </>
-              )}
             </div>
 
-            {/* Productos */}
-            <h6 className="section-title-notacredito">Detalle de Productos</h6>
+            {facturaSeleccionada && (
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <label className="form-label">Cliente</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={`${facturaSeleccionada.cliente?.nombre || ""} ${
+                      facturaSeleccionada.cliente?.apellido || ""
+                    }`.trim()}
+                    disabled
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Número Factura</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={facturaSeleccionada.numeroFactura || ""}
+                    disabled
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">CUFE</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={notaDebito.cufe}
+                    disabled
+                  />
+                </div>
+              </div>
+            )}
+
+            <h6 className="section-title-notadebito">Detalle de Productos</h6>
             <div className="table-responsive mb-3">
               <table className="table table-sm table-bordered">
                 <thead className="table-light">
@@ -651,16 +631,15 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
 
             <button
               type="button"
-              className="btn btn-sm btn-outline-success mb-3"
+              className="btn btn-sm btn-outline-warning mb-3"
               onClick={agregarProducto}
             >
-              + Agregar Producto
+              Agregar Producto
             </button>
 
-            {/* Formas de Pago y Totales */}
             <div className="row mb-3">
               <div className="col-md-6">
-                <h6 className="section-title-notacredito">Formas de Pago</h6>
+                <h6 className="section-title-notadebito">Formas de Pago</h6>
                 {formasPago.map((forma, index) => (
                   <div key={index} className="row mb-2 align-items-center">
                     <div className="col-6">
@@ -705,7 +684,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                 ))}
                 <button
                   type="button"
-                  className="btn btn-sm btn-outline-success"
+                  className="btn btn-sm btn-outline-warning"
                   onClick={agregarFormaPago}
                 >
                   + Agregar Forma de Pago
@@ -733,9 +712,9 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
               </div>
 
               <div className="col-md-6">
-                <h6 className="section-title-notacredito">Totales</h6>
-                <div className="totales-box-notacredito">
-                  <div className="totales-row-notacredito">
+                <h6 className="section-title-notadebito">Totales</h6>
+                <div className="totales-box-notadebito">
+                  <div className="totales-row-notadebito">
                     <span>Total Bruto:</span>
                     <span>
                       ${totales.totalBruto.toLocaleString("es-CO", {
@@ -744,7 +723,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                       })}
                     </span>
                   </div>
-                  <div className="totales-row-notacredito">
+                  <div className="totales-row-notadebito">
                     <span>Descuentos:</span>
                     <span className="text-danger">
                       -${totales.totalDescuentos.toLocaleString("es-CO", {
@@ -753,7 +732,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                       })}
                     </span>
                   </div>
-                  <div className="totales-row-notacredito">
+                  <div className="totales-row-notadebito">
                     <span>Subtotal:</span>
                     <span>
                       ${totales.subtotal.toLocaleString("es-CO", {
@@ -762,7 +741,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                       })}
                     </span>
                   </div>
-                  <div className="totales-row-notacredito">
+                  <div className="totales-row-notadebito">
                     <span>IVA:</span>
                     <span>
                       ${totales.totalIVA.toLocaleString("es-CO", {
@@ -771,7 +750,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                       })}
                     </span>
                   </div>
-                  <div className="totales-row-notacredito">
+                  <div className="totales-row-notadebito">
                     <span>INC:</span>
                     <span>
                       ${totales.totalINC.toLocaleString("es-CO", {
@@ -780,15 +759,15 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                       })}
                     </span>
                   </div>
-                  <div className="totales-row-notacredito">
+                  <div className="totales-row-notadebito">
                     <span>ReteICA:</span>
                     <div className="d-flex align-items-center gap-2">
                       <select
                         className="form-select form-select-sm"
                         style={{ width: "80px" }}
-                        value={notaCredito.retelCA}
+                        value={notaDebito.retelCA}
                         onChange={(e) =>
-                          setNotaCredito({ ...notaCredito, retelCA: parseFloat(e.target.value) })
+                          setNotaDebito({ ...notaDebito, retelCA: parseFloat(e.target.value) })
                         }
                       >
                         <option value="0">0%</option>
@@ -804,7 +783,7 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
                       </span>
                     </div>
                   </div>
-                  <div className="totales-net-notacredito">
+                  <div className="totales-net-notadebito">
                     <span>Total Neto:</span>
                     <span>
                       ${totales.totalNeto.toLocaleString("es-CO", {
@@ -817,30 +796,29 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
               </div>
             </div>
 
-            {/* Observaciones */}
-            <h6 className="section-title-notacredito">Observaciones</h6>
+            <h6 className="section-title-notadebito">Observaciones</h6>
             <div className="mb-3">
               <textarea
                 className="form-control"
                 rows="3"
-                value={notaCredito.observaciones}
+                value={notaDebito.observaciones}
                 onChange={(e) =>
-                  setNotaCredito({ ...notaCredito, observaciones: e.target.value })
+                  setNotaDebito({ ...notaDebito, observaciones: e.target.value })
                 }
-                placeholder="Observaciones adicionales sobre la nota crédito..."
+                placeholder="Observaciones adicionales sobre la nota débito..."
               />
             </div>
 
-            <div className="modal-notacredito-footer">
+            <div className="modal-notadebito-footer">
               <button type="button" className="btn btn-secondary" onClick={onClose}>
                 Cancelar
               </button>
               <button 
                 type="submit" 
-                className="btn btn-success text-white"
+                className="btn btn-warning text-white"
                 disabled={!formasPagoCuadran}
               >
-                {notaEditando ? "Actualizar Nota Crédito" : "Crear Nota Crédito"}
+                {notaEditando ? "Actualizar Nota Débito" : "Crear Nota Débito"}
               </button>
             </div>
           </form>
@@ -850,4 +828,4 @@ function ModalNotaCredito({ open, onClose, notaEditando, facturas, productos, on
   );
 }
 
-export default ModalNotaCredito;
+export default ModalNotaDebito;

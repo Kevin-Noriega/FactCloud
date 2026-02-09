@@ -1,35 +1,38 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import PlanCard from "../components/PlanCard";
-import { planes } from "../utils/Planes";
 import CountdownBanner from "../components/CountdownBanner";
 import Stepper from "../components/Stepper";
 import faqsPlan from "../utils/FAQS";
 import "../styles/PLanes.css";
+import { usePlanes } from "../hooks/usePlanes";
 
 export default function Planes() {
   const navigate = useNavigate();
+  const { data: planes, isLoading, error, refetch } = usePlanes();
   const [openFAQ, setOpenFAQ] = useState(null);
 
-  const handleSelectPlan = (planName, planPrice, planDiscount) => {
-    const selectedPlan = {
-      planName,
-      planDiscount,
-      planPrice,
-      timestamp: new Date().toISOString(),
-    };
-
-    localStorage.setItem("selectedPlan", JSON.stringify(selectedPlan));
-
-    // Redirigir a registro
+  const handleSelectPlan = (plan) => {
+    localStorage.setItem("selectedPlan", JSON.stringify({
+      ...plan,
+      timestamp: new Date().toISOString()
+    }));
     navigate("/registro");
   };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+
   const faqs = faqsPlan.filter((faq) => faq.seccion === "planes");
 
+    if (isLoading) return <div className="loading">Cargando planes...</div>;
+  if (error) return (
+    <div className="error">
+      Error: {error.message}
+      <button onClick={refetch}>Reintentar</button>
+    </div>
+  );
   return (
     <div className="planCards-page">
       <CountdownBanner />
@@ -49,7 +52,7 @@ export default function Planes() {
             <PlanCard key={plan.id} plan={plan} onCheckout={handleSelectPlan} />
           ))}
         </div>
-        <section className="pricing-footer">
+        <section className="pricing-footer-page">
           <h3>¿Necesitas un plan personalizado?</h3>
           <div className="princing-footer-content">
             <p>

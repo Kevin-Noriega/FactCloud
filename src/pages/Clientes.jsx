@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import { obtenerSiglas } from "../utils/Helpers";
-import ModalCliente from "../components/ModalCrearCliente"; 
+import ModalCliente from "../components/dashboard/ModalCrearCliente"; 
 import {People} from 'react-bootstrap-icons';
 import "../styles/sharedPage.css";
 

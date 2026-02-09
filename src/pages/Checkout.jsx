@@ -12,6 +12,10 @@ import {
   ChevronLeft
 } from "react-bootstrap-icons";
 import "../styles/Checkout.css";
+import Select from "react-select";
+import tipoIdentificacion from "../utils/TiposDocumentos.json";
+
+import ciudades from "../utils/Ciudades.json";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -541,18 +545,31 @@ const crearYActivarUsuario = async (transactionId) => {
 
                     <div className="form-row">
                       <div className="form-group">
-                        <select
-                          name="tipoIdentificacion"
-                          value={formData.tipoIdentificacion}
-                          onChange={handleChange}
-                          className={errors.tipoIdentificacion ? "input-error" : ""}
-                        >
-                          <option value="">Tipo de documento *</option>
-                          <option value="CC">Cédula de ciudadanía</option>
-                          <option value="CE">Cédula de extranjería</option>
-                          <option value="NIT">NIT</option>
-                          <option value="PP">Pasaporte</option>
-                        </select>
+                        <Select
+                                    name="tipoIdentificacion"
+                                    options={tipoIdentificacion.map((ti) => ({
+                                      value: ti.nombre,
+                                      label: `${ti.codigo} - ${ti.nombre}`,
+                                    }))}
+                                    value={
+                                      formData.tipoIdentificacion
+                                        ? tipoIdentificacion
+                                            .map((ti) => ({
+                                              value: ti.nombre,
+                                              label: `${ti.codigo} - ${ti.nombre}`,
+                                            }))
+                                            .find((opt) => opt.value === formData.tipoIdentificacion)
+                                        : null
+                                    }
+                                    onChange={(opt) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        tipoIdentificacion: opt ? opt.value : "",
+                                      }))
+                                    }
+                                    isClearable
+                                    placeholder="Seleccionar tipo"
+                                  />
                         {errors.tipoIdentificacion && <span className="error-msg">{errors.tipoIdentificacion}</span>}
                       </div>
 
@@ -598,18 +615,31 @@ const crearYActivarUsuario = async (transactionId) => {
 
                     <div className="form-row">
                       <div className="form-group">
-                        <select
-                          name="ciudad"
-                          value={formData.ciudad}
-                          onChange={handleChange}
-                          className={errors.ciudad ? "input-error" : ""}
-                        >
-                          <option value="">Ciudad *</option>
-                          <option value="Bogotá">Bogotá</option>
-                          <option value="Medellín">Medellín</option>
-                          <option value="Cali">Cali</option>
-                          <option value="Valledupar">Valledupar</option>
-                        </select>
+                        <Select 
+                                    name="ciudad"
+                                    options={ciudades.map((ci) => ({
+                                      value: ci.ciudad,
+                                      label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                                    }))}
+                                    value={
+                                      formData.ciudad
+                                        ? ciudades
+                                            .map((ci) => ({
+                                              value: ci.ciudad,
+                                              label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                                            }))
+                                            .find((opt) => opt.value === formData.ciudad)
+                                        : null
+                                    }
+                                    onChange={(opt) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        ciudad: opt ? opt.value : "",
+                                      }))
+                                    }
+                                    isClearable
+                                    placeholder="Seleccionar ciudad"
+                                  />
                         {errors.ciudad && <span className="error-msg">{errors.ciudad}</span>}
                       </div>
 
@@ -681,16 +711,31 @@ const crearYActivarUsuario = async (transactionId) => {
                       </div>
 
                       <div className="form-group">
-                        <select
-                          name="ciudadFacturacion"
-                          value={formData.ciudadFacturacion}
-                          onChange={handleChange}
-                        >
-                          <option value="">Ciudad *</option>
-                          <option value="Bogotá">Bogotá</option>
-                          <option value="Medellín">Medellín</option>
-                          <option value="Cali">Cali</option>
-                        </select>
+                        <Select
+                                    name="ciudad"
+                                    options={ciudades.map((ci) => ({
+                                      value: ci.ciudad,
+                                      label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                                    }))}
+                                    value={
+                                      formData.ciudad
+                                        ? ciudades
+                                            .map((ci) => ({
+                                              value: ci.ciudad,
+                                              label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                                            }))
+                                            .find((opt) => opt.value === formData.ciudad)
+                                        : null
+                                    }
+                                    onChange={(opt) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        ciudad: opt ? opt.value : "",
+                                      }))
+                                    }
+                                    isClearable
+                                    placeholder="Seleccionar ciudad"
+                                  />
                       </div>
                     </div>
                   </div>

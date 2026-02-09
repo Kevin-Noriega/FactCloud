@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { API_URL } from "../api/config";
+import { API_URL } from "../../api/config";
 import Select from "react-select";
-import "../styles/ModalCrearFactura.css";
+import "../../styles/ModalCrearFactura.css";
 
-function ModalCrearFactura({ open, onClose, clientes, productos, onSuccess }) {
+function ModalCrearFactura({onClose, clientes, productos, onSuccess }) {
   const [factura, setFactura] = useState({
     clienteId: "",
     numeroFactura: "",

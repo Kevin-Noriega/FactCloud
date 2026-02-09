@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
-import ModalProducto from "../components/ModalCrearProducto";
+import ModalProducto from "../components/dashboard/ModalCrearProducto";
 import "../styles/sharedPage.css";
 import {BoxSeam} from 'react-bootstrap-icons';
 
