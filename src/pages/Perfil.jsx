@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import { useUsuarios } from "../hooks/useUsuarios";
-import ModalPerfilDesactivar from "../components/ModalPerfilDesactivar";
+import ModalPerfilDesactivar from "../components/dashboard/ModalPerfilDesactivar";
 import { 
   ToggleOn, 
   ToggleOff, 

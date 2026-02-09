@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBarSecondary from "./NavbarSecondary";
+import Footer from "./Footer";
 
 export default function RegisterLayout() {
   return (
@@ -7,6 +8,7 @@ export default function RegisterLayout() {
      
       <NavBarSecondary />
       <Outlet />
+      <Footer/>
     </>
   );
 }

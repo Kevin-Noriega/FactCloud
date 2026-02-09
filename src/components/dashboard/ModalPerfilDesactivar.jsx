@@ -1,5 +1,5 @@
 import { ExclamationTriangleFill, XCircle } from "react-bootstrap-icons";
-import "../styles/ModalPerfilDesactivar.css";
+import "../../styles/ModalPerfilDesactivar.css";
 
 function ModalPerfilDesactivar({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;

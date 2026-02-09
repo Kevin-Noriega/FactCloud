@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { API_URL } from "../api/config";
+import { API_URL } from "../../api/config";
 import Select from "react-select";
-import unidadesMedidaDIAN from "../utils/UnidadesMedidas.json";
-import tipoProductoDIAN from "../utils/TiposProducto.json";
-import "../styles/ModalCrearProducto.css";
+import unidadesMedidaDIAN from "../../utils/UnidadesMedidas.json";
+import tipoProductoDIAN from "../../utils/TiposProducto.json";
+import "../../styles/ModalCrearProducto.css";
 
 function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
   const [producto, setProducto] = useState({

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { API_URL } from "../api/config";
-import unidadesMedidaDIAN from "../utils/UnidadesMedidas.json";
-import { numeroALetras } from "../utils/Helpers.js";
+import { API_URL } from "../../api/config.js";
+import unidadesMedidaDIAN from "../../utils/UnidadesMedidas.json";
+import { numeroALetras } from "../../utils/Helpers.js";
 
 const obtenerLabel = (array, codigo) => 
   array.find((v) => v.codigo === codigo)?.descripcion || "";

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, BoxArrowRight } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
-import '../styles/UserMenu.css';
+import '../../styles/UserMenu.css';
 
 const UserMenu = ({ userName, userEmail, userPlan, userAvatar }) => {
   const [isOpen, setIsOpen] = useState(false);

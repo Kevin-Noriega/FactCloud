@@ -21,7 +21,7 @@ import {
   CheckCircleFill,
 } from "react-bootstrap-icons";
 import "../styles/Dashboard.css";
-import QuickActions from "../components/AccesosDirectos";
+import QuickActions from "../components/dashboard/AccesosDirectos";
 
 function Dashboard() {
   const [clientesCount, setClientesCount] = useState(0);

@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../components/Stepper";
 import "../styles/Registro.css";
+import Select from "react-select";
+import tipoIdentificacion from "../utils/TiposDocumentos.json";
 import {ChevronLeft, 
   CheckCircleFill} from 'react-bootstrap-icons';
 
 export default function Registro() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState(null);
+
   const [formData, setFormData] = useState({
     tipoIdentificacion: "",
     numeroIdentificacion: "",
@@ -101,18 +104,31 @@ export default function Registro() {
             <form onSubmit={handleSubmit} className="registro-form">
               <div className="form-row">
                 <div className="form-group">
-                  <select
-                    name="tipoIdentificacion"
-                    value={formData.tipoIdentificacion}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Tipo Documento *</option>
-                    <option value="CC">Cédula de Ciudadanía</option>
-                    <option value="NIT">NIT</option>
-                    <option value="CE">Cédula de Extranjería</option>
-                    <option value="PP">Pasaporte</option>
-                  </select>
+                  <Select
+                                    name="tipoIdentificacion"
+                                    options={tipoIdentificacion.map((ti) => ({
+                                      value: ti.nombre,
+                                      label: `${ti.codigo} - ${ti.nombre}`,
+                                    }))}
+                                    value={
+                                      formData.tipoIdentificacion
+                                        ? tipoIdentificacion
+                                            .map((ti) => ({
+                                              value: ti.nombre,
+                                              label: `${ti.codigo} - ${ti.nombre}`,
+                                            }))
+                                            .find((opt) => opt.value === formData.tipoIdentificacion)
+                                        : null
+                                    }
+                                    onChange={(opt) =>
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        tipoIdentificacion: opt ? opt.value : "",
+                                      }))
+                                    }
+                                    isClearable
+                                    placeholder="Seleccionar tipo"
+                                  />
                 </div>
 
                 <div className="form-group">

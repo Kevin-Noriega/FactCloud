@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { API_URL } from "../api/config";
+import { API_URL } from "../../api/config";
 import { XCircle, CheckCircleFill, FileEarmarkText } from "react-bootstrap-icons";
-import "../styles/ModalDocumentoSoporte.css";
+import "../../styles/ModalDocumentoSoporte.css";
 
 function ModalDocumentoSoporte({ isOpen, onClose, onSuccess, documentoEditar }) {
   const [formData, setFormData] = useState({

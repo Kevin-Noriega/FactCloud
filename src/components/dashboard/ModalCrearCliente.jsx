@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { API_URL } from "../api/config";
+import { API_URL } from "../../api/config";
 import Select from "react-select";
-import tipoIdentificacion from "../utils/TiposDocumentos.json";
-import actividadesCIIU from "../utils/ActividadesEconomicasCIIU.json";
-import regimenTributarioDIAN from "../utils/RegimenTributario.json";
-import regimenFiscalDIAN from "../utils/RegimenFiscal.json";
+import tipoIdentificacion from "../../utils/TiposDocumentos.json";
+import actividadesCIIU from "../../utils/ActividadesEconomicasCIIU.json";
+import regimenTributarioDIAN from "../../utils/RegimenTributario.json";
+import regimenFiscalDIAN from "../../utils/RegimenFiscal.json";
 import {
   departamentosOptions,
   ciudadesOptionsPorDepartamento,
-} from "../utils/Helpers";
-import "../styles/ModalCrearCliente.css";
+} from "../../utils/Helpers";
+import "../../styles/ModalCrearCliente.css";
 
-function ModalCrearCliente({ open, onClose, clienteEditando, onSuccess }) {
+function ModalCrearCliente({ onClose, clienteEditando, onSuccess }) {
   const [cliente, setCliente] = useState({
     nombre: "",
     apellido: "",

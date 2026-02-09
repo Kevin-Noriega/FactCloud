@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API_URL } from "../api/config";
-import ModalFacturaPDF from "../components/ModalfacturaPDF.jsx";
-import ModalPago from "../components/ModalPago.jsx";
-import ModalCrearFactura from "../components/ModalCrearFactura.jsx"; 
+import ModalFacturaPDF from "../components/dashboard/ModalfacturaPDF.jsx";
+import ModalPago from "../components/dashboard/ModalPago.jsx";
+import ModalCrearFactura from "../components/dashboard/ModalCrearFactura.jsx"; 
 import { createConnection } from "../SignalR/SignalConector";
 import { toast, ToastContainer } from "react-toastify";
 import {FileEarmarkText} from 'react-bootstrap-icons';

@@ -10,7 +10,7 @@ import {
   Database,
   CheckCircleFill
 } from "react-bootstrap-icons";
-import "../styles/ModalConfiguracion.css";
+import "../../styles/ModalConfiguracion.css";
 
 function ModalConfiguracion({ isOpen, onClose }) {
   const [config, setConfig] = useState({

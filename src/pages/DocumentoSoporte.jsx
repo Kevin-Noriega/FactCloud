@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
-import ModalDocumentoSoporte from "../components/ModalDocumentoSoporte";
+import ModalDocumentoSoporte from "../components/dashboard/ModalDocumentoSoporte";
 import "../styles/sharedPage.css";
 import { 
   FileEarmarkText, 
