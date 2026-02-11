@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../api/config";
 import "../styles/Login.css";
-import { Eye, EyeSlash, EnvelopeFill, LockFill } from 'react-bootstrap-icons';
-
+import { Eye, EyeSlash, EnvelopeFill, LockFill } from "react-bootstrap-icons";
+import { useAuth } from "../hooks/useAuth";
 export default function Login() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -11,37 +11,28 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setLoading(true);
     setError("");
 
     try {
-      const res = await fetch(`${API_URL}/Auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          correo,
-          contrasena,
-        }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        setError(errorData.message || "Credenciales incorrectas");
-        return;
-      }
-
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
+      await login(correo, contrasena); // ← Método del contexto
       setTimeout(() => {
         navigate("/dashboard");
       }, 300);
     } catch (err) {
-      setError("Error al conectar con el servidor");
+      // Manejar errores específicos del backend
+      if (err.response?.status === 423) {
+        setError(
+          `Cuenta desactivada. ${err.response.data.diasRestantes} días para reactivar.`,
+        );
+      } else {
+        setError(err.response?.data?.message || "Error al iniciar sesión");
+      }
     } finally {
       setLoading(false);
     }
@@ -52,33 +43,36 @@ export default function Login() {
       <section className="login-visual">
         <div className="login-visual-overlay">
           <div className="login-visual-content">
-  <img
-    src="/img/LogoFC.png"
-    alt="FactCloud"
-    className="login-visual-logo"
-  />
+            <img
+              src="/img/LogoFC.png"
+              alt="FactCloud"
+              className="login-visual-logo"
+            />
 
-  <h2 className="login-visual-title">
-    Bienvenido de nuevo a FactCloud
-  </h2>
+            <h2 className="login-visual-title">
+              Bienvenido de nuevo a FactCloud
+            </h2>
 
-  <p className="login-visual-subtitle">
-    Nos alegra verte otra vez. Accede a tu cuenta y continúa gestionando
-    tu facturación de forma segura y sencilla.
-  </p>
-
-</div>
-
+            <p className="login-visual-subtitle">
+              Nos alegra verte otra vez. Accede a tu cuenta y continúa
+              gestionando tu facturación de forma segura y sencilla.
+            </p>
+          </div>
         </div>
-        <img src="/img/img_login.webp" alt="Background" className="login-visual-bg" />
+        <img
+          src="/img/img_login.webp"
+          alt="Background"
+          className="login-visual-bg"
+        />
       </section>
 
       <section className="login-form-section">
         <div className="login-card">
           <div className="login-header">
-
             <h1 className="login-title">Inicio de sesion</h1>
-            <p className="login-subtitle">Ingresa tus credenciales para continuar</p>
+            <p className="login-subtitle">
+              Ingresa tus credenciales para continuar
+            </p>
           </div>
 
           {error && (
@@ -89,7 +83,9 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="login-form-group">
-              <label htmlFor="correo" className="login-label">Correo electrónico</label>
+              <label htmlFor="correo" className="login-label">
+                Correo electrónico
+              </label>
               <div className="login-input-wrapper">
                 <EnvelopeFill className="login-input-icon" />
                 <input
@@ -106,7 +102,9 @@ export default function Login() {
             </div>
 
             <div className="login-form-group">
-              <label htmlFor="contrasena" className="login-label">Contraseña</label>
+              <label htmlFor="contrasena" className="login-label">
+                Contraseña
+              </label>
               <div className="login-input-wrapper">
                 <LockFill className="login-input-icon" />
                 <input
@@ -140,7 +138,11 @@ export default function Login() {
               </button>
             </div>
 
-            <button type="submit" className="login-btn-submit" disabled={loading}>
+            <button
+              type="submit"
+              className="login-btn-submit"
+              disabled={loading}
+            >
               {loading ? (
                 <>
                   <span className="login-spinner"></span>
@@ -156,8 +158,8 @@ export default function Login() {
             <span>¿No tienes cuenta?</span>
           </div>
 
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="login-btn-register"
             onClick={() => navigate("/registro")}
           >
@@ -165,7 +167,7 @@ export default function Login() {
           </button>
 
           <footer className="login-footer">
-             <div className="login-footer-links">
+            <div className="login-footer-links">
               <a href="/terminos">Términos</a>
               <span>•</span>
               <a href="/privacidad">Privacidad</a>

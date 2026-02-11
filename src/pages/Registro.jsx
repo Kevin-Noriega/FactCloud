@@ -45,8 +45,9 @@ export default function Registro() {
       </div>
     );
 
-  const descuentoPlan = selectedPlan.originalAnnualPrice * selectedPlan.discountPercentage / 100;
-  const subtotal = selectedPlan.annualPrice; 
+  const descuentoPlan =
+    (selectedPlan.originalAnnualPrice * selectedPlan.discountPercentage) / 100;
+  const subtotal = selectedPlan.annualPrice;
   const totalFinal = cupones.coupon ? cupones.total : subtotal;
 
   const handleChange = (e) => {
@@ -277,6 +278,7 @@ export default function Registro() {
                     <strong>regalamos el doble de documento</strong>
                   </p>
                 </div>
+                Nam{" "}
               </div>
               <div className="resumen-compra">
                 <h2>Resumen de compra</h2>
@@ -332,7 +334,7 @@ export default function Registro() {
                       onClick={cupones.validateCoupon}
                       disabled={cupones.loading}
                     >
-                      {cupones.loading ? '...' : 'Validar'}
+                      {cupones.loading ? "..." : "Validar"}
                     </button>
                   </div>
                   {cupones.couponError && (
@@ -342,11 +344,10 @@ export default function Registro() {
                   )}
                   {cupones.coupon && (
                     <div className="coupon-success text-success small mt-11">
-                      el cupon {cupones.coupon.code}: del {cupones.coupon.discountPercent}% de  descuento fue aplicado
-                      con exito.
-                      
+                      el cupon {cupones.coupon.code}: del{" "}
+                      {cupones.coupon.discountPercent}% de descuento fue
+                      aplicado con exito.
                     </div>
-                    
                   )}
 
                   <div className="total">
