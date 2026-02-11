@@ -39,7 +39,6 @@ export const Planes = () => {
     },
   }));
 
-  // ✅ MUESTRA LOS 3 PRIMEROS PLANES (Starter, Básico, Profesional)
   const top3Planes = normalizedPlanes.slice(0, 3);
   const plansToShow = isMobile 
     ? [top3Planes[index] || top3Planes[0]] 
