@@ -13,6 +13,6 @@ export const usePlanes = () => {
       return response.json();
     },
     staleTime: 10 * 60 * 1000,
-    retry: false, // No reintenta en Home
+    retry: false,
   });
 };

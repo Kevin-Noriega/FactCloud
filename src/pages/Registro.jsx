@@ -4,12 +4,13 @@ import Stepper from "../components/Stepper";
 import "../styles/Registro.css";
 import Select from "react-select";
 import tipoIdentificacion from "../utils/TiposDocumentos.json";
-import {ChevronLeft, 
-  CheckCircleFill} from 'react-bootstrap-icons';
+import { ChevronLeft, CheckCircleFill } from "react-bootstrap-icons";
+import { useCupones } from "../hooks/useCupones";
 
 export default function Registro() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     tipoIdentificacion: "",
@@ -29,7 +30,25 @@ export default function Registro() {
     if (plan) {
       setSelectedPlan(JSON.parse(plan));
     }
+
+    setLoading(false);
   }, []);
+
+  const cupones = useCupones(selectedPlan?.id);
+
+  if (loading) return <div>Cargando...</div>;
+  if (!selectedPlan)
+    return (
+      <div className="no-plan">
+        <h2>No hay plan seleccionado</h2>
+        <button onClick={() => navigate("/planes")}>Ir a Planes</button>
+      </div>
+    );
+
+  const descuentoPlan =
+    (selectedPlan.originalAnnualPrice * selectedPlan.discountPercentage) / 100;
+  const subtotal = selectedPlan.annualPrice;
+  const totalFinal = cupones.coupon ? cupones.total : subtotal;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -68,7 +87,6 @@ export default function Registro() {
         password: formData.password,
       };
 
-
       localStorage.setItem("registroData", JSON.stringify(registroData));
 
       navigate("/checkout");
@@ -77,24 +95,26 @@ export default function Registro() {
       alert("Error procesando los datos. Intenta nuevamente.");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div>Cargando plan seleccionado...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="registro-page">
       <Stepper currentStep={2} />
-      <button 
-              onClick={() => navigate("/planes")} 
-              className="btn-back"
-            >
-              <ChevronLeft/>
-              Regresar
-            </button>
+      <button onClick={() => navigate("/planes")} className="btn-back">
+        <ChevronLeft />
+        Regresar
+      </button>
 
       <div className="registro-container">
-
         <div className="registro-content">
           <div className="registro-form-section">
-            
-            
-
             <h1>Crea tu cuenta</h1>
             <p className="registro-subtitle">
               Es rápido y sencillo, ingresa los siguientes datos y explora todas
@@ -105,30 +125,33 @@ export default function Registro() {
               <div className="form-row">
                 <div className="form-group">
                   <Select
-                                    name="tipoIdentificacion"
-                                    options={tipoIdentificacion.map((ti) => ({
-                                      value: ti.nombre,
-                                      label: `${ti.codigo} - ${ti.nombre}`,
-                                    }))}
-                                    value={
-                                      formData.tipoIdentificacion
-                                        ? tipoIdentificacion
-                                            .map((ti) => ({
-                                              value: ti.nombre,
-                                              label: `${ti.codigo} - ${ti.nombre}`,
-                                            }))
-                                            .find((opt) => opt.value === formData.tipoIdentificacion)
-                                        : null
-                                    }
-                                    onChange={(opt) =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        tipoIdentificacion: opt ? opt.value : "",
-                                      }))
-                                    }
-                                    isClearable
-                                    placeholder="Seleccionar tipo"
-                                  />
+                    name="tipoIdentificacion"
+                    options={tipoIdentificacion.map((ti) => ({
+                      value: ti.nombre,
+                      label: `${ti.codigo} - ${ti.nombre}`,
+                    }))}
+                    value={
+                      formData.tipoIdentificacion
+                        ? tipoIdentificacion
+                            .map((ti) => ({
+                              value: ti.nombre,
+                              label: `${ti.codigo} - ${ti.nombre}`,
+                            }))
+                            .find(
+                              (opt) =>
+                                opt.value === formData.tipoIdentificacion,
+                            )
+                        : null
+                    }
+                    onChange={(opt) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        tipoIdentificacion: opt ? opt.value : "",
+                      }))
+                    }
+                    isClearable
+                    placeholder="Seleccionar tipo"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -225,11 +248,13 @@ export default function Registro() {
                   required
                 />
                 <label htmlFor="terminos">
-                  Al hacer clic, autorizo a que Factcloud trate mis datos conforme a lo descrito en la{" "}
+                  Al hacer clic, autorizo a que Factcloud trate mis datos
+                  conforme a lo descrito en la{" "}
                   <a href="/politica-privacidad" target="_blank">
                     Política de Privacidad
                   </a>
-                  , cree una cuenta con mis datos en www.factcloud.com y me ofrezca servicios propios y/o de terceros.
+                  , cree una cuenta con mis datos en www.factcloud.com y me
+                  ofrezca servicios propios y/o de terceros.
                 </label>
               </div>
 
@@ -244,68 +269,95 @@ export default function Registro() {
           </div>
 
           {selectedPlan && (
-            <div> 
-            <div className="plan-banner">
-            <div className="plan-banner-content">
-              <CheckCircleFill/>
-              <p className="plan-banner-title">
-                
-                ¡COMPRA HOY! el plan {selectedPlan.planName}, y te{" "}
-                <strong>regalamos el doble de documento</strong>
-              </p>
-            </div>
-          </div>
-            <div className="resumen-compra">
-              <h2>Resumen de compra</h2>
+            <div>
+              <div className="plan-banner">
+                <div className="plan-banner-content">
+                  <CheckCircleFill />
+                  <p className="plan-banner-title">
+                    ¡COMPRA HOY! el plan {selectedPlan.name}, y te{" "}
+                    <strong>regalamos el doble de documento</strong>
+                  </p>
+                </div>
+                Nam{" "}
+              </div>
+              <div className="resumen-compra">
+                <h2>Resumen de compra</h2>
 
-              <div className="resumen-producto">
-                <h3>Producto</h3>
-                <div className="producto-item">
-                  <div className="producto-info">
-                    <span className="producto-nombre">
-                      Plan {selectedPlan.planName}
+                <div className="resumen-producto">
+                  <h3>Producto</h3>
+                  <div className="producto-item">
+                    <div className="producto-info">
+                      <span className="producto-nombre">
+                        Plan {selectedPlan.name}
+                      </span>
+                      <button className="ver-detalle">Ver detalle</button>
+                    </div>
+                    <span className="producto-precio">
+                      $
+                      {selectedPlan.originalAnnualPrice.toLocaleString("es-CO")}
                     </span>
-                    <button className="ver-detalle">Ver detalle</button>
                   </div>
-                  <span className="producto-precio">
-                    ${selectedPlan?.planPrice?.toLocaleString("es-CO") ?? "0"}
-                  </span>
-                </div>
-                
-                
 
-                <div className="descuento-item">
-                  <span>↓ Descuento {selectedPlan.planDiscount}</span>
-                  <span className="descuento-valor">
-                    -${(selectedPlan.planPrice * 0.09).toLocaleString("es-CO")}
-                  </span>
-                </div>
+                  <div className="descuento-item">
+                    <span>
+                      Descuento {selectedPlan.planDiscount} (
+                      {selectedPlan.discountPercentage}%){" "}
+                    </span>
+                    <span className="descuento-valor">
+                      -${descuentoPlan.toLocaleString("es-CO")}
+                    </span>
+                  </div>
 
-                <div className="subtotal">
-                  <span>Subtotal</span>
-                  <span>
-                    ${(selectedPlan.planPrice * 0.91).toLocaleString("es-CO")}
-                  </span>
-                </div>
+                  <div className="subtotal">
+                    <span>Subtotal</span>
+                    <span>
+                      ${selectedPlan.annualPrice.toLocaleString("es-CO")}
+                    </span>
+                  </div>
 
-                <div className="impuestos">
-                  <span>Impuestos</span>
-                  <span>$0</span>
-                </div>
+                  <div className="impuestos">
+                    <span>Impuestos</span>
+                    <span>$0</span>
+                  </div>
 
-                <div className="codigo-descuento">
-                  <input type="text" placeholder="Código de descuento" />
-                  <button className="btn-validar">Validar</button>
-                </div>
+                  <div className="codigo-descuento">
+                    <input
+                      type="text"
+                      placeholder="Código de descuento"
+                      value={cupones.couponCode}
+                      onChange={(e) =>
+                        cupones.setCouponCode(e.target.value.toUpperCase())
+                      }
+                    />
+                    <button
+                      className="btn-validar"
+                      onClick={cupones.validateCoupon}
+                      disabled={cupones.loading}
+                    >
+                      {cupones.loading ? "..." : "Validar"}
+                    </button>
+                  </div>
+                  {cupones.couponError && (
+                    <p className="coupon-error text-danger samll mt-1">
+                      {cupones.couponError}
+                    </p>
+                  )}
+                  {cupones.coupon && (
+                    <div className="coupon-success text-success small mt-11">
+                      el cupon {cupones.coupon.code}: del{" "}
+                      {cupones.coupon.discountPercent}% de descuento fue
+                      aplicado con exito.
+                    </div>
+                  )}
 
-                <div className="total">
-                  <strong>Total a pagar / año</strong>
-                  <strong className="total-precio">
-                    ${(selectedPlan.planPrice * 0.91).toLocaleString("es-CO")}
-                  </strong>
+                  <div className="total">
+                    <strong>Total a pagar / año</strong>
+                    <strong className="total-precio">
+                      ${totalFinal.toLocaleString("es-CO")}
+                    </strong>
+                  </div>
                 </div>
               </div>
-            </div>
             </div>
           )}
         </div>
