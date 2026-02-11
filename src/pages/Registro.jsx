@@ -268,9 +268,11 @@ export default function Registro() {
                     <button className="ver-detalle">Ver detalle</button>
                   </div>
                   <span className="producto-precio">
-                    ${selectedPlan.planPrice.toLocaleString("es-CO")}
+                    ${selectedPlan?.planPrice?.toLocaleString("es-CO") ?? "0"}
                   </span>
                 </div>
+                
+                
 
                 <div className="descuento-item">
                   <span>↓ Descuento {selectedPlan.planDiscount}</span>
