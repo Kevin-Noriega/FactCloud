@@ -22,7 +22,6 @@ export default function Checkout() {
 
   const [plan, setPlan] = useState(null);
   const [user, setUser] = useState(null);
-  const [registroData] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("CARD");
   const [isFlipped, setIsFlipped] = useState(false);
   const [acceptanceToken, setAcceptanceToken] = useState("");
@@ -61,6 +60,9 @@ export default function Checkout() {
     const planData = localStorage.getItem("selectedPlan");
     const registroDataLocal = localStorage.getItem("registroData");
 
+    console.log("📦 planData raw:", planData);
+    console.log("📦 registroData raw:", registroDataLocal);
+
     if (!planData || !registroDataLocal) {
       alert("Datos incompletos. Inicia el proceso nuevamente.");
       navigate("/planes");
@@ -70,7 +72,18 @@ export default function Checkout() {
     const parsedPlan = JSON.parse(planData);
     const parsedRegistro = JSON.parse(registroDataLocal);
 
-    setPlan(parsedPlan);
+    console.log("✅ Plan parseado:", parsedPlan);
+    console.log("✅ Registro parseado:", parsedRegistro);
+
+    // ✅ NORMALIZAR: Agregar planPrice desde annualPrice
+    const normalizedPlan = {
+      ...parsedPlan,
+      planPrice: parsedPlan.annualPrice || parsedPlan.originalAnnualPrice || 0,
+    };
+
+    console.log("✅ Plan normalizado:", normalizedPlan);
+
+    setPlan(normalizedPlan);
     setUser(parsedRegistro);
 
     setFormData((prev) => ({
@@ -88,8 +101,9 @@ export default function Checkout() {
 
   const loadAcceptanceToken = async () => {
     try {
-      const response = await wompiService.getAcceptanceToken();
-      setAcceptanceToken(response.data.presignedAcceptance.acceptanceToken);
+      const token = await wompiService.getAcceptanceToken();
+      setAcceptanceToken(token);
+      console.log("Token cargado");
     } catch (error) {
       console.error("Error cargando token:", error);
     }
@@ -215,7 +229,6 @@ export default function Checkout() {
       }));
     }
   };
-
   const handlePay = async () => {
     if (!validateForm()) {
       alert("Por favor completa todos los campos correctamente");
@@ -227,17 +240,75 @@ export default function Checkout() {
     try {
       const [expMonth, expYear] = formData.expiry.split("/");
 
+      console.log("🔵 Plan seleccionado:", plan);
+      console.log("🔵 Precio del plan:", plan.planPrice);
+
+      // ✅ Verificar que plan.planPrice existe
+      if (!plan || !plan.planPrice) {
+        alert("Error: No se ha seleccionado un plan válido");
+        return;
+      }
+
+      console.log("🔵 Iniciando pago...");
+      console.log("📋 Datos de tarjeta:", {
+        number: formData.cardNumber.replace(/\s/g, ""),
+        expMonth,
+        expYear,
+        cardHolder: formData.cardName,
+      });
+
+      // ✅ Tokenizar tarjeta
       const cardToken = await wompiService.tokenizeCard({
         number: formData.cardNumber.replace(/\s/g, ""),
         cvc: formData.cvv,
         expMonth: expMonth,
-        expYear: `20${expYear}`,
+        expYear: expYear,
         cardHolder: formData.cardName,
       });
 
-      const amountInCents = Math.round(plan.planPrice * 100);
+      console.log("✅ Token de tarjeta obtenido:", cardToken);
+
+      // ✅ Calcular monto (asegurar que sea número)
+      const amountInCents = Math.round(parseFloat(plan.planPrice) * 100);
       const reference = `FACTCLOUD-${Date.now()}`;
 
+      console.log("💰 Monto calculado:", {
+        planPrice: plan.planPrice,
+        amountInCents,
+        tipo: typeof amountInCents,
+      });
+
+      // ✅ Verificar que amountInCents sea válido
+      if (isNaN(amountInCents) || amountInCents <= 0) {
+        alert("Error: Monto inválido");
+        console.error("❌ Monto inválido:", {
+          planPrice: plan.planPrice,
+          amountInCents,
+        });
+        return;
+      }
+
+      console.log("📤 Datos de transacción:", {
+        amountInCents,
+        reference,
+        acceptanceToken,
+        cardToken,
+      });
+
+      // ✅ Mapear tipo de documento a código
+      const tipoDocumentoMap = {
+        "Cédula de Ciudadanía": "CC",
+        "Cédula de Extranjería": "CE",
+        NIT: "NIT",
+        Pasaporte: "passport",
+        CC: "CC",
+        CE: "CE",
+      };
+
+      const tipoDocCodigo =
+        tipoDocumentoMap[formData.tipoIdentificacion] || "CC";
+
+      // ✅ Crear transacción
       const transaction = await wompiService.createTransaction({
         amountInCents,
         currency: "COP",
@@ -252,94 +323,196 @@ export default function Checkout() {
         customerData: {
           fullName: `${formData.nombres} ${formData.apellidos}`,
           phoneNumber: `+57${formData.telefono}`,
-          legalId: formData.numeroIdentificacion,
-          legalIdType: formData.tipoIdentificacion,
+          legalId: {
+            type: tipoDocCodigo, // Usar código en lugar de texto completo
+            number: formData.numeroIdentificacion,
+          },
         },
       });
 
-      if (transaction.data.data.status === "APPROVED") {
-        await crearYActivarUsuario(transaction.data.data.id);
+      console.log("✅ Respuesta transacción:", transaction);
 
+      // ✅ Guardar registro pendiente (NO crear usuario todavía)
+      //await guardarRegistroPendiente(
+        //transaction.data.id,
+        //transaction.data.status,
+      //);
+
+      if (transaction.data.status === "APPROVED" || transaction.data.status === "PENDING") {
+        await crearYActivarUsuario(transaction.data.id);
         alert("¡Pago exitoso! Tu cuenta ha sido creada y activada 🎉");
         navigate("/dashboard");
-      } else if (transaction.data.data.status === "PENDING") {
-        alert("Pago pendiente. Te notificaremos cuando se confirme.");
-        navigate("/");
+     // } else if (transaction.data.status === "PENDING") {
+        //alert("Pago pendiente. Te notificaremos cuando se confirme.");
+        //navigate("/");
       } else {
         alert("Pago rechazado. Verifica los datos e intenta nuevamente.");
       }
     } catch (error) {
-      alert(error.response?.data?.error?.reason || "Error procesando el pago");
+      console.error("❌ Error completo:", error);
+      console.error("❌ Response:", error.response?.data);
+      alert(
+        error.response?.data?.error ||
+          error.message ||
+          "Error procesando el pago",
+      );
     } finally {
       setLoading(false);
     }
   };
-  const crearYActivarUsuario = async (transactionId) => {
-    try {
-      const response = await fetch(`${API_URL}/Usuarios/crear-y-activar`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          // Datos del usuario
-          nombre: registroData.nombre,
-          telefono: registroData.telefono,
-          correo: registroData.email,
-          password: registroData.password,
-          tipoIdentificacion: registroData.tipoIdentificacion,
-          numeroIdentificacion: registroData.numeroIdentificacion,
-          pais: "CO",
 
-          // Datos del negocio
+   {/* función para guardar registro pendiente
+  const guardarRegistroPendiente = async (transactionId, status) => {
+    try {
+      console.log("💾 Guardando registro pendiente...");
+      console.log("📋 User:", user);
+      console.log("📋 Plan:", plan);
+      console.log("📋 FormData:", formData);
+
+      // ✅ Validar que user existe
+      if (!user) {
+        console.error("❌ User es null");
+        throw new Error("Datos de usuario no disponibles");
+      }
+
+      const datosCompletos = {
+        transaccionId: transactionId,
+        estado: status,
+        datosRegistro: {
+          nombre: user.nombre, 
+          telefono: user.telefono, 
+          correo: user.email, 
+          password: user.password, 
+          tipoIdentificacion: user.tipoIdentificacion, 
+          numeroIdentificacion: user.numeroIdentificacion, 
+        },
+        datosNegocio: {
           nombreNegocio: formData.razonSocial,
           nit: formData.nit,
-          dvNit: formData.digitoVerificacion
-            ? parseInt(formData.digitoVerificacion)
-            : null,
+          dvNit: formData.digitoVerificacion,
           direccion: formData.direccionFacturacion,
           ciudad: formData.ciudadFacturacion,
           departamento: formData.departamento,
           telefonoNegocio: formData.telefonoFacturacion,
           correoNegocio: formData.emailFacturacion,
-
-          // Datos de suscripción
+        },
+        datosPlan: {
           planFacturacionId: plan.id,
-          transaccionId: transactionId,
-          tipoPago: plan.tipoPago || "anual",
+          tipoPago: "anual",
           precioPagado: plan.planPrice,
-        }),
-      });
+        },
+      };
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Error creando usuario");
-      }
-
-      const data = await response.json();
-
-      // Guardar token y usuario
-      localStorage.setItem("token", data.token);
-      localStorage.setItem(
-        "usuario",
-        JSON.stringify({
-          id: data.usuario.id,
-          nombre: data.usuario.nombre,
-          correo: data.usuario.correo,
-          estado: data.usuario.estado,
-          negocio: data.usuario.negocio,
-          suscripcion: data.usuario.suscripcion,
-        }),
+      console.log(
+        "📤 Datos a enviar:",
+        JSON.stringify(datosCompletos, null, 2),
       );
 
-      // Limpiar datos temporales
-      localStorage.removeItem("registroData");
-      localStorage.removeItem("selectedPlan");
+      const response = await fetch(
+        `${API_URL}/payment/guardar-registro-pendiente`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datosCompletos),
+        },
+      );
 
-      return data;
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("❌ Error guardando registro:", errorData);
+        throw new Error(
+          errorData.error || "Error guardando registro pendiente",
+        );
+      }
+
+      const result = await response.json();
+      console.log("✅ Registro pendiente guardado:", result);
+
+      return true;
     } catch (error) {
-      console.error("Error creando usuario:", error);
+      console.error("❌ Error en guardarRegistroPendiente:", error);
       throw error;
     }
-  };
+  };*/}
+
+  const crearYActivarUsuario = async (transactionId) => {
+  try {
+    console.log("🔵 Creando usuario...");
+    console.log("📋 User:", user);
+    console.log("📋 FormData:", formData);
+    console.log("📋 Plan:", plan);
+
+    // ✅ Validar que user existe
+    if (!user) {
+      throw new Error("Datos de usuario no disponibles");
+    }
+
+    const response = await fetch(`${API_URL}/Usuarios/crear-y-activar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        // Datos del usuario (usar 'user' en lugar de 'registroData')
+        nombre: user.nombre, // ✅
+        telefono: user.telefono, // ✅
+        correo: user.email, // ✅
+        password: user.password, // ✅
+        tipoIdentificacion: user.tipoIdentificacion, // ✅
+        numeroIdentificacion: user.numeroIdentificacion, // ✅
+        pais: "CO",
+
+        // Datos del negocio
+        nombreNegocio: formData.razonSocial,
+        nit: formData.nit,
+        dvNit: formData.digitoVerificacion
+          ? parseInt(formData.digitoVerificacion)
+          : null,
+        direccion: formData.direccionFacturacion,
+        ciudad: formData.ciudadFacturacion,
+        departamento: formData.departamento,
+        telefonoNegocio: formData.telefonoFacturacion,
+        correoNegocio: formData.emailFacturacion,
+
+        // Datos de suscripción
+        planFacturacionId: plan.id,
+        transaccionId: transactionId,
+        tipoPago: "anual",
+        precioPagado: plan.planPrice,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error("❌ Error del servidor:", error);
+      throw new Error(error.error || "Error creando usuario");
+    }
+
+    const data = await response.json();
+    console.log("✅ Usuario creado:", data);
+
+    // Guardar token y usuario
+    localStorage.setItem("token", data.token);
+    localStorage.setItem(
+      "usuario",
+      JSON.stringify({
+        id: data.usuario.id,
+        nombre: data.usuario.nombre,
+        correo: data.usuario.correo,
+        estado: data.usuario.estado,
+        negocio: data.usuario.negocio,
+        suscripcion: data.usuario.suscripcion,
+      })
+    );
+
+    // Limpiar datos temporales
+    localStorage.removeItem("registroData");
+    localStorage.removeItem("selectedPlan");
+
+    return data;
+  } catch (error) {
+    console.error("❌ Error creando usuario:", error);
+    throw error;
+  }
+};
 
   if (!plan || !user) return null;
 
