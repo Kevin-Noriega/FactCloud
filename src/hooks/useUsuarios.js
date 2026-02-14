@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_URL } from "../api/config";
 
@@ -8,6 +9,7 @@ const getAuthHeaders = () => {
     ...(token && { Authorization: `Bearer ${token}` }),
   };
 };
+import axiosClient from "../api/axiosClient";
 
 export const useUsuarios = () => {
   const queryClient = useQueryClient();
@@ -20,28 +22,21 @@ export const useUsuarios = () => {
       if (!usuarioGuardado) throw new Error("No hay usuario autenticado");
 
       const usuarioData = JSON.parse(usuarioGuardado);
-      if (!usuarioData?.id) {
-        localStorage.clear();
-        window.location.href = "/login";
-        throw new Error("Sesión expirada");
+
+      // ✅ Usar el ID que está en localStorage (guardado en el login)
+      const userId = usuarioData.id;
+
+      if (!userId) {
+        localStorage.removeItem("usuario");
+        throw new Error("Sesión expirada. Redirige al login.");
       }
 
-      const response = await fetch(`${API_URL}/Usuarios/${usuarioData.id}`, {
-        headers: getAuthHeaders(),
-      });
+      // 2️⃣ Fetch usuario actualizado desde API usando el ID correcto
+      const { data } = await axiosClient.get(`/Usuarios/${userId}`);
 
-      if (!response.ok) {
-        if (response.status === 401 || response.status === 403) {
-          localStorage.clear();
-          window.location.href = "/login";
-          throw new Error("Sesión expirada");
-        }
-        throw new Error(`Error HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
+      // 3️⃣ Guardar usuario actualizado en localStorage
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
-      
+
       return {
         ...data,
         tieneSuscripcionActiva: data.suscripcion?.activa ?? false,
@@ -56,8 +51,20 @@ export const useUsuarios = () => {
     },
     staleTime: 2 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: true,
-    retry: false, 
+    refetchOnWindowFocus: "always",
+    retry: (failureCount, error) => {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return false;
+      }
+      return failureCount < 2;
+    },
+    onError: (error) => {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.clear();
+        window.location.href = "/login";
+      }
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   // 🔧 MODIFICAR perfil
@@ -176,10 +183,15 @@ export const useUsuarios = () => {
 export const useSuscripcionStatus = () => {
   const { data } = useUsuarios();
   return {
-    esPremium: data?.suscripcion?.documentosRestantes > 100,
-    necesitaRenovar: !data?.tieneSuscripcionActiva,
-    diasRestantes: data?.suscripcion?.fechaExpiracion 
-      ? Math.floor((new Date(data.suscripcion.fechaExpiracion) - new Date()) / (1000 * 60 * 60 * 24))
+    ...useQuery,
+    esPremium:
+      data?.suscripcion?.activa && data?.suscripcion?.documentosRestantes > 100,
+    necesitaRenovar: data?.suscripcion?.activa === false,
+    diasRestantes: data?.suscripcion?.fechaExpiracion
+      ? Math.floor(
+          (new Date(data.suscripcion.fechaExpiracion).getTime() - Date.now()) /
+            (1000 * 60 * 60 * 24),
+        )
       : 0,
   };
 };

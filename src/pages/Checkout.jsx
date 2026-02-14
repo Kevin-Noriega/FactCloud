@@ -9,7 +9,7 @@ import {
   ShieldCheck,
   CheckCircleFill,
   ExclamationCircleFill,
-  ChevronLeft
+  ChevronLeft,
 } from "react-bootstrap-icons";
 import "../styles/Checkout.css";
 import Select from "react-select";
@@ -22,7 +22,6 @@ export default function Checkout() {
 
   const [plan, setPlan] = useState(null);
   const [user, setUser] = useState(null);
-    const [registroData] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("CARD");
   const [isFlipped, setIsFlipped] = useState(false);
   const [acceptanceToken, setAcceptanceToken] = useState("");
@@ -59,7 +58,10 @@ export default function Checkout() {
   useEffect(() => {
     window.scrollTo(0, 0);
     const planData = localStorage.getItem("selectedPlan");
-        const registroDataLocal = localStorage.getItem("registroData");
+    const registroDataLocal = localStorage.getItem("registroData");
+
+    console.log("📦 planData raw:", planData);
+    console.log("📦 registroData raw:", registroDataLocal);
 
     if (!planData || !registroDataLocal) {
       alert("Datos incompletos. Inicia el proceso nuevamente.");
@@ -70,10 +72,21 @@ export default function Checkout() {
     const parsedPlan = JSON.parse(planData);
     const parsedRegistro = JSON.parse(registroDataLocal);
 
-    setPlan(parsedPlan);
+    console.log("✅ Plan parseado:", parsedPlan);
+    console.log("✅ Registro parseado:", parsedRegistro);
+
+    // ✅ NORMALIZAR: Agregar planPrice desde annualPrice
+    const normalizedPlan = {
+      ...parsedPlan,
+      planPrice: parsedPlan.annualPrice || parsedPlan.originalAnnualPrice || 0,
+    };
+
+    console.log("✅ Plan normalizado:", normalizedPlan);
+
+    setPlan(normalizedPlan);
     setUser(parsedRegistro);
 
-     setFormData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       email: parsedRegistro.email || "",
       nombres: parsedRegistro.nombre?.split(" ")[0] || "",
@@ -83,14 +96,14 @@ export default function Checkout() {
       telefono: parsedRegistro.telefono || "",
     }));
 
-
     loadAcceptanceToken();
   }, [navigate]);
 
   const loadAcceptanceToken = async () => {
     try {
-      const response = await wompiService.getAcceptanceToken();
-      setAcceptanceToken(response.data.presignedAcceptance.acceptanceToken);
+      const token = await wompiService.getAcceptanceToken();
+      setAcceptanceToken(token);
+      console.log("Token cargado");
     } catch (error) {
       console.error("Error cargando token:", error);
     }
@@ -182,8 +195,10 @@ export default function Checkout() {
 
     if (!formData.nombres) newErrors.nombres = "Nombres requeridos";
     if (!formData.apellidos) newErrors.apellidos = "Apellidos requeridos";
-    if (!formData.tipoIdentificacion) newErrors.tipoIdentificacion = "Tipo de documento requerido";
-    if (!formData.numeroIdentificacion) newErrors.numeroIdentificacion = "Número requerido";
+    if (!formData.tipoIdentificacion)
+      newErrors.tipoIdentificacion = "Tipo de documento requerido";
+    if (!formData.numeroIdentificacion)
+      newErrors.numeroIdentificacion = "Número requerido";
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email inválido";
     }
@@ -214,7 +229,6 @@ export default function Checkout() {
       }));
     }
   };
-
   const handlePay = async () => {
     if (!validateForm()) {
       alert("Por favor completa todos los campos correctamente");
@@ -226,17 +240,75 @@ export default function Checkout() {
     try {
       const [expMonth, expYear] = formData.expiry.split("/");
 
+      console.log("🔵 Plan seleccionado:", plan);
+      console.log("🔵 Precio del plan:", plan.planPrice);
+
+      // ✅ Verificar que plan.planPrice existe
+      if (!plan || !plan.planPrice) {
+        alert("Error: No se ha seleccionado un plan válido");
+        return;
+      }
+
+      console.log("🔵 Iniciando pago...");
+      console.log("📋 Datos de tarjeta:", {
+        number: formData.cardNumber.replace(/\s/g, ""),
+        expMonth,
+        expYear,
+        cardHolder: formData.cardName,
+      });
+
+      // ✅ Tokenizar tarjeta
       const cardToken = await wompiService.tokenizeCard({
         number: formData.cardNumber.replace(/\s/g, ""),
         cvc: formData.cvv,
         expMonth: expMonth,
-        expYear: `20${expYear}`,
+        expYear: expYear,
         cardHolder: formData.cardName,
       });
 
-      const amountInCents = Math.round(plan.planPrice * 100);
+      console.log("✅ Token de tarjeta obtenido:", cardToken);
+
+      // ✅ Calcular monto (asegurar que sea número)
+      const amountInCents = Math.round(parseFloat(plan.planPrice) * 100);
       const reference = `FACTCLOUD-${Date.now()}`;
 
+      console.log("💰 Monto calculado:", {
+        planPrice: plan.planPrice,
+        amountInCents,
+        tipo: typeof amountInCents,
+      });
+
+      // ✅ Verificar que amountInCents sea válido
+      if (isNaN(amountInCents) || amountInCents <= 0) {
+        alert("Error: Monto inválido");
+        console.error("❌ Monto inválido:", {
+          planPrice: plan.planPrice,
+          amountInCents,
+        });
+        return;
+      }
+
+      console.log("📤 Datos de transacción:", {
+        amountInCents,
+        reference,
+        acceptanceToken,
+        cardToken,
+      });
+
+      // ✅ Mapear tipo de documento a código
+      const tipoDocumentoMap = {
+        "Cédula de Ciudadanía": "CC",
+        "Cédula de Extranjería": "CE",
+        NIT: "NIT",
+        Pasaporte: "passport",
+        CC: "CC",
+        CE: "CE",
+      };
+
+      const tipoDocCodigo =
+        tipoDocumentoMap[formData.tipoIdentificacion] || "CC";
+
+      // ✅ Crear transacción
       const transaction = await wompiService.createTransaction({
         amountInCents,
         currency: "COP",
@@ -251,83 +323,185 @@ export default function Checkout() {
         customerData: {
           fullName: `${formData.nombres} ${formData.apellidos}`,
           phoneNumber: `+57${formData.telefono}`,
-          legalId: formData.numeroIdentificacion,
-          legalIdType: formData.tipoIdentificacion,
+          legalId: {
+            type: tipoDocCodigo, // Usar código en lugar de texto completo
+            number: formData.numeroIdentificacion,
+          },
         },
       });
 
+      console.log("✅ Respuesta transacción:", transaction);
 
-      if (transaction.data.data.status === "APPROVED") {
-        
-        await crearYActivarUsuario(transaction.data.data.id);
-        
+      // ✅ Guardar registro pendiente (NO crear usuario todavía)
+      //await guardarRegistroPendiente(
+        //transaction.data.id,
+        //transaction.data.status,
+      //);
+
+      if (transaction.data.status === "APPROVED" || transaction.data.status === "PENDING") {
+        await crearYActivarUsuario(transaction.data.id);
         alert("¡Pago exitoso! Tu cuenta ha sido creada y activada 🎉");
         navigate("/dashboard");
-        
-      } else if (transaction.data.data.status === "PENDING") {
-        alert("Pago pendiente. Te notificaremos cuando se confirme.");
-        navigate("/");
-        
+     // } else if (transaction.data.status === "PENDING") {
+        //alert("Pago pendiente. Te notificaremos cuando se confirme.");
+        //navigate("/");
       } else {
         alert("Pago rechazado. Verifica los datos e intenta nuevamente.");
       }
     } catch (error) {
-      alert(error.response?.data?.error?.reason || "Error procesando el pago");
+      console.error("❌ Error completo:", error);
+      console.error("❌ Response:", error.response?.data);
+      alert(
+        error.response?.data?.error ||
+          error.message ||
+          "Error procesando el pago",
+      );
     } finally {
       setLoading(false);
     }
   };
-const crearYActivarUsuario = async (transactionId) => {
+
+   {/* función para guardar registro pendiente
+  const guardarRegistroPendiente = async (transactionId, status) => {
+    try {
+      console.log("💾 Guardando registro pendiente...");
+      console.log("📋 User:", user);
+      console.log("📋 Plan:", plan);
+      console.log("📋 FormData:", formData);
+
+      // ✅ Validar que user existe
+      if (!user) {
+        console.error("❌ User es null");
+        throw new Error("Datos de usuario no disponibles");
+      }
+
+      const datosCompletos = {
+        transaccionId: transactionId,
+        estado: status,
+        datosRegistro: {
+          nombre: user.nombre, 
+          telefono: user.telefono, 
+          correo: user.email, 
+          password: user.password, 
+          tipoIdentificacion: user.tipoIdentificacion, 
+          numeroIdentificacion: user.numeroIdentificacion, 
+        },
+        datosNegocio: {
+          nombreNegocio: formData.razonSocial,
+          nit: formData.nit,
+          dvNit: formData.digitoVerificacion,
+          direccion: formData.direccionFacturacion,
+          ciudad: formData.ciudadFacturacion,
+          departamento: formData.departamento,
+          telefonoNegocio: formData.telefonoFacturacion,
+          correoNegocio: formData.emailFacturacion,
+        },
+        datosPlan: {
+          planFacturacionId: plan.id,
+          tipoPago: "anual",
+          precioPagado: plan.planPrice,
+        },
+      };
+
+      console.log(
+        "📤 Datos a enviar:",
+        JSON.stringify(datosCompletos, null, 2),
+      );
+
+      const response = await fetch(
+        `${API_URL}/payment/guardar-registro-pendiente`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datosCompletos),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("❌ Error guardando registro:", errorData);
+        throw new Error(
+          errorData.error || "Error guardando registro pendiente",
+        );
+      }
+
+      const result = await response.json();
+      console.log("✅ Registro pendiente guardado:", result);
+
+      return true;
+    } catch (error) {
+      console.error("❌ Error en guardarRegistroPendiente:", error);
+      throw error;
+    }
+  };*/}
+
+  const crearYActivarUsuario = async (transactionId) => {
   try {
+    console.log("🔵 Creando usuario...");
+    console.log("📋 User:", user);
+    console.log("📋 FormData:", formData);
+    console.log("📋 Plan:", plan);
+
+    // ✅ Validar que user existe
+    if (!user) {
+      throw new Error("Datos de usuario no disponibles");
+    }
 
     const response = await fetch(`${API_URL}/Usuarios/crear-y-activar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        // Datos del usuario
-        nombre: registroData.nombre,
-        telefono: registroData.telefono,
-        correo: registroData.email,
-        password: registroData.password,
-        tipoIdentificacion: registroData.tipoIdentificacion,
-        numeroIdentificacion: registroData.numeroIdentificacion,
+        // Datos del usuario (usar 'user' en lugar de 'registroData')
+        nombre: user.nombre, // ✅
+        telefono: user.telefono, // ✅
+        correo: user.email, // ✅
+        password: user.password, // ✅
+        tipoIdentificacion: user.tipoIdentificacion, // ✅
+        numeroIdentificacion: user.numeroIdentificacion, // ✅
         pais: "CO",
-        
+
         // Datos del negocio
         nombreNegocio: formData.razonSocial,
         nit: formData.nit,
-        dvNit: formData.digitoVerificacion ? parseInt(formData.digitoVerificacion) : null,
+        dvNit: formData.digitoVerificacion
+          ? parseInt(formData.digitoVerificacion)
+          : null,
         direccion: formData.direccionFacturacion,
         ciudad: formData.ciudadFacturacion,
         departamento: formData.departamento,
         telefonoNegocio: formData.telefonoFacturacion,
         correoNegocio: formData.emailFacturacion,
-        
+
         // Datos de suscripción
         planFacturacionId: plan.id,
         transaccionId: transactionId,
-        tipoPago: plan.tipoPago || "anual", 
+        tipoPago: "anual",
         precioPagado: plan.planPrice,
       }),
     });
 
     if (!response.ok) {
       const error = await response.json();
+      console.error("❌ Error del servidor:", error);
       throw new Error(error.error || "Error creando usuario");
     }
 
     const data = await response.json();
+    console.log("✅ Usuario creado:", data);
 
     // Guardar token y usuario
     localStorage.setItem("token", data.token);
-    localStorage.setItem("usuario", JSON.stringify({
-      id: data.usuario.id,
-      nombre: data.usuario.nombre,
-      correo: data.usuario.correo,
-      estado: data.usuario.estado,
-      negocio: data.usuario.negocio,
-      suscripcion: data.usuario.suscripcion,
-    }));
+    localStorage.setItem(
+      "usuario",
+      JSON.stringify({
+        id: data.usuario.id,
+        nombre: data.usuario.nombre,
+        correo: data.usuario.correo,
+        estado: data.usuario.estado,
+        negocio: data.usuario.negocio,
+        suscripcion: data.usuario.suscripcion,
+      })
+    );
 
     // Limpiar datos temporales
     localStorage.removeItem("registroData");
@@ -335,11 +509,10 @@ const crearYActivarUsuario = async (transactionId) => {
 
     return data;
   } catch (error) {
-    console.error("Error creando usuario:", error);
+    console.error("❌ Error creando usuario:", error);
     throw error;
   }
 };
-
 
   if (!plan || !user) return null;
 
@@ -368,7 +541,9 @@ const crearYActivarUsuario = async (transactionId) => {
               <div className="payment-methods-section">
                 <h3>Método de pago</h3>
                 <div className="payment-methods">
-                  <label className={`payment-option ${paymentMethod === "CARD" ? "active" : ""}`}>
+                  <label
+                    className={`payment-option ${paymentMethod === "CARD" ? "active" : ""}`}
+                  >
                     <input
                       type="radio"
                       value="CARD"
@@ -379,7 +554,9 @@ const crearYActivarUsuario = async (transactionId) => {
                     <span>Tarjeta</span>
                   </label>
 
-                  <label className={`payment-option ${paymentMethod === "PSE" ? "active" : ""}`}>
+                  <label
+                    className={`payment-option ${paymentMethod === "PSE" ? "active" : ""}`}
+                  >
                     <input
                       type="radio"
                       value="PSE"
@@ -397,7 +574,7 @@ const crearYActivarUsuario = async (transactionId) => {
                 <>
                   <div className="card-section">
                     <h3>Datos de la tarjeta</h3>
-                    
+
                     <div className="payment-container">
                       <div className="card-form-fields">
                         <div className="form-row">
@@ -429,7 +606,9 @@ const crearYActivarUsuario = async (transactionId) => {
                               className={errors.cardName ? "input-error" : ""}
                             />
                             {errors.cardName && (
-                              <span className="error-msg">{errors.cardName}</span>
+                              <span className="error-msg">
+                                {errors.cardName}
+                              </span>
                             )}
                           </div>
                         </div>
@@ -469,7 +648,11 @@ const crearYActivarUsuario = async (transactionId) => {
                         </div>
 
                         <div className="form-group">
-                          <select name="cuotas" value={formData.cuotas} onChange={handleChange}>
+                          <select
+                            name="cuotas"
+                            value={formData.cuotas}
+                            onChange={handleChange}
+                          >
                             <option value="1">1 cuota (sin interés)</option>
                             <option value="2">2 cuotas</option>
                             <option value="3">3 cuotas</option>
@@ -506,7 +689,9 @@ const crearYActivarUsuario = async (transactionId) => {
                           <div className="magnetic-strip" />
                           <div className="cvv-section">
                             <small>CVV</small>
-                            <div className="cvv-box">{formData.cvv || "•••"}</div>
+                            <div className="cvv-box">
+                              {formData.cvv || "•••"}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -527,7 +712,9 @@ const crearYActivarUsuario = async (transactionId) => {
                           onChange={handleChange}
                           className={errors.nombres ? "input-error" : ""}
                         />
-                        {errors.nombres && <span className="error-msg">{errors.nombres}</span>}
+                        {errors.nombres && (
+                          <span className="error-msg">{errors.nombres}</span>
+                        )}
                       </div>
 
                       <div className="form-group">
@@ -539,38 +726,47 @@ const crearYActivarUsuario = async (transactionId) => {
                           onChange={handleChange}
                           className={errors.apellidos ? "input-error" : ""}
                         />
-                        {errors.apellidos && <span className="error-msg">{errors.apellidos}</span>}
+                        {errors.apellidos && (
+                          <span className="error-msg">{errors.apellidos}</span>
+                        )}
                       </div>
                     </div>
 
                     <div className="form-row">
                       <div className="form-group">
                         <Select
-                                    name="tipoIdentificacion"
-                                    options={tipoIdentificacion.map((ti) => ({
-                                      value: ti.nombre,
-                                      label: `${ti.codigo} - ${ti.nombre}`,
-                                    }))}
-                                    value={
-                                      formData.tipoIdentificacion
-                                        ? tipoIdentificacion
-                                            .map((ti) => ({
-                                              value: ti.nombre,
-                                              label: `${ti.codigo} - ${ti.nombre}`,
-                                            }))
-                                            .find((opt) => opt.value === formData.tipoIdentificacion)
-                                        : null
-                                    }
-                                    onChange={(opt) =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        tipoIdentificacion: opt ? opt.value : "",
-                                      }))
-                                    }
-                                    isClearable
-                                    placeholder="Seleccionar tipo"
-                                  />
-                        {errors.tipoIdentificacion && <span className="error-msg">{errors.tipoIdentificacion}</span>}
+                          name="tipoIdentificacion"
+                          options={tipoIdentificacion.map((ti) => ({
+                            value: ti.nombre,
+                            label: `${ti.codigo} - ${ti.nombre}`,
+                          }))}
+                          value={
+                            formData.tipoIdentificacion
+                              ? tipoIdentificacion
+                                  .map((ti) => ({
+                                    value: ti.nombre,
+                                    label: `${ti.codigo} - ${ti.nombre}`,
+                                  }))
+                                  .find(
+                                    (opt) =>
+                                      opt.value === formData.tipoIdentificacion,
+                                  )
+                              : null
+                          }
+                          onChange={(opt) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              tipoIdentificacion: opt ? opt.value : "",
+                            }))
+                          }
+                          isClearable
+                          placeholder="Seleccionar tipo"
+                        />
+                        {errors.tipoIdentificacion && (
+                          <span className="error-msg">
+                            {errors.tipoIdentificacion}
+                          </span>
+                        )}
                       </div>
 
                       <div className="form-group">
@@ -580,9 +776,15 @@ const crearYActivarUsuario = async (transactionId) => {
                           placeholder="Número de documento *"
                           value={formData.numeroIdentificacion}
                           onChange={handleChange}
-                          className={errors.numeroIdentificacion ? "input-error" : ""}
+                          className={
+                            errors.numeroIdentificacion ? "input-error" : ""
+                          }
                         />
-                        {errors.numeroIdentificacion && <span className="error-msg">{errors.numeroIdentificacion}</span>}
+                        {errors.numeroIdentificacion && (
+                          <span className="error-msg">
+                            {errors.numeroIdentificacion}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -596,7 +798,9 @@ const crearYActivarUsuario = async (transactionId) => {
                           onChange={handleChange}
                           className={errors.email ? "input-error" : ""}
                         />
-                        {errors.email && <span className="error-msg">{errors.email}</span>}
+                        {errors.email && (
+                          <span className="error-msg">{errors.email}</span>
+                        )}
                       </div>
 
                       <div className="form-group">
@@ -609,38 +813,42 @@ const crearYActivarUsuario = async (transactionId) => {
                           className={errors.telefono ? "input-error" : ""}
                           maxLength={10}
                         />
-                        {errors.telefono && <span className="error-msg">{errors.telefono}</span>}
+                        {errors.telefono && (
+                          <span className="error-msg">{errors.telefono}</span>
+                        )}
                       </div>
                     </div>
 
                     <div className="form-row">
                       <div className="form-group">
-                        <Select 
-                                    name="ciudad"
-                                    options={ciudades.map((ci) => ({
-                                      value: ci.ciudad,
-                                      label: `${ci.codigoCiudad} - ${ci.ciudad}`,
-                                    }))}
-                                    value={
-                                      formData.ciudad
-                                        ? ciudades
-                                            .map((ci) => ({
-                                              value: ci.ciudad,
-                                              label: `${ci.codigoCiudad} - ${ci.ciudad}`,
-                                            }))
-                                            .find((opt) => opt.value === formData.ciudad)
-                                        : null
-                                    }
-                                    onChange={(opt) =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        ciudad: opt ? opt.value : "",
-                                      }))
-                                    }
-                                    isClearable
-                                    placeholder="Seleccionar ciudad"
-                                  />
-                        {errors.ciudad && <span className="error-msg">{errors.ciudad}</span>}
+                        <Select
+                          name="ciudad"
+                          options={ciudades.map((ci) => ({
+                            value: ci.ciudad,
+                            label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                          }))}
+                          value={
+                            formData.ciudad
+                              ? ciudades
+                                  .map((ci) => ({
+                                    value: ci.ciudad,
+                                    label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                                  }))
+                                  .find((opt) => opt.value === formData.ciudad)
+                              : null
+                          }
+                          onChange={(opt) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              ciudad: opt ? opt.value : "",
+                            }))
+                          }
+                          isClearable
+                          placeholder="Seleccionar ciudad"
+                        />
+                        {errors.ciudad && (
+                          <span className="error-msg">{errors.ciudad}</span>
+                        )}
                       </div>
 
                       <div className="form-group">
@@ -652,7 +860,9 @@ const crearYActivarUsuario = async (transactionId) => {
                           onChange={handleChange}
                           className={errors.direccion ? "input-error" : ""}
                         />
-                        {errors.direccion && <span className="error-msg">{errors.direccion}</span>}
+                        {errors.direccion && (
+                          <span className="error-msg">{errors.direccion}</span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -683,7 +893,11 @@ const crearYActivarUsuario = async (transactionId) => {
                           onChange={handleChange}
                           className={errors.razonSocial ? "input-error" : ""}
                         />
-                        {errors.razonSocial && <span className="error-msg">{errors.razonSocial}</span>}
+                        {errors.razonSocial && (
+                          <span className="error-msg">
+                            {errors.razonSocial}
+                          </span>
+                        )}
                       </div>
 
                       <div className="form-group">
@@ -695,7 +909,9 @@ const crearYActivarUsuario = async (transactionId) => {
                           onChange={handleChange}
                           className={errors.nit ? "input-error" : ""}
                         />
-                        {errors.nit && <span className="error-msg">{errors.nit}</span>}
+                        {errors.nit && (
+                          <span className="error-msg">{errors.nit}</span>
+                        )}
                       </div>
                     </div>
 
@@ -712,30 +928,30 @@ const crearYActivarUsuario = async (transactionId) => {
 
                       <div className="form-group">
                         <Select
-                                    name="ciudad"
-                                    options={ciudades.map((ci) => ({
-                                      value: ci.ciudad,
-                                      label: `${ci.codigoCiudad} - ${ci.ciudad}`,
-                                    }))}
-                                    value={
-                                      formData.ciudad
-                                        ? ciudades
-                                            .map((ci) => ({
-                                              value: ci.ciudad,
-                                              label: `${ci.codigoCiudad} - ${ci.ciudad}`,
-                                            }))
-                                            .find((opt) => opt.value === formData.ciudad)
-                                        : null
-                                    }
-                                    onChange={(opt) =>
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        ciudad: opt ? opt.value : "",
-                                      }))
-                                    }
-                                    isClearable
-                                    placeholder="Seleccionar ciudad"
-                                  />
+                          name="ciudad"
+                          options={ciudades.map((ci) => ({
+                            value: ci.ciudad,
+                            label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                          }))}
+                          value={
+                            formData.ciudad
+                              ? ciudades
+                                  .map((ci) => ({
+                                    value: ci.ciudad,
+                                    label: `${ci.codigoCiudad} - ${ci.ciudad}`,
+                                  }))
+                                  .find((opt) => opt.value === formData.ciudad)
+                              : null
+                          }
+                          onChange={(opt) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              ciudad: opt ? opt.value : "",
+                            }))
+                          }
+                          isClearable
+                          placeholder="Seleccionar ciudad"
+                        />
                       </div>
                     </div>
                   </div>
@@ -759,7 +975,9 @@ const crearYActivarUsuario = async (transactionId) => {
                       <option value="1013">BBVA</option>
                       <option value="1001">Banco de Bogotá</option>
                     </select>
-                    {errors.banco && <span className="error-msg">{errors.banco}</span>}
+                    {errors.banco && (
+                      <span className="error-msg">{errors.banco}</span>
+                    )}
                   </div>
                 </div>
               )}
@@ -785,16 +1003,20 @@ const crearYActivarUsuario = async (transactionId) => {
                   <h3>Producto</h3>
                   <div className="producto-item">
                     <div className="producto-info">
-                      <span className="producto-nombre">Plan {plan.planName}</span>
+                      <span className="producto-nombre">
+                        Plan {plan.planName}
+                      </span>
                     </div>
                     <span className="producto-precio">
-                      ${plan.planPrice.toLocaleString("es-CO")}
+                      ${plan?.planPrice?.toLocaleString("es-CO") ?? "0"}
                     </span>
                   </div>
 
                   <div className="subtotal">
                     <span>Subtotal</span>
-                    <span>${plan.planPrice.toLocaleString("es-CO")}</span>
+                    <span>
+                      ${plan?.planPrice?.toLocaleString("es-CO") ?? "0"}
+                    </span>
                   </div>
 
                   <div className="impuestos">
@@ -805,11 +1027,15 @@ const crearYActivarUsuario = async (transactionId) => {
                   <div className="total">
                     <strong>Total a pagar</strong>
                     <strong className="total-precio">
-                      ${plan.planPrice.toLocaleString("es-CO")}
+                      ${plan?.planPrice?.toLocaleString("es-CO") ?? "0"}
                     </strong>
                   </div>
 
-                  <button className="btn-pagar" onClick={handlePay} disabled={loading}>
+                  <button
+                    className="btn-pagar"
+                    onClick={handlePay}
+                    disabled={loading}
+                  >
                     {loading ? (
                       <>
                         <span className="spinner"></span>

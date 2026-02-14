@@ -283,6 +283,7 @@ export default function Registro() {
                     <strong>regalamos el doble de documento</strong>
                   </p>
                 </div>
+                Nam{" "}
               </div>
               <div className="resumen-compra">
                 <h2>Resumen de compra</h2>
