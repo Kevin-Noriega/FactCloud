@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { API_URL } from "../api/config";
 import { useUsuarios } from "../hooks/useUsuarios";
 import ModalPerfilDesactivar from "../components/dashboard/ModalPerfilDesactivar";
-import { 
-  ToggleOn, 
-  ToggleOff, 
+import {
+  ToggleOn,
+  ToggleOff,
   ExclamationTriangleFill,
-  XCircle,
   PersonCircle,
   EnvelopeFill,
   TelephoneFill,
@@ -16,167 +14,112 @@ import {
   CreditCard2BackFill,
   PencilSquare,
   CheckCircleFill,
-  ClockHistory
+  ClockHistory,
 } from "react-bootstrap-icons";
 import "../styles/Perfil.css";
+import ModalCambiarContraseña from "../components/perfil/ModalCambiarContraseña";
+import ModalHistorialSesiones from "../components/perfil/ModalHistorialSesiones";
 
 function Perfil() {
-  const [usuario, setUsuario] = useState(null);
   const [editando, setEditando] = useState(false);
   const [mensajeExito, setMensajeExito] = useState("");
   const [isOnline, setIsOnline] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  
-  const { data: datosBackend, isLoading, error, refetch } = useUsuarios();
+
+  const [showCambiarContrasena, setShowCambiarContrasena] = useState(false);
+  const [showHistorialSesiones, setShowHistorialSesiones] = useState(false);
+
+  const {
+    data: usuario,
+    isLoading,
+    error,
+    refetch,
+    actualizarPerfil,
+    actualizarPerfilLoading,
+    cambiarEstado,
+    cambiarEstadoLoading,
+  } = useUsuarios();
 
   const [formData, setFormData] = useState({
     nombre: "",
-    email: "",
-    empresa: "",
+    apellido: "",
+    correo: "",
     telefono: "",
-    logoNegocio: "",
+    nombreNegocio: "",
     nitNegocio: "",
     dvNitNegocio: "",
     direccionNegocio: "",
-    tipoRegimen: "",
+    regimenFiscal: "",
     ciudadNegocio: "",
     departamentoNegocio: "",
     correoNegocio: "",
     telefonoNegocio: "",
   });
 
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
-    return {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    };
-  };
-
   useEffect(() => {
-    if (datosBackend) {
-      const usuarioNormalizado = {
-        id: datosBackend.id,
-        nombre: `${datosBackend.nombre || ""} ${datosBackend.apellido || ""}`.trim(),
-        nombreSolo: datosBackend.nombre || "",
-        apellido: datosBackend.apellido || "",
-        email: datosBackend.correo || "",
-        empresa: datosBackend.nombreNegocio || "",
-        telefono: datosBackend.telefono || "",
-        tipoIdentificacion: datosBackend.tipoIdentificacion || "",
-        logoNegocio: datosBackend.logoNegocio || "",
-        nitNegocio: datosBackend.nitNegocio || "",
-        dvNitNegocio: datosBackend.dvNitNegocio || "",
-        direccionNegocio: datosBackend.direccionNegocio || "",
-        tipoRegimen: datosBackend.regimenFiscal || "",
-        regimenTributario: datosBackend.regimenTributario || "",
-        departamentoNegocio: datosBackend.departamentoNegocio || "",
-        ciudadNegocio: datosBackend.ciudadNegocio || "",
-        correoNegocio: datosBackend.correoNegocio || "",
-        telefonoNegocio: datosBackend.telefonoNegocio || "",
-        numeroIdentificacion: datosBackend.numeroIdentificacion || "",
-        estado: datosBackend.estado,
-        fechaDesactivacion: datosBackend.fechaDesactivacion,
-        fechaRegistro: datosBackend.fechaRegistro,
-      };
+    if (usuario) {
+      setIsOnline(usuario.usuario?.estado ?? usuario.estado ?? true);
 
-      setUsuario(usuarioNormalizado);
-      setIsOnline(usuarioNormalizado.estado);
-      
       setFormData({
-        nombre: usuarioNormalizado.nombre,
-        email: usuarioNormalizado.email,
-        empresa: usuarioNormalizado.empresa,
-        telefono: usuarioNormalizado.telefono,
-        logoNegocio: usuarioNormalizado.logoNegocio,
-        nitNegocio: usuarioNormalizado.nitNegocio,
-        dvNitNegocio: usuarioNormalizado.dvNitNegocio,
-        direccionNegocio: usuarioNormalizado.direccionNegocio,
-        tipoRegimen: usuarioNormalizado.tipoRegimen,
-        ciudadNegocio: usuarioNormalizado.ciudadNegocio,
-        departamentoNegocio: usuarioNormalizado.departamentoNegocio,
-        correoNegocio: usuarioNormalizado.correoNegocio,
-        telefonoNegocio: usuarioNormalizado.telefonoNegocio,
+        nombre: usuario.usuario?.nombre || usuario.nombre || "",
+        apellido: usuario.usuario?.apellido || usuario.apellido || "",
+        correo: usuario.usuario?.correo || usuario.correo || "",
+        telefono: usuario.usuario?.telefono || usuario.telefono || "",
+        nombreNegocio:
+          usuario.negocio?.nombreNegocio || usuario.nombreNegocio || "",
+        nitNegocio: usuario.negocio?.nit || usuario.nitNegocio || "",
+        dvNitNegocio: usuario.negocio?.dvNit || usuario.dvNitNegocio || "",
+        direccionNegocio:
+          usuario.negocio?.direccion || usuario.direccionNegocio || "",
+        regimenFiscal:
+          usuario.negocio?.regimenFiscal || usuario.regimenFiscal || "",
+        ciudadNegocio: usuario.negocio?.ciudad || usuario.ciudadNegocio || "",
+        departamentoNegocio:
+          usuario.negocio?.departamento || usuario.departamentoNegocio || "",
+        correoNegocio: usuario.negocio?.correo || usuario.correoNegocio || "",
+        telefonoNegocio:
+          usuario.negocio?.telefono || usuario.telefonoNegocio || "",
       });
     }
-  }, [datosBackend]);
+  }, [usuario]);
 
   const handleToggleClick = () => {
     if (isOnline) {
       setShowConfirmModal(true);
     } else {
-      confirmarCambioEstado(true);
+      handleCambiarEstado(true);
     }
   };
 
-  const confirmarCambioEstado = async (activar = false) => {
-    const nuevoEstado = activar ? true : false;
-    const estadoAnterior = isOnline;
-    
-    setIsOnline(nuevoEstado);
-    setShowConfirmModal(false);
-
+  const handleCambiarEstado = async (activar = false) => {
     try {
-      const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
-      if (!usuarioGuardado) {
-        throw new Error("No se encontró usuario autenticado");
-      }
-
-      const respuesta = await fetch(
-        `${API_URL}/Usuarios/${usuarioGuardado.id}`,
-        {
-          method: "PATCH",
-          headers: getAuthHeaders(),
-          body: JSON.stringify({
-            estado: nuevoEstado,
-            ...(nuevoEstado === false && { 
-              fechaDesactivacion: new Date().toISOString() 
-            }),
-            ...(nuevoEstado === true && { 
-              fechaDesactivacion: null 
-            })
-          }),
-        }
-      );
-
-      if (!respuesta.ok) {
-        const errorText = await respuesta.text();
-        throw new Error(errorText || "Error al actualizar el estado");
-      }
-
+      await cambiarEstado(activar);
+      setIsOnline(activar);
       setMensajeExito(
-        nuevoEstado 
-          ? "Cuenta reactivada exitosamente" 
-          : "Cuenta desactivada. Se eliminará en 30 días si no la reactivas."
+        activar ? "Cuenta activada correctamente" : "Cuenta desactivada",
       );
-      
-      setUsuario((prev) => ({ 
-        ...prev, 
-        estado: nuevoEstado,
-        fechaDesactivacion: nuevoEstado ? null : new Date().toISOString()
-      }));
-
-      refetch();
-      setTimeout(() => setMensajeExito(""), 5000);
-      
+      setShowConfirmModal(false);
+      setTimeout(() => setMensajeExito(""), 3000);
     } catch (error) {
-      console.error("Error:", error);
-      setIsOnline(estadoAnterior);
-      alert("Error al cambiar el estado: " + error.message);
+      console.error("Error al cambiar estado:", error);
+      alert(`Error: ${error.message}`);
     }
   };
 
   const calcularDiasRestantes = () => {
-    if (!usuario?.fechaDesactivacion) return null;
-    
-    const fechaDesactivacion = new Date(usuario.fechaDesactivacion);
+    if (!usuario?.usuario?.fechaDesactivacion && !usuario?.fechaDesactivacion)
+      return null;
+
+    const fechaDesactivacion = new Date(
+      usuario.usuario?.fechaDesactivacion || usuario.fechaDesactivacion,
+    );
     const fechaEliminacion = new Date(fechaDesactivacion);
-    fechaEliminacion.setDate(fechaEliminacion.getDate() + 30);
-    
+    fechaEliminacion.setDate(fechaEliminacion.getDate() + 29);
+
     const ahora = new Date();
     const diferencia = fechaEliminacion - ahora;
     const diasRestantes = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
-    
+
     return diasRestantes > 0 ? diasRestantes : 0;
   };
 
@@ -191,71 +134,35 @@ function Perfil() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
-      if (!usuarioGuardado) {
-        alert("No se encontró usuario autenticado");
-        return;
-      }
-
-      const [nombre, ...apellidoParts] = formData.nombre.split(" ");
-      const apellido = apellidoParts.join(" ");
-
-      const respuesta = await fetch(
-        `${API_URL}/Usuarios/${usuarioGuardado.id}`,
-        {
-          method: "PATCH",
-          headers: getAuthHeaders(),
-          body: JSON.stringify({
-            nombre: nombre,
-            apellido: apellido,
-            correo: formData.email,
-            nombreNegocio: formData.empresa,
-            telefono: formData.telefono,
-            logoNegocio: formData.logoNegocio,
-            nitNegocio: formData.nitNegocio,
-            dvNitNegocio: formData.dvNitNegocio ? parseInt(formData.dvNitNegocio) : null,
-            direccionNegocio: formData.direccionNegocio,
-            regimenFiscal: formData.tipoRegimen,
-            departamentoNegocio: formData.departamentoNegocio,
-            ciudadNegocio: formData.ciudadNegocio,
-            correoNegocio: formData.correoNegocio,
-            telefonoNegocio: formData.telefonoNegocio,
-            estado: usuario.estado,
-          }),
-        }
-      );
-
-      if (!respuesta.ok) {
-        const texto = await respuesta.text();
-        throw new Error(texto);
-      }
+      await actualizarPerfil(formData);
 
       setMensajeExito("Perfil actualizado correctamente");
       setEditando(false);
-      await refetch();
-
       setTimeout(() => setMensajeExito(""), 3000);
     } catch (error) {
+      console.error("Error actualizar:", error);
       alert("Error al actualizar perfil: " + error.message);
     }
   };
 
   const cancelarEdicion = () => {
-    setFormData({
-      nombre: usuario.nombre || "",
-      email: usuario.email || "",
-      empresa: usuario.empresa || "",
-      telefono: usuario.telefono || "",
-      logoNegocio: usuario.logoNegocio || "",
-      nitNegocio: usuario.nitNegocio || "",
-      dvNitNegocio: usuario.dvNitNegocio || "",
-      direccionNegocio: usuario.direccionNegocio || "",
-      tipoRegimen: usuario.tipoRegimen || "",
-      ciudadNegocio: usuario.ciudadNegocio || "",
-      departamentoNegocio: usuario.departamentoNegocio || "",
-      correoNegocio: usuario.correoNegocio || "",
-      telefonoNegocio: usuario.telefonoNegocio || "",
-    });
+    if (usuario) {
+      setFormData({
+        nombre: usuario.usuario?.nombre || usuario.nombre || "",
+        apellido: usuario.usuario?.apellido || usuario.apellido || "",
+        correo: usuario.usuario?.correo || usuario.correo || "",
+        telefono: usuario.usuario?.telefono || usuario.telefono || "",
+        nombreNegocio: usuario.negocio?.nombreNegocio || "",
+        nitNegocio: usuario.negocio?.nit || "",
+        dvNitNegocio: usuario.negocio?.dvNit || "",
+        direccionNegocio: usuario.negocio?.direccion || "",
+        regimenFiscal: usuario.negocio?.regimenFiscal || "",
+        ciudadNegocio: usuario.negocio?.ciudad || "",
+        departamentoNegocio: usuario.negocio?.departamento || "",
+        correoNegocio: usuario.negocio?.correo || "",
+        telefonoNegocio: usuario.negocio?.telefono || "",
+      });
+    }
     setEditando(false);
   };
 
@@ -345,18 +252,21 @@ function Perfil() {
     <div className="perfil-container">
       <nav aria-label="breadcrumb" className="breadcrumb-perfil">
         <ol className="breadcrumb">
-          <li className="breadcrumb-item"><a href="/dashboard">Inicio </a></li>
-          <li className="breadcrumb-item active" aria-current="page">Mi Perfil</li>
+          <li className="breadcrumb-item">
+            <a href="/dashboard">Inicio</a>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            Mi Perfil
+          </li>
         </ol>
       </nav>
 
       {mensajeExito && (
-        <div className={`alert-perfil ${!isOnline ? 'alert-warning-perfil' : 'alert-success-perfil'}`}>
+        <div
+          className={`alert-perfil ${!isOnline ? "alert-warning-perfil" : "alert-success-perfil"}`}
+        >
           <CheckCircleFill size={20} className="me-2" />
           <span>{mensajeExito}</span>
-          <button className="alert-close-btn-perfil" onClick={() => setMensajeExito("")}>
-            <XCircle size={18} />
-          </button>
         </div>
       )}
 
@@ -368,42 +278,68 @@ function Perfil() {
           <div className="alert-content-perfil">
             <h4 className="alert-title-perfil">Cuenta Desactivada</h4>
             <p className="alert-message-perfil">
-              Tu cuenta será eliminada permanentemente en <strong>{diasRestantes} {diasRestantes === 1 ? 'día' : 'días'}</strong>.
+              Tu cuenta será eliminada permanentemente en{" "}
+              <strong>
+                {diasRestantes} {diasRestantes === 1 ? "día" : "días"}
+              </strong>
+              .
               <br />
-              Puedes reactivarla en cualquier momento antes de que expire el plazo.
+              Puedes reactivarla en cualquier momento antes de que expire el
+              plazo.
             </p>
-            <button className="btn-reactivate-perfil" onClick={() => confirmarCambioEstado(true)}>
-              Reactivar Ahora
-            </button>
           </div>
+          <button
+            className="btn-reactivate-perfil"
+            onClick={() => handleCambiarEstado(true)}
+          >
+            Reactivar Ahora
+          </button>
         </div>
       )}
 
       <div className="row g-4">
         <div className="col-lg-8">
           <div className="perfil-card">
-            <div className={`perfil-card-header ${!isOnline ? 'inactive' : ''}`}>
+            <div
+              className={`perfil-card-header ${!isOnline ? "inactive" : ""}`}
+            >
               <div className="d-flex align-items-center justify-content-between w-100">
                 <div className="d-flex align-items-center gap-4">
                   <div className="logo-wrapper">
                     <LogoEmpresa
-                      url={usuario?.logoNegocio}
-                      nombreEmpresa={usuario?.empresa}
+                      url={
+                        usuario?.negocio?.logoNegocio || usuario?.logoNegocio
+                      }
+                      nombreEmpresa={
+                        usuario?.negocio?.nombreNegocio ||
+                        usuario?.nombreNegocio ||
+                        "Sin empresa"
+                      }
                       size="120px"
                     />
-                    <div className={`status-indicator-dot ${isOnline ? 'online' : 'offline'}`}></div>
+                    <div
+                      className={`status-indicator-dot ${isOnline ? "online" : "offline"}`}
+                    ></div>
                   </div>
                   <div>
-                    <h2 className="empresa-title">{usuario?.empresa || "Sin empresa"}</h2>
-                    <p className="usuario-subtitle">{usuario?.nombre}</p>
+                    <h2 className="empresa-title">
+                      {usuario?.negocio?.nombreNegocio ||
+                        usuario?.nombreNegocio ||
+                        "Sin empresa"}
+                    </h2>
+                    <p className="usuario-subtitle">
+                      {usuario?.nombreCompleto || "Usuario"}
+                    </p>
                     <div className="d-flex align-items-center gap-2 mt-2 flex-wrap">
-                      <span className={`status-pill ${isOnline ? 'online' : 'offline'}`}>
+                      <span
+                        className={`status-pill ${isOnline ? "online" : "offline"}`}
+                      >
                         <span className="status-dot"></span>
                         {isOnline ? "Activo" : "Inactivo"}
                       </span>
-                      {usuario?.tipoRegimen && (
+                      {usuario?.negocio?.regimenFiscal && (
                         <span className="regimen-pill">
-                          {usuario.tipoRegimen}
+                          {usuario.negocio.regimenFiscal}
                         </span>
                       )}
                     </div>
@@ -417,10 +353,11 @@ function Perfil() {
                 <>
                   <div className="info-section">
                     <div className="section-header-perfil">
-                      <h3 className="section-title">
-                        Información Personal
-                      </h3>
-                      <button className="btn-icon-edit" onClick={() => setEditando(true)}>
+                      <h3 className="section-title">Información Personal</h3>
+                      <button
+                        className="btn-icon-edit"
+                        onClick={() => setEditando(true)}
+                      >
                         <PencilSquare size={18} />
                       </button>
                     </div>
@@ -431,7 +368,9 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Nombre Completo</span>
-                          <p className="info-value">{usuario?.nombre || "N/A"}</p>
+                          <p className="info-value">
+                            {usuario?.nombreCompleto || "N/A"}
+                          </p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -440,7 +379,11 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Correo Electrónico</span>
-                          <p className="info-value">{datosBackend?.correo|| "N/A"}</p>
+                          <p className="info-value">
+                            {usuario?.usuario?.correo ||
+                              usuario?.correo ||
+                              "N/A"}
+                          </p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -449,7 +392,11 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Teléfono</span>
-                          <p className="info-value">{datosBackend?.telefono || "N/A"}</p>
+                          <p className="info-value">
+                            {usuario?.usuario?.telefono ||
+                              usuario?.telefono ||
+                              "N/A"}
+                          </p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -459,11 +406,15 @@ function Perfil() {
                         <div>
                           <span className="info-label">Fecha de Registro</span>
                           <p className="info-value">
-                            {usuario?.fechaRegistro
-                              ? new Date(usuario.fechaRegistro).toLocaleDateString("es-CO", {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric'
+                            {usuario?.usuario?.fechaRegistro ||
+                            usuario?.fechaRegistro
+                              ? new Date(
+                                  usuario.usuario?.fechaRegistro ||
+                                    usuario.fechaRegistro,
+                                ).toLocaleDateString("es-CO", {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
                                 })
                               : "N/A"}
                           </p>
@@ -476,9 +427,7 @@ function Perfil() {
 
                   <div className="info-section">
                     <div className="section-header-perfil">
-                      <h3 className="section-title">
-                        Información Empresarial
-                      </h3>
+                      <h3 className="section-title">Información Empresarial</h3>
                     </div>
                     <div className="info-grid">
                       <div className="info-item">
@@ -487,7 +436,9 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Razón Social</span>
-                          <p className="info-value">{datosBackend?.nombreNegocio || "N/A"}</p>
+                          <p className="info-value">
+                            {usuario?.negocio?.nombreNegocio || "N/A"}
+                          </p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -497,9 +448,11 @@ function Perfil() {
                         <div>
                           <span className="info-label">NIT</span>
                           <p className="info-value">
-                            {datosBackend?.nitNegocio
-                              ? `${usuario.nitNegocio}${
-                                  usuario.dvNitNegocio ? `-${usuario.dvNitNegocio}` : ""
+                            {usuario?.negocio?.nit
+                              ? `${usuario.negocio.nit}${
+                                  usuario.negocio.dvNit
+                                    ? `-${usuario.negocio.dvNit}`
+                                    : ""
                                 }`
                               : "N/A"}
                           </p>
@@ -511,7 +464,9 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Dirección</span>
-                          <p className="info-value">{datosBackend?.direccionNegocio || "N/A"}</p>
+                          <p className="info-value">
+                            {usuario?.negocio?.direccion || "N/A"}
+                          </p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -521,10 +476,10 @@ function Perfil() {
                         <div>
                           <span className="info-label">Ciudad</span>
                           <p className="info-value">
-                            {usuario?.ciudadNegocio
-                              ? `${usuario.ciudadNegocio}${
-                                  usuario.departamentoNegocio
-                                    ? `, ${usuario.departamentoNegocio}`
+                            {usuario?.negocio?.ciudad
+                              ? `${usuario.negocio.ciudad}${
+                                  usuario.negocio.departamento
+                                    ? `, ${usuario.negocio.departamento}`
                                     : ""
                                 }`
                               : "N/A"}
@@ -537,7 +492,9 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Teléfono Empresa</span>
-                          <p className="info-value">{usuario?.telefonoNegocio || "N/A"}</p>
+                          <p className="info-value">
+                            {usuario?.negocio?.telefono || "N/A"}
+                          </p>
                         </div>
                       </div>
                       <div className="info-item">
@@ -546,7 +503,9 @@ function Perfil() {
                         </div>
                         <div>
                           <span className="info-label">Correo Empresa</span>
-                          <p className="info-value">{usuario?.correoNegocio || "N/A"}</p>
+                          <p className="info-value">
+                            {usuario?.negocio?.correo || "N/A"}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -565,7 +524,7 @@ function Perfil() {
                     <h4 className="form-section-title">Datos Personales</h4>
                     <div className="row g-3">
                       <div className="col-md-6">
-                        <label className="form-label-perfil">Nombre Completo *</label>
+                        <label className="form-label-perfil">Nombre *</label>
                         <input
                           type="text"
                           name="nombre"
@@ -576,12 +535,24 @@ function Perfil() {
                         />
                       </div>
                       <div className="col-md-6">
-                        <label className="form-label-perfil">Correo Electrónico *</label>
+                        <label className="form-label-perfil">Apellido</label>
+                        <input
+                          type="text"
+                          name="apellido"
+                          className="form-control-perfil"
+                          value={formData.apellido}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label-perfil">
+                          Correo Electrónico *
+                        </label>
                         <input
                           type="email"
-                          name="email"
+                          name="correo"
                           className="form-control-perfil"
-                          value={formData.email}
+                          value={formData.correo}
                           onChange={handleChange}
                           required
                         />
@@ -597,23 +568,27 @@ function Perfil() {
                           placeholder="3001234567"
                         />
                       </div>
-                      <div className="col-md-6">
-                        <label className="form-label-perfil">Nombre de la Empresa</label>
-                        <input
-                          type="text"
-                          name="empresa"
-                          className="form-control-perfil"
-                          value={formData.empresa}
-                          onChange={handleChange}
-                          placeholder="Mi Empresa S.A.S"
-                        />
-                      </div>
                     </div>
                   </div>
 
                   <div className="form-section">
-                    <h4 className="form-section-title">Información Empresarial</h4>
+                    <h4 className="form-section-title">
+                      Información Empresarial
+                    </h4>
                     <div className="row g-3">
+                      <div className="col-md-12">
+                        <label className="form-label-perfil">
+                          Nombre de la Empresa
+                        </label>
+                        <input
+                          type="text"
+                          name="nombreNegocio"
+                          className="form-control-perfil"
+                          value={formData.nombreNegocio}
+                          onChange={handleChange}
+                          placeholder="Mi Empresa S.A.S"
+                        />
+                      </div>
                       <div className="col-md-5">
                         <label className="form-label-perfil">NIT</label>
                         <input
@@ -638,17 +613,21 @@ function Perfil() {
                         />
                       </div>
                       <div className="col-md-6">
-                        <label className="form-label-perfil">Tipo de Régimen</label>
+                        <label className="form-label-perfil">
+                          Régimen Fiscal
+                        </label>
                         <select
-                          name="tipoRegimen"
+                          name="regimenFiscal"
                           className="form-select-perfil"
-                          value={formData.tipoRegimen}
+                          value={formData.regimenFiscal}
                           onChange={handleChange}
                         >
                           <option value="">Seleccionar...</option>
                           <option value="Simplificado">Simplificado</option>
                           <option value="Común">Común</option>
-                          <option value="Gran Contribuyente">Gran Contribuyente</option>
+                          <option value="Gran Contribuyente">
+                            Gran Contribuyente
+                          </option>
                         </select>
                       </div>
                       <div className="col-12">
@@ -674,7 +653,9 @@ function Perfil() {
                         />
                       </div>
                       <div className="col-md-6">
-                        <label className="form-label-perfil">Departamento</label>
+                        <label className="form-label-perfil">
+                          Departamento
+                        </label>
                         <input
                           type="text"
                           name="departamentoNegocio"
@@ -685,7 +666,9 @@ function Perfil() {
                         />
                       </div>
                       <div className="col-md-6">
-                        <label className="form-label-perfil">Teléfono Empresa</label>
+                        <label className="form-label-perfil">
+                          Teléfono Empresa
+                        </label>
                         <input
                           type="text"
                           name="telefonoNegocio"
@@ -696,7 +679,9 @@ function Perfil() {
                         />
                       </div>
                       <div className="col-md-6">
-                        <label className="form-label-perfil">Correo Empresa</label>
+                        <label className="form-label-perfil">
+                          Correo Empresa
+                        </label>
                         <input
                           type="email"
                           name="correoNegocio"
@@ -706,37 +691,34 @@ function Perfil() {
                           placeholder="contacto@empresa.com"
                         />
                       </div>
-                      <div className="col-12">
-                        <label className="form-label-perfil">Logo de la Empresa (URL)</label>
-                        <input
-                          type="url"
-                          name="logoNegocio"
-                          className="form-control-perfil"
-                          value={formData.logoNegocio}
-                          onChange={handleChange}
-                          placeholder="https://ejemplo.com/logo.png"
-                        />
-                        {formData.logoNegocio && (
-                          <div className="logo-preview mt-3">
-                            <p className="text-muted small mb-2">Vista previa:</p>
-                            <LogoEmpresa
-                              url={formData.logoNegocio}
-                              nombreEmpresa={formData.empresa}
-                              size="80px"
-                            />
-                          </div>
-                        )}
-                      </div>
                     </div>
                   </div>
 
                   <div className="form-actions">
-                    <button type="button" className="btn-secondary-perfil" onClick={cancelarEdicion}>
+                    <button
+                      type="button"
+                      className="btn-secondary-perfil"
+                      onClick={cancelarEdicion}
+                      disabled={actualizarPerfilLoading}
+                    >
                       Cancelar
                     </button>
-                    <button type="submit" className="btn-primary-perfil">
-                      <CheckCircleFill className="me-2" size={18} />
-                      Guardar Cambios
+                    <button
+                      type="submit"
+                      className="btn-primary-perfil"
+                      disabled={actualizarPerfilLoading}
+                    >
+                      {actualizarPerfilLoading ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2"></span>
+                          Guardando...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircleFill className="me-2" size={18} />
+                          Guardar Cambios
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>
@@ -753,25 +735,35 @@ function Perfil() {
             <div className="sidebar-card-body">
               <div className="status-control">
                 <div className="status-info">
-                  <div className={`status-icon-large ${isOnline ? 'online' : 'offline'}`}>
-                    {isOnline ? <CheckCircleFill size={28} /> : <ExclamationTriangleFill size={28} />}
+                  <div
+                    className={`status-icon-large ${isOnline ? "online" : "offline"}`}
+                  >
+                    {isOnline ? (
+                      <CheckCircleFill size={28} />
+                    ) : (
+                      <ExclamationTriangleFill size={28} />
+                    )}
                   </div>
                   <div>
-                    <h4 className="status-text">{isOnline ? "Cuenta Activa" : "Cuenta Inactiva"}</h4>
+                    <h4 className="status-text">
+                      {isOnline ? "Cuenta Activa" : "Cuenta Inactiva"}
+                    </h4>
                     <p className="status-description">
-                      {isOnline 
-                        ? "Tu cuenta está activa y funcionando correctamente" 
-                        : `Tu cuenta será eliminada en ${diasRestantes} ${diasRestantes === 1 ? 'día' : 'días'}`
-                      }
+                      {isOnline
+                        ? "Tu cuenta está activa y funcionando correctamente"
+                        : `Tu cuenta será eliminada en ${diasRestantes} ${diasRestantes === 1 ? "día" : "días"}`}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={handleToggleClick}
-                  className={`toggle-switch-perfil ${isOnline ? 'active' : ''}`}
+                  className={`toggle-switch-perfil ${isOnline ? "active" : ""}`}
                   title={isOnline ? "Desactivar cuenta" : "Activar cuenta"}
+                  disabled={cambiarEstadoLoading}
                 >
-                  {isOnline ? (
+                  {cambiarEstadoLoading ? (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  ) : isOnline ? (
                     <ToggleOn size={40} />
                   ) : (
                     <ToggleOff size={40} />
@@ -786,23 +778,37 @@ function Perfil() {
               <h3 className="sidebar-card-title">Seguridad</h3>
             </div>
             <div className="sidebar-card-body">
-              <a href="#cambiar-contrasena" className="action-link">
+              <button
+                onClick={() => setShowCambiarContrasena(true)}
+                className="action-link"
+              >
                 <span>Cambiar Contraseña</span>
-                <span>→</span>
-              </a>
-              <a href="#historial" className="action-link">
+              </button>
+              <button
+                onClick={() => setShowHistorialSesiones(true)}
+                className="action-link"
+              >
                 <span>Historial de Sesiones</span>
-                <span>→</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>
       </div>
+      
 
       <ModalPerfilDesactivar
         isOpen={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
-        onConfirm={() => confirmarCambioEstado(false)}
+        onConfirm={() => handleCambiarEstado(false)}
+        loading={cambiarEstadoLoading}
+      />
+      <ModalCambiarContraseña
+        isOpen={showCambiarContrasena}
+        onClose={() => setShowCambiarContrasena(false)}
+      />
+      <ModalHistorialSesiones
+        isOpen={showHistorialSesiones}
+        onClose={() => setShowHistorialSesiones(false)}
       />
     </div>
   );

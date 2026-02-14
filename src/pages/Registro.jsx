@@ -5,12 +5,14 @@ import "../styles/Registro.css";
 import Select from "react-select";
 import tipoIdentificacion from "../utils/TiposDocumentos.json";
 import { ChevronLeft, CheckCircleFill } from "react-bootstrap-icons";
-import { useCupones } from "../hooks/useCupones";
+import { useCupones } from "../hooks/useCupones.JS";
+import { ModalDetalles } from "../components/checkout/ModalDetalles";
 
 export default function Registro() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [mostrarVerDetalles, setMostrarVerDetalles] = useState(false);
 
   const [formData, setFormData] = useState({
     tipoIdentificacion: "",
@@ -24,6 +26,7 @@ export default function Registro() {
     aceptaTerminos: false,
   });
 
+  const cupones = useCupones(selectedPlan?.id);
   useEffect(() => {
     window.scrollTo(0, 0);
     const plan = localStorage.getItem("selectedPlan");
@@ -34,8 +37,6 @@ export default function Registro() {
     setLoading(false);
   }, []);
 
-  const cupones = useCupones(selectedPlan?.id);
-
   if (loading) return <div>Cargando...</div>;
   if (!selectedPlan)
     return (
@@ -45,8 +46,11 @@ export default function Registro() {
       </div>
     );
 
-  const descuentoPlan = selectedPlan.originalAnnualPrice * selectedPlan.discountPercentage / 100;
-  const subtotal = selectedPlan.annualPrice; 
+  const descuentoPlan =
+    (selectedPlan.originalAnnualPrice * selectedPlan.discountPercentage) / 100;
+  const subtotal = selectedPlan.annualPrice;
+  const descuentoCupon =
+    subtotal - (cupones.coupon?.priceAfterDiscount || subtotal);
   const totalFinal = cupones.coupon ? cupones.total : subtotal;
 
   const handleChange = (e) => {
@@ -106,12 +110,14 @@ export default function Registro() {
   return (
     <div className="registro-page">
       <Stepper currentStep={2} />
-      <button onClick={() => navigate("/planes")} className="btn-back">
+     
+
+      <div className="registro-container">
+         <button onClick={() => navigate("/planes")} className="btn-back">
         <ChevronLeft />
         Regresar
       </button>
 
-      <div className="registro-container">
         <div className="registro-content">
           <div className="registro-form-section">
             <h1>Crea tu cuenta</h1>
@@ -288,7 +294,15 @@ export default function Registro() {
                       <span className="producto-nombre">
                         Plan {selectedPlan.name}
                       </span>
-                      <button className="ver-detalle">Ver detalle</button>
+
+                      <button
+                        className="ver-detalle"
+                        title="Detalles"
+                        onClick={() => setMostrarVerDetalles(true)}
+                      >
+                        Ver detalle
+                      </button>
+                      
                     </div>
                     <span className="producto-precio">
                       $
@@ -297,10 +311,7 @@ export default function Registro() {
                   </div>
 
                   <div className="descuento-item">
-                    <span>
-                      Descuento {selectedPlan.planDiscount} (
-                      {selectedPlan.discountPercentage}%){" "}
-                    </span>
+                    <span>Descuento ({selectedPlan.discountPercentage}%) </span>
                     <span className="descuento-valor">
                       -${descuentoPlan.toLocaleString("es-CO")}
                     </span>
@@ -312,6 +323,14 @@ export default function Registro() {
                       ${selectedPlan.annualPrice.toLocaleString("es-CO")}
                     </span>
                   </div>
+                  {cupones.coupon && (
+                    <div className="cupon">
+                      <span>
+                        Descuento cupon ({cupones.coupon.discountPercent}%){" "}
+                      </span>
+                      <span className = "descuento-cupon">-${descuentoCupon.toLocaleString("es-CO")}</span>
+                    </div>
+                  )}
 
                   <div className="impuestos">
                     <span>Impuestos</span>
@@ -323,16 +342,21 @@ export default function Registro() {
                       type="text"
                       placeholder="Código de descuento"
                       value={cupones.couponCode}
-                      onChange={(e) =>
-                        cupones.setCouponCode(e.target.value.toUpperCase())
-                      }
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase();
+                        cupones.setCouponCode(value);
+
+                        if (!value.trim()) {
+                          cupones.clearCoupon();
+                        }
+                      }}
                     />
                     <button
                       className="btn-validar"
                       onClick={cupones.validateCoupon}
                       disabled={cupones.loading}
                     >
-                      {cupones.loading ? '...' : 'Validar'}
+                      {cupones.loading ? "..." : "Validar"}
                     </button>
                   </div>
                   {cupones.couponError && (
@@ -341,12 +365,9 @@ export default function Registro() {
                     </p>
                   )}
                   {cupones.coupon && (
-                    <div className="coupon-success text-success small mt-11">
-                      el cupon {cupones.coupon.code}: del {cupones.coupon.discountPercent}% de  descuento fue aplicado
-                      con exito.
-                      
+                    <div className="coupon-success text-success small mt-1">
+                      {cupones.coupon.message}
                     </div>
-                    
                   )}
 
                   <div className="total">
@@ -359,8 +380,15 @@ export default function Registro() {
               </div>
             </div>
           )}
+          <ModalDetalles
+                      isOpen={mostrarVerDetalles}
+                    onClose={() => setMostrarVerDetalles(false)}
+                    plan={selectedPlan}
+                      />
         </div>
+         
       </div>
+      
     </div>
   );
 }

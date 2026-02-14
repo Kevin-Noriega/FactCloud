@@ -22,15 +22,12 @@ function ModalCrear({ open, onClose }) {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [open]);
-
-  useEffect(() => {
     if (!open) {
       setModalActivo(null);
     }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [open]);
 
   /**

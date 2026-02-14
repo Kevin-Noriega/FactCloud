@@ -11,17 +11,12 @@ import {
   FileEarmarkPdf,
   Clock,
   BookmarkCheck,
-  QuestionCircle,
-  Headset,
-  PlayBtn,
-  Megaphone,
   ArrowRight,
   GraphUpArrow,
-  Calendar,
   CheckCircleFill,
 } from "react-bootstrap-icons";
 import "../styles/Dashboard.css";
-import QuickActions from "../components/dashboard/AccesosDirectos";
+import { HeroBanner } from "../components/dashboard/HeroBanner";
 
 function Dashboard() {
   const [clientesCount, setClientesCount] = useState(0);
@@ -97,34 +92,8 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="dashboard-header-card">
-          <div className="dashboard-header-content">
-            <div className="dashboard-header-text">
-              <h1 className="dashboard-header-title">¡Bienvenido a FactCloud!</h1>
-              <p className="dashboard-header-subtitle">
-                Sistema de Facturación Electrónica - Cumplimiento DIAN 2025
-              </p>
-              <div className="dashboard-header-date">
-                <Calendar className="me-2" size={16} />
-                {new Date().toLocaleDateString("es-CO", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </div>
-
-            </div>
-            <div className="dashboard-header-icon">
-              <GraphUpArrow size={120} />
-            </div>
-            <div className="dashboard-header-actions">
-              <QuickActions />
-            </div>
-          </div>
-        </div>
-      </div>
+       <HeroBanner/>
+       
 
       <ToastContainer
         position="top-right"
@@ -406,61 +375,6 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="bottom-grid">
-        <div className="help-card">
-          <div className="help-icon">
-            <QuestionCircle size={32} />
-          </div>
-          <div className="help-content">
-            <h6 className="help-title">¿Necesitas ayuda?</h6>
-            <p className="help-description">
-              Consulta nuestra documentación completa o contacta con soporte
-              técnico.
-            </p>
-          </div>
-          <div className="help-buttons">
-            <button className="help-button">
-              <FileEarmarkText size={18} className="me-2" />
-              Documentación
-            </button>
-            <button className="help-button">
-              <Headset size={18} className="me-2" />
-              Soporte
-            </button>
-            <button className="help-button">
-              <PlayBtn size={18} className="me-2" />
-              Tutoriales
-            </button>
-          </div>
-        </div>
-
-        <div className="news-card">
-          <div className="news-icon">
-            <Megaphone size={32} />
-          </div>
-          <div className="news-content">
-            <h6 className="news-title">Novedades de FactCloud</h6>
-            <ul className="news-list">
-              <li className="news-item">
-                <CheckCircleFill size={16} className="me-2" />
-                Integración con DIAN automática
-              </li>
-              <li className="news-item">
-                <CheckCircleFill size={16} className="me-2" />
-                Envío masivo de facturas por email
-              </li>
-              <li className="news-item">
-                <CheckCircleFill size={16} className="me-2" />
-                Reportes avanzados en tiempo real
-              </li>
-              <li className="news-item">
-                <CheckCircleFill size={16} className="me-2" />
-                Backup automático en la nube
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

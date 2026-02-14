@@ -62,6 +62,7 @@ export const useCupones = (planId) => {
     loading,
     validateCoupon,
     clearCoupon,
+    descuentoPorcentaje: coupon?.discountPercent, 
     total: coupon?.priceAfterDiscount || 0
   };
 };

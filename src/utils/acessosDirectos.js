@@ -6,24 +6,9 @@
     route: "/facturas",
   },
   {
-    title: "Crear Nota de Crédito",
-    icon: "ArrowCounterclockwise",
-    route: "/notaCredito",
-  },
-  {
-    title: "Crear Nota de Débito",
-    icon: "ArrowRepeat",
-    route: "/notadebito",
-  },
-  {
     title: "Crear Documento Soporte",
     icon: "FileCheck",
     route: "/DocumentoSoporte",
-  },
-  {
-    title: "Crear Producto",
-    icon: "BoxSeam",
-    route: "/productos",
   },
   {
     title: "Agregar Tercero",

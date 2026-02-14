@@ -48,7 +48,7 @@
 }
 
 .btn-back:hover {
-  transform: translateX(-4px);
+  gap: 4px;
 }
 
 .registro-content {
@@ -90,6 +90,7 @@
 }
 
 .form-group input,
+.codigo-descuento input,
 .form-group select {
   padding: 10px 14px;
   border: 2px solid #e2e8f0;
@@ -99,10 +100,10 @@
 }
 
 .form-group input:focus,
+.codigo-descuento input:focus,
 .form-group select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-checkbox {
@@ -142,8 +143,7 @@
 }
 
 .btn-crear-cuenta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
+  background: var(--primary-dark);
 }
 
 .login-link {
@@ -177,7 +177,7 @@
 
 .resumen-compra h3 {
   font-size: 16px;
-  color: #64748b;
+  color: var(--text-muted);
   margin-bottom: 16px;
   font-weight: 600;
 }
@@ -204,7 +204,7 @@
 .ver-detalle {
   background: none;
   border: none;
-  color: #3b82f6;
+  color: var(--primary-dark);
   font-size: 13px;
   cursor: pointer;
   text-align: left;
@@ -218,18 +218,17 @@
 
 .descuento-item,
 .subtotal,
-.impuestos {
+.impuestos, .cupon {
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
   border-bottom: 1px solid #f1f5f9;
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
-.descuento-valor {
-  color: #10b981;
-  font-weight: 600;
+.descuento-valor, .descuento-cupon {
+  color: var(--success);
 }
 
 .codigo-descuento {
@@ -248,7 +247,7 @@
 
 .btn-validar {
   padding: 10px 20px;
-  background: #3b82f6;
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -258,7 +257,7 @@
 }
 
 .btn-validar:hover {
-  background: #2563eb;
+  background: var(--primary-dark);
 }
 
 .total {
@@ -272,7 +271,7 @@
 }
 
 .total-precio {
-  color: #3b82f6;
+  color: var(--primary);
   font-size: 24px;
 }
 

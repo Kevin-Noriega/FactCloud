@@ -11,7 +11,7 @@ import {
 } from "../../utils/Helpers";
 import "../../styles/ModalCrearCliente.css";
 
-function ModalCrearCliente({ onClose, clienteEditando, onSuccess }) {
+function ModalCrearCliente({ open, onClose, clienteEditando, onSuccess }) {
   const [cliente, setCliente] = useState({
     nombre: "",
     apellido: "",

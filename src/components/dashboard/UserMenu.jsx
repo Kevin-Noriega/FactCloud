@@ -1,13 +1,14 @@
-// components/UserMenu.jsx
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, BoxArrowRight } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
-import '../../styles/UserMenu.css';
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronDown, BoxArrowRight } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
+import { useUsuarios } from '../../hooks/useUsuarios'; 
+import "../../styles/UserMenu.css";
 
-const UserMenu = ({ userName, userEmail, userPlan, userAvatar }) => {
+const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const {data: usuario, isLoading} = useUsuarios();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -16,28 +17,22 @@ const UserMenu = ({ userName, userEmail, userPlan, userAvatar }) => {
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+      document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+    
   }, [isOpen]);
 
   const handleLogout = () => {
-   localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
-    
+     localStorage.clear();
     sessionStorage.clear();
     
-    navigate('/login');
-    
+    navigate('/login', { replace: true });
+
     window.location.reload();
   };
 
   const getInitials = (name) => {
+    if (!name) return 'UD';
     return name
       .split(' ')
       .map(word => word[0])
@@ -46,15 +41,26 @@ const UserMenu = ({ userName, userEmail, userPlan, userAvatar }) => {
       .toUpperCase();
   };
 
+  const userName = usuario?.nombreCompleto || 'Usuario';
+  const businessNit = usuario?.negocioNit;
+  const userEmail = usuario?.usuario?.correo ||  'email@ejemplo.com';
+  const userPlan = usuario?.planNombre || "Demo";
+  const userAvatar = usuario?.usuario?.avatar || usuario?.avatar;
+
+  if (isLoading) {
+    return (
+      <div className="user-menu-loading">
+        <div className="avatar-skeleton"></div>
+        <span>Cargando...</span>
+      </div>
+    );
+  }
   return (
     <div className="user-menu-container" ref={menuRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="user-menu-button"
-      >
+      <button onClick={() => setIsOpen(!isOpen)} className="user-menu-button">
         <span className="user-menu-name">{userName}</span>
-        <ChevronDown 
-          className={`user-menu-chevron ${isOpen ? 'rotated' : ''}`}
+        <ChevronDown
+          className={`user-menu-chevron ${isOpen ? "rotated" : ""}`}
           size={16}
         />
       </button>
@@ -71,13 +77,11 @@ const UserMenu = ({ userName, userEmail, userPlan, userAvatar }) => {
                 </div>
               )}
             </div>
-            
+
             <div className="user-menu-info">
-              <h4 className="user-menu-title">{userName}</h4>
+              <h4 className="user-menu-title">{userName} {businessNit}</h4>
               <p className="user-menu-email">{userEmail}</p>
-              {userPlan && (
-                <span className="user-menu-badge">{userPlan}</span>
-              )}
+              {userPlan && <span className="user-menu-badge">{userPlan}</span>}
             </div>
           </div>
 
