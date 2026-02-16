@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import ModalNotaCredito from "../components/dashboard/ModalNotaCredito";
 import "../styles/sharedPage.css";
-import {ArrowCounterclockwise} from 'react-bootstrap-icons';
-
+import { ArrowCounterclockwise } from "react-bootstrap-icons";
+import axiosClient from "../api/axiosClient";
 function NotaCredito() {
   const [notasCredito, setNotasCredito] = useState([]);
   const [facturas, setFacturas] = useState([]);
@@ -34,49 +34,23 @@ function NotaCredito() {
 
   const fetchDatos = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        alert("No estás autenticado. Por favor inicia sesión.");
-        return;
-      }
-
       const [notasRes, facturasRes, productosRes] = await Promise.all([
-        fetch(`${API_URL}/NotasCredito`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/Facturas`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/Productos`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
+        axiosClient.get("/NotasCredito"),
+        axiosClient.get("/Facturas"),
+        axiosClient.get("/Productos"),
       ]);
 
-      if (!notasRes.ok || !facturasRes.ok || !productosRes.ok) {
-        throw new Error("Error al cargar datos");
-      }
-
-      const notasData = await notasRes.json();
-      const facturasData = await facturasRes.json();
-      const productosData = await productosRes.json();
-
-      setNotasCredito(notasData);
-      setFacturas(facturasData);
-      setProductos(productosData);
+      setNotasCredito(notasRes.data);
+      setFacturas(facturasRes.data);
+      setProductos(productosRes.data);
       setError(null);
     } catch (error) {
       console.error("Error al cargar datos:", error);
-      setError(error.message);
+      const mensaje =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al cargar datos";
+      setError(mensaje);
     } finally {
       setLoading(false);
     }
@@ -142,19 +116,18 @@ function NotaCredito() {
   return (
     <div className="container-fluid mt-4 px-4">
       <div className="header-card">
-                      <div className="header-content">
-                        <div className="header-text">
-                         <h2 className="header-title mb-4">Gestión Nota Credito</h2>
-                          <p className="header-subtitle">
-                          Gestiona, actualiza y controla tu inventario.
-                          </p>
-            
-                        </div>
-                        <div className="header-icon">
-                          <ArrowCounterclockwise size={80}/>
-                        </div>
-                      </div>
-                    </div>
+        <div className="header-content">
+          <div className="header-text">
+            <h2 className="header-title mb-4">Gestión Nota Credito</h2>
+            <p className="header-subtitle">
+              Gestiona, actualiza y controla tu inventario.
+            </p>
+          </div>
+          <div className="header-icon">
+            <ArrowCounterclockwise size={80} />
+          </div>
+        </div>
+      </div>
 
       {mensajeExito && (
         <div className="alert alert-success alert-dismissible fade show">
@@ -168,16 +141,15 @@ function NotaCredito() {
 
       <div className="nota-info mb-4">
         <p>
-          <strong>Información importante:</strong> Las notas crédito son documentos que reducen el valor de una factura. 
-          Este proceso es irreversible una vez validado con la DIAN. Afecta directamente los registros contables.
+          <strong>Información importante:</strong> Las notas crédito son
+          documentos que reducen el valor de una factura. Este proceso es
+          irreversible una vez validado con la DIAN. Afecta directamente los
+          registros contables.
         </p>
       </div>
 
       <div className="opcions-header">
-        <button
-          className="btn-crear"
-          onClick={abrirModalNuevo}
-        >
+        <button className="btn-crear" onClick={abrirModalNuevo}>
           Nueva Nota Crédito
         </button>
         <div className="filters">
@@ -198,23 +170,25 @@ function NotaCredito() {
           </select>
         </div>
       </div>
-           {mostrarModal && (
+      {mostrarModal && (
         <ModalNotaCredito
-        open={mostrarModal}
-        onClose={() => {
-          setMostrarModal(false);
-          setNotaEditando(null);
-        }}
-        notaEditando={notaEditando}
-        facturas={facturas}
-        productos={productos}
-        onSuccess={handleNotaCreada}
-      />
+          open={mostrarModal}
+          onClose={() => {
+            setMostrarModal(false);
+            setNotaEditando(null);
+          }}
+          notaEditando={notaEditando}
+          facturas={facturas}
+          productos={productos}
+          onSuccess={handleNotaCreada}
+        />
       )}
       <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
-            <div className="alert alert-info">No hay notas crédito registradas.</div>
+            <div className="alert alert-info">
+              No hay notas crédito registradas.
+            </div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
@@ -234,21 +208,31 @@ function NotaCredito() {
                 <tbody>
                   {filtrados.map((nota) => (
                     <tr key={nota.id}>
-                      <td><strong>{nota.numeroNota || nota.id}</strong></td>
+                      <td>
+                        <strong>{nota.numeroNota || nota.id}</strong>
+                      </td>
                       <td>{nota.numeroFactura}</td>
                       <td>{nota.cliente?.nombre || "N/A"}</td>
                       <td>
-                        {new Date(nota.fechaElaboracion).toLocaleDateString("es-CO")}
+                        {new Date(nota.fechaElaboracion).toLocaleDateString(
+                          "es-CO",
+                        )}
                       </td>
                       <td>
-                        <span className={`badge ${
-                          nota.tipo === "anulacion" ? "bg-danger" : 
-                          nota.tipo === "devolucion" ? "bg-warning text-dark" : 
-                          "bg-info"
-                        }`}>
-                          {nota.tipo === "anulacion" ? "Anulación" : 
-                           nota.tipo === "devolucion" ? "Devolución" : 
-                           "Descuento"}
+                        <span
+                          className={`badge ${
+                            nota.tipo === "anulacion"
+                              ? "bg-danger"
+                              : nota.tipo === "devolucion"
+                                ? "bg-warning text-dark"
+                                : "bg-info"
+                          }`}
+                        >
+                          {nota.tipo === "anulacion"
+                            ? "Anulación"
+                            : nota.tipo === "devolucion"
+                              ? "Devolución"
+                              : "Descuento"}
                         </span>
                       </td>
                       <td>{nota.motivoDIAN}</td>
@@ -259,7 +243,9 @@ function NotaCredito() {
                         {nota.estado === "Enviada" ? (
                           <span className="badge bg-success">Enviada</span>
                         ) : (
-                          <span className="badge bg-warning text-dark">Pendiente</span>
+                          <span className="badge bg-warning text-dark">
+                            Pendiente
+                          </span>
                         )}
                       </td>
                       <td>

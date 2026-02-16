@@ -16,6 +16,7 @@ import {
   CheckCircleFill,
 } from "react-bootstrap-icons";
 import "../styles/Dashboard.css";
+import axiosClient from "../api/axiosClient";
 import { HeroBanner } from "../components/dashboard/HeroBanner";
 
 function Dashboard() {
@@ -32,33 +33,14 @@ function Dashboard() {
 
   const cargarDatos = async () => {
     try {
-      const token = localStorage.getItem("token");
       const [resClientes, resProductos, resFacturas] = await Promise.all([
-        fetch(`${API_URL}/clientes`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/productos`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/facturas`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
+        axiosClient.get("/clientes"),
+        axiosClient.get("/productos"),
+        axiosClient.get("/facturas"),
       ]);
-
-      const [dataClientes, dataProductos, dataFacturas] = await Promise.all([
-        resClientes.json(),
-        resProductos.json(),
-        resFacturas.json(),
-      ]);
+      const dataClientes = resClientes.data;
+      const dataProductos = resProductos.data;
+      const dataFacturas = resFacturas.data;
 
       setClientesCount(dataClientes.length);
       setProductosCount(dataProductos.length);
@@ -92,8 +74,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-       <HeroBanner/>
-       
+      <HeroBanner />
 
       <ToastContainer
         position="top-right"
@@ -374,7 +355,6 @@ function Dashboard() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

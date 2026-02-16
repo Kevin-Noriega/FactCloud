@@ -1,51 +1,43 @@
 import axios from "axios";
-import { API_URL } from "./config";
 
 const axiosClient = axios.create({
-  baseURL: API_URL,
+  baseURL: "/api",
   withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Variable en memoria para el access token
+// ✅ Variable en memoria ÚNICAMENTE (no localStorage)
 let accessToken = null;
 
 export const setAccessToken = (token) => {
-  console.log(
-    "🔧 setAccessToken llamado con:",
-    token ? "Token válido" : "null",
-  );
   accessToken = token;
 };
 
 export const getAccessToken = () => {
-  console.log(
-    "🔧 getAccessToken devuelve:",
-    accessToken ? "Token válido" : "null",
-  );
   return accessToken;
 };
 
 export const clearTokens = () => {
-  console.log("🔧 clearTokens llamado");
   accessToken = null;
 };
 
 // Interceptor REQUEST: agrega el access token a cada petición
 axiosClient.interceptors.request.use(
   (config) => {
-    console.log(`📤 Request a ${config.url}`);
-
-    if (accessToken) {
+    // ✅ Solo agregar token si existe Y no es login/refresh
+    if (
+      accessToken &&
+      !config.url?.includes("/Auth/login") &&
+      !config.url?.includes("/Auth/refresh")
+    ) {
       config.headers.Authorization = `Bearer ${accessToken}`;
-      console.log(`📤 Token agregado al header de ${config.url}`);
-    } else {
-      console.warn(`⚠️ No hay token disponible para ${config.url}`);
     }
 
     return config;
   },
   (error) => {
-    console.error("❌ Error en request interceptor:", error);
     return Promise.reject(error);
   },
 );
@@ -67,25 +59,19 @@ const processQueue = (error, token = null) => {
 
 axiosClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ Response OK de ${response.config.url}`);
     return response;
   },
   async (error) => {
-    console.error(
-      `❌ Response error de ${error.config?.url}:`,
-      error.response?.status,
-    );
-
     const originalRequest = error.config;
 
+    // ✅ Solo intentar refresh si es 401, no es retry, y no es login/refresh
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      originalRequest.url !== "/Auth/refresh" &&
-      originalRequest.url !== "/Auth/login"
+      !originalRequest.url?.includes("/Auth/refresh") &&
+      !originalRequest.url?.includes("/Auth/login")
     ) {
-      console.log("🔄 Intento de renovar token con refresh...");
-
+      // Sistema de cola para evitar múltiples refresh simultáneos
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -101,19 +87,25 @@ axiosClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
+        // ✅ El refreshToken se envía automáticamente como cookie HttpOnly
         const { data } = await axiosClient.post("/Auth/refresh");
         const newToken = data.token;
 
-        console.log("✅ Token renovado exitosamente");
         setAccessToken(newToken);
         processQueue(null, newToken);
 
+        // Reintentar la petición original
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosClient(originalRequest);
       } catch (refreshError) {
-        console.error("❌ Fallo al renovar token, redirigiendo a login");
+        console.error("❌ Sesión expirada. Redirigiendo al login..."); // ✅ Log crítico
         processQueue(refreshError, null);
         clearTokens();
+
+        // ✅ Limpiar también el usuario de localStorage
+        localStorage.removeItem("usuario");
+
+        // Redirigir al login
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {
