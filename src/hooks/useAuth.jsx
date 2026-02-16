@@ -1,49 +1,73 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import axiosClient, { setAccessToken, clearTokens } from "../api/axiosClient";
 
-// 1. Crear el contexto
 const AuthContext = createContext(null);
 
-// 2. Provider del contexto
 export const AuthProvider = ({ children }) => {
+  // Estado del usuario: recupera desde localStorage si existe
   const [usuario, setUsuario] = useState(() => {
-    // Recuperar usuario de localStorage al cargar (si existe)
     const usuarioGuardado = localStorage.getItem("usuario");
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   });
-  const [loading] = useState(false);
+
+  // ✅ CAMBIO: Iniciar en true para esperar la restauración
+  const [loading, setLoading] = useState(true);
+
+  // ✅ NUEVO: Restaurar token al cargar la app
+  useEffect(() => {
+    const restaurarSesion = async () => {
+      const usuarioGuardado = localStorage.getItem("usuario");
+
+      // Si hay usuario guardado, intentar restaurar el token
+      if (usuarioGuardado) {
+        try {
+          // Usar el refresh token (cookie HttpOnly) para obtener un nuevo access token
+          const { data } = await axiosClient.post("/Auth/refresh");
+          setAccessToken(data.token); // ✅ Restaurar token en memoria
+        } catch (error) {
+          // Si falla el refresh, limpiar todo (sesión expiró)
+          console.error("Error al restaurar sesión:", error);
+          clearTokens();
+          setUsuario(null);
+          localStorage.removeItem("usuario");
+        }
+      }
+
+      // ✅ Terminar estado de carga
+      setLoading(false);
+    };
+
+    restaurarSesion();
+  }, []); // Solo se ejecuta una vez al montar
+
+  // Listener para evento de logout global
+  useEffect(() => {
+    const handleLogout = () => {
+      setUsuario(null);
+      clearTokens();
+      localStorage.removeItem("usuario");
+    };
+
+    window.addEventListener("auth:logout", handleLogout);
+
+    return () => {
+      window.removeEventListener("auth:logout", handleLogout);
+    };
+  }, []);
 
   // Función de login
   const login = async (correo, contrasena) => {
-    console.log("🔵 useAuth.login iniciado");
-    console.log("🔵 Correo:", correo);
+    const { data } = await axiosClient.post("/Auth/login", {
+      correo,
+      contrasena,
+    });
 
-    try {
-      const { data } = await axiosClient.post("/Auth/login", {
-        correo,
-        contrasena,
-      });
+    // Guardar token en memoria y usuario en localStorage
+    setAccessToken(data.token);
+    setUsuario(data.usuario);
+    localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      console.log("✅ Respuesta del servidor:", data);
-      console.log("✅ Token recibido:", data.token);
-      console.log("✅ Usuario recibido:", data.usuario);
-
-      setAccessToken(data.token);
-      setUsuario(data.usuario);
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
-      console.log("✅ Token guardado en memoria");
-      console.log("✅ Usuario guardado en localStorage");
-
-      return data;
-    } catch (error) {
-      console.error("❌ Error en login:");
-      console.error("❌ Error completo:", error);
-      console.error("❌ Response:", error.response);
-      console.error("❌ Status:", error.response?.status);
-      console.error("❌ Data:", error.response?.data);
-      throw error;
-    }
+    return data;
   };
 
   // Función de logout
@@ -51,7 +75,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await axiosClient.post("/Auth/logout");
     } catch (error) {
-      console.error("Error en logout:", error);
+      console.error("Error al cerrar sesión en servidor:", error);
     } finally {
       clearTokens();
       setUsuario(null);
@@ -67,10 +91,32 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!usuario,
   };
 
+  // ✅ Mostrar pantalla de carga mientras restaura sesión
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          backgroundColor: "#f8f9fa",
+        }}
+      >
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p style={{ marginTop: "1rem", color: "#6c757d" }}>
+          Restaurando sesión...
+        </p>
+      </div>
+    );
+  }
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// 3. Hook personalizado para usar el contexto
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

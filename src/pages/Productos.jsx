@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import ModalProducto from "../components/dashboard/ModalCrearProducto";
 import "../styles/sharedPage.css";
-import {BoxSeam} from 'react-bootstrap-icons';
+import { BoxSeam } from "react-bootstrap-icons";
+import axiosClient from "../api/axiosClient";
 
 function Productos() {
   const [productos, setProductos] = useState([]);
@@ -42,21 +43,16 @@ function Productos() {
 
   const fetchProductos = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/Productos`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-      const data = await response.json();
-      setProductos(data);
+      const response = await axiosClient.get("/Productos");
+      setProductos(response.data);
       setError(null);
     } catch (error) {
+      const mensaje =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al cargar productos";
       console.error("Error al cargar productos:", error);
-      setError(error.message);
+      setError(mensaje);
     } finally {
       setLoading(false);
     }
@@ -90,29 +86,20 @@ function Productos() {
 
   const eliminarProducto = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/Productos/desactivar/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ estado: false }),
-      });
-
-      if (!response.ok) {
-        const errorTxt = await response.text();
-        throw new Error(errorTxt);
-      }
-
+      await axiosClient.put(`/Productos/desactivar/${id}`, { estado: false });
       setMensajeExito("Producto eliminado con éxito.");
       setTimeout(() => setMensajeExito(""), 3000);
       fetchProductos();
     } catch (error) {
       console.error("Error al eliminar producto:", error);
-      alert("Error al eliminar producto: " + error.message);
+      const mensaje =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al eliminar producto";
+      alert("Error al eliminar producto: " + mensaje);
+    } finally {
+      setProductoAEliminar(null);
     }
-    setProductoAEliminar(null);
   };
 
   if (loading) {
@@ -143,20 +130,18 @@ function Productos() {
   return (
     <div className="container-fluid mt-4 px-4">
       <div className="header-card">
-                <div className="header-content">
-                  <div className="header-text">
-                   <h2 className="header-title mb-4">Inventario de Productos</h2>
-                    <p className="header-subtitle">
-                    Gestiona, actualiza y controla tu inventario.
-                    </p>
-      
-                  </div>
-                  <div className="header-icon">
-                    <BoxSeam size={80} />
-                  </div>
-                </div>
-              </div>
-
+        <div className="header-content">
+          <div className="header-text">
+            <h2 className="header-title mb-4">Inventario de Productos</h2>
+            <p className="header-subtitle">
+              Gestiona, actualiza y controla tu inventario.
+            </p>
+          </div>
+          <div className="header-icon">
+            <BoxSeam size={80} />
+          </div>
+        </div>
+      </div>
 
       {mensajeExito && (
         <div className="alert alert-success alert-dismissible fade show">
@@ -213,7 +198,9 @@ function Productos() {
                 </tr>
                 <tr>
                   <th>Precio</th>
-                  <td className="fw-bold text-success">$ {productoVer.precioUnitario.toLocaleString("es-CO")}</td>
+                  <td className="fw-bold text-success">
+                    $ {productoVer.precioUnitario.toLocaleString("es-CO")}
+                  </td>
                 </tr>
                 <tr>
                   <th>Categoría</th>
@@ -262,7 +249,9 @@ function Productos() {
       <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
-            <div className="alert alert-info">No hay productos registrados.</div>
+            <div className="alert alert-info">
+              No hay productos registrados.
+            </div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
@@ -284,7 +273,8 @@ function Productos() {
                       <td>{prod.categoria || "Sin categoría"}</td>
                       <td>{prod.cantidadDisponible}</td>
                       <td className="text-end fw-bold text-success">
-                        ${prod.precioUnitario.toLocaleString("es-CO")}</td>
+                        ${prod.precioUnitario.toLocaleString("es-CO")}
+                      </td>
                       <td>
                         <div className="btn-group-acciones">
                           <button

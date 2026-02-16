@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import { obtenerSiglas } from "../utils/Helpers";
-import ModalCliente from "../components/dashboard/ModalCrearCliente"; 
-import {People} from 'react-bootstrap-icons';
+import ModalCliente from "../components/dashboard/ModalCrearCliente";
+import { People } from "react-bootstrap-icons";
 import "../styles/sharedPage.css";
+import axiosClient from "../api/axiosClient";
 
 function Clientes() {
   const [clientes, setClientes] = useState([]);
@@ -24,7 +25,6 @@ function Clientes() {
         !query ||
         cli.nombre?.toLowerCase().includes(query) ||
         cli.numeroIdentificacion?.toLowerCase().includes(query)
-
       );
     })
     .sort((a, b) => {
@@ -40,19 +40,15 @@ function Clientes() {
 
   async function fetchClientes() {
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${API_URL}/Clientes`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!res.ok) throw new Error(`Error HTTP ${res.status}`);
-      const datos = await res.json();
-      setClientes(datos);
+      const res = await axiosClient.get("/Clientes");
+      setClientes(res.data);
       setError(null);
     } catch (error) {
-      setError(error.message || "Error desconocido al cargar clientes");
+      const respuesta =
+        error.response?.data?.message ||
+        error.message ||
+        "Error desconocido al cargar clientes";
+      setError(respuesta);
     } finally {
       setLoading(false);
     }
@@ -80,28 +76,22 @@ function Clientes() {
 
   const eliminarCliente = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      const respuesta = await fetch(`${API_URL}/Clientes/desactivar/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!respuesta.ok) throw new Error("Error al eliminar cliente");
+      await axiosClient.put(`/Clientes/desactivar/${id}`);
 
       setMensajeExito("Cliente eliminado con éxito.");
       setTimeout(() => setMensajeExito(""), 3000);
       fetchClientes();
-    } catch {
-      alert("Error al eliminar cliente");
+    } catch (error) {
+      const mensaje = error.response?.data?.message || error.message || "Error desconocido";
+      alert(mensaje);
+      console.error("error al eliminar un cliente:", error);
     }
     setClienteAEliminar(null);
   };
 
   if (loading)
     return (
-     <div className="container mt-5">
+      <div className="container mt-5">
         <div className="loading-container">
           <div className="spinner-border text-success" role="status"></div>
           <p className="mt-3">Cargando datos...</p>
@@ -124,28 +114,28 @@ function Clientes() {
 
   return (
     <div className="container-fluid mt-4 px-4">
-            <div className="header-card">
-                      <div className="header-content">
-                        <div className="header-text">
-                         <h2 className="header-title mb-4">Gestión de Clientes</h2>
-                          <p className="header-subtitle">
-                           Administra, actualiza y mantén organizada la información de tus clientes.
-                          </p>
-            
-                        </div>
-                        <div className="header-icon">
-                          <People size={80} />
-                        </div>
-                      </div>
-                    </div>
-      
+      <div className="header-card">
+        <div className="header-content">
+          <div className="header-text">
+            <h2 className="header-title mb-4">Gestión de Clientes</h2>
+            <p className="header-subtitle">
+              Administra, actualiza y mantén organizada la información de tus
+              clientes.
+            </p>
+          </div>
+          <div className="header-icon">
+            <People size={80} />
+          </div>
+        </div>
+      </div>
+
       {mensajeExito && (
-        <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+        <div
+          className="alert alert-success d-flex justify-content-between align-items-center"
+          role="alert"
+        >
           <span>{mensajeExito}</span>
-          <button
-            className="btn-close"
-            onClick={() => setMensajeExito("")}
-          />
+          <button className="btn-close" onClick={() => setMensajeExito("")} />
         </div>
       )}
 
@@ -161,12 +151,15 @@ function Clientes() {
               <tbody>
                 <tr>
                   <th>Nombre</th>
-                  <td>{clienteVer.nombre} {clienteVer.apellido}</td>
+                  <td>
+                    {clienteVer.nombre} {clienteVer.apellido}
+                  </td>
                 </tr>
                 <tr>
                   <th>Identificación</th>
                   <td>
-                    {obtenerSiglas(clienteVer.tipoIdentificacion)} - {clienteVer.numeroIdentificacion}
+                    {obtenerSiglas(clienteVer.tipoIdentificacion)} -{" "}
+                    {clienteVer.numeroIdentificacion}
                   </td>
                 </tr>
                 <tr>
@@ -268,32 +261,34 @@ function Clientes() {
                   {filtrados.map((cli) => (
                     <tr key={cli.id}>
                       <td>{cli.id}</td>
-                      <td>{cli.nombre} {cli.apellido}</td>
+                      <td>
+                        {cli.nombre} {cli.apellido}
+                      </td>
                       <td>{cli.numeroIdentificacion}</td>
                       <td>{cli.tipoIdentificacion}</td>
                       <td>{cli.correo}</td>
                       <td>{cli.telefono || "N/A"}</td>
                       <td>
                         <div className="btn-group-acciones">
-                        <button
-                          className="btn btn-ver btn-sm"
-                          onClick={() => setClienteVer(cli)}
-                        >
-                          Ver
-                        </button>
-                        <button
-                          className="btn btn-editar btn-sm"
-                          onClick={() => editarCliente(cli)}
-                        >
-                          Editar
-                        </button>
-                        <button
-                          className="btn btn-eliminar btn-sm "
-                          onClick={() => setClienteAEliminar(cli.id)}
-                        >
-                          Eliminar
-                        </button>
-                      </div>
+                          <button
+                            className="btn btn-ver btn-sm"
+                            onClick={() => setClienteVer(cli)}
+                          >
+                            Ver
+                          </button>
+                          <button
+                            className="btn btn-editar btn-sm"
+                            onClick={() => editarCliente(cli)}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="btn btn-eliminar btn-sm "
+                            onClick={() => setClienteAEliminar(cli.id)}
+                          >
+                            Eliminar
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

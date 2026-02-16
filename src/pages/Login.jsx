@@ -16,20 +16,31 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+
     setLoading(true);
     setError("");
 
     try {
-      await login(correo, contrasena); // ← Método del contexto
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 300);
+      console.log("🔵 Iniciando login desde componente");
+
+      await login(correo, contrasena);
+
+      console.log("🎉 Login exitoso, navegando a dashboard");
+
+      // ✅ CAMBIO CRÍTICO: Navegar inmediatamente, sin setTimeout
+      navigate("/dashboard", { replace: true });
     } catch (err) {
+      console.error("❌ Error capturado en handleSubmit:", err);
+
       // Manejar errores específicos del backend
       if (err.response?.status === 423) {
         setError(
           `Cuenta desactivada. ${err.response.data.diasRestantes} días para reactivar.`,
         );
+      } else if (err.response?.status === 401) {
+        setError("Credenciales incorrectas");
+      } else if (err.response?.status === 500) {
+        setError("Error del servidor. Intenta más tarde.");
       } else {
         setError(err.response?.data?.message || "Error al iniciar sesión");
       }
