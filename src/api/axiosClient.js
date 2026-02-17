@@ -7,37 +7,33 @@ const axiosClient = axios.create({
 });
 
 // Variable en memoria para el access token
-let accessToken = null;
+let accessToken = localStorage.getItem("token");
 
 export const setAccessToken = (token) => {
-  console.log(
-    "🔧 setAccessToken llamado con:",
-    token ? "Token válido" : "null",
-  );
   accessToken = token;
+  localStorage.setItem("token", token);
 };
-
 export const getAccessToken = () => {
   console.log(
-    "🔧 getAccessToken devuelve:",
+    "getAccessToken devuelve:",
     accessToken ? "Token válido" : "null",
   );
   return accessToken;
 };
 
 export const clearTokens = () => {
-  console.log("🔧 clearTokens llamado");
+  console.log("clearTokens llamado");
   accessToken = null;
 };
 
 // Interceptor REQUEST: agrega el access token a cada petición
 axiosClient.interceptors.request.use(
   (config) => {
-    console.log(`📤 Request a ${config.url}`);
+    console.log(`Request a ${config.url}`);
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
-      console.log(`📤 Token agregado al header de ${config.url}`);
+      console.log(`Token agregado al header de ${config.url}`);
     } else {
       console.warn(`⚠️ No hay token disponible para ${config.url}`);
     }
@@ -45,7 +41,7 @@ axiosClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error("❌ Error en request interceptor:", error);
+    console.error("Error en request interceptor:", error);
     return Promise.reject(error);
   },
 );
@@ -67,7 +63,7 @@ const processQueue = (error, token = null) => {
 
 axiosClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ Response OK de ${response.config.url}`);
+    console.log(`Response OK de ${response.config.url}`);
     return response;
   },
   async (error) => {
@@ -84,7 +80,7 @@ axiosClient.interceptors.response.use(
       originalRequest.url !== "/Auth/refresh" &&
       originalRequest.url !== "/Auth/login"
     ) {
-      console.log("🔄 Intento de renovar token con refresh...");
+      console.log("Intento de renovar token con refresh...");
 
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -104,7 +100,7 @@ axiosClient.interceptors.response.use(
         const { data } = await axiosClient.post("/Auth/refresh");
         const newToken = data.token;
 
-        console.log("✅ Token renovado exitosamente");
+        console.log("Token renovado exitosamente");
         setAccessToken(newToken);
         processQueue(null, newToken);
 

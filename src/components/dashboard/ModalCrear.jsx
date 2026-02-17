@@ -13,7 +13,7 @@ import "../../styles/ModalCrear.css";
 import ModalCrearFactura from "./ModalCrearFactura";
 import ModalCrearCliente from "./ModalCrearCliente";
 import ModalCrearProducto from "./ModalCrearProducto";
-import ModalCrearNotaCredito from "./ModalNotaCredito";
+// import ModalCrearNotaCredito from "./ModalNotaCredito";
 import ModalDocumentoSoporte from "./ModalDocumentoSoporte";
 
 function ModalCrear({ open, onClose }) {
@@ -30,11 +30,6 @@ function ModalCrear({ open, onClose }) {
     };
   }, [open]);
 
-  /**
-   * Maneja la navegación y apertura de modales
-   * @param {string} tipo - Tipo de modal a abrir
-   * @param {string} rutaDestino - Ruta a la que navegar después de crear
-   */
   const handleAbrirModal = (tipo, rutaDestino) => {
     setModalActivo({ tipo, rutaDestino });
   };
@@ -106,13 +101,13 @@ function ModalCrear({ open, onClose }) {
                       </button>
                     </li>
                     <li>
-                      <button
+                      {/* <button
                         className="menu-item-crear"
                         onClick={() => handleAbrirModal("notaCredito", "/notaCredito")}
                       >
                         <FileText className="menu-icon-crear" />
                         <span>Nota crédito</span>
-                      </button>
+                      </button> */}
                     </li>
                   </ul>
                 </div>
@@ -213,12 +208,12 @@ function ModalCrear({ open, onClose }) {
         />
       )}
 
-      {modalActivo?.tipo === "notaCredito" && (
+      {/* {modalActivo?.tipo === "notaCredito" && (
         <ModalCrearNotaCredito 
           onClose={handleCerrarModalEspecifico}
           onGuardadoExitoso={handleGuardadoExitoso}
         />
-      )}
+      )} */}
 
       {modalActivo?.tipo === "documentoSoporte" && (
         <ModalDocumentoSoporte 

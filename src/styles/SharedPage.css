@@ -49,8 +49,7 @@
 .alert {
   border-radius: 8px;
   border: none;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
+  padding: 16px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -69,9 +68,10 @@
 }
 
 .alert-info {
+   border-radius: 0 8px 0 0;
   background: #dbeafe;
-  color: #1e40af;
-  border-left: 4px solid #3b82f6;
+  color: var(--primary-dark);
+  border-left: 4px solid var(--primary);
 }
 
 .alert .btn-close {
@@ -153,6 +153,7 @@
 
 .card {
   border: none;
+
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;

@@ -1,21 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { API_URL } from "../api/config";
-import ModalNotaCredito from "../components/dashboard/ModalNotaCredito";
-import "../styles/sharedPage.css";
-import {ArrowCounterclockwise} from 'react-bootstrap-icons';
+import React, { useState } from "react";
+import { ArrowCounterclockwise, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
+import { useNotas } from "../hooks/useNotas";
+import "../styles/NotaCredito.css";
+import FormNotaCredito from "../components/nota-credito/FormNotaCredito";
 
 function NotaCredito() {
-  const [notasCredito, setNotasCredito] = useState([]);
-  const [facturas, setFacturas] = useState([]);
-  const [productos, setProductos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { notasCredito,facturas,productos, loading,error,crearNotaCredito, actualizarNotaCredito,} = useNotas();
+
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [notaEditando, setNotaEditando] = useState(null);
   const [mensajeExito, setMensajeExito] = useState("");
   const [buscador, setBuscador] = useState("");
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [notaEditando, setNotaEditando] = useState(null);
   const [filtro, setFiltro] = useState("recientes");
 
+  // Estados del formulario
+  const [notaCredito, setNotaCredito] = useState({
+    facturaId: "",
+    tipo: "devolucion",
+    motivoDIAN: "NC-1",
+    fechaElaboracion: new Date().toISOString().split("T")[0],
+    cufe: "",
+    observaciones: "",
+    retelCA: 0,
+  });
+
+  const [productosSeleccionados, setProductosSeleccionados] = useState([
+    {
+      productoId: "",
+      cantidad: 1,
+      precioUnitario: 0,
+      porcentajeDescuento: 0,
+      tarifaIVA: 19,
+      tarifaINC: 0,
+      descripcion: "",
+      unidadMedida: "Unidad",
+    },
+  ]);
+
+  const [formasPago, setFormasPago] = useState([
+    { metodo: "10", valor: 0 },
+  ]);
+
+  const [facturaSeleccionada, setFacturaSeleccionada] = useState(null);
+
+  // Filtrar notas
   const filtrados = notasCredito
     .filter((nota) => {
       const query = buscador.trim().toLowerCase();
@@ -32,69 +60,200 @@ function NotaCredito() {
       }
     });
 
-  const fetchDatos = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  // Resetear formulario
+  const resetearFormulario = () => {
+    setNotaCredito({
+      facturaId: "",
+      tipo: "devolucion",
+      motivoDIAN: "NC-1",
+      fechaElaboracion: new Date().toISOString().split("T")[0],
+      cufe: "",
+      observaciones: "",
+      retelCA: 0,
+    });
+    setProductosSeleccionados([
+      {
+        productoId: "",
+        cantidad: 1,
+        precioUnitario: 0,
+        porcentajeDescuento: 0,
+        tarifaIVA: 19,
+        tarifaINC: 0,
+        descripcion: "",
+        unidadMedida: "Unidad",
+      },
+    ]);
+    setFormasPago([{ metodo: "10", valor: 0 }]);
+    setFacturaSeleccionada(null);
+    setNotaEditando(null);
+  };
 
-      if (!token) {
-        alert("No estás autenticado. Por favor inicia sesión.");
+  const toggleFormulario = () => {
+    if (mostrarFormulario) {
+      resetearFormulario();
+    }
+    setMostrarFormulario(!mostrarFormulario);
+  };
+
+  const calcularLinea = (item) => {
+    const cantidad = parseFloat(item.cantidad) || 0;
+    const precio = parseFloat(item.precioUnitario) || 0;
+    const descuento = parseFloat(item.porcentajeDescuento) || 0;
+    const tarifaIVA = parseFloat(item.tarifaIVA) || 0;
+    const tarifaINC = parseFloat(item.tarifaINC) || 0;
+
+    const subtotalLinea = cantidad * precio;
+    const valorDescuento = subtotalLinea * (descuento / 100);
+    const baseImponible = subtotalLinea - valorDescuento;
+    const valorIVA = baseImponible * (tarifaIVA / 100);
+    const valorINC = baseImponible * (tarifaINC / 100);
+    const totalLinea = baseImponible + valorIVA + valorINC;
+
+    return {
+      subtotalLinea,
+      valorDescuento,
+      baseImponible,
+      valorIVA,
+      valorINC,
+      totalLinea,
+    };
+  };
+
+  const calcularTotales = () => {
+    let totalBruto = 0;
+    let totalDescuentos = 0;
+    let subtotal = 0;
+    let totalIVA = 0;
+    let totalINC = 0;
+
+    productosSeleccionados.forEach((item) => {
+      const linea = calcularLinea(item);
+      totalBruto += linea.subtotalLinea;
+      totalDescuentos += linea.valorDescuento;
+      subtotal += linea.baseImponible;
+      totalIVA += linea.valorIVA;
+      totalINC += linea.valorINC;
+    });
+
+    const retelCA = subtotal * (parseFloat(notaCredito.retelCA) / 100);
+    const totalNeto = subtotal + totalIVA + totalINC - retelCA;
+
+    return {
+      totalBruto,
+      totalDescuentos,
+      subtotal,
+      totalIVA,
+      totalINC,
+      retelCA,
+      totalNeto,
+    };
+  };
+
+  const calcularTotalFormasPago = () => {
+    return formasPago.reduce(
+      (total, forma) => total + parseFloat(forma.valor || 0),
+      0
+    );
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!notaCredito.facturaId) {
+      alert("Debes seleccionar una factura");
+      return;
+    }
+
+    if (productosSeleccionados.length === 0) {
+      alert("Debes agregar al menos un producto");
+      return;
+    }
+
+    const productosSinID = productosSeleccionados.filter((p) => !p.productoId);
+    if (productosSinID.length > 0) {
+      alert("Todos los productos deben estar seleccionados");
+      return;
+    }
+
+    const totales = calcularTotales();
+    const totalFormasPago = calcularTotalFormasPago();
+
+    if (Math.abs(totales.totalNeto - totalFormasPago) > 0.01) {
+      const diferencia = totales.totalNeto - totalFormasPago;
+      alert(
+        `El total de formas de pago debe coincidir con el total neto.\n` +
+          `Total Neto: $${totales.totalNeto.toFixed(2)}\n` +
+          `Total Formas de Pago: $${totalFormasPago.toFixed(2)}\n` +
+          `Diferencia: $${Math.abs(diferencia).toFixed(2)}`
+      );
+      return;
+    }
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const usuarioId = user.id;
+
+      if (!usuarioId) {
+        alert("No se pudo obtener el ID del usuario.");
         return;
       }
 
-      const [notasRes, facturasRes, productosRes] = await Promise.all([
-        fetch(`${API_URL}/NotasCredito`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const payload = {
+        usuarioId: usuarioId,
+        facturaId: parseInt(notaCredito.facturaId),
+        numeroNota: notaEditando?.numeroNota || `NC-${Date.now()}`,
+        tipo: notaCredito.tipo,
+        motivoDIAN: notaCredito.motivoDIAN,
+        fechaElaboracion: notaCredito.fechaElaboracion,
+        cufe: notaCredito.cufe || "",
+        totalBruto: totales.totalBruto,
+        totalDescuentos: totales.totalDescuentos,
+        subtotal: totales.subtotal,
+        totalIVA: totales.totalIVA,
+        totalINC: totales.totalINC,
+        retelCA: totales.retelCA,
+        totalNeto: totales.totalNeto,
+        observaciones: notaCredito.observaciones || "",
+        estado: "Pendiente",
+        detalleNotaCredito: productosSeleccionados.map((item) => {
+          const linea = calcularLinea(item);
+          return {
+            productoId: parseInt(item.productoId),
+            descripcion: item.descripcion || "",
+            cantidad: parseFloat(item.cantidad),
+            unidadMedida: item.unidadMedida || "Unidad",
+            precioUnitario: parseFloat(item.precioUnitario),
+            porcentajeDescuento: parseFloat(item.porcentajeDescuento) || 0,
+            valorDescuento: linea.valorDescuento,
+            subtotalLinea: linea.subtotalLinea,
+            tarifaIVA: parseFloat(item.tarifaIVA),
+            valorIVA: linea.valorIVA,
+            tarifaINC: parseFloat(item.tarifaINC) || 0,
+            valorINC: linea.valorINC,
+            totalLinea: linea.totalLinea,
+          };
         }),
-        fetch(`${API_URL}/Facturas`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/Productos`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-      ]);
+        formasPago: formasPago.map((f) => ({
+          metodo: f.metodo,
+          valor: parseFloat(f.valor),
+        })),
+      };
 
-      if (!notasRes.ok || !facturasRes.ok || !productosRes.ok) {
-        throw new Error("Error al cargar datos");
+      if (notaEditando) {
+        await actualizarNotaCredito(notaEditando.id, payload);
+        setMensajeExito("Nota crédito actualizada exitosamente");
+      } else {
+        await crearNotaCredito(payload);
+        setMensajeExito("Nota crédito creada exitosamente");
       }
 
-      const notasData = await notasRes.json();
-      const facturasData = await facturasRes.json();
-      const productosData = await productosRes.json();
-
-      setNotasCredito(notasData);
-      setFacturas(facturasData);
-      setProductos(productosData);
-      setError(null);
+      setTimeout(() => setMensajeExito(""), 3000);
+      resetearFormulario();
+      setMostrarFormulario(false);
     } catch (error) {
-      console.error("Error al cargar datos:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      console.error("Error:", error);
+      alert("Error al guardar la nota crédito: " + error.message);
     }
-  };
-
-  useEffect(() => {
-    fetchDatos();
-  }, []);
-
-  const handleNotaCreada = (mensaje) => {
-    setMensajeExito(mensaje);
-    setTimeout(() => setMensajeExito(""), 3000);
-    fetchDatos();
-  };
-
-  const abrirModalNuevo = () => {
-    setNotaEditando(null);
-    setMostrarModal(true);
   };
 
   const descargarXML = (nota) => {
@@ -131,9 +290,6 @@ function NotaCredito() {
         <div className="alert alert-danger">
           <h5>Error al cargar datos</h5>
           <p>{error}</p>
-          <button className="btn btn-primary mt-2" onClick={fetchDatos}>
-            Reintentar
-          </button>
         </div>
       </div>
     );
@@ -142,43 +298,51 @@ function NotaCredito() {
   return (
     <div className="container-fluid mt-4 px-4">
       <div className="header-card">
-                      <div className="header-content">
-                        <div className="header-text">
-                         <h2 className="header-title mb-4">Gestión Nota Credito</h2>
-                          <p className="header-subtitle">
-                          Gestiona, actualiza y controla tu inventario.
-                          </p>
-            
-                        </div>
-                        <div className="header-icon">
-                          <ArrowCounterclockwise size={80}/>
-                        </div>
-                      </div>
-                    </div>
+        <div className="header-content">
+          <div className="header-text">
+            <h2 className="header-title mb-4">Gestión Nota Crédito</h2>
+            <p className="header-subtitle">
+              Gestiona y controla tus notas crédito.
+            </p>
+          </div>
+          <div className="header-icon">
+            <ArrowCounterclockwise size={80} />
+          </div>
+        </div>
+      </div>
 
       {mensajeExito && (
         <div className="alert alert-success alert-dismissible fade show">
           <span>{mensajeExito}</span>
-          <button
-            className="btn btn-close"
-            onClick={() => setMensajeExito("")}
-          />
+          <button className="btn-close" onClick={() => setMensajeExito("")} />
         </div>
       )}
 
       <div className="nota-info mb-4">
         <p>
-          <strong>Información importante:</strong> Las notas crédito son documentos que reducen el valor de una factura. 
-          Este proceso es irreversible una vez validado con la DIAN. Afecta directamente los registros contables.
+          <strong>Información importante:</strong> Las notas crédito son
+          documentos que reducen el valor de una factura. Este proceso es
+          irreversible una vez validado con la DIAN.
         </p>
       </div>
 
       <div className="opcions-header">
         <button
-          className="btn-crear"
-          onClick={abrirModalNuevo}
+          className={`btn-crear ${mostrarFormulario ? "active" : ""}`}
+          onClick={toggleFormulario}
+          type="button"
         >
-          Nueva Nota Crédito
+          {mostrarFormulario ? (
+            <>
+              <ChevronUp size={20} className="me-2" />
+              Ocultar Formulario
+            </>
+          ) : (
+            <>
+              <ChevronDown size={20} className="me-2" />
+              Nueva Nota Crédito
+            </>
+          )}
         </button>
         <div className="filters">
           <input
@@ -198,23 +362,35 @@ function NotaCredito() {
           </select>
         </div>
       </div>
-           {mostrarModal && (
-        <ModalNotaCredito
-        open={mostrarModal}
-        onClose={() => {
-          setMostrarModal(false);
-          setNotaEditando(null);
-        }}
-        notaEditando={notaEditando}
-        facturas={facturas}
-        productos={productos}
-        onSuccess={handleNotaCreada}
-      />
-      )}
+
+      {/* FORMULARIO COLAPSABLE */}
+      <div
+        className={`formulario-nota-collapse ${mostrarFormulario ? "show" : ""}`}
+      >
+        <FormNotaCredito
+          notaCredito={notaCredito}
+          setNotaCredito={setNotaCredito}
+          productosSeleccionados={productosSeleccionados}
+          setProductosSeleccionados={setProductosSeleccionados}
+          formasPago={formasPago}
+          setFormasPago={setFormasPago}
+          facturaSeleccionada={facturaSeleccionada}
+          setFacturaSeleccionada={setFacturaSeleccionada}
+          facturas={facturas}
+          productos={productos}
+          notaEditando={notaEditando}
+          onSubmit={handleSubmit}
+          onCancel={toggleFormulario}
+        />
+      </div>
+
+      {/* TABLA DE NOTAS */}
       <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
-            <div className="alert alert-info">No hay notas crédito registradas.</div>
+            <div className="alert alert-info">
+              No hay notas crédito registradas.
+            </div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
@@ -234,32 +410,44 @@ function NotaCredito() {
                 <tbody>
                   {filtrados.map((nota) => (
                     <tr key={nota.id}>
-                      <td><strong>{nota.numeroNota || nota.id}</strong></td>
+                      <td>
+                        <strong>{nota.numeroNota || nota.id}</strong>
+                      </td>
                       <td>{nota.numeroFactura}</td>
                       <td>{nota.cliente?.nombre || "N/A"}</td>
                       <td>
-                        {new Date(nota.fechaElaboracion).toLocaleDateString("es-CO")}
+                        {new Date(nota.fechaElaboracion).toLocaleDateString(
+                          "es-CO"
+                        )}
                       </td>
                       <td>
-                        <span className={`badge ${
-                          nota.tipo === "anulacion" ? "bg-danger" : 
-                          nota.tipo === "devolucion" ? "bg-warning text-dark" : 
-                          "bg-info"
-                        }`}>
-                          {nota.tipo === "anulacion" ? "Anulación" : 
-                           nota.tipo === "devolucion" ? "Devolución" : 
-                           "Descuento"}
+                        <span
+                          className={`badge ${
+                            nota.tipo === "anulacion"
+                              ? "bg-danger"
+                              : nota.tipo === "devolucion"
+                              ? "bg-warning text-dark"
+                              : "bg-info"
+                          }`}
+                        >
+                          {nota.tipo === "anulacion"
+                            ? "Anulación"
+                            : nota.tipo === "devolucion"
+                            ? "Devolución"
+                            : "Descuento"}
                         </span>
                       </td>
                       <td>{nota.motivoDIAN}</td>
-                      <td className="text-end  fw-bold text-success">
+                      <td className="text-end fw-bold text-success">
                         ${nota.totalNeto?.toLocaleString("es-CO") || "0"}
                       </td>
                       <td>
                         {nota.estado === "Enviada" ? (
                           <span className="badge bg-success">Enviada</span>
                         ) : (
-                          <span className="badge bg-warning text-dark">Pendiente</span>
+                          <span className="badge bg-warning text-dark">
+                            Pendiente
+                          </span>
                         )}
                       </td>
                       <td>

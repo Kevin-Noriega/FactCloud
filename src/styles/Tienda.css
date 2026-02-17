@@ -1,0 +1,642 @@
+/* ========================================
+   🎨 TIENDA - ESTILOS PRINCIPALES
+   ======================================== */
+
+.tienda-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* ========================================
+   LOADING & ERROR STATES
+   ======================================== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+}
+
+.loading-container p {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.header-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.header-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  margin: 0.5rem 0 0 0;
+}
+
+/* ========================================
+   PLAN ACTUAL
+   ======================================== */
+.plan-actual-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.plan-actual-header {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.plan-actual-header h5 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.plan-actual-body {
+  padding: 1.5rem;
+}
+
+.plan-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.plan-info-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plan-info-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+/* ========================================
+   ESTADÍSTICAS
+   ======================================== */
+.estadisticas-uso {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.progress {
+  height: 10px;
+  border-radius: 10px;
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  transition: width 0.6s ease;
+  border-radius: 10px;
+}
+
+/* ========================================
+   TOGGLE PERIODO
+   ======================================== */
+.periodo-toggle-container {
+  display: flex;
+  justify-content: center;
+}
+
+.periodo-toggle {
+  display: inline-flex;
+  background: white;
+  border-radius: 50px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.periodo-btn {
+  border: none;
+  background: transparent;
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #495057;
+}
+
+.periodo-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.periodo-btn:hover:not(.active) {
+  background: #f8f9fa;
+}
+
+/* ========================================
+   BOTONES ACCIÓN
+   ======================================== */
+.acciones-header {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-tienda,
+.btn-tienda-addon {
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-tienda {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-tienda-addon {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.btn-tienda:hover,
+.btn-tienda-addon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-tienda.active,
+.btn-tienda-addon.active {
+  background: #6c757d;
+}
+
+/* ========================================
+   GRID DE PLANES
+   ======================================== */
+.planes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.plan-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.plan-card.destacado {
+  border: 3px solid #ffd700;
+}
+
+.plan-card.actual {
+  border: 3px solid #38ef7d;
+}
+
+.plan-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #ffd700;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+}
+
+.plan-badge-actual {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #38ef7d;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  z-index: 10;
+}
+
+.plan-header {
+  padding: 2rem;
+  color: white;
+  text-align: center;
+}
+
+.plan-nombre {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
+.plan-precio {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.precio-valor {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.precio-periodo {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.plan-body {
+  padding: 2rem;
+}
+
+.plan-descripcion {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  min-height: 60px;
+}
+
+.plan-caracteristicas {
+  margin-bottom: 1.5rem;
+}
+
+.caracteristica-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.caracteristica-item strong {
+  color: #495057;
+  font-weight: 600;
+}
+
+.caracteristicas-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+}
+
+.caracteristicas-list li {
+  padding: 0.5rem 0;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.check-icon {
+  color: #38ef7d;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* ========================================
+   FORMULARIO
+   ======================================== */
+.formulario-tienda-collapse {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.formulario-tienda-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.plan-seleccionado-info {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.plan-seleccionado-info h6 {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.periodo-selector {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.resumen-pago {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.resumen-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.resumen-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-top: 2px solid #dee2e6;
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+/* ========================================
+   ADDONS
+   ======================================== */
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.addon-card {
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addon-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+}
+
+.addon-card.selected {
+  border-color: #38ef7d;
+  background: #f0fdf4;
+  box-shadow: 0 4px 20px rgba(56, 239, 125, 0.3);
+}
+
+.addon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-left: 4px solid #667eea;
+  padding-left: 1rem;
+}
+
+.addon-nome {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.addon-check {
+  background: #38ef7d;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.addon-body {
+  padding: 0 1rem;
+}
+
+.addon-descripcion {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  min-height: 60px;
+}
+
+.addon-precio {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.addon-precio .precio-valor {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.addon-precio .precio-unidad {
+  font-size: 0.95rem;
+  color: #6c757d;
+}
+
+.resumen-addons {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #f5576c;
+}
+
+.resumen-addons h6 {
+  color: #f5576c;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.resumen-addons ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.resumen-addons li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.total-addons {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0 0 0;
+  border-top: 2px solid #dee2e6;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* ========================================
+   INFO CARD
+   ======================================== */
+.info-tienda-card {
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #667eea30;
+}
+
+.info-tienda-card h5 {
+  color: #667eea;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.features-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.feature-icon {
+  background: #38ef7d;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 1.8rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .periodo-toggle {
+    width: 100%;
+  }
+
+  .acciones-header {
+    flex-direction: column;
+  }
+
+  .btn-tienda,
+  .btn-tienda-addon {
+    width: 100%;
+  }
+
+  .planes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .addons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+}

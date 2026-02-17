@@ -1,425 +1,440 @@
-import React, { useState} from "react";
-import { 
-  TrophyFill,
-  Lightning,
-  ShieldCheck,
-  CloudCheck,
-  ArrowUpCircle,
-  CheckCircleFill,
-  StarFill,
-  GraphUpArrow,
-  People,
-  BoxSeam,
-  Headset,
-  GearFill
-} from "react-bootstrap-icons";
+import React, { useState } from "react";
+import { ChevronDown, ChevronUp, Shop } from "react-bootstrap-icons";
+import { useTienda } from "../hooks/useTienda";
+import FormularioTienda from "../components/tienda/FormTienda";
+import TarjetaPlan from "../components/tienda/TarjetaPlan";
+import TarjetaAddon from "../components/tienda/TarjetaAddon";
 import "../styles/Tienda.css";
 
-const planActual = {
-  nombre: "Emprendedor",
-  facturas: 50,
-  usuarios: 1,
-  productos: 100,
-  precio: 29000,
-  caracteristicas: ["Facturación DIAN", "Reportes básicos", "Soporte email"],
-};
-
-const planesUpgrade = [
-  {
-    id: 2,
-    nombre: "Profesional",
-    tagline: "Lleva tu negocio al siguiente nivel",
-    precio: 59000,
-    precioAnual: 590000,
-    diferenciaPrecio: 30000,
-    color: "#8b5cf6",
-    gradiente: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
-    facturas: 500,
-    usuarios: 5,
-    productos: "Ilimitados",
-    recomendado: true,
-    novedades: [
-      "10x más facturas (50 → 500)",
-      "4 usuarios adicionales",
-      "Productos ilimitados",
-      "API REST completa",
-      "Soporte prioritario 24/7",
-      "Multi-sucursal",
-    ],
-  },
-  {
-    id: 3,
-    nombre: "Empresarial",
-    tagline: "Solución corporativa sin límites",
-    precio: 99000,
-    precioAnual: 990000,
-    diferenciaPrecio: 70000,
-    color: "#ec4899",
-    gradiente: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)",
-    facturas: "Ilimitadas",
-    usuarios: "Ilimitados",
-    productos: "Ilimitados",
-    recomendado: false,
-    novedades: [
-      "Facturas sin límites",
-      "Usuarios ilimitados",
-      "Business Intelligence",
-      "API empresarial + webhooks",
-      "Soporte dedicado premium",
-      "White label",
-    ],
-  },
-];
-
-const addons = [
-  {
-    id: 1,
-    nombre: "Usuarios Extra",
-    descripcion: "Agrega más usuarios a tu plan actual",
-    precio: 5000,
-    unidad: "por usuario/mes",
-    icono: <People size={36} />,
-    color: "#06b6d4",
-    cantidad: 1,
-  },
-  {
-    id: 2,
-    nombre: "Facturas Adicionales",
-    descripcion: "Paquete de 50 facturas extra",
-    precio: 10000,
-    unidad: "por paquete",
-    icono: <BoxSeam size={36} />,
-    color: "#10b981",
-    cantidad: 1,
-  },
-  {
-    id: 3,
-    nombre: "Soporte Prioritario",
-    descripcion: "Atención prioritaria 24/7",
-    precio: 15000,
-    unidad: "por mes",
-    icono: <Headset size={36} />,
-    color: "#f59e0b",
-    cantidad: 1,
-  },
-  {
-    id: 4,
-    nombre: "Personalización Avanzada",
-    descripcion: "Customiza la apariencia de tus facturas",
-    precio: 20000,
-    unidad: "por mes",
-    icono: <GearFill size={36} />,
-    color: "#8b5cf6",
-    cantidad: 1,
-  },
-];
-
 function Tienda() {
-  const [periodoAnual, setPeriodoAnual] = useState(false);
-  const [addonsSeleccionados, setAddonsSeleccionados] = useState([]);
+  const {
+    planActual,
+    planesDisponibles,
+    addonsDisponibles,
+    estadisticas,
+    isLoading,
+    error,
+    cambiarPlan,
+    cambiarPlanLoading,
+    agregarAddons,
+    agregarAddonsLoading,
+  } = useTienda();
 
-  const toggleAddon = (addonId) => {
-    if (addonsSeleccionados.includes(addonId)) {
-      setAddonsSeleccionados(addonsSeleccionados.filter(id => id !== addonId));
-    } else {
-      setAddonsSeleccionados([...addonsSeleccionados, addonId]);
+  const [mostrarFormularioPlan, setMostrarFormularioPlan] = useState(false);
+  const [mostrarFormularioAddons, setMostrarFormularioAddons] = useState(false);
+  const [planSeleccionado, setPlanSeleccionado] = useState(null);
+  const [addonsSeleccionados, setAddonsSeleccionados] = useState([]);
+  const [mensajeExito, setMensajeExito] = useState("");
+  const [periodoAnual, setPeriodoAnual] = useState(true);
+
+  const toggleFormularioPlan = () => {
+    if (mostrarFormularioPlan) {
+      setPlanSeleccionado(null);
+    }
+    setMostrarFormularioPlan(!mostrarFormularioPlan);
+    setMostrarFormularioAddons(false);
+  };
+
+  const toggleFormularioAddons = () => {
+    if (mostrarFormularioAddons) {
+      setAddonsSeleccionados([]);
+    }
+    setMostrarFormularioAddons(!mostrarFormularioAddons);
+    setMostrarFormularioPlan(false);
+  };
+
+  const handleSeleccionarPlan = (plan) => {
+    setPlanSeleccionado(plan);
+    setMostrarFormularioPlan(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleToggleAddon = (addonId) => {
+    setAddonsSeleccionados((prev) =>
+      prev.includes(addonId)
+        ? prev.filter((id) => id !== addonId)
+        : [...prev, addonId]
+    );
+  };
+
+  const handleCambiarPlan = async (e) => {
+    e.preventDefault();
+
+    if (!planSeleccionado) {
+      alert("Debes seleccionar un plan");
+      return;
+    }
+
+    try {
+      await cambiarPlan({ planId: planSeleccionado.id, periodoAnual });
+      setMensajeExito("✅ Plan actualizado exitosamente");
+      setTimeout(() => setMensajeExito(""), 3000);
+      setMostrarFormularioPlan(false);
+      setPlanSeleccionado(null);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al cambiar el plan: " + (error.message || "Error desconocido"));
     }
   };
 
-  const calcularTotalAddons = () => {
-    return addons
-      .filter(addon => addonsSeleccionados.includes(addon.id))
-      .reduce((total, addon) => total + addon.precio, 0);
+  const handleAgregarAddons = async (e) => {
+    e.preventDefault();
+
+    if (addonsSeleccionados.length === 0) {
+      alert("Debes seleccionar al menos un complemento");
+      return;
+    }
+
+    try {
+      await agregarAddons(addonsSeleccionados);
+      setMensajeExito("✅ Complementos agregados exitosamente");
+      setTimeout(() => setMensajeExito(""), 3000);
+      setMostrarFormularioAddons(false);
+      setAddonsSeleccionados([]);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al agregar complementos: " + (error.message || "Error desconocido"));
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container mt-5">
+        <div className="loading-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+          <p className="mt-3">Cargando tienda...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-5">
+        <div className="alert alert-danger">
+          <h5>❌ Error al cargar la tienda</h5>
+          <p>{error.message || "Error desconocido"}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const calcularPrecio = (plan) => {
+    return periodoAnual ? plan.precioAnual : plan.precioMensual;
   };
 
   return (
-    <div className="tienda-upgrade-container">
-      {/* Plan Actual Banner */}
-      <section className="plan-actual-banner">
-        <div className="container">
-          <div className="banner-content">
-            <div className="plan-actual-info">
-              <div className="plan-badge">
-                <CheckCircleFill size={18} className="me-2" />
-                Plan Actual
-              </div>
-              <h2 className="plan-actual-nombre">{planActual.nombre}</h2>
-              <div className="plan-actual-stats">
-                <div className="stat">
-                  <span className="stat-number">{planActual.facturas}</span>
-                  <span className="stat-label">Facturas/mes</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-number">{planActual.usuarios}</span>
-                  <span className="stat-label">Usuario</span>
-                </div>
-                <div className="stat">
-                  <span className="stat-number">{planActual.productos}</span>
-                  <span className="stat-label">Productos</span>
-                </div>
-              </div>
-            </div>
-            <div className="plan-actual-precio">
-              <div className="precio-actual">
-                <span className="simbolo">$</span>
-                <span className="cantidad">{planActual.precio.toLocaleString("es-CO")}</span>
-                <span className="periodo">/mes</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="upgrade-header">
-        <div className="container">
-          <div className="tienda-header-content">
-            <StarFill className="tienda-header-icon" size={48} />
-            <h1 className="upgrade-title">
-              Potencia tu <span className="gradient-text">FactCloud</span>
-            </h1>
-            <p className="upgrade-subtitle">
-              Actualiza tu plan o agrega funcionalidades específicas según las necesidades de tu negocio
+    <div className="container-fluid mt-4 px-4 tienda-container">
+      {/* HEADER */}
+      <div className="header-card">
+        <div className="header-content">
+          <div className="header-text">
+            <h2 className="header-title mb-4">Tienda FactCloud</h2>
+            <p className="header-subtitle">
+              Gestiona tu plan de facturación y complementos
             </p>
           </div>
+          <div className="header-icon">
+            <Shop size={80} />
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section className="upgrade-plans-section">
-        <div className="container">
-          <div className="section-header">
-            <ArrowUpCircle size={32} className="me-3" />
-            <h2 className="section-title">Actualiza tu Plan</h2>
+      {/* MENSAJE DE ÉXITO */}
+      {mensajeExito && (
+        <div className="alert alert-success alert-dismissible fade show">
+          <span>{mensajeExito}</span>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setMensajeExito("")}
+          />
+        </div>
+      )}
+
+      {/* PLAN ACTUAL */}
+      {planActual && (
+        <div className="plan-actual-card mb-4">
+          <div className="plan-actual-header">
+            <h5>Tu Plan Actual</h5>
+            <span className="badge bg-success">Activo</span>
           </div>
-          <p className="section-description">
-            Obtén más recursos y funcionalidades premium con nuestros planes superiores
-          </p>
+          <div className="plan-actual-body">
+            <div className="row">
+              <div className="col-md-4">
+                <div className="plan-info-item">
+                  <span className="plan-info-label">Plan:</span>
+                  <span className="plan-info-value">{planActual.nombre}</span>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="plan-info-item">
+                  <span className="plan-info-label">Precio:</span>
+                  <span className="plan-info-value">
+                    ${planActual.precioMensual?.toLocaleString("es-CO")}/mes
+                  </span>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="plan-info-item">
+                  <span className="plan-info-label">Facturas/mes:</span>
+                  <span className="plan-info-value">
+                    {planActual.facturasMensuales === -1
+                      ? "Ilimitadas"
+                      : planActual.facturasMensuales}
+                  </span>
+                </div>
+              </div>
+            </div>
 
-          {/* Toggle Anual */}
-          <div className="toggle-periodo-upgrade">
-            <button 
-              className={`toggle-btn ${!periodoAnual ? "active" : ""}`}
-              onClick={() => setPeriodoAnual(false)}
-            >
-              Mensual
-            </button>
-            <button 
-              className={`toggle-btn ${periodoAnual ? "active" : ""}`}
-              onClick={() => setPeriodoAnual(true)}
-            >
-              Anual
-              <span className="toggle-badge">-20%</span>
-            </button>
-          </div>
+            {/* ESTADÍSTICAS */}
+            {estadisticas && (
+              <div className="estadisticas-uso mt-4">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="stat-item">
+                      <span className="stat-label">Documentos usados:</span>
+                      <span className="stat-value">
+                        {estadisticas.documentosUsados} /{" "}
+                        {estadisticas.documentosLimite === -1
+                          ? "∞"
+                          : estadisticas.documentosLimite}
+                      </span>
+                    </div>
+                    {estadisticas.documentosLimite !== -1 && (
+                      <div className="progress mt-2">
+                        <div
+                          className={`progress-bar ${
+                            estadisticas.porcentajeUso >= 80
+                              ? "bg-danger"
+                              : estadisticas.porcentajeUso >= 60
+                              ? "bg-warning"
+                              : "bg-success"
+                          }`}
+                          role="progressbar"
+                          style={{ width: `${estadisticas.porcentajeUso}%` }}
+                        >
+                          {estadisticas.porcentajeUso.toFixed(0)}%
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="col-md-6">
+                    <div className="stat-item">
+                      <span className="stat-label">Días restantes:</span>
+                      <span className="stat-value">
+                        {estadisticas.diasRestantes} días
+                      </span>
+                    </div>
+                    {estadisticas.fechaFin && (
+                      <small className="text-muted d-block mt-1">
+                        Vence:{" "}
+                        {new Date(estadisticas.fechaFin).toLocaleDateString("es-CO")}
+                      </small>
+                    )}
+                  </div>
+                </div>
 
-          <div className="upgrade-plans-grid">
-            {planesUpgrade.map((plan) => (
-              <div 
-                key={plan.id}
-                className={`upgrade-plan-card ${plan.recomendado ? "recomendado" : ""}`}
-              >
-                {plan.recomendado && (
-                  <div className="plan-ribbon">
-                    <TrophyFill size={16} className="me-1" />
-                    Recomendado
+                {estadisticas.porcentajeUso >= 80 && (
+                  <div className="alert alert-warning mt-3 mb-0">
+                    <strong>⚠️ Advertencia:</strong> Has usado más del 80% de tus
+                    documentos disponibles. Considera actualizar tu plan.
                   </div>
                 )}
-
-                <div className="upgrade-card-header">
-                  <h3 className="upgrade-plan-nombre">{plan.nombre}</h3>
-                  <p className="upgrade-plan-tagline">{plan.tagline}</p>
-                </div>
-
-                <div className="upgrade-pricing">
-                  <div className="precio-nuevo">
-                    <span className="simbolo">$</span>
-                    <span className="cantidad">
-                      {(periodoAnual 
-                        ? Math.floor(plan.precioAnual / 12) 
-                        : plan.precio
-                      ).toLocaleString("es-CO")}
-                    </span>
-                    <span className="periodo">/mes</span>
-                  </div>
-                  <div className="diferencia-precio">
-                    Solo +${plan.diferenciaPrecio.toLocaleString("es-CO")}/mes adicionales
-                  </div>
-                  {periodoAnual && (
-                    <div className="ahorro-anual">
-                      <CheckCircleFill size={14} className="me-1" />
-                      Ahorra {((plan.precio * 12 - plan.precioAnual) / 1000).toFixed(0)}k al año
-                    </div>
-                  )}
-                </div>
-
-                <div className="comparacion-rapida">
-                  <div className="comp-item">
-                    <span className="comp-label">Facturas:</span>
-                    <span className="comp-valor">{plan.facturas}/mes</span>
-                  </div>
-                  <div className="comp-item">
-                    <span className="comp-label">Usuarios:</span>
-                    <span className="comp-valor">{plan.usuarios}</span>
-                  </div>
-                  <div className="comp-item">
-                    <span className="comp-label">Productos:</span>
-                    <span className="comp-valor">{plan.productos}</span>
-                  </div>
-                </div>
-
-                <div className="novedades-section">
-                  <h4 className="novedades-titulo">
-                    <Lightning size={20} className="me-2" />
-                    Nuevas funcionalidades
-                  </h4>
-                  <ul className="novedades-list">
-                    {plan.novedades.map((novedad, idx) => (
-                      <li key={idx}>
-                        <CheckCircleFill size={16} className="check-icon" />
-                        <span>{novedad}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <button 
-                  className="btn-upgrade"
-                  style={{ 
-                    background: plan.recomendado ? plan.gradiente : "transparent",
-                    borderColor: plan.color,
-                    color: plan.recomendado ? "white" : plan.color
-                  }}
-                >
-                  {plan.recomendado ? "Actualizar Ahora" : "Cambiar a " + plan.nombre}
-                </button>
               </div>
-            ))}
+            )}
           </div>
         </div>
-      </section>
+      )}
 
-      {/* Add-ons Section */}
-      <section className="addons-section">
-        <div className="container">
-          <div className="section-header">
-            <BoxSeam size={32} className="me-3" />
-            <h2 className="section-title">Complementos y Extras</h2>
-          </div>
-          <p className="section-description">
-            Personaliza tu plan actual con funcionalidades adicionales sin cambiar de plan
-          </p>
+      {/* TOGGLE DE PERIODO */}
+      <div className="periodo-toggle-container mb-4">
+        <div className="periodo-toggle">
+          <button
+            className={`periodo-btn ${!periodoAnual ? "active" : ""}`}
+            onClick={() => setPeriodoAnual(false)}
+          >
+            Mensual
+          </button>
+          <button
+            className={`periodo-btn ${periodoAnual ? "active" : ""}`}
+            onClick={() => setPeriodoAnual(true)}
+          >
+            Anual
+            <span className="badge bg-success ms-2">Ahorra 20%</span>
+          </button>
+        </div>
+      </div>
 
-          <div className="addons-grid">
-            {addons.map((addon) => (
-              <div 
-                key={addon.id}
-                className={`addon-card ${addonsSeleccionados.includes(addon.id) ? "selected" : ""}`}
-                onClick={() => toggleAddon(addon.id)}
-              >
-                <div className="addon-check">
-                  {addonsSeleccionados.includes(addon.id) && (
-                    <CheckCircleFill size={24} />
-                  )}
-                </div>
-
-                <div className="addon-icon" style={{ color: addon.color }}>
-                  {addon.icono}
-                </div>
-
-                <h3 className="addon-nombre">{addon.nombre}</h3>
-                <p className="addon-descripcion">{addon.descripcion}</p>
-
-                <div className="addon-precio">
-                  <span className="addon-cantidad">
-                    ${addon.precio.toLocaleString("es-CO")}
-                  </span>
-                  <span className="addon-unidad">{addon.unidad}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {addonsSeleccionados.length > 0 && (
-            <div className="addons-resumen">
-              <div className="resumen-content">
-                <div className="resumen-info">
-                  <span className="resumen-label">
-                    {addonsSeleccionados.length} complemento(s) seleccionado(s)
-                  </span>
-                  <span className="resumen-total">
-                    Total adicional: ${calcularTotalAddons().toLocaleString("es-CO")}/mes
-                  </span>
-                </div>
-                <button className="btn-agregar-addons">
-                  Agregar a mi Plan
-                </button>
-              </div>
-            </div>
+      {/* BOTONES DE ACCIÓN */}
+      <div className="acciones-header mb-4">
+        <button
+          className={`btn-tienda ${mostrarFormularioPlan ? "active" : ""}`}
+          onClick={toggleFormularioPlan}
+          type="button"
+        >
+          {mostrarFormularioPlan ? (
+            <>
+              <ChevronUp size={20} className="me-2" />
+              Ocultar Planes
+            </>
+          ) : (
+            <>
+              <ChevronDown size={20} className="me-2" />
+              Ver Todos los Planes
+            </>
           )}
+        </button>
+
+        <button
+          className={`btn-tienda-addon ${mostrarFormularioAddons ? "active" : ""}`}
+          onClick={toggleFormularioAddons}
+          type="button"
+        >
+          {mostrarFormularioAddons ? (
+            <>
+              <ChevronUp size={20} className="me-2" />
+              Ocultar Complementos
+            </>
+          ) : (
+            <>
+              <ChevronDown size={20} className="me-2" />
+              Ver Complementos
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* FORMULARIO DE CONFIRMACIÓN DE PLAN */}
+      {mostrarFormularioPlan && planSeleccionado && (
+        <div className="formulario-tienda-collapse mb-4">
+          <FormularioTienda
+            planSeleccionado={planSeleccionado}
+            periodoAnual={periodoAnual}
+            setPeriodoAnual={setPeriodoAnual}
+            onSubmit={handleCambiarPlan}
+            onCancel={() => {
+              setMostrarFormularioPlan(false);
+              setPlanSeleccionado(null);
+            }}
+            isLoading={cambiarPlanLoading}
+          />
         </div>
-      </section>
+      )}
 
-      {/* Beneficios */}
-      <section className="beneficios-upgrade-section">
-        <div className="container">
-          <h2 className="section-title-center">
-            ¿Por qué actualizar tu <span className="gradient-text">FactCloud</span>?
-          </h2>
+      {/* GRID DE PLANES */}
+      {mostrarFormularioPlan && (
+        <div className="planes-grid mb-4">
+          {planesDisponibles.map((plan) => (
+            <TarjetaPlan
+              key={plan.id}
+              plan={plan}
+              periodoAnual={periodoAnual}
+              esActual={planActual?.id === plan.id}
+              onSeleccionar={handleSeleccionarPlan}
+              calcularPrecio={calcularPrecio}
+            />
+          ))}
+        </div>
+      )}
 
-          <div className="beneficios-upgrade-grid">
-            <div className="beneficio-upgrade-card">
-              <div className="beneficio-icon">
-                <GraphUpArrow size={40} />
+      {/* FORMULARIO DE ADDONS */}
+      {mostrarFormularioAddons && (
+        <div className="formulario-tienda-collapse mb-4">
+          <div className="formulario-tienda-container">
+            <form onSubmit={handleAgregarAddons}>
+              <h5 className="mb-4">Complementos Disponibles</h5>
+
+              <div className="addons-grid mb-4">
+                {addonsDisponibles.map((addon) => (
+                  <TarjetaAddon
+                    key={addon.id}
+                    addon={addon}
+                    seleccionado={addonsSeleccionados.includes(addon.id)}
+                    onToggle={handleToggleAddon}
+                  />
+                ))}
               </div>
-              <h3>Escala sin límites</h3>
-              <p>Crece tu negocio sin preocuparte por quedarte sin recursos</p>
-            </div>
 
-            <div className="beneficio-upgrade-card">
-              <div className="beneficio-icon">
-                <Lightning size={40} />
-              </div>
-              <h3>Más velocidad</h3>
-              <p>Procesamiento prioritario y rendimiento optimizado</p>
-            </div>
+              {addonsSeleccionados.length > 0 && (
+                <div className="resumen-addons mb-3">
+                  <h6>Resumen de selección:</h6>
+                  <ul>
+                    {addonsSeleccionados.map((id) => {
+                      const addon = addonsDisponibles.find((a) => a.id === id);
+                      return (
+                        <li key={id}>
+                          {addon.nombre} - ${addon.precio.toLocaleString("es-CO")}{" "}
+                          {addon.unidad}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <div className="total-addons">
+                    <strong>Total adicional:</strong>
+                    <span>
+                      $
+                      {addonsSeleccionados
+                        .reduce((total, id) => {
+                          const addon = addonsDisponibles.find((a) => a.id === id);
+                          return total + addon.precio;
+                        }, 0)
+                        .toLocaleString("es-CO")}
+                    </span>
+                  </div>
+                </div>
+              )}
 
-            <div className="beneficio-upgrade-card">
-              <div className="beneficio-icon">
-                <ShieldCheck size={40} />
+              <div className="d-flex justify-content-end gap-2">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={toggleFormularioAddons}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={addonsSeleccionados.length === 0 || agregarAddonsLoading}
+                >
+                  {agregarAddonsLoading ? "Agregando..." : "Agregar Complementos"}
+                </button>
               </div>
-              <h3>Soporte premium</h3>
-              <p>Atención dedicada cuando más lo necesitas</p>
-            </div>
-
-            <div className="beneficio-upgrade-card">
-              <div className="beneficio-icon">
-                <CloudCheck size={40} />
-              </div>
-              <h3>Actualizaciones instantáneas</h3>
-              <p>Tu cambio de plan es inmediato, sin interrupciones</p>
-            </div>
+            </form>
           </div>
         </div>
-      </section>
+      )}
 
-      {/* CTA */}
-      <section className="cta-upgrade-section">
-        <div className="cta-upgrade-content">
-          <h2 className="cta-title">¿Necesitas ayuda para decidir?</h2>
-          <p className="cta-text">
-            Nuestro equipo está disponible para asesorarte y ayudarte a encontrar 
-            la mejor opción para tu negocio
-          </p>
-          <div className="cta-buttons">
-            <button className="btn-cta-contacto">
-              <Headset size={20} className="me-2" />
-              Hablar con un Asesor
-            </button>
-            <button className="btn-cta-comparar">
-              Comparar Planes
-            </button>
+      {/* INFORMACIÓN ADICIONAL */}
+      <div className="info-tienda-card mt-4">
+        <h5>¿Necesitas ayuda?</h5>
+        <p>
+          Si tienes dudas sobre qué plan es mejor para ti o necesitas un plan
+          personalizado, contáctanos en{" "}
+          <a href="mailto:soporte@factcloud.com">soporte@factcloud.com</a>
+        </p>
+        <div className="features-list">
+          <div className="feature-item">
+            <span className="feature-icon">✓</span>
+            <span>Todos los planes incluyen soporte técnico</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">✓</span>
+            <span>Facturación electrónica validada por la DIAN</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">✓</span>
+            <span>Actualización y cancelación en cualquier momento</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">✓</span>
+            <span>Respaldo automático de tus datos</span>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

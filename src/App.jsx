@@ -85,9 +85,6 @@ function App() {
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
               <Route path="/reportes" element={<Reportes />} />
               <Route path="/perfil" element={<Perfil />} />
-            </Route>
-
-            <Route element={<PublicLayout />}>
               <Route path="/tienda" element={<Tienda />} />
               <Route path="/tienda/:categoria" element={<Tienda />} />
             </Route>
