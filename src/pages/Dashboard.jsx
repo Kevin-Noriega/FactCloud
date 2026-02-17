@@ -15,6 +15,8 @@ function Dashboard() {
   useEffect(() => {
   }, []);
 
+
+
   if (loading) {
     return (
       <div className="loading-dashboard">
@@ -26,8 +28,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-       <HeroBanner/>
-       
+      <HeroBanner />
 
       <ToastContainer
         position="top-right"
@@ -48,7 +49,6 @@ function Dashboard() {
         <Tutoriales/>
         <NormativasDian/>
       </div>
-
     </div>
   );
 }

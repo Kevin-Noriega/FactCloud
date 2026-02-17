@@ -2,11 +2,12 @@ import React, { useEffect, useState, useRef } from "react";
 import { API_URL } from "../api/config";
 import ModalFacturaPDF from "../components/dashboard/ModalfacturaPDF.jsx";
 import ModalPago from "../components/dashboard/ModalPago.jsx";
-import ModalCrearFactura from "../components/dashboard/ModalCrearFactura.jsx"; 
+import ModalCrearFactura from "../components/dashboard/ModalCrearFactura.jsx";
 import { createConnection } from "../SignalR/SignalConector";
 import { toast, ToastContainer } from "react-toastify";
-import {FileEarmarkText} from 'react-bootstrap-icons';
+import { FileEarmarkText } from "react-bootstrap-icons";
 import "../styles/sharedPage.css";
+import axiosClient from "../api/axiosClient";
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -16,7 +17,7 @@ function Facturas() {
   const [error, setError] = useState(null);
   const [mensajeExito, setMensajeExito] = useState("");
   const [buscador, setBuscador] = useState("");
-  const [mostrarFormulario, setMostrarFormulario] = useState(false); 
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [mostrarModalPago, setMostrarModalPago] = useState(false);
   const [facturaParaPago, setFacturaParaPago] = useState(null);
   const connectionRef = useRef(null);
@@ -25,29 +26,14 @@ function Facturas() {
 
   const enviarFacturaPorCorreo = async (factId) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("No estás autenticado. Inicia sesión de nuevo.");
-        return;
-      }
-
-      const resp = await fetch(`${API_URL}/Facturas/${factId}/enviar-cliente`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!resp.ok) {
-        const txt = await resp.text();
-        throw new Error(txt || "Error al enviar factura");
-      }
+      await axiosClient.post(`/Facturas/${factId}/enviar-cliente`);
 
       setMensajeExito("Factura enviada al cliente por correo.");
       setTimeout(() => setMensajeExito(""), 3000);
     } catch (err) {
-      setMensajeExito(err.message);
+      const mensaje =
+        err.response?.data?.message || err.message || "Error al enviar factura";
+      setMensajeExito(mensaje);
       setTimeout(() => setMensajeExito(""), 3000);
     }
   };
@@ -87,49 +73,23 @@ function Facturas() {
 
   const fetchDatos = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        alert("No estás autenticado. Por favor inicia sesión.");
-        return;
-      }
-
       const [facturasRes, clientesRes, productosRes] = await Promise.all([
-        fetch(`${API_URL}/Facturas`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/Clientes`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/Productos`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
+        axiosClient.get("/Facturas"),
+        axiosClient.get("/Clientes"),
+        axiosClient.get("/Productos"),
       ]);
 
-      if (!facturasRes.ok || !clientesRes.ok || !productosRes.ok) {
-        throw new Error("Error al cargar datos");
-      }
-
-      const facturasData = await facturasRes.json();
-      const clientesData = await clientesRes.json();
-      const productosData = await productosRes.json();
-
-      setFacturas(facturasData);
-      setClientes(clientesData);
-      setProductos(productosData);
+      setFacturas(facturasRes.data);
+      setClientes(clientesRes.data);
+      setProductos(productosRes.data);
       setError(null);
     } catch (error) {
       console.error("Error al cargar datos:", error);
-      setError(error.message);
+      const mensaje =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al cargar datos";
+      setError(mensaje);
     } finally {
       setLoading(false);
     }
@@ -215,23 +175,26 @@ function Facturas() {
 
   return (
     <div className="container-fluid mt-4 px-4">
-            <div className="header-card">
-                      <div className="header-content">
-                        <div className="header-text">
-                         <h2 className="header-title mb-4">Gestión de Facturas</h2>
-                          <p className="header-subtitle">
-                          Emite, consulta y administra tus facturas de forma rápida y segura.
-                          </p>
-            
-                        </div>
-                        <div className="header-icon">
-                          <FileEarmarkText size={80} />
-                        </div>
-                      </div>
-                    </div>
+      <div className="header-card">
+        <div className="header-content">
+          <div className="header-text">
+            <h2 className="header-title mb-4">Gestión de Facturas</h2>
+            <p className="header-subtitle">
+              Emite, consulta y administra tus facturas de forma rápida y
+              segura.
+            </p>
+          </div>
+          <div className="header-icon">
+            <FileEarmarkText size={80} />
+          </div>
+        </div>
+      </div>
 
       {mensajeExito && (
-        <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+        <div
+          className="alert alert-success d-flex justify-content-between align-items-center"
+          role="alert"
+        >
           <span>{mensajeExito}</span>
           <button
             className="btn btn-close"
@@ -241,7 +204,6 @@ function Facturas() {
       )}
 
       <div className="opcions-header">
-
         <button
           className="btn-crear"
           onClick={() => setMostrarFormulario(true)}
@@ -304,14 +266,18 @@ function Facturas() {
                 <tbody>
                   {filtrados.map((fact) => (
                     <tr key={fact.id}>
-                      <td><strong>{fact.numeroFactura || fact.id}</strong></td>
+                      <td>
+                        <strong>{fact.numeroFactura || fact.id}</strong>
+                      </td>
                       <td>
                         {fact.cliente
                           ? `${fact.cliente.nombre} ${fact.cliente.apellido}`
                           : "N/A"}
                       </td>
                       <td>
-                        {new Date(fact.fechaEmision).toLocaleDateString("es-CO")}
+                        {new Date(fact.fechaEmision).toLocaleDateString(
+                          "es-CO",
+                        )}
                       </td>
                       <td className="text-end">
                         ${fact.subtotal?.toLocaleString("es-CO") || "0"}
@@ -329,38 +295,39 @@ function Facturas() {
                         {fact.estado === "Pagada" ? (
                           <span className="badge bg-success">Pagada</span>
                         ) : (
-                          <span className="badge bg-warning text-dark">Pendiente</span>
+                          <span className="badge bg-warning text-dark">
+                            Pendiente
+                          </span>
                         )}
                       </td>
                       <td>
                         <div className="btn-group-acciones">
-                        {fact.estado !== "Pagada" && (
-                          
+                          {fact.estado !== "Pagada" && (
+                            <button
+                              className="btn btn-cobrar btn-sm"
+                              onClick={() => abrirModalPago(fact)}
+                            >
+                              Cobrar
+                            </button>
+                          )}
                           <button
-                            className="btn btn-cobrar btn-sm"
-                            onClick={() => abrirModalPago(fact)}
+                            className="btn btn-pdf btn-sm"
+                            onClick={() => setFacturaVista(fact.id)}
                           >
-                            Cobrar
+                            PDF
                           </button>
-                        )}
-                        <button
-                          className="btn btn-pdf btn-sm"
-                          onClick={() => setFacturaVista(fact.id)}
-                        >
-                          PDF
-                        </button>
-                        <button
-                          className="btn btn-xml btn-sm"
-                          onClick={() => descargarXML(fact)}
-                        >
-                          XML
-                        </button>
-                        <button
-                          className="btn btn-email btn-sm"
-                          onClick={() => enviarFacturaPorCorreo(fact.id)}
-                        >
-                          Enviar Email
-                        </button>
+                          <button
+                            className="btn btn-xml btn-sm"
+                            onClick={() => descargarXML(fact)}
+                          >
+                            XML
+                          </button>
+                          <button
+                            className="btn btn-email btn-sm"
+                            onClick={() => enviarFacturaPorCorreo(fact.id)}
+                          >
+                            Enviar Email
+                          </button>
                         </div>
                       </td>
                     </tr>

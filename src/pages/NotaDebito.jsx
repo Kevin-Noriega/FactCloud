@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { API_URL } from "../api/config";
 import ModalNotaDebito from "../components/dashboard/ModalNotaDebito";
 import "../styles/sharedPage.css";
-import {ArrowRepeat} from 'react-bootstrap-icons';
-
+import { ArrowRepeat } from "react-bootstrap-icons";
+import axiosClient from "../api/axiosClient";
 function NotaDebito() {
   const [notasDebito, setNotasDebito] = useState([]);
   const [facturas, setFacturas] = useState([]);
@@ -34,49 +34,23 @@ function NotaDebito() {
 
   const fetchDatos = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        alert("No estás autenticado. Por favor inicia sesión.");
-        return;
-      }
-
       const [notasRes, facturasRes, productosRes] = await Promise.all([
-        fetch(`${API_URL}/NotasDebito`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/Facturas`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-        fetch(`${API_URL}/Productos`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }),
+        axiosClient.get("/NotasDebito"),
+        axiosClient.get("/Facturas"),
+        axiosClient.get("/Productos"),
       ]);
 
-      if (!notasRes.ok || !facturasRes.ok || !productosRes.ok) {
-        throw new Error("Error al cargar datos");
-      }
-
-      const notasData = await notasRes.json();
-      const facturasData = await facturasRes.json();
-      const productosData = await productosRes.json();
-
-      setNotasDebito(notasData);
-      setFacturas(facturasData);
-      setProductos(productosData);
+      setNotasDebito(notasRes.data);
+      setFacturas(facturasRes.data);
+      setProductos(productosRes.data);
       setError(null);
     } catch (error) {
       console.error("Error al cargar datos:", error);
-      setError(error.message);
+      const mensaje =
+        error.response?.data?.message ||
+        error.message ||
+        "Error al cargar datos";
+      setError(mensaje);
     } finally {
       setLoading(false);
     }
@@ -142,22 +116,24 @@ function NotaDebito() {
   return (
     <div className="container-fluid mt-4 px-4">
       <div className="header-card">
-                            <div className="header-content">
-                              <div className="header-text">
-                               <h2 className="header-title mb-4">Gestión Nota Debito</h2>
-                                <p className="header-subtitle">
-                                Gestiona, actualiza y controla tu inventario.
-                                </p>
-                  
-                              </div>
-                              <div className="header-icon">
-                                <ArrowRepeat size={80}/>
-                              </div>
-                            </div>
-                          </div>
+        <div className="header-content">
+          <div className="header-text">
+            <h2 className="header-title mb-4">Gestión Nota Debito</h2>
+            <p className="header-subtitle">
+              Gestiona, actualiza y controla tu inventario.
+            </p>
+          </div>
+          <div className="header-icon">
+            <ArrowRepeat size={80} />
+          </div>
+        </div>
+      </div>
 
       {mensajeExito && (
-        <div className="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+        <div
+          className="alert alert-success d-flex justify-content-between align-items-center"
+          role="alert"
+        >
           <span>{mensajeExito}</span>
           <button
             className="btn btn-close"
@@ -168,15 +144,14 @@ function NotaDebito() {
 
       <div className="nota-info mb-4">
         <p>
-          <strong>Información importante:</strong> Las notas débito son documentos que incrementan el valor de una factura. 
-          No se pueden aplicar cuando la factura cuenta con aceptación DIAN.
+          <strong>Información importante:</strong> Las notas débito son
+          documentos que incrementan el valor de una factura. No se pueden
+          aplicar cuando la factura cuenta con aceptación DIAN.
         </p>
       </div>
 
       <div className="opcions-header">
-        <button
-          className="btn-crear"
-          onClick={abrirModalNuevo} >
+        <button className="btn-crear" onClick={abrirModalNuevo}>
           Nueva Nota Débito
         </button>
         <div className="filters">
@@ -203,7 +178,9 @@ function NotaDebito() {
       <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
-            <div className="alert alert-info">No hay notas débito registradas.</div>
+            <div className="alert alert-info">
+              No hay notas débito registradas.
+            </div>
           ) : (
             <div className="table-responsive">
               <table className="table table-hover table-bordered">
@@ -222,11 +199,15 @@ function NotaDebito() {
                 <tbody>
                   {filtrados.map((nota) => (
                     <tr key={nota.id}>
-                      <td><strong>{nota.numeroNota || nota.id}</strong></td>
+                      <td>
+                        <strong>{nota.numeroNota || nota.id}</strong>
+                      </td>
                       <td>{nota.numeroFactura}</td>
                       <td>{nota.cliente?.nombre || "N/A"}</td>
                       <td>
-                        {new Date(nota.fechaElaboracion).toLocaleDateString("es-CO")}
+                        {new Date(nota.fechaElaboracion).toLocaleDateString(
+                          "es-CO",
+                        )}
                       </td>
                       <td>{nota.motivoDIAN}</td>
                       <td className="text-end  fw-bold text-success">
@@ -236,7 +217,9 @@ function NotaDebito() {
                         {nota.estado === "Enviada" ? (
                           <span className="badge bg-success">Enviada</span>
                         ) : (
-                          <span className="badge bg-warning text-dark">Pendiente</span>
+                          <span className="badge bg-warning text-dark">
+                            Pendiente
+                          </span>
                         )}
                       </td>
                       <td>

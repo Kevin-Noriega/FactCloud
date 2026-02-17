@@ -42,7 +42,7 @@ function MainLayout() {
       <div className="alert alert-danger m-4">Error: {error?.message}</div>
     );
   }
-console.log(useUsuarios);
+
   const nombreCompleto = `${usuarios?.nombre || ""} ${usuarios?.apellido || ""}`.trim() || "Usuario";
 
   return (
