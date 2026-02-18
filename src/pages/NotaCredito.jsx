@@ -1,20 +1,17 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
-import { ArrowCounterclockwise, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
-import { useNotas } from "../hooks/useNotas";
-import "../styles/NotaCredito.css";
-import FormNotaCredito from "../components/nota-credito/FormNotaCredito";
-
-=======
-import React, { useEffect, useState } from "react";
-import { API_URL } from "../api/config";
-import ModalNotaCredito from "../components/dashboard/ModalNotaCredito";
 import "../styles/sharedPage.css";
+import {useNotas} from "../hooks/useNotas";
 import { ArrowCounterclockwise } from "react-bootstrap-icons";
-import axiosClient from "../api/axiosClient";
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
 function NotaCredito() {
-  const { notasCredito,facturas,productos, loading,error,crearNotaCredito, actualizarNotaCredito,} = useNotas();
+  const {
+    notasCredito,
+    facturas,
+    productos,
+    loading,
+    error,
+    crearNotaCredito,
+    actualizarNotaCredito,
+  } = useNotas();
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [notaEditando, setNotaEditando] = useState(null);
@@ -46,9 +43,7 @@ function NotaCredito() {
     },
   ]);
 
-  const [formasPago, setFormasPago] = useState([
-    { metodo: "10", valor: 0 },
-  ]);
+  const [formasPago, setFormasPago] = useState([{ metodo: "10", valor: 0 }]);
 
   const [facturaSeleccionada, setFacturaSeleccionada] = useState(null);
 
@@ -69,7 +64,6 @@ function NotaCredito() {
       }
     });
 
-<<<<<<< HEAD
   // Resetear formulario
   const resetearFormulario = () => {
     setNotaCredito({
@@ -162,7 +156,7 @@ function NotaCredito() {
   const calcularTotalFormasPago = () => {
     return formasPago.reduce(
       (total, forma) => total + parseFloat(forma.valor || 0),
-      0
+      0,
     );
   };
 
@@ -194,15 +188,14 @@ function NotaCredito() {
         `El total de formas de pago debe coincidir con el total neto.\n` +
           `Total Neto: $${totales.totalNeto.toFixed(2)}\n` +
           `Total Formas de Pago: $${totalFormasPago.toFixed(2)}\n` +
-          `Diferencia: $${Math.abs(diferencia).toFixed(2)}`
+          `Diferencia: $${Math.abs(diferencia).toFixed(2)}`,
       );
       return;
     }
 
     try {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const user = JSON.parse(localStorage.getItem("usuario") || "{}");
       const usuarioId = user.id;
-
       if (!usuarioId) {
         alert("No se pudo obtener el ID del usuario.");
         return;
@@ -263,29 +256,6 @@ function NotaCredito() {
     } catch (error) {
       console.error("Error:", error);
       alert("Error al guardar la nota crédito: " + error.message);
-=======
-  const fetchDatos = async () => {
-    try {
-      const [notasRes, facturasRes, productosRes] = await Promise.all([
-        axiosClient.get("/NotasCredito"),
-        axiosClient.get("/Facturas"),
-        axiosClient.get("/Productos"),
-      ]);
-
-      setNotasCredito(notasRes.data);
-      setFacturas(facturasRes.data);
-      setProductos(productosRes.data);
-      setError(null);
-    } catch (error) {
-      console.error("Error al cargar datos:", error);
-      const mensaje =
-        error.response?.data?.message ||
-        error.message ||
-        "Error al cargar datos";
-      setError(mensaje);
-    } finally {
-      setLoading(false);
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
     }
   };
 
@@ -333,15 +303,9 @@ function NotaCredito() {
       <div className="header-card">
         <div className="header-content">
           <div className="header-text">
-<<<<<<< HEAD
             <h2 className="header-title mb-4">Gestión Nota Crédito</h2>
             <p className="header-subtitle">
               Gestiona y controla tus notas crédito.
-=======
-            <h2 className="header-title mb-4">Gestión Nota Credito</h2>
-            <p className="header-subtitle">
-              Gestiona, actualiza y controla tu inventario.
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
             </p>
           </div>
           <div className="header-icon">
@@ -361,17 +325,11 @@ function NotaCredito() {
         <p>
           <strong>Información importante:</strong> Las notas crédito son
           documentos que reducen el valor de una factura. Este proceso es
-<<<<<<< HEAD
           irreversible una vez validado con la DIAN.
-=======
-          irreversible una vez validado con la DIAN. Afecta directamente los
-          registros contables.
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
         </p>
       </div>
 
       <div className="opcions-header">
-<<<<<<< HEAD
         <button
           className={`btn-crear ${mostrarFormulario ? "active" : ""}`}
           onClick={toggleFormulario}
@@ -388,10 +346,6 @@ function NotaCredito() {
               Nueva Nota Crédito
             </>
           )}
-=======
-        <button className="btn-crear" onClick={abrirModalNuevo}>
-          Nueva Nota Crédito
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
         </button>
         <div className="filters">
           <input
@@ -411,7 +365,6 @@ function NotaCredito() {
           </select>
         </div>
       </div>
-<<<<<<< HEAD
 
       {/* FORMULARIO COLAPSABLE */}
       <div
@@ -435,21 +388,6 @@ function NotaCredito() {
       </div>
 
       {/* TABLA DE NOTAS */}
-=======
-      {mostrarModal && (
-        <ModalNotaCredito
-          open={mostrarModal}
-          onClose={() => {
-            setMostrarModal(false);
-            setNotaEditando(null);
-          }}
-          notaEditando={notaEditando}
-          facturas={facturas}
-          productos={productos}
-          onSuccess={handleNotaCreada}
-        />
-      )}
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
       <div className="card mt-3">
         <div className="card-body">
           {filtrados.length === 0 ? (
@@ -482,11 +420,7 @@ function NotaCredito() {
                       <td>{nota.cliente?.nombre || "N/A"}</td>
                       <td>
                         {new Date(nota.fechaElaboracion).toLocaleDateString(
-<<<<<<< HEAD
-                          "es-CO"
-=======
                           "es-CO",
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
                         )}
                       </td>
                       <td>
@@ -495,25 +429,15 @@ function NotaCredito() {
                             nota.tipo === "anulacion"
                               ? "bg-danger"
                               : nota.tipo === "devolucion"
-<<<<<<< HEAD
-                              ? "bg-warning text-dark"
-                              : "bg-info"
-=======
                                 ? "bg-warning text-dark"
                                 : "bg-info"
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
                           }`}
                         >
                           {nota.tipo === "anulacion"
                             ? "Anulación"
                             : nota.tipo === "devolucion"
-<<<<<<< HEAD
-                            ? "Devolución"
-                            : "Descuento"}
-=======
                               ? "Devolución"
                               : "Descuento"}
->>>>>>> feaad689b1c7283d7462db390785553b0f394166
                         </span>
                       </td>
                       <td>{nota.motivoDIAN}</td>
