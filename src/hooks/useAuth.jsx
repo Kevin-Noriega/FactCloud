@@ -10,10 +10,10 @@ export const AuthProvider = ({ children }) => {
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   });
 
-  // ✅ CAMBIO: Iniciar en true para esperar la restauración
+  // Iniciar en true para esperar la restauración
   const [loading, setLoading] = useState(true);
 
-  // ✅ NUEVO: Restaurar token al cargar la app
+  //Restaurar token al cargar la app
   useEffect(() => {
     const restaurarSesion = async () => {
       const usuarioGuardado = localStorage.getItem("usuario");
