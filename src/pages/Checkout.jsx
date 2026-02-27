@@ -177,7 +177,7 @@ export default function Checkout() {
 
     if (paymentMethod === "CARD") {
       const cleanCard = formData.cardNumber.replace(/\s/g, "");
-      if (!cleanCard || cleanCard.length < 13 || cleanCard.length > 16) {
+      if (!cleanCard || cleanCard.length < 13 || cleanCard.length > 19) {
         newErrors.cardNumber = "Número de tarjeta inválido";
       }
       if (!formData.cardName || formData.cardName.length < 3) {
@@ -334,15 +334,18 @@ export default function Checkout() {
 
       // ✅ Guardar registro pendiente (NO crear usuario todavía)
       //await guardarRegistroPendiente(
-        //transaction.data.id,
-        //transaction.data.status,
+      //transaction.data.id,
+      //transaction.data.status,
       //);
 
-      if (transaction.data.status === "APPROVED" || transaction.data.status === "PENDING") {
+      if (
+        transaction.data.status === "APPROVED" ||
+        transaction.data.status === "PENDING"
+      ) {
         await crearYActivarUsuario(transaction.data.id);
         alert("¡Pago exitoso! Tu cuenta ha sido creada y activada 🎉");
         navigate("/dashboard");
-     // } else if (transaction.data.status === "PENDING") {
+        // } else if (transaction.data.status === "PENDING") {
         //alert("Pago pendiente. Te notificaremos cuando se confirme.");
         //navigate("/");
       } else {
@@ -361,7 +364,8 @@ export default function Checkout() {
     }
   };
 
-   {/* función para guardar registro pendiente
+  {
+    /* función para guardar registro pendiente
   const guardarRegistroPendiente = async (transactionId, status) => {
     try {
       console.log("💾 Guardando registro pendiente...");
@@ -433,86 +437,87 @@ export default function Checkout() {
       console.error("❌ Error en guardarRegistroPendiente:", error);
       throw error;
     }
-  };*/}
+  };*/
+  }
 
   const crearYActivarUsuario = async (transactionId) => {
-  try {
-    console.log("🔵 Creando usuario...");
-    console.log("📋 User:", user);
-    console.log("📋 FormData:", formData);
-    console.log("📋 Plan:", plan);
+    try {
+      console.log("🔵 Creando usuario...");
+      console.log("📋 User:", user);
+      console.log("📋 FormData:", formData);
+      console.log("📋 Plan:", plan);
 
-    // ✅ Validar que user existe
-    if (!user) {
-      throw new Error("Datos de usuario no disponibles");
+      // ✅ Validar que user existe
+      if (!user) {
+        throw new Error("Datos de usuario no disponibles");
+      }
+
+      const response = await fetch(`${API_URL}/Usuarios/crear-y-activar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          // Datos del usuario (usar 'user' en lugar de 'registroData')
+          nombre: user.nombre, // ✅
+          telefono: user.telefono, // ✅
+          correo: user.email, // ✅
+          password: user.password, // ✅
+          tipoIdentificacion: user.tipoIdentificacion, // ✅
+          numeroIdentificacion: user.numeroIdentificacion, // ✅
+          pais: "CO",
+
+          // Datos del negocio
+          nombreNegocio: formData.razonSocial,
+          nit: formData.nit,
+          dvNit: formData.digitoVerificacion
+            ? parseInt(formData.digitoVerificacion)
+            : null,
+          direccion: formData.direccionFacturacion,
+          ciudad: formData.ciudadFacturacion,
+          departamento: formData.departamento,
+          telefonoNegocio: formData.telefonoFacturacion,
+          correoNegocio: formData.emailFacturacion,
+
+          // Datos de suscripción
+          planFacturacionId: plan.id,
+          transaccionId: transactionId,
+          tipoPago: "anual",
+          precioPagado: plan.planPrice,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("❌ Error del servidor:", error);
+        throw new Error(error.error || "Error creando usuario");
+      }
+
+      const data = await response.json();
+      console.log("✅ Usuario creado:", data);
+
+      // Guardar token y usuario
+      localStorage.setItem("token", data.token);
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify({
+          id: data.usuario.id,
+          nombre: data.usuario.nombre,
+          correo: data.usuario.correo,
+          estado: data.usuario.estado,
+          negocio: data.usuario.negocio,
+          suscripcion: data.usuario.suscripcion,
+        }),
+      );
+
+      // Limpiar datos temporales
+      localStorage.removeItem("registroData");
+      localStorage.removeItem("selectedPlan");
+
+      return data;
+    } catch (error) {
+      console.error("❌ Error creando usuario:", error);
+      throw error;
     }
-
-    const response = await fetch(`${API_URL}/Usuarios/crear-y-activar`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        // Datos del usuario (usar 'user' en lugar de 'registroData')
-        nombre: user.nombre, // ✅
-        telefono: user.telefono, // ✅
-        correo: user.email, // ✅
-        password: user.password, // ✅
-        tipoIdentificacion: user.tipoIdentificacion, // ✅
-        numeroIdentificacion: user.numeroIdentificacion, // ✅
-        pais: "CO",
-
-        // Datos del negocio
-        nombreNegocio: formData.razonSocial,
-        nit: formData.nit,
-        dvNit: formData.digitoVerificacion
-          ? parseInt(formData.digitoVerificacion)
-          : null,
-        direccion: formData.direccionFacturacion,
-        ciudad: formData.ciudadFacturacion,
-        departamento: formData.departamento,
-        telefonoNegocio: formData.telefonoFacturacion,
-        correoNegocio: formData.emailFacturacion,
-
-        // Datos de suscripción
-        planFacturacionId: plan.id,
-        transaccionId: transactionId,
-        tipoPago: "anual",
-        precioPagado: plan.planPrice,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error("❌ Error del servidor:", error);
-      throw new Error(error.error || "Error creando usuario");
-    }
-
-    const data = await response.json();
-    console.log("✅ Usuario creado:", data);
-
-    // Guardar token y usuario
-    localStorage.setItem("token", data.token);
-    localStorage.setItem(
-      "usuario",
-      JSON.stringify({
-        id: data.usuario.id,
-        nombre: data.usuario.nombre,
-        correo: data.usuario.correo,
-        estado: data.usuario.estado,
-        negocio: data.usuario.negocio,
-        suscripcion: data.usuario.suscripcion,
-      })
-    );
-
-    // Limpiar datos temporales
-    localStorage.removeItem("registroData");
-    localStorage.removeItem("selectedPlan");
-
-    return data;
-  } catch (error) {
-    console.error("❌ Error creando usuario:", error);
-    throw error;
-  }
-};
+  };
 
   if (!plan || !user) return null;
 

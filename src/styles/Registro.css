@@ -3,6 +3,7 @@
   background: #f8fafc;
   padding: 90px 60px 40px;
 }
+.input-error { border: 1px solid #dc3545; }
 
 .registro-container {
   max-width: 1400px;

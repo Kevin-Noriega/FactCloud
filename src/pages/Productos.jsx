@@ -132,7 +132,9 @@ function Productos() {
       <div className="header-card">
         <div className="header-content">
           <div className="header-text">
-            <h2 className="header-title mb-4">Inventario de Productos</h2>
+            <h2 className="header-title mb-4">
+              Inventario de Productos/Servicios
+            </h2>
             <p className="header-subtitle">
               Gestiona, actualiza y controla tu inventario.
             </p>
@@ -154,27 +156,28 @@ function Productos() {
       )}
 
       <div className="opcions-header">
-        <button className="btn-crear" onClick={handleNuevoProducto}>
-          Nuevo Producto
-        </button>
+        <div className="btns-group">
+          <button
+            className="btn btn-purple-header"
+            onClick={handleNuevoProducto}
+          >
+            Crear/Importar
+          </button>
+          <button className="btn btn-blue-complementary">
+            <i className="bi bi-file-earmark-excel-fill"></i> Exportar Excel
+          </button>
+        </div>
         <div className="filters">
           <input
             type="text"
-            className="form-control"
-            placeholder="Buscar por nombre o código de barras…"
+            className="form-control search-input"
+            placeholder="Buscar producto o servicio..."
             value={buscador}
             onChange={(e) => setBuscador(e.target.value)}
           />
-          <select
-            className="form-select"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          >
-            <option value="recientes">Más recientes</option>
-            <option value="antiguos">Más antiguos</option>
-            <option value="caros">Más caros</option>
-            <option value="baratos">Más baratos</option>
-          </select>
+          <button className="btn btn-filtros">
+            <i className="bi bi-sliders2"></i> Filtros
+          </button>
         </div>
       </div>
 
