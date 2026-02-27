@@ -46,11 +46,27 @@ export default function Registro() {
       </div>
     );
 
-  const descuentoPlan =
-    (selectedPlan.originalAnnualPrice * selectedPlan.discountPercentage) / 100;
-  const subtotal = selectedPlan.annualPrice;
-  const descuentoCupon =
-    subtotal - (cupones.coupon?.priceAfterDiscount || subtotal);
+  // Calcular precio original (antes del descuento del plan)
+  const precioOriginal = selectedPlan.descuentoActivo
+    ? Math.round(
+        selectedPlan.precioAnual / (1 - selectedPlan.descuentoPorcentaje / 100),
+      )
+    : selectedPlan.precioAnual;
+
+  // Calcular el monto del descuento del plan
+  const descuentoPlan = selectedPlan.descuentoActivo
+    ? precioOriginal - selectedPlan.precioAnual
+    : 0;
+
+  // Subtotal es el precio anual del plan (ya con descuento del plan aplicado)
+  const subtotal = selectedPlan.precioAnual;
+
+  // Calcular descuento del cupón
+  const descuentoCupon = cupones.coupon
+    ? subtotal - (cupones.coupon.priceAfterDiscount || subtotal)
+    : 0;
+
+  // Total final
   const totalFinal = cupones.coupon ? cupones.total : subtotal;
 
   const handleChange = (e) => {
@@ -110,13 +126,12 @@ export default function Registro() {
   return (
     <div className="registro-page">
       <Stepper currentStep={2} />
-     
 
       <div className="registro-container">
-         <button onClick={() => navigate("/planes")} className="btn-back">
-        <ChevronLeft />
-        Regresar
-      </button>
+        <button onClick={() => navigate("/planes")} className="btn-back">
+          <ChevronLeft />
+          Regresar
+        </button>
 
         <div className="registro-content">
           <div className="registro-form-section">
@@ -279,11 +294,10 @@ export default function Registro() {
                 <div className="plan-banner-content">
                   <CheckCircleFill />
                   <p className="plan-banner-title">
-                    ¡COMPRA HOY! el plan {selectedPlan.name}, y te{" "}
+                    ¡COMPRA HOY! el plan {selectedPlan.nombre}, y te{" "}
                     <strong>regalamos el doble de documento</strong>
                   </p>
                 </div>
-                Nam{" "}
               </div>
               <div className="resumen-compra">
                 <h2>Resumen de compra</h2>
@@ -293,7 +307,7 @@ export default function Registro() {
                   <div className="producto-item">
                     <div className="producto-info">
                       <span className="producto-nombre">
-                        Plan {selectedPlan.name}
+                        Plan {selectedPlan.nombre}
                       </span>
 
                       <button
@@ -303,33 +317,51 @@ export default function Registro() {
                       >
                         Ver detalle
                       </button>
-                      
                     </div>
                     <span className="producto-precio">
                       $
-                      {selectedPlan.originalAnnualPrice.toLocaleString("es-CO")}
+                      {selectedPlan.descuentoActivo
+                        ? Math.round(
+                            selectedPlan.precioAnual /
+                              (1 - selectedPlan.descuentoPorcentaje / 100),
+                          ).toLocaleString("es-CO")
+                        : (selectedPlan.precioAnual ?? 0).toLocaleString(
+                            "es-CO",
+                          )}
                     </span>
                   </div>
 
-                  <div className="descuento-item">
-                    <span>Descuento ({selectedPlan.discountPercentage}%) </span>
-                    <span className="descuento-valor">
-                      -${descuentoPlan.toLocaleString("es-CO")}
-                    </span>
-                  </div>
+                  {selectedPlan.descuentoActivo && (
+                    <div className="descuento-item">
+                      <span>
+                        Descuento ({selectedPlan.descuentoPorcentaje}%)
+                      </span>
+                      <span className="descuento-valor">
+                        -$
+                        {Math.round(
+                          selectedPlan.precioAnual /
+                            (1 - selectedPlan.descuentoPorcentaje / 100) -
+                            selectedPlan.precioAnual,
+                        ).toLocaleString("es-CO")}
+                      </span>
+                    </div>
+                  )}
 
                   <div className="subtotal">
                     <span>Subtotal</span>
                     <span>
-                      ${selectedPlan.annualPrice.toLocaleString("es-CO")}
+                      ${(selectedPlan.precioAnual ?? 0).toLocaleString("es-CO")}
                     </span>
                   </div>
+
                   {cupones.coupon && (
                     <div className="cupon">
                       <span>
                         Descuento cupon ({cupones.coupon.discountPercent}%){" "}
                       </span>
-                      <span className = "descuento-cupon">-${descuentoCupon.toLocaleString("es-CO")}</span>
+                      <span className="descuento-cupon">
+                        -${descuentoCupon.toLocaleString("es-CO")}
+                      </span>
                     </div>
                   )}
 
@@ -381,15 +413,14 @@ export default function Registro() {
               </div>
             </div>
           )}
+
           <ModalDetalles
-                      isOpen={mostrarVerDetalles}
-                    onClose={() => setMostrarVerDetalles(false)}
-                    plan={selectedPlan}
-                      />
+            isOpen={mostrarVerDetalles}
+            onClose={() => setMostrarVerDetalles(false)}
+            plan={selectedPlan}
+          />
         </div>
-         
       </div>
-      
     </div>
   );
 }

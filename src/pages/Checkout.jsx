@@ -78,7 +78,7 @@ export default function Checkout() {
     // ✅ NORMALIZAR: Agregar planPrice desde annualPrice
     const normalizedPlan = {
       ...parsedPlan,
-      planPrice: parsedPlan.annualPrice || parsedPlan.originalAnnualPrice || 0,
+      planPrice: parsedPlan.precioAnual || 0,
     };
 
     console.log("✅ Plan normalizado:", normalizedPlan);
