@@ -8,3 +8,113 @@
   padding: 24px;
   position: relative;
 }
+
+/* Página ocupa todo el ancho */
+.page-crear-producto {
+  background-color: #f5f6fa;
+  min-height: 100vh;
+  padding: 24px 0;
+}
+
+/* Centra y da bordes */
+.page-crear-producto__wrapper {
+  max-width: 2000px;
+  margin: 0 auto;
+  padding: 0 100px;
+}
+
+/* El formulario con fondo blanco */
+.page-crear-producto__body {
+  background: #fff !important;
+  border-radius: 8px;
+  padding: 28px 32px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Selector tipo Producto/Servicio */
+.page-crear-producto .tipo-selector-container {
+  background-color: #dbeafe !important;
+  border: 1.5px solid #1a6fdb !important;
+  border-radius: 8px;
+  padding: 14px 20px;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Radio button — círculo azul cuando está seleccionado */
+.page-crear-producto .tipo-selector-container .form-check-input:checked {
+  background-color: #1a6fdb !important;
+  border-color: #1a6fdb !important;
+}
+
+/* Radio button — borde azul cuando NO está seleccionado */
+.page-crear-producto .tipo-selector-container .form-check-input {
+  border-color: #1a6fdb !important;
+}
+
+/* Títulos de sección */
+.page-crear-producto .section-title-producto-producto,
+.page-crear-producto .section-title-producto {
+  color: #1a6fdb;
+  border-bottom: 2px solid #1a6fdb;
+  padding-bottom: 6px;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+.page-crear-producto__banner {
+  background: linear-gradient(135deg, #1a6fdb 0%, #1250a8 100%);
+ border-radius: 12px;
+  padding: 15px 28px;      /* ← menos padding vertical */
+  max-width: 1375px;        /* ← limita el ancho ✅ */
+  color: white;
+  margin-bottom: 20px;
+  margin: 0 auto 20px auto;
+}
+
+.page-crear-producto__banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-crear-producto__banner-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-crear-producto__banner-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: white;
+}
+
+.page-crear-producto__banner-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.page-crear-producto__banner-icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+.btn-volver {
+  background-color: transparent;
+  border: 1.5px solid #1a6fdb;
+  color: #1a6fdb;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 5px 10px;
+  transition: all 0.2s;
+    margin-left: 100px;   /* asegura que esté alineado con el banner */
+  margin-bottom: 12px;
+  display: inline-block;
+}
+.btn-volver:hover {
+  background-color: #1a6fdb;
+  color: white;
+}
+
