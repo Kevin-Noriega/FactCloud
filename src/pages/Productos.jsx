@@ -4,18 +4,19 @@ import ModalProducto from "../components/dashboard/ModalCrearProducto";
 import "../styles/sharedPage.css";
 import { BoxSeam } from "react-bootstrap-icons";
 import axiosClient from "../api/axiosClient";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Productos() {
+  const location = useLocation();
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mensajeExito, setMensajeExito] = useState("");
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [productoEditando, setProductoEditando] = useState(null);
+  const navigate = useNavigate();
   const [productoAEliminar, setProductoAEliminar] = useState(null);
   const [productoVer, setProductoVer] = useState(null);
   const [buscador, setBuscador] = useState("");
-  const [filtro, setFiltro] = useState("recientes");
+  const [filtro] = useState("recientes");
 
   const filtrados = productos
     .filter((prod) => {
@@ -58,31 +59,30 @@ function Productos() {
     }
   };
 
-  useEffect(() => {
+  // ✅ useEffect de carga inicial
+useEffect(() => {
+  fetchProductos();
+}, []);
+
+// ✅ useEffect separado para leer el mensaje al volver de CrearProductoPage
+useEffect(() => {
+  if (location.state?.mensajeExito) {
+    setMensajeExito(location.state.mensajeExito);
+    setTimeout(() => setMensajeExito(""), 3000);
     fetchProductos();
-  }, []);
+    window.history.replaceState({}, "");
+  }
+}, [location.state]);
 
   const handleNuevoProducto = () => {
-    setProductoEditando(null);
-    setMostrarModal(true);
+    navigate("/crearProducto");
   };
 
   const handleEditarProducto = (prod) => {
-    setProductoEditando(prod);
-    setMostrarModal(true);
+    navigate(`/crearProducto/editar/${prod.id}`);
   };
 
-  const handleCerrarModal = () => {
-    setMostrarModal(false);
-    setProductoEditando(null);
-  };
-
-  const handleGuardadoExitoso = (mensaje) => {
-    setMensajeExito(mensaje);
-    setTimeout(() => setMensajeExito(""), 3000);
-    fetchProductos();
-    handleCerrarModal();
-  };
+  
 
   const eliminarProducto = async (id) => {
     try {
@@ -132,7 +132,9 @@ function Productos() {
       <div className="header-card">
         <div className="header-content">
           <div className="header-text">
-            <h2 className="header-title mb-4">Inventario de Productos</h2>
+            <h2 className="header-title mb-4">
+              Inventario de Productos/Servicios
+            </h2>
             <p className="header-subtitle">
               Gestiona, actualiza y controla tu inventario.
             </p>
@@ -154,27 +156,28 @@ function Productos() {
       )}
 
       <div className="opcions-header">
-        <button className="btn-crear" onClick={handleNuevoProducto}>
-          Nuevo Producto
-        </button>
+        <div className="btns-group">
+          <button
+            className="btn btn-purple-header"
+            onClick={handleNuevoProducto}
+          >
+            Crear/Importar
+          </button>
+          <button className="btn btn-blue-complementary">
+            <i className="bi bi-file-earmark-excel-fill"></i> Exportar Excel
+          </button>
+        </div>
         <div className="filters">
           <input
             type="text"
-            className="form-control"
-            placeholder="Buscar por nombre o código de barras…"
+            className="form-control search-input"
+            placeholder="Buscar producto o servicio..."
             value={buscador}
             onChange={(e) => setBuscador(e.target.value)}
           />
-          <select
-            className="form-select"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          >
-            <option value="recientes">Más recientes</option>
-            <option value="antiguos">Más antiguos</option>
-            <option value="caros">Más caros</option>
-            <option value="baratos">Más baratos</option>
-          </select>
+          <button className="btn btn-filtros">
+            <i className="bi bi-sliders2"></i> Filtros
+          </button>
         </div>
       </div>
 
@@ -236,14 +239,6 @@ function Productos() {
             </div>
           </div>
         </div>
-      )}
-
-      {mostrarModal && (
-        <ModalProducto
-          productoEditando={productoEditando}
-          onClose={handleCerrarModal}
-          onGuardadoExitoso={handleGuardadoExitoso}
-        />
       )}
 
       <div className="card mt-3">

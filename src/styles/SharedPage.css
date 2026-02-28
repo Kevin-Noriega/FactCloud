@@ -86,6 +86,73 @@
 .alert .btn-close:hover {
   opacity: 1;
 }
+.btn-purple-header {
+  background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%); /* Gradiente púrpura del header */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); /* Sombra púrpura suave */
+  transition: all 0.3s ease;
+}
+.btn-filtros {
+  background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 20px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-filtros:hover {
+  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-filtros:active {
+  transform: translateY(0);
+  background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
+}
+
+
+.btn-blue-complementary {
+  background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%); /* Verde Excel */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-blue-complementary:hover {
+  background: linear-gradient(135deg, #15803D 0%, #16A34A 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+}
+
+.btn-blue-complementary:active {
+  transform: translateY(0);
+}
+
+
+
+
+.btn-purple-header:active {
+  transform: translateY(0);
+}
 
 .opcions-header {
   display: flex;
@@ -198,6 +265,10 @@
 
 .table tbody tr:last-child td {
   border-bottom: none;
+}
+.btns-group {
+  display: flex;
+  gap: 0.5rem; /* Antes era 0.75rem, ahora más separado */
 }
 
 .btn-group-acciones {

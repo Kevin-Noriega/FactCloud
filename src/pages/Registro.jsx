@@ -13,7 +13,7 @@ export default function Registro() {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mostrarVerDetalles, setMostrarVerDetalles] = useState(false);
-
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     tipoIdentificacion: "",
     numeroIdentificacion: "",
@@ -25,6 +25,20 @@ export default function Registro() {
     confirmPassword: "",
     aceptaTerminos: false,
   });
+
+  const tipoOptions = tipoIdentificacion.map((ti) => ({
+    value: ti.nombre,
+    label: `${ti.codigo} - ${ti.nombre}`,
+  }));
+
+  const DOC_RULES = {
+    "Cédula de ciudadanía": { min: 6, max: 10, allowLeadingZeros: false },
+    "Cédula de extranjería": { min: 6, max: 12, allowLeadingZeros: true },
+    NIT: { min: 8, max: 12, allowLeadingZeros: false },
+  };
+
+  const onlyDigits = (s) => /^\d+$/.test(s);
+  const isBlank = (s) => !s || !s.trim();
 
   const cupones = useCupones(selectedPlan?.id);
   useEffect(() => {
@@ -76,38 +90,114 @@ export default function Registro() {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones
-    if (formData.email !== formData.confirmEmail) {
-      alert("Los emails no coinciden");
-      return;
+    const newErrors = {};
+    const allowedTipos = new Set(tipoOptions.map((x) => x.value));
+
+    // 1) Tipo documento
+    if (!formData.tipoIdentificacion) {
+      newErrors.tipoIdentificacion = "Selecciona un tipo de documento";
+    } else if (!allowedTipos.has(formData.tipoIdentificacion)) {
+      newErrors.tipoIdentificacion = "Tipo de documento inválido";
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Las contraseñas no coinciden");
-      return;
+    // 2) Número documento
+    const doc = (formData.numeroIdentificacion ?? "").trim();
+    if (!doc) newErrors.numeroIdentificacion = "El documento es obligatorio";
+    else if (!onlyDigits(doc))
+      newErrors.numeroIdentificacion = "Solo se permiten números";
+    else {
+      const rules = DOC_RULES[formData.tipoIdentificacion];
+      if (rules) {
+        if (doc.length < rules.min || doc.length > rules.max) {
+          newErrors.numeroIdentificacion = `Longitud inválida (${rules.min}-${rules.max})`;
+        }
+        if (!rules.allowLeadingZeros && doc.length > 1 && doc.startsWith("0")) {
+          newErrors.numeroIdentificacion =
+            "No se permiten ceros a la izquierda";
+        }
+      }
     }
 
-    if (!formData.aceptaTerminos) {
-      alert("Debes aceptar los términos y condiciones");
-      return;
+    // 3) Nombre
+    const nombre = (formData.nombreCompleto ?? "").trim();
+    if (!nombre) newErrors.nombreCompleto = "Nombre completo es obligatorio";
+    else {
+      const okChars = /^[\p{L}\p{M} ]+$/u; // letras, tildes y espacios
+      if (!okChars.test(nombre))
+        newErrors.nombreCompleto = "Solo letras y espacios";
+      if (nombre.length < 6) newErrors.nombreCompleto = "Muy corto (mínimo 6)";
+      if (nombre.length > 80)
+        newErrors.nombreCompleto = "Muy largo (máximo 80)";
     }
 
+    // 4) Teléfono
+    const tel = (formData.telefono ?? "").trim();
+    if (!tel) newErrors.telefono = "Teléfono es obligatorio";
+    else if (!onlyDigits(tel)) newErrors.telefono = "Teléfono solo dígitos";
+    else if (tel.length !== 10)
+      newErrors.telefono = "Teléfono debe tener 10 dígitos";
+
+    // 5) Email
+    const email = (formData.email ?? "").trim();
+    if (!email) newErrors.email = "Email es obligatorio";
+    else {
+      if (/\s/.test(email)) newErrors.email = "Email no debe tener espacios";
+      const basicEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!basicEmail.test(email))
+        newErrors.email = "Formato de email inválido";
+      if (email.length > 254) newErrors.email = "Email demasiado largo";
+    }
+
+    // 6) Confirm email
+    const confirmEmail = (formData.confirmEmail ?? "").trim();
+    if (!confirmEmail) newErrors.confirmEmail = "Confirma tu email";
+    else if (email && confirmEmail !== email)
+      newErrors.confirmEmail = "Los emails no coinciden";
+
+    // 7) Password
+    const pass = formData.password ?? "";
+    if (!pass) newErrors.password = "Contraseña es obligatoria";
+    else {
+      if (pass.length < 8 || pass.length > 64)
+        newErrors.password = "Debe tener 8 a 64 caracteres";
+      const complexity =
+        /[a-z]/.test(pass) &&
+        /[A-Z]/.test(pass) &&
+        /\d/.test(pass) &&
+        /[^A-Za-z0-9]/.test(pass);
+      if (!complexity)
+        newErrors.password = "Incluye mayúscula, minúscula, número y símbolo";
+    }
+
+    // 8) Confirm password
+    const confirmPass = formData.confirmPassword ?? "";
+    if (!confirmPass) newErrors.confirmPassword = "Confirma tu contraseña";
+    else if (pass && confirmPass !== pass)
+      newErrors.confirmPassword = "Las contraseñas no coinciden";
+
+    // 9) Términos
+    if (!formData.aceptaTerminos)
+      newErrors.aceptaTerminos = "Debes aceptar los términos";
+
+    // Si hay errores, muéstralos y no sigas
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    // OK: guarda y navega
     try {
       const registroData = {
         tipoIdentificacion: formData.tipoIdentificacion,
-        numeroIdentificacion: formData.numeroIdentificacion,
-        nombre: formData.nombreCompleto,
-        telefono: formData.telefono,
-        email: formData.email,
-        password: formData.password,
+        numeroIdentificacion: doc,
+        nombre: nombre,
+        telefono: tel,
+        email: email.toLowerCase(),
+        password: pass,
       };
 
       localStorage.setItem("registroData", JSON.stringify(registroData));
-
       navigate("/checkout");
     } catch (error) {
       console.error("Error guardando datos:", error);
@@ -146,32 +236,33 @@ export default function Registro() {
                 <div className="form-group">
                   <Select
                     name="tipoIdentificacion"
-                    options={tipoIdentificacion.map((ti) => ({
-                      value: ti.nombre,
-                      label: `${ti.codigo} - ${ti.nombre}`,
-                    }))}
+                    options={tipoOptions}
                     value={
-                      formData.tipoIdentificacion
-                        ? tipoIdentificacion
-                            .map((ti) => ({
-                              value: ti.nombre,
-                              label: `${ti.codigo} - ${ti.nombre}`,
-                            }))
-                            .find(
-                              (opt) =>
-                                opt.value === formData.tipoIdentificacion,
-                            )
-                        : null
+                      tipoOptions.find(
+                        (o) => o.value === formData.tipoIdentificacion,
+                      ) || null
                     }
-                    onChange={(opt) =>
+                    onChange={(opt) => {
                       setFormData((prev) => ({
                         ...prev,
                         tipoIdentificacion: opt ? opt.value : "",
-                      }))
-                    }
+                      }));
+
+                      // opcional: limpia el error cuando el usuario corrige
+                      setErrors((prev) => ({
+                        ...prev,
+                        tipoIdentificacion: undefined,
+                      }));
+                    }}
                     isClearable
                     placeholder="Seleccionar tipo"
                   />
+
+                  {errors.tipoIdentificacion && (
+                    <p className="text-danger small mt-1">
+                      {errors.tipoIdentificacion}
+                    </p>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -179,82 +270,211 @@ export default function Registro() {
                     type="text"
                     name="numeroIdentificacion"
                     value={formData.numeroIdentificacion}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      // opcional: filtra para que solo entren dígitos desde el inicio
+                      const onlyNums = e.target.value.replace(/\D/g, "");
+                      setFormData((prev) => ({
+                        ...prev,
+                        numeroIdentificacion: onlyNums,
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        numeroIdentificacion: undefined,
+                      }));
+                    }}
                     placeholder="Número de documento *"
+                    inputMode="numeric" // teclado numérico en móvil [web:51]
+                    pattern="^[0-9]+$" // solo dígitos (si no está vacío) [web:63]
+                    maxLength={12} // límite de caracteres [web:56]
+                    className={errors.numeroIdentificacion ? "input-error" : ""}
                     required
                   />
+
+                  {errors.numeroIdentificacion && (
+                    <p className="text-danger small mt-1">
+                      {errors.numeroIdentificacion}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="form-row">
+                {/* Nombres y apellidos */}
                 <div className="form-group">
                   <input
                     type="text"
                     name="nombreCompleto"
                     value={formData.nombreCompleto}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const raw = e.target.value;
+
+                      const value = raw
+                        // deja letras A-Z, a-z, tildes típicas y espacios
+                        .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+/g, "")
+                        .replace(/\s{2,}/g, " ");
+
+                      setFormData((prev) => ({
+                        ...prev,
+                        nombreCompleto: value,
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        nombreCompleto: undefined,
+                      }));
+                    }}
                     placeholder="Nombres y apellidos *"
+                    maxLength={80}
+                    className={errors.nombreCompleto ? "input-error" : ""}
                     required
                   />
+                  {errors.nombreCompleto && (
+                    <p className="text-danger small mt-1">
+                      {errors.nombreCompleto}
+                    </p>
+                  )}
                 </div>
 
+                {/* Teléfono */}
                 <div className="form-group">
                   <input
                     type="tel"
                     name="telefono"
                     value={formData.telefono}
-                    onChange={handleChange}
-                    placeholder="telefono *"
+                    onChange={(e) => {
+                      const onlyNums = e.target.value.replace(/\D/g, "");
+                      setFormData((prev) => ({ ...prev, telefono: onlyNums }));
+                      setErrors((prev) => ({ ...prev, telefono: undefined }));
+                    }}
+                    placeholder="Teléfono *"
+                    inputMode="numeric" // teclado numérico en móvil [web:51]
+                    pattern="^[0-9]{10}$" // exactamente 10 dígitos [web:64][web:63]
+                    maxLength={10} // no deja pasar de 10 [web:68]
+                    className={errors.telefono ? "input-error" : ""}
                     required
                   />
+                  {errors.telefono && (
+                    <p className="text-danger small mt-1">{errors.telefono}</p>
+                  )}
                 </div>
               </div>
-
               <div className="form-row">
+                {/* Email */}
                 <div className="form-group">
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      // email: sin espacios, minúsculas, trim suave
+                      const value = e.target.value
+                        .replace(/\s/g, "")
+                        .toLowerCase();
+                      setFormData((prev) => ({ ...prev, email: value }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        email: undefined,
+                        confirmEmail: undefined,
+                      }));
+                    }}
                     placeholder="E-mail *"
+                    autoComplete="email" // hint al navegador para autocompletar [web:83]
+                    maxLength={254} // límite típico razonable
+                    className={errors.email ? "input-error" : ""}
                     required
                   />
+                  {errors.email && (
+                    <p className="text-danger small mt-1">{errors.email}</p>
+                  )}
                 </div>
 
+                {/* Confirmar Email */}
                 <div className="form-group">
                   <input
                     type="email"
                     name="confirmEmail"
                     value={formData.confirmEmail}
-                    onChange={handleChange}
-                    placeholder="confirmar E-mail *"
+                    onChange={(e) => {
+                      const value = e.target.value
+                        .replace(/\s/g, "")
+                        .toLowerCase();
+                      setFormData((prev) => ({ ...prev, confirmEmail: value }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        confirmEmail: undefined,
+                      }));
+                    }}
+                    placeholder="Confirmar E-mail *"
+                    autoComplete="email" // también puede ser "email" [web:83]
+                    maxLength={254}
+                    className={errors.confirmEmail ? "input-error" : ""}
                     required
                   />
+                  {errors.confirmEmail && (
+                    <p className="text-danger small mt-1">
+                      {errors.confirmEmail}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="form-row">
+                {/* Contraseña */}
                 <div className="form-group">
                   <input
                     type="password"
                     name="password"
                     value={formData.password}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        password: e.target.value, // NO hagas trim aquí
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        password: undefined,
+                        confirmPassword: undefined,
+                      }));
+                    }}
                     placeholder="Contraseña *"
+                    autoComplete="new-password" // registro [web:83]
+                    minLength={8} // ok en password [web:89]
+                    maxLength={64} // ok en password [web:89]
+                    className={errors.password ? "input-error" : ""}
                     required
                   />
+                  {errors.password && (
+                    <p className="text-danger small mt-1">{errors.password}</p>
+                  )}
                 </div>
 
+                {/* Confirmar contraseña */}
                 <div className="form-group">
                   <input
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        confirmPassword: undefined,
+                      }));
+                    }}
                     placeholder="Confirmar contraseña *"
+                    autoComplete="new-password" // confirm [web:83]
+                    minLength={8}
+                    maxLength={64}
+                    className={errors.confirmPassword ? "input-error" : ""}
                     required
                   />
+                  {errors.confirmPassword && (
+                    <p className="text-danger small mt-1">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -264,18 +484,37 @@ export default function Registro() {
                   id="terminos"
                   name="aceptaTerminos"
                   checked={formData.aceptaTerminos}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      aceptaTerminos: e.target.checked,
+                    }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      aceptaTerminos: undefined,
+                    }));
+                  }}
                   required
                 />
                 <label htmlFor="terminos">
                   Al hacer clic, autorizo a que Factcloud trate mis datos
                   conforme a lo descrito en la{" "}
-                  <a href="/politica-privacidad" target="_blank">
+                  <a
+                    href="/politica-privacidad"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     Política de Privacidad
                   </a>
                   , cree una cuenta con mis datos en www.factcloud.com y me
                   ofrezca servicios propios y/o de terceros.
                 </label>
+
+                {errors.aceptaTerminos && (
+                  <p className="text-danger small mt-1">
+                    {errors.aceptaTerminos}
+                  </p>
+                )}
               </div>
 
               <button type="submit" className="btn-crear-cuenta">
