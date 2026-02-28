@@ -4,18 +4,19 @@ import ModalProducto from "../components/dashboard/ModalCrearProducto";
 import "../styles/sharedPage.css";
 import { BoxSeam } from "react-bootstrap-icons";
 import axiosClient from "../api/axiosClient";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Productos() {
+  const location = useLocation();
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mensajeExito, setMensajeExito] = useState("");
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [productoEditando, setProductoEditando] = useState(null);
+  const navigate = useNavigate();
   const [productoAEliminar, setProductoAEliminar] = useState(null);
   const [productoVer, setProductoVer] = useState(null);
   const [buscador, setBuscador] = useState("");
-  const [filtro, setFiltro] = useState("recientes");
+  const [filtro] = useState("recientes");
 
   const filtrados = productos
     .filter((prod) => {
@@ -58,31 +59,30 @@ function Productos() {
     }
   };
 
-  useEffect(() => {
+  // ✅ useEffect de carga inicial
+useEffect(() => {
+  fetchProductos();
+}, []);
+
+// ✅ useEffect separado para leer el mensaje al volver de CrearProductoPage
+useEffect(() => {
+  if (location.state?.mensajeExito) {
+    setMensajeExito(location.state.mensajeExito);
+    setTimeout(() => setMensajeExito(""), 3000);
     fetchProductos();
-  }, []);
+    window.history.replaceState({}, "");
+  }
+}, [location.state]);
 
   const handleNuevoProducto = () => {
-    setProductoEditando(null);
-    setMostrarModal(true);
+    navigate("/crearProducto");
   };
 
   const handleEditarProducto = (prod) => {
-    setProductoEditando(prod);
-    setMostrarModal(true);
+    navigate(`/crearProducto/editar/${prod.id}`);
   };
 
-  const handleCerrarModal = () => {
-    setMostrarModal(false);
-    setProductoEditando(null);
-  };
-
-  const handleGuardadoExitoso = (mensaje) => {
-    setMensajeExito(mensaje);
-    setTimeout(() => setMensajeExito(""), 3000);
-    fetchProductos();
-    handleCerrarModal();
-  };
+  
 
   const eliminarProducto = async (id) => {
     try {
@@ -239,14 +239,6 @@ function Productos() {
             </div>
           </div>
         </div>
-      )}
-
-      {mostrarModal && (
-        <ModalProducto
-          productoEditando={productoEditando}
-          onClose={handleCerrarModal}
-          onGuardadoExitoso={handleGuardadoExitoso}
-        />
       )}
 
       <div className="card mt-3">
