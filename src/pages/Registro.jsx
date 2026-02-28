@@ -2,214 +2,479 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Stepper from "../components/Stepper";
 import "../styles/Registro.css";
+import Select from "react-select";
+import tipoIdentificacion from "../utils/TiposDocumentos.json";
+import { ChevronLeft, CheckCircleFill } from "react-bootstrap-icons";
+import { useCupones } from "../hooks/useCupones.JS";
+import { ModalDetalles } from "../components/checkout/ModalDetalles";
 
 export default function Registro() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [mostrarVerDetalles, setMostrarVerDetalles] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    tipoDocumento: "",
-    numeroDocumento: "",
+    tipoIdentificacion: "",
+    numeroIdentificacion: "",
     nombreCompleto: "",
-    celular: "",
+    telefono: "",
     email: "",
     confirmEmail: "",
     password: "",
     confirmPassword: "",
-    aceptaTerminos: false
+    aceptaTerminos: false,
   });
 
+  const tipoOptions = tipoIdentificacion.map((ti) => ({
+    value: ti.nombre,
+    label: `${ti.codigo} - ${ti.nombre}`,
+  }));
+
+  const DOC_RULES = {
+    "Cédula de ciudadanía": { min: 6, max: 10, allowLeadingZeros: false },
+    "Cédula de extranjería": { min: 6, max: 12, allowLeadingZeros: true },
+    NIT: { min: 8, max: 12, allowLeadingZeros: false },
+  };
+
+  const onlyDigits = (s) => /^\d+$/.test(s);
+  const isBlank = (s) => !s || !s.trim();
+
+  const cupones = useCupones(selectedPlan?.id);
   useEffect(() => {
     window.scrollTo(0, 0);
     const plan = localStorage.getItem("selectedPlan");
     if (plan) {
       setSelectedPlan(JSON.parse(plan));
     }
+
+    setLoading(false);
   }, []);
+
+  if (loading) return <div>Cargando...</div>;
+  if (!selectedPlan)
+    return (
+      <div className="no-plan">
+        <h2>No hay plan seleccionado</h2>
+        <button onClick={() => navigate("/planes")}>Ir a Planes</button>
+      </div>
+    );
+
+  // Calcular precio original (antes del descuento del plan)
+  const precioOriginal = selectedPlan.descuentoActivo
+    ? Math.round(
+        selectedPlan.precioAnual / (1 - selectedPlan.descuentoPorcentaje / 100),
+      )
+    : selectedPlan.precioAnual;
+
+  // Calcular el monto del descuento del plan
+  const descuentoPlan = selectedPlan.descuentoActivo
+    ? precioOriginal - selectedPlan.precioAnual
+    : 0;
+
+  // Subtotal es el precio anual del plan (ya con descuento del plan aplicado)
+  const subtotal = selectedPlan.precioAnual;
+
+  // Calcular descuento del cupón
+  const descuentoCupon = cupones.coupon
+    ? subtotal - (cupones.coupon.priceAfterDiscount || subtotal)
+    : 0;
+
+  // Total final
+  const totalFinal = cupones.coupon ? cupones.total : subtotal;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones
-    if (formData.email !== formData.confirmEmail) {
-      alert("Los emails no coinciden");
-      return;
+    const newErrors = {};
+    const allowedTipos = new Set(tipoOptions.map((x) => x.value));
+
+    // 1) Tipo documento
+    if (!formData.tipoIdentificacion) {
+      newErrors.tipoIdentificacion = "Selecciona un tipo de documento";
+    } else if (!allowedTipos.has(formData.tipoIdentificacion)) {
+      newErrors.tipoIdentificacion = "Tipo de documento inválido";
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Las contraseñas no coinciden");
-      return;
+    // 2) Número documento
+    const doc = (formData.numeroIdentificacion ?? "").trim();
+    if (!doc) newErrors.numeroIdentificacion = "El documento es obligatorio";
+    else if (!onlyDigits(doc))
+      newErrors.numeroIdentificacion = "Solo se permiten números";
+    else {
+      const rules = DOC_RULES[formData.tipoIdentificacion];
+      if (rules) {
+        if (doc.length < rules.min || doc.length > rules.max) {
+          newErrors.numeroIdentificacion = `Longitud inválida (${rules.min}-${rules.max})`;
+        }
+        if (!rules.allowLeadingZeros && doc.length > 1 && doc.startsWith("0")) {
+          newErrors.numeroIdentificacion =
+            "No se permiten ceros a la izquierda";
+        }
+      }
     }
 
-    if (!formData.aceptaTerminos) {
-      alert("Debes aceptar los términos y condiciones");
-      return;
+    // 3) Nombre
+    const nombre = (formData.nombreCompleto ?? "").trim();
+    if (!nombre) newErrors.nombreCompleto = "Nombre completo es obligatorio";
+    else {
+      const okChars = /^[\p{L}\p{M} ]+$/u; // letras, tildes y espacios
+      if (!okChars.test(nombre))
+        newErrors.nombreCompleto = "Solo letras y espacios";
+      if (nombre.length < 6) newErrors.nombreCompleto = "Muy corto (mínimo 6)";
+      if (nombre.length > 80)
+        newErrors.nombreCompleto = "Muy largo (máximo 80)";
     }
 
+    // 4) Teléfono
+    const tel = (formData.telefono ?? "").trim();
+    if (!tel) newErrors.telefono = "Teléfono es obligatorio";
+    else if (!onlyDigits(tel)) newErrors.telefono = "Teléfono solo dígitos";
+    else if (tel.length !== 10)
+      newErrors.telefono = "Teléfono debe tener 10 dígitos";
+
+    // 5) Email
+    const email = (formData.email ?? "").trim();
+    if (!email) newErrors.email = "Email es obligatorio";
+    else {
+      if (/\s/.test(email)) newErrors.email = "Email no debe tener espacios";
+      const basicEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!basicEmail.test(email))
+        newErrors.email = "Formato de email inválido";
+      if (email.length > 254) newErrors.email = "Email demasiado largo";
+    }
+
+    // 6) Confirm email
+    const confirmEmail = (formData.confirmEmail ?? "").trim();
+    if (!confirmEmail) newErrors.confirmEmail = "Confirma tu email";
+    else if (email && confirmEmail !== email)
+      newErrors.confirmEmail = "Los emails no coinciden";
+
+    // 7) Password
+    const pass = formData.password ?? "";
+    if (!pass) newErrors.password = "Contraseña es obligatoria";
+    else {
+      if (pass.length < 8 || pass.length > 64)
+        newErrors.password = "Debe tener 8 a 64 caracteres";
+      const complexity =
+        /[a-z]/.test(pass) &&
+        /[A-Z]/.test(pass) &&
+        /\d/.test(pass) &&
+        /[^A-Za-z0-9]/.test(pass);
+      if (!complexity)
+        newErrors.password = "Incluye mayúscula, minúscula, número y símbolo";
+    }
+
+    // 8) Confirm password
+    const confirmPass = formData.confirmPassword ?? "";
+    if (!confirmPass) newErrors.confirmPassword = "Confirma tu contraseña";
+    else if (pass && confirmPass !== pass)
+      newErrors.confirmPassword = "Las contraseñas no coinciden";
+
+    // 9) Términos
+    if (!formData.aceptaTerminos)
+      newErrors.aceptaTerminos = "Debes aceptar los términos";
+
+    // Si hay errores, muéstralos y no sigas
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    // OK: guarda y navega
     try {
-      // Aquí harías el registro del usuario
-      // const response = await api.register(formData);
+      const registroData = {
+        tipoIdentificacion: formData.tipoIdentificacion,
+        numeroIdentificacion: doc,
+        nombre: nombre,
+        telefono: tel,
+        email: email.toLowerCase(),
+        password: pass,
+      };
 
-      localStorage.setItem("userData", JSON.stringify({
-        email: formData.email,
-        nombre: formData.nombreCompleto, 
-        documento: formData.numeroDocumento
-      }));
-
+      localStorage.setItem("registroData", JSON.stringify(registroData));
       navigate("/checkout");
-
     } catch (error) {
-      console.error("Error en registro:", error);
-      alert("Error al crear la cuenta. Intenta nuevamente.");
+      console.error("Error guardando datos:", error);
+      alert("Error procesando los datos. Intenta nuevamente.");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div>Cargando plan seleccionado...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="registro-page">
       <Stepper currentStep={2} />
 
       <div className="registro-container">
-
-        {/* Banner con plan seleccionado */}
-        {selectedPlan && (
-          <div className="plan-banner">
-            <div className="plan-banner-content">
-              <p className="plan-banner-title">
-                ¡COMPRA HOY! el plan {selectedPlan.planName}, y te{" "}
-                <strong>regalamos el doble de documento</strong>
-              </p>
-            </div>
-          </div>
-        )}
+        <button onClick={() => navigate("/planes")} className="btn-back">
+          <ChevronLeft />
+          Regresar
+        </button>
 
         <div className="registro-content">
-          {/* Formulario de Registro */}
           <div className="registro-form-section">
-            <button 
-              onClick={() => navigate("/planes")} 
-              className="btn-back"
-            >
-              ← Regresar
-            </button>
-
             <h1>Crea tu cuenta</h1>
             <p className="registro-subtitle">
-              Es rápido y sencillo, ingresa los siguientes datos y explora todas las herramientas.
+              Es rápido y sencillo, ingresa los siguientes datos y explora todas
+              las herramientas.
             </p>
 
             <form onSubmit={handleSubmit} className="registro-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label>Tipo Documento *</label>
-                  <select
-                    name="tipoDocumento"
-                    value={formData.tipoDocumento}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Seleccionar</option>
-                    <option value="CC">Cédula de Ciudadanía</option>
-                    <option value="NIT">NIT</option>
-                    <option value="CE">Cédula de Extranjería</option>
-                    <option value="PP">Pasaporte</option>
-                  </select>
+                  <Select
+                    name="tipoIdentificacion"
+                    options={tipoOptions}
+                    value={
+                      tipoOptions.find(
+                        (o) => o.value === formData.tipoIdentificacion,
+                      ) || null
+                    }
+                    onChange={(opt) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        tipoIdentificacion: opt ? opt.value : "",
+                      }));
+
+                      // opcional: limpia el error cuando el usuario corrige
+                      setErrors((prev) => ({
+                        ...prev,
+                        tipoIdentificacion: undefined,
+                      }));
+                    }}
+                    isClearable
+                    placeholder="Seleccionar tipo"
+                  />
+
+                  {errors.tipoIdentificacion && (
+                    <p className="text-danger small mt-1">
+                      {errors.tipoIdentificacion}
+                    </p>
+                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Número de documento *</label>
                   <input
                     type="text"
-                    name="numeroDocumento"
-                    value={formData.numeroDocumento}
-                    onChange={handleChange}
-                    placeholder="123456789"
+                    name="numeroIdentificacion"
+                    value={formData.numeroIdentificacion}
+                    onChange={(e) => {
+                      // opcional: filtra para que solo entren dígitos desde el inicio
+                      const onlyNums = e.target.value.replace(/\D/g, "");
+                      setFormData((prev) => ({
+                        ...prev,
+                        numeroIdentificacion: onlyNums,
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        numeroIdentificacion: undefined,
+                      }));
+                    }}
+                    placeholder="Número de documento *"
+                    inputMode="numeric" // teclado numérico en móvil [web:51]
+                    pattern="^[0-9]+$" // solo dígitos (si no está vacío) [web:63]
+                    maxLength={12} // límite de caracteres [web:56]
+                    className={errors.numeroIdentificacion ? "input-error" : ""}
                     required
                   />
+
+                  {errors.numeroIdentificacion && (
+                    <p className="text-danger small mt-1">
+                      {errors.numeroIdentificacion}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="form-row">
+                {/* Nombres y apellidos */}
                 <div className="form-group">
-                  <label>Nombres y apellidos *</label>
                   <input
                     type="text"
                     name="nombreCompleto"
                     value={formData.nombreCompleto}
-                    onChange={handleChange}
-                    placeholder="Juan Pérez"
+                    onChange={(e) => {
+                      const raw = e.target.value;
+
+                      const value = raw
+                        // deja letras A-Z, a-z, tildes típicas y espacios
+                        .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+/g, "")
+                        .replace(/\s{2,}/g, " ");
+
+                      setFormData((prev) => ({
+                        ...prev,
+                        nombreCompleto: value,
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        nombreCompleto: undefined,
+                      }));
+                    }}
+                    placeholder="Nombres y apellidos *"
+                    maxLength={80}
+                    className={errors.nombreCompleto ? "input-error" : ""}
                     required
                   />
+                  {errors.nombreCompleto && (
+                    <p className="text-danger small mt-1">
+                      {errors.nombreCompleto}
+                    </p>
+                  )}
                 </div>
 
+                {/* Teléfono */}
                 <div className="form-group">
-                  <label>Celular *</label>
                   <input
                     type="tel"
-                    name="celular"
-                    value={formData.celular}
-                    onChange={handleChange}
-                    placeholder="3001234567"
+                    name="telefono"
+                    value={formData.telefono}
+                    onChange={(e) => {
+                      const onlyNums = e.target.value.replace(/\D/g, "");
+                      setFormData((prev) => ({ ...prev, telefono: onlyNums }));
+                      setErrors((prev) => ({ ...prev, telefono: undefined }));
+                    }}
+                    placeholder="Teléfono *"
+                    inputMode="numeric" // teclado numérico en móvil [web:51]
+                    pattern="^[0-9]{10}$" // exactamente 10 dígitos [web:64][web:63]
+                    maxLength={10} // no deja pasar de 10 [web:68]
+                    className={errors.telefono ? "input-error" : ""}
                     required
                   />
+                  {errors.telefono && (
+                    <p className="text-danger small mt-1">{errors.telefono}</p>
+                  )}
                 </div>
               </div>
-
               <div className="form-row">
+                {/* Email */}
                 <div className="form-group">
-                  <label>E-mail *</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
-                    placeholder="correo@ejemplo.com"
+                    onChange={(e) => {
+                      // email: sin espacios, minúsculas, trim suave
+                      const value = e.target.value
+                        .replace(/\s/g, "")
+                        .toLowerCase();
+                      setFormData((prev) => ({ ...prev, email: value }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        email: undefined,
+                        confirmEmail: undefined,
+                      }));
+                    }}
+                    placeholder="E-mail *"
+                    autoComplete="email" // hint al navegador para autocompletar [web:83]
+                    maxLength={254} // límite típico razonable
+                    className={errors.email ? "input-error" : ""}
                     required
                   />
+                  {errors.email && (
+                    <p className="text-danger small mt-1">{errors.email}</p>
+                  )}
                 </div>
 
+                {/* Confirmar Email */}
                 <div className="form-group">
-                  <label>Confirmar e-mail *</label>
                   <input
                     type="email"
                     name="confirmEmail"
                     value={formData.confirmEmail}
-                    onChange={handleChange}
-                    placeholder="correo@ejemplo.com"
+                    onChange={(e) => {
+                      const value = e.target.value
+                        .replace(/\s/g, "")
+                        .toLowerCase();
+                      setFormData((prev) => ({ ...prev, confirmEmail: value }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        confirmEmail: undefined,
+                      }));
+                    }}
+                    placeholder="Confirmar E-mail *"
+                    autoComplete="email" // también puede ser "email" [web:83]
+                    maxLength={254}
+                    className={errors.confirmEmail ? "input-error" : ""}
                     required
                   />
+                  {errors.confirmEmail && (
+                    <p className="text-danger small mt-1">
+                      {errors.confirmEmail}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="form-row">
+                {/* Contraseña */}
                 <div className="form-group">
-                  <label>Contraseña *</label>
                   <input
                     type="password"
                     name="password"
                     value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        password: e.target.value, // NO hagas trim aquí
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        password: undefined,
+                        confirmPassword: undefined,
+                      }));
+                    }}
+                    placeholder="Contraseña *"
+                    autoComplete="new-password" // registro [web:83]
+                    minLength={8} // ok en password [web:89]
+                    maxLength={64} // ok en password [web:89]
+                    className={errors.password ? "input-error" : ""}
                     required
                   />
+                  {errors.password && (
+                    <p className="text-danger small mt-1">{errors.password}</p>
+                  )}
                 </div>
 
+                {/* Confirmar contraseña */}
                 <div className="form-group">
-                  <label>Confirmar contraseña *</label>
                   <input
                     type="password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="••••••••"
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        confirmPassword: undefined,
+                      }));
+                    }}
+                    placeholder="Confirmar contraseña *"
+                    autoComplete="new-password" // confirm [web:83]
+                    minLength={8}
+                    maxLength={64}
+                    className={errors.confirmPassword ? "input-error" : ""}
                     required
                   />
+                  {errors.confirmPassword && (
+                    <p className="text-danger small mt-1">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -219,84 +484,180 @@ export default function Registro() {
                   id="terminos"
                   name="aceptaTerminos"
                   checked={formData.aceptaTerminos}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      aceptaTerminos: e.target.checked,
+                    }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      aceptaTerminos: undefined,
+                    }));
+                  }}
                   required
                 />
                 <label htmlFor="terminos">
-                  Al hacer clic, autorizo a que Siigo trate mis datos conforme a lo descrito en la{" "}
-                  <a href="/politica-privacidad" target="_blank">
+                  Al hacer clic, autorizo a que Factcloud trate mis datos
+                  conforme a lo descrito en la{" "}
+                  <a
+                    href="/politica-privacidad"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     Política de Privacidad
                   </a>
-                  , cree una cuenta con mis datos en www.siigo.com y me ofrezca servicios propios y/o de terceros.
+                  , cree una cuenta con mis datos en www.factcloud.com y me
+                  ofrezca servicios propios y/o de terceros.
                 </label>
+
+                {errors.aceptaTerminos && (
+                  <p className="text-danger small mt-1">
+                    {errors.aceptaTerminos}
+                  </p>
+                )}
               </div>
 
               <button type="submit" className="btn-crear-cuenta">
-                Crear tu cuenta
+                Continuar al pago
               </button>
 
               <p className="login-link">
-                ¿Ya tienes cuenta?{" "}
-                <a href="/login">Inicia sesión</a>
+                ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
               </p>
             </form>
           </div>
 
-          {/* Resumen del Plan */}
           {selectedPlan && (
-            <div className="resumen-compra">
-              <h2>Resumen de compra</h2>
+            <div>
+              <div className="plan-banner">
+                <div className="plan-banner-content">
+                  <CheckCircleFill />
+                  <p className="plan-banner-title">
+                    ¡COMPRA HOY! el plan {selectedPlan.nombre}, y te{" "}
+                    <strong>regalamos el doble de documento</strong>
+                  </p>
+                </div>
+              </div>
+              <div className="resumen-compra">
+                <h2>Resumen de compra</h2>
 
-              <div className="resumen-producto">
-                <h3>Producto</h3>
-                <div className="producto-item">
-                  <div className="producto-info">
-                    <span className="producto-nombre">
-                      Plan {selectedPlan.planName}
+                <div className="resumen-producto">
+                  <h3>Producto</h3>
+                  <div className="producto-item">
+                    <div className="producto-info">
+                      <span className="producto-nombre">
+                        Plan {selectedPlan.nombre}
+                      </span>
+
+                      <button
+                        className="ver-detalle"
+                        title="Detalles"
+                        onClick={() => setMostrarVerDetalles(true)}
+                      >
+                        Ver detalle
+                      </button>
+                    </div>
+                    <span className="producto-precio">
+                      $
+                      {selectedPlan.descuentoActivo
+                        ? Math.round(
+                            selectedPlan.precioAnual /
+                              (1 - selectedPlan.descuentoPorcentaje / 100),
+                          ).toLocaleString("es-CO")
+                        : (selectedPlan.precioAnual ?? 0).toLocaleString(
+                            "es-CO",
+                          )}
                     </span>
-                    <button className="ver-detalle">Ver detalle</button>
                   </div>
-                  <span className="producto-precio">
-                    ${selectedPlan.planPrice.toLocaleString("es-CO")}
-                  </span>
-                </div>
 
-                <div className="descuento-item">
-                  <span>↓ Descuento {selectedPlan.planDiscount}</span>
-                  <span className="descuento-valor">
-                    -${(selectedPlan.planPrice * 0.09).toLocaleString("es-CO")}
-                  </span>
-                </div>
+                  {selectedPlan.descuentoActivo && (
+                    <div className="descuento-item">
+                      <span>
+                        Descuento ({selectedPlan.descuentoPorcentaje}%)
+                      </span>
+                      <span className="descuento-valor">
+                        -$
+                        {Math.round(
+                          selectedPlan.precioAnual /
+                            (1 - selectedPlan.descuentoPorcentaje / 100) -
+                            selectedPlan.precioAnual,
+                        ).toLocaleString("es-CO")}
+                      </span>
+                    </div>
+                  )}
 
-                <div className="subtotal">
-                  <span>Subtotal</span>
-                  <span>
-                    ${(selectedPlan.planPrice * 0.91).toLocaleString("es-CO")}
-                  </span>
-                </div>
+                  <div className="subtotal">
+                    <span>Subtotal</span>
+                    <span>
+                      ${(selectedPlan.precioAnual ?? 0).toLocaleString("es-CO")}
+                    </span>
+                  </div>
 
-                <div className="impuestos">
-                  <span>Impuestos</span>
-                  <span>$0</span>
-                </div>
+                  {cupones.coupon && (
+                    <div className="cupon">
+                      <span>
+                        Descuento cupon ({cupones.coupon.discountPercent}%){" "}
+                      </span>
+                      <span className="descuento-cupon">
+                        -${descuentoCupon.toLocaleString("es-CO")}
+                      </span>
+                    </div>
+                  )}
 
-                <div className="codigo-descuento">
-                  <input 
-                    type="text" 
-                    placeholder="Código de descuento"
-                  />
-                  <button className="btn-validar">Validar</button>
-                </div>
+                  <div className="impuestos">
+                    <span>Impuestos</span>
+                    <span>$0</span>
+                  </div>
 
-                <div className="total">
-                  <strong>Total a pagar / año</strong>
-                  <strong className="total-precio">
-                    ${(selectedPlan.planPrice * 0.91).toLocaleString("es-CO")}
-                  </strong>
+                  <div className="codigo-descuento">
+                    <input
+                      type="text"
+                      placeholder="Código de descuento"
+                      value={cupones.couponCode}
+                      onChange={(e) => {
+                        const value = e.target.value.toUpperCase();
+                        cupones.setCouponCode(value);
+
+                        if (!value.trim()) {
+                          cupones.clearCoupon();
+                        }
+                      }}
+                    />
+                    <button
+                      className="btn-validar"
+                      onClick={cupones.validateCoupon}
+                      disabled={cupones.loading}
+                    >
+                      {cupones.loading ? "..." : "Validar"}
+                    </button>
+                  </div>
+                  {cupones.couponError && (
+                    <p className="coupon-error text-danger samll mt-1">
+                      {cupones.couponError}
+                    </p>
+                  )}
+                  {cupones.coupon && (
+                    <div className="coupon-success text-success small mt-1">
+                      {cupones.coupon.message}
+                    </div>
+                  )}
+
+                  <div className="total">
+                    <strong>Total a pagar / año</strong>
+                    <strong className="total-precio">
+                      ${totalFinal.toLocaleString("es-CO")}
+                    </strong>
+                  </div>
                 </div>
               </div>
             </div>
           )}
+
+          <ModalDetalles
+            isOpen={mostrarVerDetalles}
+            onClose={() => setMostrarVerDetalles(false)}
+            plan={selectedPlan}
+          />
         </div>
       </div>
     </div>

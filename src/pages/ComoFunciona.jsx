@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import pasos from "../utils/ComoFunciona/Pasos";
 import caracteristicas from "../utils/ComoFunciona/Caracteristicas";
 import planes from "../utils/ComoFunciona/Planes";
-import ventajas from "../utils/ComoFunciona/Ventajas"
 import tecnologias from "../utils/ComoFunciona/Tecnologias"
 import proceso from "../utils/ComoFunciona/Proceso";
 import faqsFuncionamiento from "../utils/FAQS"
@@ -20,17 +19,25 @@ useEffect(() => {
 }, []);
   return (
     <div className="como-funciona-page">
-      <section className="hero-section">
-        <div className="container">
-          <span className="hero-badge">Aprende cómo funciona</span>
-          <h1>¿Cómo funciona FactCloud?</h1>
-          <p className="hero-description">
-            Desde el registro hasta tu primera factura electrónica validada por
-            DIAN en solo 10 minutos. Sin complicaciones técnicas ni
-            configuraciones complejas.
-          </p>
-        </div>
-      </section>
+     <section className="hero-section">
+  <img 
+    src="/img/img_hero_comoFunciona.webp"
+    alt="Empresario usando FactCloud" 
+    className="hero-image"
+  />
+  
+  <div className="container">
+    <span className="hero-badge">Aprende cómo funciona</span>
+    <h1>¿Cómo funciona FactCloud?</h1>
+    <p className="hero-description">
+      Desde el registro hasta tu primera factura electrónica validada por
+      DIAN en solo 10 minutos. Sin complicaciones técnicas ni
+      configuraciones complejas.
+    </p>
+  </div>
+</section>
+
+
 
       <section className="pasos-section">
         <div className="container">
@@ -54,20 +61,6 @@ useEffect(() => {
         </div>
       </section>
 
-      <section className="ventajas-section">
-        <div className="container">
-          <h2>Por qué elegir FactCloud</h2>
-          <div className="ventajas-grid">
-            {ventajas.map((ventaja, idx) => (
-              <div key={idx} className="ventaja-card">
-                <div className="ventaja-metrica">{ventaja.metrica}</div>
-                <h3>{ventaja.titulo}</h3>
-                <p>{ventaja.descripcion}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section id="caracteristicas" className="caracteristicas-section">
         <div className="container">
@@ -131,7 +124,7 @@ useEffect(() => {
       </section>
 
       <section id= "tecnologias"className="tecnologia-section">
-        <div className="container">
+        <div className="tecnologia-container">
           <h2>Tecnología detrás de FactCloud</h2>
           <p className="section-intro">
             Plataforma construida con las mejores prácticas de desarrollo y

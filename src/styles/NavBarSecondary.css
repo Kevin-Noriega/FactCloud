@@ -1,0 +1,20 @@
+.navbarSecondary {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: white;
+  backdrop-filter: blur(20px);
+  height: 80px;
+  border-bottom: 1px solid var(--primary-light);
+  
+}
+
+.navsec-content {
+  width: 100%;
+  padding: 15px 60px;
+}
+
+.logo-navsec {
+  height: 50px;
+}

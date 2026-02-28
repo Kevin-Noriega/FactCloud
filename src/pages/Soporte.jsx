@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "../styles/Soporte.css";
 import canalesAtencion from "../components/CanalesAtencion";
-import slaData from "../utils/Soporte/SlaData"
+import slaData from "../utils/Soporte/SlaData";
 
 const Soporte = () => {
   const [formData, setFormData] = useState({
@@ -14,12 +14,116 @@ const Soporte = () => {
     asunto: "",
     mensaje: "",
   });
+  const NAME_MIN = 6;
+  const NAME_MAX = 80;
+
+  const EMPRESA_MAX = 80;
+
+  const ASUNTO_MIN = 5;
+  const ASUNTO_MAX = 80;
+
+  const MSG_MIN = 20;
+  const MSG_MAX = 1000;
+
+  const allowedCategorias = new Set([
+    "tecnico",
+    "facturacion",
+    "cuenta",
+    "integracion",
+    "dian",
+    "bug",
+    "otro",
+  ]);
+
+  const allowedPrioridades = new Set(["baja", "normal", "alta", "critica"]);
+
+  const onlyDigits = (s) => /^\d+$/.test(s);
+
+  const isValidEmail = (email) => {
+    if (!email) return false;
+    if (/\s/.test(email)) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  // Nombre con tildes comunes (compatible sin \p{...})
+  const isValidName = (name) => /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+$/.test(name);
+
+  const [errors, setErrors] = useState({});
 
   const [submitted, setSubmitted] = useState(false);
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // 1) Nombre
+    const nombre = formData.nombre?.trim() || "";
+    if (!nombre) newErrors.nombre = "El nombre es obligatorio";
+    else {
+      if (nombre.length < NAME_MIN)
+        newErrors.nombre = `Mínimo ${NAME_MIN} caracteres`;
+      if (nombre.length > NAME_MAX)
+        newErrors.nombre = `Máximo ${NAME_MAX} caracteres`;
+      if (!isValidName(nombre)) newErrors.nombre = "Solo letras y espacios";
+    }
+
+    // 2) Email
+    if (!formData.email) newErrors.email = "El email es obligatorio";
+    else if (!isValidEmail(formData.email))
+      newErrors.email = "Formato de email inválido";
+    else if (formData.email.length > 254)
+      newErrors.email = "Email demasiado largo";
+
+    // 3) Empresa (opcional)
+    const empresa = formData.empresa?.trim() || "";
+    if (empresa && empresa.length > EMPRESA_MAX)
+      newErrors.empresa = `Máximo ${EMPRESA_MAX} caracteres`;
+
+    // 4) Teléfono (obligatorio)
+    const tel = formData.telefono?.trim() || "";
+    if (!tel) newErrors.telefono = "El teléfono es obligatorio";
+    else if (!onlyDigits(tel)) newErrors.telefono = "Teléfono solo números";
+    else if (tel.length !== 10)
+      newErrors.telefono = "Teléfono debe tener 10 dígitos";
+
+    // 5) Categoría
+    if (!formData.categoria) newErrors.categoria = "Selecciona una categoría";
+    else if (!allowedCategorias.has(formData.categoria))
+      newErrors.categoria = "Categoría inválida";
+
+    // 6) Prioridad
+    if (!formData.prioridad) newErrors.prioridad = "Selecciona una prioridad";
+    else if (!allowedPrioridades.has(formData.prioridad))
+      newErrors.prioridad = "Prioridad inválida";
+
+    // 7) Asunto
+    const asunto = formData.asunto?.trim() || "";
+    if (!asunto) newErrors.asunto = "El asunto es obligatorio";
+    else {
+      if (asunto.length < ASUNTO_MIN)
+        newErrors.asunto = `Mínimo ${ASUNTO_MIN} caracteres`;
+      if (asunto.length > ASUNTO_MAX)
+        newErrors.asunto = `Máximo ${ASUNTO_MAX} caracteres`;
+    }
+
+    // 8) Mensaje
+    const msg = formData.mensaje?.trim() || "";
+    if (!msg) newErrors.mensaje = "La descripción es obligatoria";
+    else {
+      if (msg.length < MSG_MIN)
+        newErrors.mensaje = `Mínimo ${MSG_MIN} caracteres`;
+      if (msg.length > MSG_MAX)
+        newErrors.mensaje = `Máximo ${MSG_MAX} caracteres`;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí integrarías con tu backend ASP.NET
+
+    if (!validateForm()) return;
+
     console.log("Ticket creado:", formData);
     setSubmitted(true);
 
@@ -35,15 +139,46 @@ const Soporte = () => {
         asunto: "",
         mensaje: "",
       });
+      setErrors({});
     }, 3000);
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    let v = value;
+
+    if (name === "nombre") {
+      v = v.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+/g, "").replace(/\s{2,}/g, " ");
+    }
+
+    if (name === "email") {
+      v = v.replace(/\s/g, "").toLowerCase();
+    }
+
+    if (name === "empresa") {
+      v = v.replace(/\s{2,}/g, " ");
+    }
+
+    if (name === "telefono") {
+      v = v.replace(/\D/g, "").slice(0, 10);
+    }
+
+    if (name === "asunto") {
+      v = v.replace(/\s{2,}/g, " ");
+    }
+
+    if (name === "mensaje") {
+      // permite saltos de línea, pero no acumular demasiados espacios
+      v = v.replace(/[ \t]{2,}/g, " ");
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: v }));
+
+    // limpiar error del campo editado
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
+
   const canales = canalesAtencion.slice(1, 4);
   const canalesFooter = canalesAtencion.slice(2, 4);
 
@@ -54,6 +189,11 @@ const Soporte = () => {
   return (
     <div className="soporte-page">
       <section className="hero-section">
+        <img
+          src="/img/img_hero_Soporte.webp"
+          alt="Empresario usando FactCloud"
+          className="hero-image"
+        />
         <div className="container">
           <span className="hero-badge">¿Necesitas Ayuda?</span>
           <h1>Centro de soporte</h1>
@@ -96,8 +236,14 @@ const Soporte = () => {
                       value={formData.nombre}
                       onChange={handleChange}
                       required
+                      minLength={NAME_MIN}
+                      maxLength={NAME_MAX}
+                      className={errors.nombre ? "input-error" : ""}
                       placeholder="Juan Pérez"
                     />
+                    {errors.nombre && (
+                      <p className="text-danger small mt-1">{errors.nombre}</p>
+                    )}
                   </div>
                   <div className="form-field">
                     <label htmlFor="email">Email *</label>
@@ -108,8 +254,12 @@ const Soporte = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      placeholder="juan@empresa.com"
+                      maxLength={254}
+                      className={errors.email ? "input-error" : ""}
                     />
+                    {errors.email && (
+                      <p className="text-danger small mt-1">{errors.email}</p>
+                    )}
                   </div>
                 </div>
 
@@ -133,8 +283,17 @@ const Soporte = () => {
                       name="telefono"
                       value={formData.telefono}
                       onChange={handleChange}
-                      placeholder="+57 300 123 4567"
+                      required
+                      inputMode="numeric"
+                      pattern="^[0-9]{10}$"
+                      maxLength={10}
+                      className={errors.telefono ? "input-error" : ""}
                     />
+                    {errors.telefono && (
+                      <p className="text-danger small mt-1">
+                        {errors.telefono}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -226,7 +385,6 @@ const Soporte = () => {
                           onClick={() => window.open(canal.href, "blank")}
                         >
                           {canal.accion}
-                          
                         </button>
                       </div>
                     </div>

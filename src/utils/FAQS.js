@@ -1,5 +1,4 @@
 const FAQS = [
-  // SECCIÓN: HOME
   {
     seccion: "home",
     categoria: "General",
@@ -49,7 +48,6 @@ const FAQS = [
     respuesta: "Totalmente seguro. Usamos cifrado militar AES-256, backups automáticos cada 6 horas, certificación ISO 27001 y servidores con redundancia geográfica. Tus datos están más seguros que en servidores locales."
   },
 
-  // SECCIÓN: PLANES
   {
     seccion: "planes",
     categoria: "Planes disponibles",
@@ -99,7 +97,6 @@ const FAQS = [
     respuesta: "14 días de prueba gratis en cualquier plan, sin tarjeta de crédito. Acceso completo a todas las funcionalidades para que pruebes el sistema con casos reales. Cancelación en un clic sin explicaciones ni retenciones."
   },
 
-  // SECCIÓN: CÓMO FUNCIONA
   {
     seccion: "como-funciona",
     categoria: "Proceso general",
@@ -149,7 +146,6 @@ const FAQS = [
     respuesta: "Sí, reportes de ventas por periodo, IVA recaudado, retenciones, ventas por cliente/producto, y estados de cuenta. Formato compatible con software contable estándar. Planes Profesional+ incluyen export directo a SIIGO, Alegra y Helisa."
   },
 
-  // SECCIÓN: DIAN
   {
     seccion: "dian",
     categoria: "Normativa",
@@ -199,7 +195,6 @@ const FAQS = [
     respuesta: "Nota Crédito: disminuye valor de factura original (devoluciones, descuentos post-venta, anulaciones totales/parciales). Nota Débito: incrementa valor (intereses por mora, costos adicionales no facturados inicialmente). Ambas deben referenciar la factura original por número y CUFE."
   },
 
-  // SECCIÓN: CUENTA Y ACCESO
   {
     seccion: "cuenta",
     categoria: "Cuenta y acceso",
@@ -213,7 +208,6 @@ const FAQS = [
     respuesta: "Sí, el plan Profesional permite hasta 3 usuarios y el Empresarial hasta 10. Cada usuario tiene su propio login y puedes asignar permisos específicos (administrador, operador, solo lectura) desde el panel de configuración."
   },
 
-  // SECCIÓN: FACTURACIÓN
   {
     seccion: "facturacion",
     categoria: "Facturación",
@@ -227,7 +221,6 @@ const FAQS = [
     respuesta: "No se puede anular directamente. Debes crear una Nota Crédito por el 100% del valor para reversar la operación. La factura original queda anulada fiscalmente pero permanece en el sistema para auditorías."
   },
 
-  // SECCIÓN: TÉCNICO
   {
     seccion: "tecnico",
     categoria: "Técnico",
@@ -239,7 +232,44 @@ const FAQS = [
     categoria: "Técnico",
     pregunta: "¿Los datos están seguros y respaldados?",
     respuesta: "Sí, usamos cifrado AES-256 en reposo y TLS 1.3 en tránsito. Backups automáticos cada 6 horas con retención de 90 días. Almacenamiento en servidores cloud distribuidos con redundancia geográfica. Cumplimos ISO 27001 y GDPR."
-  }
+  },
+  {
+  seccion: "cuenta",
+  categoria: "Cuenta",
+  pregunta: "¿Cómo crear clientes en FactCloud?",
+  respuesta: "Desde el panel de control, accede al módulo de Clientes y selecciona la opción 'Crear cliente'. Ingresa los datos básicos como nombre, tipo de identificación, correo y teléfono. Una vez guardado, el cliente quedará disponible para facturación inmediata."
+},
+{
+  seccion: "cuenta",
+  categoria: "Cuenta",
+  pregunta: "¿Cómo registrar productos o servicios?",
+  respuesta: "Ingresa al módulo de Productos, haz clic en 'Nuevo producto' y define la información como nombre, descripción, precio, impuestos y tipo (producto o servicio). FactCloud guardará el producto para reutilizarlo en futuras facturas."
+},
+{
+  seccion: "cuenta",
+  categoria: "Cuenta",
+  pregunta: "¿Cómo crear una factura electrónica?",
+  respuesta: "Dirígete al módulo de Facturación, selecciona el cliente, agrega los productos o servicios y confirma los valores. FactCloud se encarga automáticamente de validar la factura ante la DIAN y enviarla al cliente."
+},
+{
+  seccion: "cuenta",
+  categoria: "Cuenta",
+  pregunta: "¿Cómo editar mi perfil de usuario?",
+  respuesta: "Desde la sección de Perfil puedes actualizar tu información personal y empresarial, como nombre, correo, teléfono y datos fiscales. Los cambios se guardan de inmediato y se reflejan en tus documentos."
+},
+{
+  seccion: "cuenta",
+  categoria: "Cuenta",
+  pregunta: "¿Cómo desactivar clientes o productos?",
+  respuesta: "En los módulos de Clientes o Productos, selecciona el registro y elige la opción 'Desactivar'. Esto evita su uso en nuevas facturas sin eliminar la información histórica."
+},
+{
+  seccion: "cuenta",
+  categoria: "Cuenta",
+  pregunta: "¿Cómo desactivar mi cuenta en FactCloud?",
+  respuesta: "Si deseas desactivar tu cuenta, puedes hacerlo desde la configuración del perfil o solicitándolo a nuestro equipo de soporte. La información quedará protegida y podrás reactivar el servicio cuando lo necesites."
+}
+
 ];
 
 export default FAQS;

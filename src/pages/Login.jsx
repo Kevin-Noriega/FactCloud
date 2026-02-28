@@ -1,38 +1,51 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../api/config";
-import logo from "../img/logoFC.png";
-
-function Login() {
+import "../styles/Login.css";
+import { Eye, EyeSlash, EnvelopeFill, LockFill } from "react-bootstrap-icons";
+import { useAuth } from "../hooks/useAuth";
+export default function Login() {
   const [correo, setCorreo] = useState("");
-  const [contraseña, setContraseña] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const { login } = useAuth();
 
-  try {
-    const response = await fetch(`${API_URL}/Auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        correo: correo,
-        contrasena: contraseña,
-      }),
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      alert(errorData.message || "Correo o contraseña incorrectos");
-      return;
-    }
+    setLoading(true);
+    setError("");
 
-    const data = await response.json();
+    try {
+      console.log("🔵 Iniciando login desde componente");
 
-    if (!data.token || !data.usuario) {
-      alert("Error: respuesta del servidor incompleta");
-      return;
+      await login(correo, contrasena);
+
+      console.log("🎉 Login exitoso, navegando a dashboard");
+
+      // ✅ CAMBIO CRÍTICO: Navegar inmediatamente, sin setTimeout
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      console.error("❌ Error capturado en handleSubmit:", err);
+
+      // Manejar errores específicos del backend
+      if (err.response?.status === 423) {
+        setError(
+          `Cuenta desactivada. ${err.response.data.diasRestantes} días para reactivar.`,
+        );
+      } else if (err.response?.status === 401) {
+        setError("Credenciales incorrectas");
+      } else if (err.response?.status === 500) {
+        setError("Error del servidor. Intenta más tarde.");
+      } else {
+        setError(err.response?.data?.message || "Error al iniciar sesión");
+      }
+    } finally {
+      setLoading(false);
     }
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
@@ -117,51 +130,146 @@ function Login() {
       fontSize: "14px",
     },
   };
-  return (
-    <div style={estilos.fondo}>
-      <div style={estilos.tarjeta}>
-        <img src={logo} alt="logo FactCloud" className="pb-3" />
-        <h2 style={estilos.subtitulo}>Iniciar Sesión</h2>
 
-        <form onSubmit={handleSubmit}>
-          <div style={estilos.campo}>
-            <label style={estilos.label}>Correo</label>
-            <input
-              type="email"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
-              placeholder="Ingrese su correo electronico"
-              style={estilos.input}
-              required
+  return (
+    <main className="login-layout">
+      <section className="login-visual">
+        <div className="login-visual-overlay">
+          <div className="login-visual-content">
+            <img
+              src="/img/LogoFC.png"
+              alt="FactCloud"
+              className="login-visual-logo"
             />
+
+            <h2 className="login-visual-title">
+              Bienvenido de nuevo a FactCloud
+            </h2>
+
+            <p className="login-visual-subtitle">
+              Nos alegra verte otra vez. Accede a tu cuenta y continúa
+              gestionando tu facturación de forma segura y sencilla.
+            </p>
+          </div>
+        </div>
+        <img
+          src="/img/img_login.webp"
+          alt="Background"
+          className="login-visual-bg"
+        />
+      </section>
+
+      <section className="login-form-section">
+        <div className="login-card">
+          <div className="login-header">
+            <h1 className="login-title">Inicio de sesion</h1>
+            <p className="login-subtitle">
+              Ingresa tus credenciales para continuar
+            </p>
           </div>
 
-          <div style={estilos.campo}>
-            <label style={estilos.label}>Contraseña</label>
-            <input
-              type="password"
-              value={contraseña}
-              onChange={(e) => setContraseña(e.target.value)}
-              placeholder="Ingrese su contraseña"
-              style={estilos.input}
-              required
-            />
+          {error && (
+            <div className="login-alert-error">
+              <span>{error}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="login-form-group">
+              <label htmlFor="correo" className="login-label">
+                Correo electrónico
+              </label>
+              <div className="login-input-wrapper">
+                <EnvelopeFill className="login-input-icon" />
+                <input
+                  id="correo"
+                  type="email"
+                  placeholder="tucorreo@empresa.com"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                  required
+                  autoComplete="email"
+                  className="login-input"
+                />
+              </div>
+            </div>
+
+            <div className="login-form-group">
+              <label htmlFor="contrasena" className="login-label">
+                Contraseña
+              </label>
+              <div className="login-input-wrapper">
+                <LockFill className="login-input-icon" />
+                <input
+                  id="contrasena"
+                  type={mostrarContrasena ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={contrasena}
+                  onChange={(e) => setContrasena(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="login-input"
+                />
+                <button
+                  type="button"
+                  className="login-toggle-password"
+                  onClick={() => setMostrarContrasena(!mostrarContrasena)}
+                  tabIndex="-1"
+                >
+                  {mostrarContrasena ? <EyeSlash /> : <Eye />}
+                </button>
+              </div>
+            </div>
+
+            <div className="login-form-options">
+              <label className="login-checkbox-wrapper">
+                <input type="checkbox" className="login-checkbox" />
+                <span>Recordarme</span>
+              </label>
+              <button type="button" className="login-link-button">
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              className="login-btn-submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="login-spinner"></span>
+                  Ingresando...
+                </>
+              ) : (
+                "Iniciar sesión"
+              )}
+            </button>
+          </form>
+
+          <div className="login-divider">
+            <span>¿No tienes cuenta?</span>
           </div>
 
           <button
-            type="submit"
-            style={estilos.boton}
-            onMouseOver={(e) => (e.target.style.backgroundColor = "#15803d")}
-            onMouseOut={(e) => (e.target.style.backgroundColor = "#16a34a")}
+            type="button"
+            className="login-btn-register"
+            onClick={() => navigate("/registro")}
           >
-            Ingresar
+            Crear cuenta gratis
           </button>
-        </form>
 
-        <p style={estilos.footer}>© 2025 FACTCLOUD</p>
-      </div>
-    </div>
+          <footer className="login-footer">
+            <div className="login-footer-links">
+              <a href="/terminos">Términos</a>
+              <span>•</span>
+              <a href="/privacidad">Privacidad</a>
+              <span>•</span>
+              <a href="/soporte">Soporte</a>
+            </div>
+          </footer>
+        </div>
+      </section>
+    </main>
   );
 }
-
-export default Login;

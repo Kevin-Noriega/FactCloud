@@ -2,10 +2,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
+  max-width: 1000px;
+  margin: 10px auto;
   position: relative;
+  width: 100%;
 }
 
 .stepper-step {
@@ -16,14 +16,13 @@
   flex: 1;
 }
 
-/* Círculos */
 .step-circle {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   border: 2px solid #d1d5db;
   background: white;
-  color: #6b7280;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,8 +31,8 @@
 }
 
 .step-circle.active {
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .step-circle.completed {
@@ -42,7 +41,6 @@
   color: white;
 }
 
-/* Texto */
 .step-label {
   margin-top: 8px;
   font-size: 14px;
@@ -60,7 +58,6 @@
   font-weight: 600;
 }
 
-/* Línea */
 .step-line {
   position: absolute;
   top: 16px;

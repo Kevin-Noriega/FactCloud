@@ -1,0 +1,280 @@
+/* FORMULARIO COLAPSABLE - VERSIÓN CORREGIDA */
+.formulario-nota-collapse {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: max-height 0.4s ease-in-out,
+              opacity 0.3s ease-in-out,
+              transform 0.4s ease-in-out;
+  margin-top: 0;
+}
+
+.formulario-nota-collapse.show {
+  max-height: 2500px;
+  opacity: 1;
+  transform: scaleY(1);
+  margin-top: 20px;
+}
+
+.formulario-nota-container {
+  background: white;
+  border: 2px solid var(--primary-light);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+}
+
+/* BOTÓN TOGGLE */
+.btn-crear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-crear.active {
+  transform: translateY(2px);
+}
+
+/* SECCIONES */
+.section-title-nota {
+  font-size: 16px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 16px;
+  margin-top: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary-light);
+  display: flex;
+  align-items: center;
+}
+
+.section-title-nota:first-of-type {
+  margin-top: 0;
+}
+
+.section-title-nota::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 20px;
+  background:var(--primary);
+  margin-right: 10px;
+  border-radius: 2px;
+}
+
+/* TOTALES */
+.totales-box-nota {
+  background: #edf3fa;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.totales-row-nota {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.95rem;
+}
+
+.totales-row-nota:last-child {
+  border-bottom: none;
+}
+
+.totales-net-nota {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  margin-top: 10px;
+  border-top: 3px solid var(--primary-light);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* INFO BOX */
+.nota-info {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-left: 4px solid var(--primary);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.nota-info p {
+  margin: 0;
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+/* INPUTS */
+.formulario-nota-container input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.formulario-nota-container input[type="number"]::-webkit-outer-spin-button,
+.formulario-nota-container input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.formulario-nota-container .form-control,
+.formulario-nota-container .form-select {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+.formulario-nota-container .form-control:focus,
+.formulario-nota-container .form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.15);
+  outline: none;
+}
+
+/* TABLA */
+.formulario-nota-container .table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+}
+
+.formulario-nota-container .table {
+  margin-bottom: 0;
+}
+
+.formulario-nota-container .table thead {
+  background: var(--primary-light);
+  color: white;
+}
+
+.formulario-nota-container .table thead th {
+  border: none;
+  font-weight: 600;
+  padding: 12px 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.formulario-nota-container .table tbody td {
+  padding: 10px 8px;
+  vertical-align: middle;
+  font-size: 0.9rem;
+  border-color: #e5e7eb;
+  z-index: 1000;
+}
+
+.formulario-nota-container .table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* BOTONES DEL FORMULARIO */
+.formulario-nota-container .btn-sm {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.formulario-nota-container .btn-outline-success {
+  border: 2px solid var(--success);
+  color: var(--success);
+}
+
+.formulario-nota-container .btn-outline-success:hover {
+  background: var(--success);
+  color: white;
+}
+
+.formulario-nota-container .btn-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.formulario-nota-container .btn-danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  transform: scale(1.05);
+}
+
+/* BOTONES DE ACCIÓN FINAL */
+.formulario-nota-container .btn-secondary {
+  background: #6b7280;
+  border-color: #6b7280;
+  padding: 10px 24px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.formulario-nota-container .btn-secondary:hover {
+  background: #4b5563;
+  border-color: #4b5563;
+}
+
+.formulario-nota-container .btn-success {
+  background: var(--primary);
+  border-color: var(--primary);
+  padding: 10px 24px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.formulario-nota-container .btn-success:hover:not(:disabled) {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.formulario-nota-container .btn-success:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .formulario-nota-container {
+    padding: 16px;
+  }
+
+  .formulario-nota-collapse.show {
+    max-height: 3500px;
+  }
+
+  .section-title-nota {
+    font-size: 1rem;
+  }
+
+  .formulario-nota-container .table thead th {
+    font-size: 0.75rem;
+    padding: 8px 4px;
+  }
+
+  .formulario-nota-container .table tbody td {
+    font-size: 0.8rem;
+    padding: 8px 4px;
+  }
+}
+
+/* ANIMACIÓN DE ENTRADA */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scaleY(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+.formulario-nota-collapse.show .formulario-nota-container {
+  animation: slideInDown 0.4s ease-out;
+}
