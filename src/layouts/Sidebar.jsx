@@ -3,15 +3,14 @@ import * as Icons from 'react-bootstrap-icons';
 import "../styles/Sidebar.css";
 
 const navItems = [
-  { to: "/Dashboard", label: "Inicio", icon: "HouseFill" },
-  { to: "/clientes", label: "Clientes", icon: "PeopleFill" },
-  { to: "/productos", label: "Inventario", icon: "BoxSeamFill" },
-  { to: "/facturas", label: "Facturación", icon: "FileEarmarkTextFill" },
-  { to: "/notaCredito", label: "Nota Credito", icon: "ArrowCounterclockwise" },
-  { to: "/notaDebito", label: "Nota Debito", icon: "ArrowRepeat" },
-  { to: "/reportes", label: "Reportes", icon: "ClipboardDataFill" },
-  { to: "/tienda", label: "Tienda", icon: "CartFill" },
+  { to: "/Dashboard", label: "Inicio", icon: "HouseFill" }, // Casa para dashboard/inicio
+  { to: "/facturas", label: "Ventas", icon: "FileEarmarkTextFill" }, // Recibo/factura cortado para ventas/facturas
+  { to: "/productos", label: "Productos Y Servicios", icon: "BoxSeamFill" }, // Caja para productos/inventario
+  { to: "/clientes", label: "Compras y Gastos", icon: "BagDashFill" }, // Bolsa con guión para compras/gastos
+  { to: "/reportes", label: "Reportes", icon: "ClipboardDataFill" }, // Portapapeles con datos para reportes
+  { to: "/tienda", label: "Tienda", icon: "CartFill" }, // Carrito para tienda
 ];
+
 
 function Sidebar() {
   const location = useLocation();

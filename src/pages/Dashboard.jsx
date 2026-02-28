@@ -1,4 +1,4 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "../styles/Dashboard.css";
 import { HeroBanner } from "../components/dashboard/HeroBanner";
@@ -7,15 +7,10 @@ import { Tutoriales } from "../components/dashboard/Tutoriales";
 import { NormativasDian } from "../components/dashboard/NormativasDian";
 import { Estadisticas } from "../components/dashboard/estadisticas";
 
-
 function Dashboard() {
+  const { loading } = useDashboard();
 
-  const {loading}=useDashboard();
-
-  useEffect(() => {
-  }, []);
-
-
+  useEffect(() => {}, []);
 
   if (loading) {
     return (
@@ -41,14 +36,6 @@ function Dashboard() {
         draggable
         pauseOnHover
       />
-
-      <Estadisticas/>
-      
-
-      <div className="content-grid">
-        <Tutoriales/>
-        <NormativasDian/>
-      </div>
     </div>
   );
 }

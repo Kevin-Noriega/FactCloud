@@ -25,6 +25,7 @@ import NotaDebito from "./pages/NotaDebito";
 import DocumentoSoporte from "./pages/DocumentoSoporte";
 import Reportes from "./pages/Reportes";
 import Perfil from "./pages/Perfil";
+import CrearProductoPage from "./components/dashboard/CrearProductPage";
 
 // Páginas de E-commerce
 import Tienda from "./pages/Tienda";
@@ -35,7 +36,9 @@ const NotFound = () => (
   <div className="text-center py-5">
     <h1 className="display-1 text-danger">404</h1>
     <p className="lead">Página no encontrada.</p>
-    <a href="/" className="btn btn-primary mt-3">Volver al Inicio</a>
+    <a href="/" className="btn btn-primary mt-3">
+      Volver al Inicio
+    </a>
   </div>
 );
 
@@ -79,6 +82,14 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/productos" element={<Productos />} />
+
+              {/* ✅ Rutas del formulario de producto */}
+              <Route path="/crearProducto" element={<CrearProductoPage />} />
+              <Route
+                path="/crearProducto/editar/:id"
+                element={<CrearProductoPage />}
+              />
+
               <Route path="/facturas" element={<Facturas />} />
               <Route path="/notaCredito" element={<NotaCredito />} />
               <Route path="/notaDebito" element={<NotaDebito />} />
