@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { API_URL } from "../api/config";
-import ModalFacturaPDF from "../components/dashboard/ModalfacturaPDF.jsx";
-import ModalPago from "../components/dashboard/ModalPago.jsx";
-import ModalCrearFactura from "../components/dashboard/ModalCrearFactura.jsx";
-import { createConnection } from "../SignalR/SignalConector";
+import ModalFacturaPDF from "../../dashboard/ModalfacturaPDF.jsx";
+import ModalPago from "../../dashboard/ModalPago.jsx";
+import ModalCrearFactura from "../../dashboard/ModalCrearFactura.jsx";
+import { createConnection } from "../../../SignalR/SignalConector.jsx";
 import { toast, ToastContainer } from "react-toastify";
-import { FileEarmarkText } from "react-bootstrap-icons";
-import "../styles/sharedPage.css";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../../api/axiosClient.js";
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -152,8 +149,8 @@ function Facturas() {
     return (
       <div className="container mt-5">
         <div className="loading-container">
-          <div className="spinner-border text-success" role="status"></div>
-          <p className="mt-3">Cargando pdatos...</p>
+          <div className="spinner-border text-primary" role="status"></div>
+          <p className="mt-3">Cargando datos...</p>
         </div>
       </div>
     );
@@ -174,22 +171,7 @@ function Facturas() {
   }
 
   return (
-    <div className="container-fluid mt-4 px-4">
-      <div className="header-card">
-        <div className="header-content">
-          <div className="header-text">
-            <h2 className="header-title mb-4">Gestión de Facturas</h2>
-            <p className="header-subtitle">
-              Emite, consulta y administra tus facturas de forma rápida y
-              segura.
-            </p>
-          </div>
-          <div className="header-icon">
-            <FileEarmarkText size={80} />
-          </div>
-        </div>
-      </div>
-
+    <div className="container-fluid px-2">
       {mensajeExito && (
         <div
           className="alert alert-success d-flex justify-content-between align-items-center"
@@ -204,12 +186,6 @@ function Facturas() {
       )}
 
       <div className="opcions-header">
-        <button
-          className="btn-crear"
-          onClick={() => setMostrarFormulario(true)}
-        >
-          Nueva Factura
-        </button>
         <div className="filters">
           <input
             type="text"
@@ -229,6 +205,12 @@ function Facturas() {
             <option value="antiguos">Más antiguos</option>
           </select>
         </div>
+        <button
+          className="btn-crear"
+          onClick={() => setMostrarFormulario(true)}
+        >
+          Nueva Factura
+        </button>
       </div>
 
       <ToastContainer
@@ -243,28 +225,32 @@ function Facturas() {
         pauseOnHover
       />
 
-      <div className="card mt-3">
+      <div className="card">
         <div className="card-body">
-          {filtrados.length === 0 ? (
-            <div className="alert alert-info">No hay facturas registradas.</div>
-          ) : (
-            <div className="table-responsive">
-              <table className="table table-hover table-bordered">
-                <thead className="table-header">
+          <div className="table-responsive">
+            <table className="table table-bordered">
+              <thead className="table-header">
+                <tr>
+                  <th>Factura</th>
+                  <th>Cliente</th>
+                  <th>Fecha</th>
+                  <th>Subtotal</th>
+                  <th>IVA</th>
+                  <th>INC</th>
+                  <th>Total</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtrados.length === 0 ? (
                   <tr>
-                    <th>Factura</th>
-                    <th>Cliente</th>
-                    <th>Fecha</th>
-                    <th>Subtotal</th>
-                    <th>IVA</th>
-                    <th>INC</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+                    <td colSpan="9" className="text-center py-4 text-muted">
+                      No hay facturas registradas
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filtrados.map((fact) => (
+                ) : (
+                  filtrados.map((fact) => (
                     <tr key={fact.id}>
                       <td>
                         <strong>{fact.numeroFactura || fact.id}</strong>
@@ -331,11 +317,11 @@ function Facturas() {
                         </div>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

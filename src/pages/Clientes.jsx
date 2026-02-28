@@ -113,18 +113,12 @@ function Clientes() {
     );
 
   return (
-    <div className="container-fluid mt-4 px-4">
-      <div className="header-card">
+    <div className="container-fluid px-4">
+      <div className="header-card mb-3 px-5">
         <div className="header-content">
-          <div className="header-text">
-            <h2 className="header-title mb-4">Gestión de Clientes</h2>
-            <p className="header-subtitle">
-              Administra, actualiza y mantén organizada la información de tus
-              clientes.
-            </p>
-          </div>
+            <h2 className="header-title">Gestión de Clientes</h2>
           <div className="header-icon">
-            <People size={80} />
+            <People size={60} />
           </div>
         </div>
       </div>

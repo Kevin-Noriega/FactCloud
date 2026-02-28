@@ -42,7 +42,6 @@ const UserMenu = () => {
   };
 
   const userName = usuario?.nombreCompleto || 'Usuario';
-  const businessNit = usuario?.negocioNit;
   const userEmail = usuario?.usuario?.correo ||  'email@ejemplo.com';
   const userPlan = usuario?.planNombre || "Demo";
   const userAvatar = usuario?.usuario?.avatar || usuario?.avatar;
@@ -79,7 +78,7 @@ const UserMenu = () => {
             </div>
 
             <div className="user-menu-info">
-              <h4 className="user-menu-title">{userName} {businessNit}</h4>
+              <h4 className="user-menu-title">{userName} </h4>
               <p className="user-menu-email">{userEmail}</p>
               {userPlan && <span className="user-menu-badge">{userPlan}</span>}
             </div>

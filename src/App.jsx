@@ -18,11 +18,11 @@ import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
-import Productos from "./pages/Productos";
-import Facturas from "./pages/Facturas";
-import NotaCredito from "./pages/NotaCredito";
-import NotaDebito from "./pages/NotaDebito";
-import DocumentoSoporte from "./pages/DocumentoSoporte";
+import Productos from "./components/ProductosServicios/Productos";
+import Facturas from "./components/ventas/documentosVenta/Facturas";
+import Ventas from "./pages/Ventas";
+import ComprasGastos from "./pages/ComprasGastos";
+import DocumentoSoporte from "./components/comprasGastos/DocumentoSoporte";
 import Reportes from "./pages/Reportes";
 import Perfil from "./pages/Perfil";
 import CrearProductoPage from "./components/dashboard/CrearProductPage";
@@ -83,16 +83,16 @@ function App() {
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/productos" element={<Productos />} />
 
-              {/* ✅ Rutas del formulario de producto */}
               <Route path="/crearProducto" element={<CrearProductoPage />} />
               <Route
                 path="/crearProducto/editar/:id"
                 element={<CrearProductoPage />}
               />
 
+
+              <Route path="/ventas" element={<Ventas />} />
+              <Route path="/compras-gastos" element={<ComprasGastos />} />
               <Route path="/facturas" element={<Facturas />} />
-              <Route path="/notaCredito" element={<NotaCredito />} />
-              <Route path="/notaDebito" element={<NotaDebito />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
               <Route path="/reportes" element={<Reportes />} />
               <Route path="/perfil" element={<Perfil />} />

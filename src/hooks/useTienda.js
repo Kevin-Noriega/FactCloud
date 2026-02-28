@@ -80,7 +80,7 @@ export const useTienda = (options = {}) => {
     refetchOnMount: false, // ⚠️ NO recargar automáticamente al montar
     retry: 1, // Solo 1 reintento
     retryDelay: 1000,
-    enabled: false, // ⚠️ DESHABILITADO POR DEFECTO
+    enabled: true, // ⚠️ DESHABILITADO POR DEFECTO
     ...options, // Permitir override
   });
 

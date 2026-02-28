@@ -18,6 +18,7 @@ function Tienda() {
     cambiarPlanLoading,
     agregarAddons,
     agregarAddonsLoading,
+    cargarDatos
   } = useTienda();
 
   const [mostrarFormularioPlan, setMostrarFormularioPlan] = useState(false);
@@ -76,7 +77,9 @@ function Tienda() {
       alert("Error al cambiar el plan: " + (error.message || "Error desconocido"));
     }
   };
-
+ React.useEffect(() => {
+    cargarDatos();
+  }, [cargarDatos]);
   const handleAgregarAddons = async (e) => {
     e.preventDefault();
 
@@ -126,18 +129,13 @@ function Tienda() {
   };
 
   return (
-    <div className="container-fluid mt-4 px-4 tienda-container">
+    <div className="container-fluid px-4 tienda-container">
       {/* HEADER */}
-      <div className="header-card">
+      <div className="header-card mb-3 px-4">
         <div className="header-content">
-          <div className="header-text">
-            <h2 className="header-title mb-4">Tienda FactCloud</h2>
-            <p className="header-subtitle">
-              Gestiona tu plan de facturación y complementos
-            </p>
-          </div>
+            <h2 className="header-title">Tienda FactCloud</h2>
           <div className="header-icon">
-            <Shop size={80} />
+            <Shop size={70} />
           </div>
         </div>
       </div>

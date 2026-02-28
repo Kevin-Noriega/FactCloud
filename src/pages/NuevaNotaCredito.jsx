@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "../styles/sharedPage.css";
-import {useNotas} from "../hooks/useNotas";
-import { ArrowCounterclockwise } from "react-bootstrap-icons";
+import {useNotas} from "../../../hooks/useNotas";
+import { ArrowCounterclockwise, ChevronDown } from "react-bootstrap-icons";
+import FormNotaCredito from "../../nota-credito/FormNotaCredito";
+
 function NotaCredito() {
   const {
     notasCredito,

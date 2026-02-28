@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { API_URL } from "../api/config";
-import ModalNotaDebito from "../components/dashboard/ModalNotaDebito";
-import "../styles/sharedPage.css";
+import ModalNotaDebito from "../../dashboard/ModalNotaDebito";
 import { ArrowRepeat } from "react-bootstrap-icons";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../../api/axiosClient";
 function NotaDebito() {
   const [notasDebito, setNotasDebito] = useState([]);
   const [facturas, setFacturas] = useState([]);
