@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { API_URL } from "../api/config";
-import ModalDocumentoSoporte from "../components/dashboard/ModalDocumentoSoporte";
-import "../styles/sharedPage.css";
+import { API_URL } from "../../api/config";
+import ModalDocumentoSoporte from "../dashboard/ModalDocumentoSoporte";
 import { 
   FileEarmarkText, 
   Eye, 
@@ -157,8 +156,8 @@ function DocumentosSoporte() {
     return (
       <div className="container mt-5">
         <div className="loading-container">
-          <div className="spinner-border text-success" role="status"></div>
-          <p className="mt-3">Cargando documentos soporte...</p>
+          <div className="spinner-border text-primary" role="status"></div>
+          <p className="mt-3">Cargando datos...</p>
         </div>
       </div>
     );
@@ -180,27 +179,6 @@ function DocumentosSoporte() {
 
   return (
     <div className="container-fluid mt-4 px-4">
-      <div className="header-card">
-        <div className="header-content">
-          <div className="header-text">
-            <h2 className="header-title">Documentos Soporte</h2>
-            <p className="header-subtitle">
-              Gestiona tus adquisiciones a proveedores no obligados a facturar
-            </p>
-          </div>
-          <div className="header-icon">
-            <FileEarmarkText size={80} />
-          </div>
-        </div>
-      </div>
-
-      <div className="nota-info">
-        <p>
-          <strong>Información importante:</strong> Los documentos soporte se utilizan 
-          para soportar adquisiciones realizadas a proveedores no obligados a expedir 
-          factura electrónica, cumpliendo con la normativa DIAN.
-        </p>
-      </div>
 
       {mensajeExito && (
         <div className="alert alert-success alert-dismissible fade show">
@@ -214,9 +192,7 @@ function DocumentosSoporte() {
       )}
 
       <div className="opcions-header">
-        <button className="btn-crear" onClick={handleNuevoDocumento}>
-          Nuevo Documento Soporte
-        </button>
+       
         <div className="filters">
           <input
             type="text"
@@ -236,12 +212,15 @@ function DocumentosSoporte() {
             <option value="menor">Menor valor</option>
           </select>
         </div>
+         <button className="btn-crear" onClick={handleNuevoDocumento}>
+          Nuevo Documento Soporte
+        </button>
       </div>
 
       <div className="card">
         <div className="card-body">
           <div className="table-responsive">
-            <table className="table">
+            <table className="table table-bordered">
               <thead className="table-header">
                 <tr>
                   <th>N° Documento</th>

@@ -25,6 +25,7 @@ body.modal-open {
   --primary-dark: #1e40af;
   --primary-dim: #425696bb;
   --primary-light: #bcd5f5;
+  --primary-super-light:#e3efff;
   --secondary: #6c757d;
   --success: #22c55e;
   --success-dark: #16a34a;
@@ -34,6 +35,7 @@ body.modal-open {
   --bg-card: #ffffff;
 
   --text: #0f172a;
+  --text-muted-light: #f1f1f1;
   --text-muted: #475569;
 
   --border: #c7d2fe;
