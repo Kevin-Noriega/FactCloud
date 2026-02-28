@@ -47,6 +47,88 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+
+    navigate("/dashboard");
+  } catch (error) {
+    console.error("Error login:", error);
+    alert("Error al conectar con el servidor");
+  }
+};
+
+  const estiloAnimacion = document.createElement("style");
+  estiloAnimacion.innerHTML = `
+@keyframes moverFondo {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+`;
+  document.head.appendChild(estiloAnimacion);
+
+  const estilos = {
+    fondo: {
+      background: "linear-gradient(135deg, var(--primary), var(--primary-dark)",
+      backgroundSize: "600% 600%",
+      animation: "moverFondo 10s ease infinite",
+      height: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontFamily: "Segoe UI, sans-serif",
+      color: "white",
+    },
+    tarjeta: {
+      backgroundColor: "#ffffff",
+      padding: "25px 40px",
+      borderRadius: "16px",
+      width: "380px",
+      boxShadow: "0px 5px 20px rgba(0, 0, 0, 0.35)",
+      textAlign: "center",
+    },
+    subtitulo: {
+      color: "#1e293b",
+      fontSize: "19px",
+      marginBottom: "32px",
+    },
+    campo: {
+      display: "flex",
+      flexDirection: "column",
+      textAlign: "left",
+      marginBottom: "21px",
+    },
+    label: {
+      fontWeight: "600",
+      marginBottom: "6.4px",
+      color: "#000000ff",
+    },
+    input: {
+      border: "1px solid #cbd5e1",
+      borderRadius: "8px",
+      padding: "13px",
+      fontSize: "16px",
+      outline: "none",
+    },
+    boton: {
+      backgroundColor: "#16a34a",
+      color: "#ffffff",
+      border: "none",
+      padding: "14px",
+      width: "100%",
+      fontWeight: "600",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontSize: "16px",
+      marginTop: "8px",
+      transition: "background 300ms",
+    },
+    footer: {
+      marginTop: "2px",
+      color: "#64748b",
+      fontSize: "14px",
+    },
   };
 
   return (
