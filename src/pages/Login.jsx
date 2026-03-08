@@ -51,11 +51,7 @@ export default function Login() {
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
 
-    navigate("/dashboard");
-  } catch (error) {
-    console.error("Error login:", error);
-    alert("Error al conectar con el servidor");
-  }
+    
 };
 
   const estiloAnimacion = document.createElement("style");
