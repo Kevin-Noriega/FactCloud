@@ -290,13 +290,21 @@
 }
 
 .table-responsive {
+    display: block;      
+  width: 100%;
   overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
 }
-
+.table-responsive::-webkit-scrollbar       { height: 6px; }
+.table-responsive::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+.table-responsive::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+.table-responsive::-webkit-scrollbar-thumb:hover { background: #999; }
 .table {
   margin: 0;
   border-collapse: collapse;
   width: 100%;
+  min-width: max-content;
 }
 
 .table thead th {

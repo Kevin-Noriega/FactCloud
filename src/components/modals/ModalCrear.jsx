@@ -1,59 +1,50 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FileEarmarkText,
-  People,
-  FileText,
-  Truck,
-  Person,
-  PersonPlus,
-  Box,
+  FileEarmarkText, People, FileText,
+  Truck, Person, PersonPlus, Box,
 } from "react-bootstrap-icons";
-import "../../styles/ModalCrear.css";
-import ModalCrearFactura from "./ModalCrearFactura";
-import ModalCrearCliente from "./ModalCrearCliente";
-import ModalCrearProducto from "./ModalCrearProducto";
-// import ModalCrearNotaCredito from "./ModalNotaCredito";
-import ModalDocumentoSoporte from "./ModalDocumentoSoporte";
+import "../../styles/modals/ModalCrear.css";
+import ModalCrearFactura   from "./ModalCrearFactura";
+import ModalCrearCliente   from "../modals/ModalCrearCliente";
+import ModalCrearProducto  from "../modals/ModalCrearProducto";
+import ModalDocumentoSoporte from "../modals/ModalDocumentoSoporte";
 
 function ModalCrear({ open, onClose }) {
   const navigate = useNavigate();
   const [modalActivo, setModalActivo] = useState(null);
 
+  // Bloquear scroll del body
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
-    if (!open) {
-      setModalActivo(null);
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
+    if (!open) setModalActivo(null);
+    return () => { document.body.style.overflow = "auto"; };
   }, [open]);
 
-  const handleAbrirModal = (tipo, rutaDestino) => {
-    setModalActivo({ tipo, rutaDestino });
-  };
+  // ── Helpers ───────────────────────────────────────────────────────
 
-  const handleCerrarModalEspecifico = () => {
-    setModalActivo(null);
-    onClose();
-  };
+  /** Abre un sub-modal (factura, cliente, producto, etc.) */
+  const abrirModal = (tipo) => setModalActivo(tipo);
 
-  
-  const handleGuardadoExitoso = () => {
-    const rutaDestino = modalActivo?.rutaDestino;
-    
-    // Cerrar modales
-    setModalActivo(null);
-    onClose();
-    
-    if (rutaDestino) {
-      navigate(rutaDestino);
-    }
-  };
-
-  const handleNavegacionDirecta = (ruta) => {
+  /** Navega a una ruta Y cierra el modal principal */
+  const navegar = (ruta) => {
+    onClose();          // ✅ siempre cerrar primero
     navigate(ruta);
+  };
+
+  /** Cerrar sub-modal sin navegar (usuario canceló) */
+  const cerrarSubModal = () => setModalActivo(null);
+
+  /** Sub-modal guardó exitosamente → cerrar todo y navegar si hay ruta */
+  const subModalExitoso = (ruta) => {
+    setModalActivo(null);
+    onClose();
+    if (ruta) navigate(ruta);
+  };
+
+  /** Click en el overlay: cierra todo */
+  const handleOverlayClick = () => {
+    setModalActivo(null);
     onClose();
   };
 
@@ -61,23 +52,28 @@ function ModalCrear({ open, onClose }) {
 
   return (
     <>
-      {/* Overlay */}
-      <div className="modal-overlay-crear" onClick={onClose} />
-      
-      {/* Modal Principal */}
+      {/* ── Overlay — cierra todo al hacer click ── */}
+      <div className="modal-overlay-crear" onClick={handleOverlayClick} />
+
+      {/* ── Modal principal ── */}
       <div className="modal-container-crear">
-        <div className="modal-content-crear" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-content-crear"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="modal-header-crear">
             <h5>¿Qué deseas crear?</h5>
-            <button 
-              className="btn-close btn-close-crear" 
+            <button
+              className="btn-close btn-close-crear"
               onClick={onClose}
-              aria-label="Cerrar modal"
+              aria-label="Cerrar"
             />
           </div>
 
           <div className="modal-body-crear">
             <div className="row g-4">
+
+              {/* ── Clientes ── */}
               <div className="col-12 col-md-6 col-lg-3">
                 <div className="category-section-crear clientes-section-crear">
                   <strong className="category-title-crear">Clientes</strong>
@@ -85,7 +81,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleAbrirModal("factura", "/facturas")}
+                        onClick={() => abrirModal("factura")}
                       >
                         <FileEarmarkText className="menu-icon-crear" />
                         <span>Factura de venta</span>
@@ -94,24 +90,35 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleAbrirModal("cliente", "/clientes")}
+                        onClick={() => abrirModal("cliente")}
                       >
                         <People className="menu-icon-crear" />
                         <span>Cliente</span>
                       </button>
                     </li>
                     <li>
-                      {/* <button
+                      <button
                         className="menu-item-crear"
-                        onClick={() => handleAbrirModal("notaCredito", "/notaCredito")}
+                        onClick={() => navegar("/nueva-nota-credito")}  // ✅ cierra y navega
                       >
                         <FileText className="menu-icon-crear" />
                         <span>Nota crédito</span>
-                      </button> */}
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="menu-item-crear"
+                        onClick={() => navegar("/nueva-nota-debito")}   // ✅ cierra y navega
+                      >
+                        <FileText className="menu-icon-crear" />
+                        <span>Nota débito</span>
+                      </button>
                     </li>
                   </ul>
                 </div>
               </div>
+
+              {/* ── Proveedores ── */}
               <div className="col-12 col-md-6 col-lg-3">
                 <div className="category-section-crear proveedores-section-crear">
                   <strong className="category-title-crear">Proveedores</strong>
@@ -119,7 +126,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleAbrirModal("documentoSoporte", "/documento-soporte")}
+                        onClick={() => navegar("/nuevo-documento-soporte")} // ✅ cierra y navega
                       >
                         <FileText className="menu-icon-crear" />
                         <span>Documento soporte</span>
@@ -128,7 +135,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavegacionDirecta("/proveedores")}
+                        onClick={() => navegar("/proveedores")}
                       >
                         <Truck className="menu-icon-crear" />
                         <span>Proveedor</span>
@@ -138,6 +145,7 @@ function ModalCrear({ open, onClose }) {
                 </div>
               </div>
 
+              {/* ── Usuarios ── */}
               <div className="col-12 col-md-6 col-lg-3">
                 <div className="category-section-crear usuarios-section-crear">
                   <strong className="category-title-crear">Usuarios</strong>
@@ -145,7 +153,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavegacionDirecta("/usuarios")}
+                        onClick={() => navegar("/usuarios")}
                       >
                         <Person className="menu-icon-crear" />
                         <span>Usuario</span>
@@ -154,7 +162,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleNavegacionDirecta("/invitar-contador")}
+                        onClick={() => navegar("/invitar-contador")}
                       >
                         <PersonPlus className="menu-icon-crear" />
                         <span>Invitar contador</span>
@@ -164,6 +172,7 @@ function ModalCrear({ open, onClose }) {
                 </div>
               </div>
 
+              {/* ── Otros ── */}
               <div className="col-12 col-md-6 col-lg-3">
                 <div className="category-section-crear otros-section-crear">
                   <strong className="category-title-crear">Otros</strong>
@@ -171,7 +180,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => handleAbrirModal("producto", "/productos")}
+                        onClick={() => abrirModal("producto")}
                       >
                         <Box className="menu-icon-crear" />
                         <span>Producto / Servicio</span>
@@ -180,47 +189,43 @@ function ModalCrear({ open, onClose }) {
                   </ul>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
       </div>
-      {modalActivo?.tipo === "producto" && (
-        <ModalCrearProducto 
-          productoEditando={null}
-          onClose={handleCerrarModalEspecifico}
-          onGuardadoExitoso={handleGuardadoExitoso}
-        />
-      )}
 
-      {modalActivo?.tipo === "factura" && (
-        <ModalCrearFactura 
+      {/* ── Sub-modales ── */}
+      {modalActivo === "factura" && (
+        <ModalCrearFactura
           facturaEditando={null}
-          onClose={handleCerrarModalEspecifico}
-          onGuardadoExitoso={handleGuardadoExitoso}
+          onClose={cerrarSubModal}
+          onGuardadoExitoso={() => subModalExitoso("/facturas")}
         />
       )}
 
-      {modalActivo?.tipo === "cliente" && (
-        <ModalCrearCliente 
+      {modalActivo === "cliente" && (
+        <ModalCrearCliente
           clienteEditando={null}
-          onClose={handleCerrarModalEspecifico}
-          onGuardadoExitoso={handleGuardadoExitoso}
+          onClose={cerrarSubModal}
+          onGuardadoExitoso={() => subModalExitoso("/clientes")}
         />
       )}
 
-      {/* {modalActivo?.tipo === "notaCredito" && (
-        <ModalCrearNotaCredito 
-          onClose={handleCerrarModalEspecifico}
-          onGuardadoExitoso={handleGuardadoExitoso}
+      {modalActivo === "producto" && (
+        <ModalCrearProducto
+          productoEditando={null}
+          onClose={cerrarSubModal}
+          onGuardadoExitoso={() => subModalExitoso("/productos")}
         />
-      )} */}
+      )}
 
-      {modalActivo?.tipo === "documentoSoporte" && (
-        <ModalDocumentoSoporte 
+      {modalActivo === "documentoSoporte" && (
+        <ModalDocumentoSoporte
           isOpen={true}
-          onClose={handleCerrarModalEspecifico}
-          onSuccess={handleGuardadoExitoso}
           documentoEditar={null}
+          onClose={cerrarSubModal}
+          onSuccess={() => subModalExitoso("/compras/documentos-soporte")}
         />
       )}
     </>

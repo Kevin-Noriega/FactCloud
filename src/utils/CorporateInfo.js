@@ -72,27 +72,15 @@ export const corporateInfo = {
     achievement: "Hoy, FactCloud ayuda a cientos de empresas colombianas a automatizar su facturación, mejorar su flujo de caja y mantener su contabilidad en orden, permitiéndoles enfocarse en lo que realmente importa: hacer crecer su negocio.",
     milestones: [
       {
-        date: "Enero 2024",
+        date: "Enero 2026",
         event: "Fundación de FactCloud en Valledupar"
       },
       {
-        date: "Marzo 2024",
+        date: "Marzo 2026",
         event: "Lanzamiento de la versión Beta"
       },
       {
-        date: "Junio 2024",
-        event: "Primeros 100 clientes activos"
-      },
-      {
-        date: "Septiembre 2024",
-        event: "Certificación DIAN completada"
-      },
-      {
-        date: "Diciembre 2024",
-        event: "500+ empresas usando FactCloud"
-      },
-      {
-        date: "Enero 2025",
+        date: "Mayo 2026",
         event: "Expansión del equipo técnico"
       }
     ]

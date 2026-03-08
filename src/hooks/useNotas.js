@@ -1,160 +1,85 @@
-import { useState, useEffect } from "react";
+// src/hooks/useNotas.js — agregar clientes al hook
+import { useState, useEffect, useRef, useCallback } from "react";
 import axiosClient from "../api/axiosClient";
 
 export const useNotas = () => {
-
-  // ESTADOS
   const [notasCredito, setNotasCredito] = useState([]);
-  const [notasDebito, setNotasDebito] = useState([]);
-  const [facturas, setFacturas] = useState([]);
-  const [productos, setProductos] = useState([]);
+  const [notasDebito,  setNotasDebito]  = useState([]);
+  const [facturas,     setFacturas]     = useState([]);
+  const [productos,    setProductos]    = useState([]);
+  const [clientes,     setClientes]     = useState([]);   // ✅ NUEVO
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading,   setLoading]   = useState(true);
+  const [saving,    setSaving]    = useState(false);
+  const [error,     setError]     = useState(null);
+  const [errorCrud, setErrorCrud] = useState(null);
 
-  // CARGAR TODOS LOS DATOS
-  const cargarDatos = async () => {
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
+  const cargarDatos = useCallback(async () => {
+    if (!mountedRef.current) return;
+    setLoading(true);
+    setError(null);
     try {
-
-      setLoading(true);
-      setError(null);
-
-      const [
-        notasCreditoRes,
-        notasDebitoRes,
-        facturasRes,
-        productosRes
-
-      ] = await Promise.all([
-
+      const [ncRes, ndRes, facRes, proRes, cliRes] = await Promise.all([
         axiosClient.get("/NotasCredito"),
         axiosClient.get("/NotasDebito"),
         axiosClient.get("/Facturas"),
         axiosClient.get("/Productos"),
-
+        axiosClient.get("/Clientes"),   // ✅ NUEVO
       ]);
-
-      setNotasCredito(notasCreditoRes.data || []);
-      setNotasDebito(notasDebitoRes.data || []);
-      setFacturas(facturasRes.data || []);
-      setProductos(productosRes.data || []);
-
+      if (!mountedRef.current) return;
+      setNotasCredito(ncRes.data  ?? []);
+      setNotasDebito(ndRes.data   ?? []);
+      setFacturas(facRes.data     ?? []);
+      setProductos(proRes.data    ?? []);
+      setClientes(cliRes.data     ?? []);  // ✅ NUEVO
     } catch (err) {
-
-      console.error("Error al cargar datos:", err);
-
-      setError(
-        err.response?.data?.message ||
-        err.message ||
-        "Error al cargar datos"
-      );
-
+      if (!mountedRef.current) return;
+      setError(err.response?.data?.message || err.message || "Error al cargar datos");
     } finally {
-
-      setLoading(false);
-
+      if (mountedRef.current) setLoading(false);
     }
-
-  };
-
-  useEffect(() => {
-    cargarDatos();
   }, []);
 
+  useEffect(() => { cargarDatos(); }, [cargarDatos]);
 
-  // ================================
-  // CRUD NOTAS CRÉDITO
-  // ================================
+  const ejecutarCrud = useCallback(async (fn) => {
+    setSaving(true);
+    setErrorCrud(null);
+    try {
+      const result = await fn();
+      await cargarDatos();
+      return result;
+    } catch (err) {
+      if (!mountedRef.current) return;
+      const msg = err.response?.data?.message || err.message || "Error al guardar";
+      setErrorCrud(msg);
+      throw new Error(msg);
+    } finally {
+      if (mountedRef.current) setSaving(false);
+    }
+  }, [cargarDatos]);
 
-  const crearNotaCredito = async (notaData) => {
+  const crearNotaCredito      = (d)     => ejecutarCrud(() => axiosClient.post("/NotasCredito", d).then(r => r.data));
+  const actualizarNotaCredito = (id, d) => ejecutarCrud(() => axiosClient.put(`/NotasCredito/${id}`, d).then(r => r.data));
+  const eliminarNotaCredito   = (id)    => ejecutarCrud(() => axiosClient.delete(`/NotasCredito/${id}`));
 
-    const response = await axiosClient.post("/NotasCredito", notaData);
+  const crearNotaDebito       = (d)     => ejecutarCrud(() => axiosClient.post("/NotasDebito", d).then(r => r.data));
+  const actualizarNotaDebito  = (id, d) => ejecutarCrud(() => axiosClient.put(`/NotasDebito/${id}`, d).then(r => r.data));
+  const eliminarNotaDebito    = (id)    => ejecutarCrud(() => axiosClient.delete(`/NotasDebito/${id}`));
 
-    await cargarDatos();
-
-    return response.data;
-
-  };
-
-  const actualizarNotaCredito = async (id, notaData) => {
-
-    const response = await axiosClient.put(`/NotasCredito/${id}`, notaData);
-
-    await cargarDatos();
-
-    return response.data;
-
-  };
-
-  const eliminarNotaCredito = async (id) => {
-
-    await axiosClient.delete(`/NotasCredito/${id}`);
-
-    await cargarDatos();
-
-  };
-
-
-  // ================================
-  // CRUD NOTAS DÉBITO
-  // ================================
-
-  const crearNotaDebito = async (notaData) => {
-
-    const response = await axiosClient.post("/NotasDebito", notaData);
-
-    await cargarDatos();
-
-    return response.data;
-
-  };
-
-  const actualizarNotaDebito = async (id, notaData) => {
-
-    const response = await axiosClient.put(`/NotasDebito/${id}`, notaData);
-
-    await cargarDatos();
-
-    return response.data;
-
-  };
-
-  const eliminarNotaDebito = async (id) => {
-
-    await axiosClient.delete(`/NotasDebito/${id}`);
-
-    await cargarDatos();
-
-  };
-
-
-  // RETORNO DEL HOOK
   return {
-
-    // datos
-    notasCredito,
-    notasDebito,
-    facturas,
-    productos,
-
-    // estados
-    loading,
-    error,
-
-    // crédito
-    crearNotaCredito,
-    actualizarNotaCredito,
-    eliminarNotaCredito,
-
-    // débito
-    crearNotaDebito,
-    actualizarNotaDebito,
-    eliminarNotaDebito,
-
-    // general
+    notasCredito, notasDebito, facturas, productos,
+    clientes,      // ✅ NUEVO
+    loading, saving, error, errorCrud,
+    limpiarErrorCrud: () => setErrorCrud(null),
+    crearNotaCredito, actualizarNotaCredito, eliminarNotaCredito,
+    crearNotaDebito,  actualizarNotaDebito,  eliminarNotaDebito,
     recargarDatos: cargarDatos,
-
   };
-
 };

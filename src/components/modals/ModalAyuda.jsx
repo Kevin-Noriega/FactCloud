@@ -12,7 +12,7 @@ import {
   Telephone,
   ChatDots
 } from "react-bootstrap-icons";
-import "../../styles/ModalAyuda.css";
+import "../../styles/modals/ModalAyuda.css";
 import faqsAyuda from "../../utils/FAQS"
 
 function ModalAyuda({ isOpen, onClose }) {

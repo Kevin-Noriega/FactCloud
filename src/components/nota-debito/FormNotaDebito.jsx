@@ -3,15 +3,15 @@ import { Calendar3, XCircle, Trash, CheckCircle, XCircleFill, Paperclip } from "
 import SearchDrop from "../shared/SearchDrop";
 import "../../styles/pages/DocBase.css";
 
-const TIPOS_NC    = [{ value: "", label: "— Seleccionar —" }, { value: "devolucion", label: "Devolución" }, { value: "descuento", label: "Descuento" }, { value: "anulacion", label: "Anulación" }];
-const MOTIVOS_NC  = [{ value: "NC-1", label: "NC-1 — Devolución parcial" }, { value: "NC-2", label: "NC-2 — Anulación" }, { value: "NC-3", label: "NC-3 — Descuento" }, { value: "NC-4", label: "NC-4 — Ajuste precio" }];
+const TIPOS_ND    = [{ value: "", label: "— Seleccionar —" }, { value: "interes", label: "Intereses" }, { value: "gastos", label: "Gastos adicionales" }, { value: "ajuste", label: "Ajuste de precio" }];
+const MOTIVOS_ND  = [{ value: "ND-1", label: "ND-1 — Intereses" }, { value: "ND-2", label: "ND-2 — Gastos adicionales" }, { value: "ND-3", label: "ND-3 — Cambio de condiciones" }];
 const IMPUESTOS_C = [{ value: "", label: "—" }, { value: "IVA5", label: "IVA 5%" }, { value: "IVA19", label: "IVA 19%" }];
 const IMPUESTOS_R = [{ value: "", label: "—" }, { value: "RET2.5", label: "Ret. 2.5%" }, { value: "RET10", label: "Ret. 10%" }];
 const FORMAS_PAGO = [{ value: "", label: "Selecciona forma de pago" }, { value: "10", label: "Efectivo" }, { value: "42", label: "Transferencia bancaria" }, { value: "48", label: "Tarjeta de crédito" }, { value: "20", label: "Crédito" }];
 const ITEM_VACIO  = { productoId: "", descripcion: "", cantidad: 1, precioUnitario: 0, porcentajeDescuento: 0, tarifaIVA: 19, tarifaINC: 0, impuestoCargo: "", impuestoRetencion: "", unidadMedida: "Unidad" };
 
-export default function FormNotaCredito({
-  notaCredito, setNotaCredito,
+export default function FormNotaDebito({
+  notaDebito, setNotaDebito,
   productosSeleccionados = [], setProductosSeleccionados,
   formasPago = [], setFormasPago,
   facturaSeleccionada, setFacturaSeleccionada,
@@ -38,13 +38,13 @@ export default function FormNotaCredito({
     setFacturaSeleccionada(f);
     setFacturaBusqueda(f.numeroFactura);
     setClienteBusqueda(f.clienteNombre || "");
-    setNotaCredito(p => ({ ...p, facturaId: f.id }));
+    setNotaDebito(p => ({ ...p, facturaId: f.id }));
   };
   const limpiarFactura = () => {
     setFacturaSeleccionada(null);
     setFacturaBusqueda("");
     setClienteBusqueda("");
-    setNotaCredito(p => ({ ...p, facturaId: "" }));
+    setNotaDebito(p => ({ ...p, facturaId: "" }));
   };
 
   const addItem = () => setProductosSeleccionados(p => [...p, { ...ITEM_VACIO }]);
@@ -54,7 +54,7 @@ export default function FormNotaCredito({
   const handleProductoChange = (idx, val) => {
     if (val === "__CREAR__") { onCrearProducto?.(); return; }
     const prod = productos.find(p => String(p.id) === String(val));
-    updItem(idx, "productoId",    val);
+    updItem(idx, "productoId", val);
     if (prod) {
       updItem(idx, "precioUnitario", prod.precioUnitario ?? 0);
       updItem(idx, "descripcion",    prod.descripcion    ?? "");
@@ -82,7 +82,7 @@ export default function FormNotaCredito({
   return (
     <div className="doc-container">
       <div className="doc-titulo-row">
-        <h4 className="doc-titulo">{notaEditando ? "Editar nota crédito" : "Nueva nota crédito"}</h4>
+        <h4 className="doc-titulo">{notaEditando ? "Editar nota débito" : "Nueva nota débito (Ventas)"}</h4>
         <button type="button" className="doc-btn-secundario">Ver tutoriales ▾</button>
       </div>
 
@@ -101,7 +101,6 @@ export default function FormNotaCredito({
                 items={facturasFiltradas}
                 keyExtractor={f => f.id}
                 renderItem={f => (<><span className="fw-semibold">{f.numeroFactura}</span><span className="text-muted ms-2 small">{f.clienteNombre}</span></>)}
-                loading={false}
                 emptyLabel={facturas.length === 0 ? "Cargando facturas..." : `"${facturaBusqueda}" sin resultados`}
                 readOnly={!!facturaSeleccionada}
               />
@@ -110,9 +109,9 @@ export default function FormNotaCredito({
             <div className="doc-field">
               <label className="doc-label">Tipo</label>
               <select className="form-select form-select-sm"
-                value={notaCredito.tipo || ""}
-                onChange={e => setNotaCredito(p => ({ ...p, tipo: e.target.value }))}>
-                {TIPOS_NC.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                value={notaDebito.tipo || ""}
+                onChange={e => setNotaDebito(p => ({ ...p, tipo: e.target.value }))}>
+                {TIPOS_ND.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </div>
 
@@ -121,8 +120,8 @@ export default function FormNotaCredito({
               <SearchDrop
                 value={clienteBusqueda}
                 onChange={setClienteBusqueda}
-                onSelect={c => { setClienteBusqueda(c.nombre); setNotaCredito(p => ({ ...p, clienteId: c.id })); }}
-                onClear={!facturaSeleccionada ? () => { setClienteBusqueda(""); setNotaCredito(p => ({ ...p, clienteId: "" })); } : null}
+                onSelect={c => { setClienteBusqueda(c.nombre); setNotaDebito(p => ({ ...p, clienteId: c.id })); }}
+                onClear={!facturaSeleccionada ? () => { setClienteBusqueda(""); setNotaDebito(p => ({ ...p, clienteId: "" })); } : null}
                 placeholder="Buscar cliente..."
                 items={clientesFiltrados}
                 keyExtractor={c => c.id}
@@ -137,8 +136,8 @@ export default function FormNotaCredito({
             <div className="doc-field">
               <label className="doc-label">Contacto</label>
               <select className="form-select form-select-sm"
-                value={notaCredito.contactoId || ""}
-                onChange={e => { if (e.target.value === "__CREAR__") { onCrearContacto?.(); return; } setNotaCredito(p => ({ ...p, contactoId: e.target.value })); }}>
+                value={notaDebito.contactoId || ""}
+                onChange={e => { if (e.target.value === "__CREAR__") { onCrearContacto?.(); return; } setNotaDebito(p => ({ ...p, contactoId: e.target.value })); }}>
                 <option value="">— Sin contacto —</option>
                 <option disabled>──────────────</option>
                 <option value="__CREAR__" style={{ color: "#27ae60", fontWeight: 600 }}>➕ Agregar nuevo contacto</option>
@@ -149,9 +148,9 @@ export default function FormNotaCredito({
               <label className="doc-label">Fecha de elaboración</label>
               <div className="doc-fecha-wrap">
                 <input type="date" className="form-control form-control-sm"
-                  value={notaCredito.fechaElaboracion || ""}
-                  onChange={e => setNotaCredito(p => ({ ...p, fechaElaboracion: e.target.value }))} />
-                <button type="button" className="doc-icon-btn" onClick={() => setNotaCredito(p => ({ ...p, fechaElaboracion: "" }))}><XCircle size={13} /></button>
+                  value={notaDebito.fechaElaboracion || ""}
+                  onChange={e => setNotaDebito(p => ({ ...p, fechaElaboracion: e.target.value }))} />
+                <button type="button" className="doc-icon-btn" onClick={() => setNotaDebito(p => ({ ...p, fechaElaboracion: "" }))}><XCircle size={13} /></button>
                 <button type="button" className="doc-icon-btn"><Calendar3 size={13} /></button>
               </div>
             </div>
@@ -173,9 +172,9 @@ export default function FormNotaCredito({
             <div className="doc-field">
               <label className="doc-label">Motivo DIAN</label>
               <select className="form-select form-select-sm"
-                value={notaCredito.motivoDIAN || "NC-1"}
-                onChange={e => setNotaCredito(p => ({ ...p, motivoDIAN: e.target.value }))}>
-                {MOTIVOS_NC.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+                value={notaDebito.motivoDIAN || "ND-1"}
+                onChange={e => setNotaDebito(p => ({ ...p, motivoDIAN: e.target.value }))}>
+                {MOTIVOS_ND.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
               </select>
             </div>
           </div>
@@ -269,7 +268,7 @@ export default function FormNotaCredito({
         {/* ══ OBSERVACIONES ══ */}
         <div className="doc-observaciones">
           <h6 className="doc-section-title">Observaciones</h6>
-          <textarea className="form-control doc-textarea" rows={3} placeholder="Comentarios adicionales..." value={notaCredito.observaciones || ""} onChange={e => setNotaCredito(p => ({ ...p, observaciones: e.target.value }))} />
+          <textarea className="form-control doc-textarea" rows={3} placeholder="Comentarios adicionales..." value={notaDebito.observaciones || ""} onChange={e => setNotaDebito(p => ({ ...p, observaciones: e.target.value }))} />
           <label className="doc-adjuntar mt-2">
             <input type="file" className="d-none" onChange={e => setArchivo(e.target.files[0])} />
             <Paperclip size={14} />{archivo ? <span className="doc-archivo-nombre ms-1">{archivo.name}</span> : " Adjuntar soporte"}
@@ -283,7 +282,7 @@ export default function FormNotaCredito({
             {saving ? <><span className="spinner-border spinner-border-sm me-2" />Guardando...</> : "Guardar"}
           </button>
           <button type="submit" className="doc-btn-guardar-enviar" disabled={saving}
-            onClick={() => setNotaCredito(p => ({ ...p, enviar: true }))}>
+            onClick={() => setNotaDebito(p => ({ ...p, enviar: true }))}>
             {saving ? "Enviando..." : "Guardar y enviar"}
           </button>
         </div>

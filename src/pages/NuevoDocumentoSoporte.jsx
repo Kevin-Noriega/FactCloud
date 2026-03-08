@@ -1,469 +1,250 @@
-import { useEffect, useState } from "react";
-import { API_URL } from "../../api/config";
-import ModalDocumentoSoporte from "../dashboard/ModalDocumentoSoporte";
-import { 
-  FileEarmarkText, 
-  Eye, 
-  Pencil, 
-  Trash,
-  XCircle,
-  CheckCircleFill,
-  FileEarmarkPdf,
-  FileEarmarkCode,
-  Envelope
-} from "react-bootstrap-icons";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CheckCircleFill } from "react-bootstrap-icons";
+import { useDocumentoSoporte } from "../hooks/useDocumentoSoporte";
+import FormDocumentoSoporte from "../components/documento-soporte/FormDocumentoSoporte";
 
-function DocumentosSoporte() {
-  const [documentos, setDocumentos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [mensajeExito, setMensajeExito] = useState("");
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [documentoEditando, setDocumentoEditando] = useState(null);
-  const [documentoAEliminar, setDocumentoAEliminar] = useState(null);
-  const [documentoVer, setDocumentoVer] = useState(null);
-  const [buscador, setBuscador] = useState("");
-  const [filtro, setFiltro] = useState("recientes");
+const DOC_VACIO = {
+  tipo:             "",
+  proveedorId:      "",
+  proveedorNombre:  "",
+  contactoId:       "",
+  fechaElaboracion: new Date().toISOString().split("T")[0],
+  motivoDIAN:       "DS-1",
+  observaciones:    "",
+  enviar:           false,
+};
 
-  const filtrados = documentos
-    .filter((doc) => {
-      const query = buscador.trim().toLowerCase();
-      return (
-        !query ||
-        doc.numeroDocumento?.toLowerCase().includes(query) ||
-        doc.proveedorNombre?.toLowerCase().includes(query) ||
-        doc.cuds?.toLowerCase().includes(query)
-      );
-    })
-    .sort((a, b) => {
-      switch (filtro) {
-        case "recientes":
-          return new Date(b.fechaGeneracion) - new Date(a.fechaGeneracion);
-        case "antiguos":
-          return new Date(a.fechaGeneracion) - new Date(b.fechaGeneracion);
-        case "mayor":
-          return b.valorTotal - a.valorTotal;
-        case "menor":
-          return a.valorTotal - b.valorTotal;
-        default:
-          return 0;
-      }
+const ITEM_VACIO = {
+  productoId: "", descripcion: "", cantidad: 1, precioUnitario: 0,
+  porcentajeDescuento: 0, tarifaIVA: 19, tarifaINC: 0,
+  impuestoCargo: "", impuestoRetencion: "", unidadMedida: "Unidad",
+};
+
+export default function NuevoDocumentoSoporte() {
+  const navigate = useNavigate();
+
+  const {
+    proveedores  = [],
+    productos    = [],
+    loading,
+    error,
+    saving,
+    errorCrud,
+    limpiarErrorCrud,
+    crearDocumento,
+    recargarDatos,
+  } = useDocumentoSoporte();
+
+  const [documento,              setDocumento]              = useState({ ...DOC_VACIO });
+  const [productosSeleccionados, setProductosSeleccionados] = useState([{ ...ITEM_VACIO }]);
+  const [formasPago,             setFormasPago]             = useState([{ metodo: "10", valor: 0 }]);
+  const [mensajeExito,           setMensajeExito]           = useState("");
+
+  // ── Modales ──────────────────────────────────────────────────────
+  const [modalProveedor, setModalProveedor] = useState(false);
+  const [modalProducto,  setModalProducto]  = useState(false);
+  const [modalContacto,  setModalContacto]  = useState(false);
+
+  // ── Cálculos ─────────────────────────────────────────────────────
+  const calcularLinea = (item) => {
+    const cantidad   = parseFloat(item.cantidad)            || 0;
+    const precio     = parseFloat(item.precioUnitario)      || 0;
+    const descuento  = parseFloat(item.porcentajeDescuento) || 0;
+    const tarifaIVA  = parseFloat(item.tarifaIVA)           || 0;
+    const tarifaINC  = parseFloat(item.tarifaINC)           || 0;
+    const base       = cantidad * precio;
+    const valDesc    = base * (descuento / 100);
+    const neto       = base - valDesc;
+    return {
+      subtotalLinea:  base,
+      valorDescuento: valDesc,
+      baseImponible:  neto,
+      valorIVA:       neto * (tarifaIVA / 100),
+      valorINC:       neto * (tarifaINC / 100),
+      totalLinea:     neto + neto * (tarifaIVA / 100) + neto * (tarifaINC / 100),
+    };
+  };
+
+  const calcularTotales = () => {
+    let totalBruto = 0, totalDescuentos = 0, subtotal = 0, totalIVA = 0, totalINC = 0;
+    productosSeleccionados.forEach((item) => {
+      const l = calcularLinea(item);
+      totalBruto      += l.subtotalLinea;
+      totalDescuentos += l.valorDescuento;
+      subtotal        += l.baseImponible;
+      totalIVA        += l.valorIVA;
+      totalINC        += l.valorINC;
     });
+    const totalNeto = subtotal + totalIVA + totalINC;
+    return { totalBruto, totalDescuentos, subtotal, totalIVA, totalINC, totalNeto };
+  };
 
-  const fetchDocumentos = async () => {
+  // ── Validación ───────────────────────────────────────────────────
+  const validar = () => {
+    if (!documento.tipo) {
+      alert("Selecciona el tipo de documento"); return false;
+    }
+    if (!documento.proveedorId) {
+      alert("Debes seleccionar un proveedor"); return false;
+    }
+    if (productosSeleccionados.length === 0) {
+      alert("Agrega al menos un producto o servicio"); return false;
+    }
+    if (productosSeleccionados.some((p) => !p.productoId)) {
+      alert("Todos los ítems deben tener un producto seleccionado"); return false;
+    }
+    const { totalNeto } = calcularTotales();
+    const totalPagos    = formasPago.reduce((s, f) => s + (parseFloat(f.valor) || 0), 0);
+    if (Math.abs(totalNeto - totalPagos) > 0.01) {
+      alert(
+        `Las formas de pago no cuadran.\n` +
+        `Total Neto: $${totalNeto.toFixed(2)}\n` +
+        `Total Pagos: $${totalPagos.toFixed(2)}`
+      );
+      return false;
+    }
+    return true;
+  };
+
+  // ── Submit ───────────────────────────────────────────────────────
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validar()) return;
+
+    const user = JSON.parse(localStorage.getItem("usuario") || "{}");
+    if (!user?.id) { alert("No se pudo obtener el usuario."); return; }
+
+    const totales = calcularTotales();
+    const payload = {
+      usuarioId:        user.id,
+      proveedorId:      parseInt(documento.proveedorId),
+      numeroDocumento:  `DS-${Date.now()}`,
+      tipo:             documento.tipo,
+      motivoDIAN:       documento.motivoDIAN,
+      fechaElaboracion: documento.fechaElaboracion,
+      observaciones:    documento.observaciones || "",
+      estado:           "Pendiente",
+      ...totales,
+      detalleDocumentoSoporte: productosSeleccionados.map((item) => {
+        const l = calcularLinea(item);
+        return {
+          productoId:          parseInt(item.productoId),
+          descripcion:         item.descripcion    || "",
+          cantidad:            parseFloat(item.cantidad),
+          unidadMedida:        item.unidadMedida   || "Unidad",
+          precioUnitario:      parseFloat(item.precioUnitario),
+          porcentajeDescuento: parseFloat(item.porcentajeDescuento) || 0,
+          impuestoCargo:       item.impuestoCargo      || "",
+          impuestoRetencion:   item.impuestoRetencion  || "",
+          ...l,
+        };
+      }),
+      formasPago: formasPago.map((f) => ({
+        metodo: f.metodo,
+        valor:  parseFloat(f.valor),
+      })),
+    };
+
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/DocumentosSoporte`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-      const data = await response.json();
-      setDocumentos(data);
-      setError(null);
-    } catch (error) {
-      console.error("Error al cargar documentos soporte:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      await crearDocumento(payload);
+      setMensajeExito("Documento soporte creado exitosamente ✓");
+      setTimeout(() => navigate("/compras/documentos-soporte"), 1800);
+    } catch {
+      // errorCrud se setea en el hook
     }
   };
 
-  useEffect(() => {
-    fetchDocumentos();
-  }, []);
+  const handleCancel = () => navigate(-1);
 
-  const handleNuevoDocumento = () => {
-    setDocumentoEditando(null);
-    setMostrarModal(true);
+  // ── Reset ────────────────────────────────────────────────────────
+  const handleReset = () => {
+    setDocumento({ ...DOC_VACIO });
+    setProductosSeleccionados([{ ...ITEM_VACIO }]);
+    setFormasPago([{ metodo: "10", valor: 0 }]);
+    setMensajeExito("");
+    limpiarErrorCrud();
   };
 
-  const handleEditarDocumento = (doc) => {
-    setDocumentoEditando(doc);
-    setMostrarModal(true);
-  };
+  // ── Loading / Error ──────────────────────────────────────────────
+  if (loading) return (
+    <div className="text-center mt-5 pt-5">
+      <div className="spinner-border text-primary" role="status" style={{ width: 48, height: 48 }} />
+      <p className="mt-3 text-muted">Cargando datos...</p>
+    </div>
+  );
 
-  const handleCerrarModal = () => {
-    setMostrarModal(false);
-    setDocumentoEditando(null);
-  };
-
-  const handleGuardadoExitoso = (mensaje) => {
-    setMensajeExito(mensaje);
-    setTimeout(() => setMensajeExito(""), 3000);
-    fetchDocumentos();
-    handleCerrarModal();
-  };
-
-  const eliminarDocumento = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/DocumentosSoporte/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorTxt = await response.text();
-        throw new Error(errorTxt);
-      }
-
-      setMensajeExito("Documento soporte eliminado con éxito.");
-      setTimeout(() => setMensajeExito(""), 3000);
-      fetchDocumentos();
-    } catch (error) {
-      console.error("Error al eliminar documento:", error);
-      alert("Error al eliminar documento soporte: " + error.message);
-    }
-    setDocumentoAEliminar(null);
-  };
-
-  const descargarPDF = (id) => {
-    window.open(`${API_URL}/DocumentosSoporte/${id}/pdf`, "_blank");
-  };
-
-  const descargarXML = (id) => {
-    window.open(`${API_URL}/DocumentosSoporte/${id}/xml`, "_blank");
-  };
-
-  const enviarEmail = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/DocumentosSoporte/${id}/enviar-email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) throw new Error("Error al enviar email");
-      
-      setMensajeExito("Email enviado exitosamente");
-      setTimeout(() => setMensajeExito(""), 3000);
-    } catch (error) {
-      alert("Error al enviar email: " + error.message);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="container mt-5">
-        <div className="loading-container">
-          <div className="spinner-border text-success" role="status"></div>
-          <p className="mt-3">Cargando documentos soporte...</p>
-        </div>
+  if (error) return (
+    <div className="alert alert-danger m-4">
+      <h5>Error al cargar</h5>
+      <p className="mb-2">{error}</p>
+      <div className="d-flex gap-2">
+        <button className="btn btn-sm btn-primary" onClick={recargarDatos}>Reintentar</button>
+        <button className="btn btn-sm btn-outline-secondary" onClick={handleCancel}>Volver</button>
       </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container-error mt-5">
-        <div className="alert alert-danger">
-          <h5>Error al cargar documentos soporte</h5>
-          <p>{error}</p>
-          <button className="btn btn-primary mt-2" onClick={fetchDocumentos}>
-            Reintentar
-          </button>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div className="container-fluid mt-4 px-4">
-      <div className="header-card">
-        <div className="header-content">
-          <div className="header-text">
-            <h2 className="header-title">Documentos Soporte</h2>
-            <p className="header-subtitle">
-              Gestiona tus adquisiciones a proveedores no obligados a facturar
-            </p>
-          </div>
-          <div className="header-icon">
-            <FileEarmarkText size={80} />
-          </div>
-        </div>
-      </div>
-
-      <div className="nota-info">
-        <p>
-          <strong>Información importante:</strong> Los documentos soporte se utilizan 
-          para soportar adquisiciones realizadas a proveedores no obligados a expedir 
-          factura electrónica, cumpliendo con la normativa DIAN.
-        </p>
-      </div>
-
+    <div>
+      {/* ── Alerta éxito ── */}
       {mensajeExito && (
-        <div className="alert alert-success alert-dismissible fade show">
-          <CheckCircleFill size={20} className="me-2" />
-          <span>{mensajeExito}</span>
-          <button
-            className="btn-close"
-            onClick={() => setMensajeExito("")}
-          ></button>
+        <div className="alert alert-success alert-dismissible fade show m-3 d-flex align-items-center gap-2">
+          <CheckCircleFill size={18} />
+          {mensajeExito}
+          <button className="btn-close ms-auto" onClick={() => setMensajeExito("")} />
         </div>
       )}
 
-      <div className="opcions-header">
-        <button className="btn-crear" onClick={handleNuevoDocumento}>
-          Nuevo Documento Soporte
-        </button>
-        <div className="filters">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Buscar por número, proveedor o CUDS..."
-            value={buscador}
-            onChange={(e) => setBuscador(e.target.value)}
-          />
-          <select
-            className="form-select"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          >
-            <option value="recientes">Más recientes</option>
-            <option value="antiguos">Más antiguos</option>
-            <option value="mayor">Mayor valor</option>
-            <option value="menor">Menor valor</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="card">
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table">
-              <thead className="table-header">
-                <tr>
-                  <th>N° Documento</th>
-                  <th>CUDS</th>
-                  <th>Fecha</th>
-                  <th>Proveedor</th>
-                  <th>NIT Proveedor</th>
-                  <th>Descripción</th>
-                  <th>Valor Total</th>
-                  <th>Estado DIAN</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtrados.length === 0 ? (
-                  <tr>
-                    <td colSpan="9" className="text-center py-4 text-muted">
-                      No hay documentos soporte registrados
-                    </td>
-                  </tr>
-                ) : (
-                  filtrados.map((doc) => (
-                    <tr key={doc.id}>
-                      <td>
-                        <strong>{doc.numeroDocumento}</strong>
-                      </td>
-                      <td>
-                        <small className="text-muted">
-                          {doc.cuds?.substring(0, 20)}...
-                        </small>
-                      </td>
-                      <td>
-                        {new Date(doc.fechaGeneracion).toLocaleDateString("es-CO")}
-                      </td>
-                      <td>{doc.proveedorNombre}</td>
-                      <td>{doc.proveedorNit}</td>
-                      <td>{doc.descripcion}</td>
-                      <td>
-                        <strong>
-                          ${doc.valorTotal?.toLocaleString("es-CO")}
-                        </strong>
-                      </td>
-                      <td>
-                        <span
-                          className={`badge ${
-                            doc.estadoDian === "Aceptado"
-                              ? "bg-success"
-                              : doc.estadoDian === "Rechazado"
-                              ? "bg-danger"
-                              : "bg-warning"
-                          }`}
-                        >
-                          {doc.estadoDian || "Pendiente"}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="btn-group-acciones">
-                          <button
-                            className="btn btn-sm btn-ver"
-                            onClick={() => setDocumentoVer(doc)}
-                            title="Ver detalles"
-                          >
-                            <Eye size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-pdf"
-                            onClick={() => descargarPDF(doc.id)}
-                            title="Descargar PDF"
-                          >
-                            <FileEarmarkPdf size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-xml"
-                            onClick={() => descargarXML(doc.id)}
-                            title="Descargar XML"
-                          >
-                            <FileEarmarkCode size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-email"
-                            onClick={() => enviarEmail(doc.id)}
-                            title="Enviar por email"
-                          >
-                            <Envelope size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-editar"
-                            onClick={() => handleEditarDocumento(doc)}
-                            title="Editar"
-                            disabled={doc.estadoDian === "Aceptado"}
-                          >
-                            <Pencil size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-eliminar"
-                            onClick={() => setDocumentoAEliminar(doc)}
-                            title="Eliminar"
-                          >
-                            <Trash size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      {/* Modal Ver Detalles */}
-      {documentoVer && (
-        <div className="modal-overlay" onClick={() => setDocumentoVer(null)}>
-          <div className="modal-ver" onClick={(e) => e.stopPropagation()}>
-            <h5>
-              <FileEarmarkText className="me-2" />
-              Detalles del Documento Soporte
-            </h5>
-            <table className="table table-bordered">
-              <tbody>
-                <tr>
-                  <th>Número Documento</th>
-                  <td>{documentoVer.numeroDocumento}</td>
-                </tr>
-                <tr>
-                  <th>CUDS</th>
-                  <td><small>{documentoVer.cuds}</small></td>
-                </tr>
-                <tr>
-                  <th>Fecha Generación</th>
-                  <td>
-                    {new Date(documentoVer.fechaGeneracion).toLocaleString("es-CO")}
-                  </td>
-                </tr>
-                <tr>
-                  <th>Proveedor</th>
-                  <td>{documentoVer.proveedorNombre}</td>
-                </tr>
-                <tr>
-                  <th>NIT Proveedor</th>
-                  <td>{documentoVer.proveedorNit}</td>
-                </tr>
-                <tr>
-                  <th>Descripción</th>
-                  <td>{documentoVer.descripcion}</td>
-                </tr>
-                <tr>
-                  <th>Valor Total</th>
-                  <td>
-                    <strong>
-                      ${documentoVer.valorTotal?.toLocaleString("es-CO")}
-                    </strong>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Estado DIAN</th>
-                  <td>
-                    <span
-                      className={`badge ${
-                        documentoVer.estadoDian === "Aceptado"
-                          ? "bg-success"
-                          : documentoVer.estadoDian === "Rechazado"
-                          ? "bg-danger"
-                          : "bg-warning"
-                      }`}
-                    >
-                      {documentoVer.estadoDian || "Pendiente"}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div className="modal-actions">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setDocumentoVer(null)}
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
+      {/* ── Alerta error CRUD ── */}
+      {errorCrud && (
+        <div className="alert alert-danger alert-dismissible fade show m-3">
+          {errorCrud}
+          <button className="btn-close" onClick={limpiarErrorCrud} />
         </div>
       )}
 
-      {documentoAEliminar && (
-        <div className="modal-overlay" onClick={() => setDocumentoAEliminar(null)}>
-          <div className="modal-eliminar" onClick={(e) => e.stopPropagation()}>
-            <h5>¿Eliminar documento soporte?</h5>
-            <p className="text-center text-muted mb-4">
-              Esta acción no se puede deshacer. El documento{" "}
-              <strong>{documentoAEliminar.numeroDocumento}</strong> será eliminado
-              permanentemente.
-            </p>
-            <div className="modal-actions">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setDocumentoAEliminar(null)}
-              >
-                Cancelar
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => eliminarDocumento(documentoAEliminar.id)}
-              >
-                <Trash className="me-2" size={16} />
-                Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ── Formulario ── */}
+      <FormDocumentoSoporte
+        documento={documento}
+        setDocumento={setDocumento}
+        productosSeleccionados={productosSeleccionados}
+        setProductosSeleccionados={setProductosSeleccionados}
+        formasPago={formasPago}
+        setFormasPago={setFormasPago}
+        proveedores={proveedores}
+        productos={productos}
+        saving={saving}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        onCrearProveedor={() => setModalProveedor(true)}
+        onCrearProducto={() => setModalProducto(true)}
+        onCrearContacto={() => setModalContacto(true)}
+      />
 
-      {mostrarModal && (
-        <ModalDocumentoSoporte
-          isOpen={mostrarModal}
-          onClose={handleCerrarModal}
-          onSuccess={handleGuardadoExitoso}
-          documentoEditar={documentoEditando}
+      {/* ── Modales — descomenta cuando los tengas ──
+      {modalProveedor && (
+        <ModalCrearProveedor
+          open={modalProveedor}
+          onClose={() => setModalProveedor(false)}
+          onSuccess={() => { recargarDatos(); setModalProveedor(false); }}
         />
       )}
+      {modalProducto && (
+        <ModalCrearProducto
+          open={modalProducto}
+          onClose={() => setModalProducto(false)}
+          onSuccess={() => { recargarDatos(); setModalProducto(false); }}
+        />
+      )}
+      {modalContacto && (
+        <ModalCrearContacto
+          open={modalContacto}
+          onClose={() => setModalContacto(false)}
+          onSuccess={() => { recargarDatos(); setModalContacto(false); }}
+        />
+      )}
+      */}
     </div>
   );
 }
-
-export default DocumentosSoporte;

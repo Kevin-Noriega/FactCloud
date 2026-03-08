@@ -16,7 +16,7 @@ import {
   useMarcarTodasLeidas,
   useEliminarNotificacion,
 } from "../../hooks/useNotificaciones";
-import "../../styles/ModalNotificaciones.css";
+import "../../styles/modals/ModalNotificaciones.css";
 
 function ModalNotificaciones({ isOpen, onClose, buttonRef }) {
   const dropdownRef = useRef(null);

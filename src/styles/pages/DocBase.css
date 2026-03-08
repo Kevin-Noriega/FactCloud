@@ -1,0 +1,407 @@
+/* ============================================================
+   DOCBASE.CSS
+   ============================================================ */
+:root {
+  --doc-radius : 10px;
+  --doc-border : #e4e7ec;
+  --doc-bg     : #f8f9fb;
+  --doc-blue   : #1ab4c8;
+  --doc-green  : #27ae60;
+  --doc-red    : #e05c6a;
+  --doc-gray   : #6b7280;
+  --doc-shadow : 0 2px 12px rgba(0,0,0,0.07);
+}
+
+/* ── Contenedor ───────────────────────────────────────────── */
+.doc-container {
+  background   : #fff;
+  border-radius: var(--doc-radius);
+  padding      : 28px 32px 0;   /* ✅ sin padding-bottom extra */
+  box-shadow   : var(--doc-shadow);
+}
+
+/* ── Título ───────────────────────────────────────────────── */
+.doc-titulo-row {
+  display       : flex;
+  align-items   : center;
+  justify-content: space-between;
+  margin-bottom : 24px;
+  padding-bottom: 16px;
+  border-bottom : 2px solid #f0f2f5;
+}
+.doc-titulo {
+  font-size  : 1.35rem;
+  font-weight: 700;
+  color      : var(--doc-blue);
+  margin     : 0;
+}
+.doc-btn-secundario {
+  background   : none;
+  border       : 1.5px solid var(--doc-border);
+  border-radius: 6px;
+  padding      : 5px 14px;
+  font-size    : 0.82rem;
+  color        : var(--doc-gray);
+  cursor       : pointer;
+  transition   : all 0.15s;
+}
+.doc-btn-secundario:hover { border-color: var(--doc-blue); color: var(--doc-blue); }
+
+/* ── Header grid ──────────────────────────────────────────── */
+.doc-header-grid {
+  display              : grid;
+  grid-template-columns: 1fr 1fr;
+  gap                  : 0 48px;
+  margin-bottom        : 28px;
+}
+.doc-col { display: flex; flex-direction: column; }
+
+/* ── Campo ────────────────────────────────────────────────── */
+.doc-field {
+  display       : flex;
+  flex-direction: column;
+  margin-bottom : 14px;
+}
+.doc-label {
+  font-size     : 0.75rem;
+  font-weight   : 600;
+  color         : var(--doc-gray);
+  margin-bottom : 4px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.doc-label-req::after { content: " *"; color: var(--doc-red); }
+
+/* ── Search wrap ──────────────────────────────────────────── */
+.doc-search-wrap   { position: relative; display: flex; align-items: center; }
+.doc-search-wrap .form-control { padding-right: 28px; }
+.doc-search-icon   { position: absolute; right: 9px; color: #bbb; pointer-events: none; }
+.doc-icon-btn {
+  position  : absolute;
+  right     : 6px;
+  background: none;
+  border    : none;
+  padding   : 0;
+  color     : #bbb;
+  cursor    : pointer;
+  display   : flex;
+  align-items: center;
+  line-height: 1;
+}
+.doc-icon-btn:hover { color: var(--doc-red); }
+
+/* ── Dropdown ─────────────────────────────────────────────── */
+.doc-dropdown {
+  position  : absolute;
+  top       : calc(100% + 4px);
+  left      : 0;
+  right     : 0;
+  background: #fff;
+  border    : 1.5px solid var(--doc-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+  z-index   : 9999;
+  max-height: 280px;
+  overflow-y: auto;
+  animation : dropFade 0.12s ease;
+}
+@keyframes dropFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.doc-dropdown-item {
+  display    : flex;
+  align-items: center;
+  width      : 100%;
+  padding    : 9px 14px;
+  border     : none;
+  background : none;
+  text-align : left;
+  cursor     : pointer;
+  font-size  : 0.87rem;
+  color      : #333;
+  gap        : 6px;
+  transition : background 0.1s;
+}
+.doc-dropdown-item:hover { background: #f0f9fb; }
+.doc-select-empty {
+  padding    : 12px 14px;
+  font-size  : 0.84rem;
+  color      : #bbb;
+  text-align : center;
+  font-style : italic;
+}
+/* ✅ "Crear nuevo" — al final, siempre visible */
+.doc-dropdown-crear {
+  color      : var(--doc-green) !important;
+  font-weight: 600 !important;
+  background : #f6fef9 !important;
+  border-top : 1.5px solid #e6f4ea;
+}
+.doc-dropdown-crear:hover { background: #eafaf0 !important; }
+.doc-dropdown-divider { height: 1px; background: var(--doc-border); margin: 0; }
+
+/* ── Fecha ────────────────────────────────────────────────── */
+.doc-fecha-wrap { display: flex; align-items: center; gap: 4px; }
+.doc-fecha-wrap .form-control { flex: 1; }
+
+/* ── Sección título ───────────────────────────────────────── */
+.doc-section-title {
+  font-size  : 1rem;
+  font-weight: 700;
+  color      : var(--doc-blue);
+  margin-bottom: 12px;
+}
+
+/* ── Tabla ────────────────────────────────────────────────── */
+.doc-table-scroll {
+  width        : 100%;
+  overflow-x   : auto;
+  border-radius: 8px;
+  border       : 1.5px solid var(--doc-border);
+}
+.doc-tabla {
+  width           : 100%;
+  border-collapse : collapse;
+  font-size       : 0.85rem;
+  min-width       : 780px;
+}
+.doc-tabla thead tr  { background: #f4f6f9; }
+.doc-tabla th {
+  padding       : 10px 10px;
+  font-weight   : 700;
+  font-size     : 0.73rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color         : #555;
+  border-bottom : 2px solid var(--doc-border);
+  white-space   : nowrap;
+}
+.doc-tabla td {
+  padding       : 7px 8px;
+  border-bottom : 1px solid #f0f2f5;
+  vertical-align: middle;
+}
+.doc-tabla tbody tr:last-child td { border-bottom: none; }
+.doc-tabla tbody tr:hover          { background: #fafbfc; }
+.doc-th-num, .doc-td-num { width: 34px; text-align: center; color: #aaa; font-size: 0.77rem; }
+.doc-tabla-empty {
+  text-align : center;
+  color      : #bbb;
+  font-style : italic;
+  padding    : 28px 0 !important;
+  font-size  : 0.87rem;
+}
+.doc-num-input    { width: 80px !important; min-width: 60px !important; }
+.doc-select-item  { min-width: 100px; }
+
+/* ── Botón trash ──────────────────────────────────────────── */
+.doc-btn-trash {
+  background   : none;
+  border       : none;
+  color        : #ccc;
+  cursor       : pointer;
+  padding      : 4px 5px;
+  border-radius: 4px;
+  transition   : all 0.15s;
+  display      : flex;
+  align-items  : center;
+}
+.doc-btn-trash:hover:not(:disabled) { color: var(--doc-red); background: #fdf0f1; }
+.doc-btn-trash:disabled             { opacity: 0.3; cursor: not-allowed; }
+
+/* ── Formas de pago + totales ─────────────────────────────── */
+.doc-pago-totales {
+  display              : grid;
+  grid-template-columns: 1fr 300px;
+  gap                  : 32px;
+  margin-bottom        : 28px;
+  align-items          : start;
+}
+.doc-hr { height: 1px; background: var(--doc-border); margin: 10px 0; }
+.doc-pago-fila {
+  display              : grid;
+  grid-template-columns: 1fr 130px 34px;
+  gap                  : 8px;
+  align-items          : center;
+  margin-bottom        : 8px;
+}
+.doc-btn-agregar-pago {
+  background: none;
+  border    : none;
+  color     : var(--doc-green);
+  font-size : 0.84rem;
+  font-weight: 600;
+  cursor    : pointer;
+  padding   : 6px 0;
+  display   : inline-flex;
+  align-items: center;
+  gap       : 5px;
+}
+.doc-btn-agregar-pago:hover { text-decoration: underline; }
+.doc-total-pagos {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  margin-top     : 8px;
+}
+.doc-total-pagos-label { font-weight: 700; font-size: 0.94rem; }
+.doc-total-pagos-valor { display: flex; align-items: center; gap: 6px; font-size: 1.05rem; font-weight: 700; }
+.doc-check-ok  { color: var(--doc-green); }
+.doc-check-err { color: var(--doc-red);   }
+.doc-pagos-error { font-size: 0.79rem; color: var(--doc-red); margin: 4px 0 0; }
+
+/* ── Totales ──────────────────────────────────────────────── */
+.doc-totales {
+  background   : #f8f9fb;
+  border-radius: 10px;
+  padding      : 18px 20px;
+  border       : 1.5px solid var(--doc-border);
+}
+.doc-totales-fila {
+  display        : flex;
+  justify-content: space-between;
+  align-items    : center;
+  padding        : 6px 0;
+  font-size      : 0.9rem;
+  color          : #444;
+  border-bottom  : 1px solid #eee;
+}
+.doc-totales-fila:last-child { border-bottom: none; }
+.doc-totales-neto {
+  margin-top : 6px;
+  padding-top: 10px;
+  border-top : 2px solid var(--doc-border) !important;
+  font-size  : 1.05rem;
+  color      : #111;
+}
+
+/* ── Observaciones ────────────────────────────────────────── */
+.doc-observaciones { margin-bottom: 8px; }
+.doc-textarea { resize: vertical; min-height: 80px; font-size: 0.87rem; }
+.doc-adjuntar {
+  display     : inline-flex;
+  align-items : center;
+  gap         : 6px;
+  margin-top  : 8px;
+  font-size   : 0.81rem;
+  color       : var(--doc-gray);
+  cursor      : pointer;
+  padding     : 5px 10px;
+  border      : 1.5px dashed var(--doc-border);
+  border-radius: 6px;
+  transition  : all 0.15s;
+}
+.doc-adjuntar:hover { border-color: var(--doc-blue); color: var(--doc-blue); }
+.doc-archivo-nombre {
+  font-weight   : 600;
+  color         : var(--doc-blue);
+  max-width     : 180px;
+  overflow      : hidden;
+  text-overflow : ellipsis;
+  white-space   : nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ✅ FOOTER — sticky dentro del contenedor, NO toca el sidebar
+   ══════════════════════════════════════════════════════════ */
+.doc-footer {
+  position      : sticky;
+  bottom        : 0;
+  /* ✅ extiende hasta los bordes del padre (cancela el padding del container) */
+  margin        : 20px -32px 0;
+  padding       : 14px 32px;
+  background    : #fff;
+  border-top    : 1.5px solid var(--doc-border);
+  box-shadow    : 0 -4px 20px rgba(0,0,0,0.08);
+  z-index       : 100;
+  display       : flex;
+  align-items   : center;
+  justify-content: flex-end;
+  gap           : 10px;
+}
+
+.doc-btn-cancelar {
+  padding      : 9px 22px;
+  border       : 1.5px solid #ddd;
+  background   : #fff;
+  color        : #555;
+  font-weight  : 600;
+  font-size    : 0.9rem;
+  border-radius: 8px;
+  cursor       : pointer;
+  transition   : all 0.15s;
+}
+.doc-btn-cancelar:hover:not(:disabled) {
+  border-color: var(--doc-red); color: var(--doc-red); background: #fdf0f1;
+}
+.doc-btn-guardar {
+  padding      : 9px 22px;
+  border       : 1.5px solid var(--doc-blue);
+  background   : #f0f9fb;
+  color        : var(--doc-blue);
+  font-weight  : 700;
+  font-size    : 0.9rem;
+  border-radius: 8px;
+  cursor       : pointer;
+  transition   : all 0.15s;
+}
+.doc-btn-guardar:hover:not(:disabled) { background: var(--doc-blue); color: #fff; }
+.doc-btn-guardar-enviar {
+  padding      : 9px 22px;
+  border       : none;
+  background   : linear-gradient(135deg, #3ecf6e, #27ae60);
+  color        : #fff;
+  font-weight  : 700;
+  font-size    : 0.9rem;
+  border-radius: 8px;
+  cursor       : pointer;
+  box-shadow   : 0 3px 10px rgba(39,174,96,0.3);
+  transition   : all 0.15s;
+}
+.doc-btn-guardar-enviar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+  box-shadow: 0 4px 14px rgba(39,174,96,0.4);
+}
+.doc-btn-cancelar:disabled,
+.doc-btn-guardar:disabled,
+.doc-btn-guardar-enviar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Nota info ────────────────────────────────────────────── */
+.nota-info {
+  background   : #fffbeb;
+  border       : 1.5px solid #fde68a;
+  border-radius: 8px;
+  padding      : 12px 16px;
+  font-size    : 0.84rem;
+  color        : #78350f;
+}
+.nota-info p { margin: 0; }
+
+/* ── Badges ───────────────────────────────────────────────── */
+.ds-badge-dian {
+  display     : inline-flex;
+  align-items : center;
+  padding     : 3px 10px;
+  border-radius: 20px;
+  font-size   : 0.74rem;
+  font-weight : 600;
+  white-space : nowrap;
+}
+.ds-badge-aceptado  { background: #e6f4ea; color: #1e7e34; }
+.ds-badge-pendiente { background: #fff8e1; color: #b8860b; }
+.ds-badge-rechazado { background: #fdecea; color: #c0392b; }
+.ds-badge-enviado   { background: #e3f2fd; color: #1565c0; }
+
+/* ── Tabla dashboard ──────────────────────────────────────── */
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .doc-header-grid  { grid-template-columns: 1fr; }
+  .doc-pago-totales { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .doc-container { padding: 16px 16px 0; }
+  .doc-footer    { margin: 16px -16px 0; padding: 12px 16px; }
+  .doc-pago-fila { grid-template-columns: 1fr 100px 30px; }
+}
