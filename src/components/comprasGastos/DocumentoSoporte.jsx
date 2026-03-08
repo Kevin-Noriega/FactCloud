@@ -1,171 +1,172 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../../api/config";
-import ModalDocumentoSoporte from "../dashboard/ModalDocumentoSoporte";
-import { 
-  FileEarmarkText, 
-  Eye, 
-  Pencil, 
-  Trash,
-  XCircle,
+import ModalDocumentoSoporte from "../modals/ModalDocumentoSoporte";
+import {
+  Eye, Pencil, Trash,
   CheckCircleFill,
-  FileEarmarkPdf,
-  FileEarmarkCode,
-  Envelope
+  FileEarmarkPdf, FileEarmarkCode,
+  Envelope, FileEarmarkExcel,
+  Search, Calendar3, XCircle,
 } from "react-bootstrap-icons";
+import {
+  ANOS,
+  PERIODOS,
+  TIPOS_TRANSACCION,
+  OPCIONES_DIAN,
+} from "../../constants/documentoSoporte";
+import { calcularFechasPorPeriodo } from "../../utils/calcularFechas";
+import "../../styles/ComprasGastos/DocumentoSoporte.css";
+import {useNavigate } from "react-router-dom";
 
 function DocumentosSoporte() {
-  const [documentos, setDocumentos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [mensajeExito, setMensajeExito] = useState("");
-  const [mostrarModal, setMostrarModal] = useState(false);
+  const [documentos, setDocumentos]               = useState([]);
+  const [loading, setLoading]                     = useState(true);
+  const [error, setError]                         = useState(null);
+  const [mensajeExito, setMensajeExito]           = useState("");
+  const [mostrarModal, setMostrarModal]           = useState(false);
   const [documentoEditando, setDocumentoEditando] = useState(null);
   const [documentoAEliminar, setDocumentoAEliminar] = useState(null);
-  const [documentoVer, setDocumentoVer] = useState(null);
-  const [buscador, setBuscador] = useState("");
-  const [filtro, setFiltro] = useState("recientes");
+  const [documentoVer, setDocumentoVer]           = useState(null);
+  const [filtrosVisibles, setFiltrosVisibles]     = useState(true);
+  const navigate = useNavigate();
 
-  const filtrados = documentos
-    .filter((doc) => {
-      const query = buscador.trim().toLowerCase();
-      return (
-        !query ||
-        doc.numeroDocumento?.toLowerCase().includes(query) ||
-        doc.proveedorNombre?.toLowerCase().includes(query) ||
-        doc.cuds?.toLowerCase().includes(query)
-      );
-    })
-    .sort((a, b) => {
-      switch (filtro) {
-        case "recientes":
-          return new Date(b.fechaGeneracion) - new Date(a.fechaGeneracion);
-        case "antiguos":
-          return new Date(a.fechaGeneracion) - new Date(b.fechaGeneracion);
-        case "mayor":
-          return b.valorTotal - a.valorTotal;
-        case "menor":
-          return a.valorTotal - b.valorTotal;
-        default:
-          return 0;
+  // ── Estado de filtros ─────────────────────────────────────────
+  const [filtros, setFiltros] = useState(() => {
+    const fechas = calcularFechasPorPeriodo("15dias", new Date().getFullYear());
+    return {
+      proveedor:        "",
+      tipoTransaccion:  "",
+      facturaProveedor: "",
+      creadoPor:        "",
+      envioDian:        "",
+      ano:              new Date().getFullYear(),
+      periodo:          "15dias",
+      fechaDesde:       fechas?.desde || "",
+      fechaHasta:       fechas?.hasta || "",
+    };
+  });
+
+  // ── Manejo de cambio de filtros ───────────────────────────────
+  const handleFiltroChange = (campo, valor) => {
+    setFiltros((prev) => {
+      const nuevo = { ...prev, [campo]: valor };
+
+      if (
+        (campo === "periodo" && valor !== "rango") ||
+        (campo === "ano" && prev.periodo !== "rango")
+      ) {
+        const anoRef = campo === "ano" ? valor : prev.ano;
+        const perRef = campo === "periodo" ? valor : prev.periodo;
+        const fechas = calcularFechasPorPeriodo(perRef, anoRef);
+        if (fechas) {
+          nuevo.fechaDesde = fechas.desde;
+          nuevo.fechaHasta = fechas.hasta;
+        }
       }
-    });
 
+      return nuevo;
+    });
+  };
+
+  const limpiarFiltros = () => {
+    const fechas = calcularFechasPorPeriodo("15dias", new Date().getFullYear());
+    setFiltros({
+      proveedor: "", tipoTransaccion: "", facturaProveedor: "",
+      creadoPor: "", envioDian: "",
+      ano:        new Date().getFullYear(),
+      periodo:    "15dias",
+      fechaDesde: fechas?.desde || "",
+      fechaHasta: fechas?.hasta || "",
+    });
+  };
+
+  // ── Fetch documentos con filtros ──────────────────────────────
   const fetchDocumentos = async () => {
+    setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/DocumentosSoporte`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const token  = localStorage.getItem("token");
+      const params = new URLSearchParams();
+
+      if (filtros.proveedor)        params.append("proveedor",        filtros.proveedor);
+      if (filtros.tipoTransaccion)  params.append("tipoTransaccion",  filtros.tipoTransaccion);
+      if (filtros.facturaProveedor) params.append("facturaProveedor", filtros.facturaProveedor);
+      if (filtros.creadoPor)        params.append("creadoPor",        filtros.creadoPor);
+      if (filtros.envioDian)        params.append("envioDian",        filtros.envioDian);
+      if (filtros.fechaDesde)       params.append("fechaDesde",       filtros.fechaDesde);
+      if (filtros.fechaHasta)       params.append("fechaHasta",       filtros.fechaHasta);
+
+      const res = await fetch(`${API_URL}/DocumentosSoporte?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-      const data = await response.json();
-      setDocumentos(data);
+      if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+      setDocumentos(await res.json());
       setError(null);
-    } catch (error) {
-      console.error("Error al cargar documentos soporte:", error);
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { fetchDocumentos(); }, []);
+
+  const handleBuscar = (e) => {
+    e.preventDefault();
     fetchDocumentos();
-  }, []);
-
-  const handleNuevoDocumento = () => {
-    setDocumentoEditando(null);
-    setMostrarModal(true);
   };
 
-  const handleEditarDocumento = (doc) => {
-    setDocumentoEditando(doc);
-    setMostrarModal(true);
-  };
-
-  const handleCerrarModal = () => {
-    setMostrarModal(false);
-    setDocumentoEditando(null);
-  };
-
+  // ── Guardado exitoso ──────────────────────────────────────────
   const handleGuardadoExitoso = (mensaje) => {
     setMensajeExito(mensaje);
     setTimeout(() => setMensajeExito(""), 3000);
     fetchDocumentos();
-    handleCerrarModal();
+    setMostrarModal(false);
+    setDocumentoEditando(null);
   };
 
+  // ── Eliminar ──────────────────────────────────────────────────
   const eliminarDocumento = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/DocumentosSoporte/${id}`, {
+      const res = await fetch(`${API_URL}/DocumentosSoporte/${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (!response.ok) {
-        const errorTxt = await response.text();
-        throw new Error(errorTxt);
-      }
-
+      if (!res.ok) throw new Error(await res.text());
       setMensajeExito("Documento soporte eliminado con éxito.");
       setTimeout(() => setMensajeExito(""), 3000);
       fetchDocumentos();
-    } catch (error) {
-      console.error("Error al eliminar documento:", error);
-      alert("Error al eliminar documento soporte: " + error.message);
+    } catch (err) {
+      alert("Error al eliminar: " + err.message);
     }
     setDocumentoAEliminar(null);
   };
 
-  const descargarPDF = (id) => {
-    window.open(`${API_URL}/DocumentosSoporte/${id}/pdf`, "_blank");
-  };
-
-  const descargarXML = (id) => {
-    window.open(`${API_URL}/DocumentosSoporte/${id}/xml`, "_blank");
-  };
+  // ── Descargas / Email ─────────────────────────────────────────
+  const descargarPDF  = (id) => window.open(`${API_URL}/DocumentosSoporte/${id}/pdf`,  "_blank");
+  const descargarXML  = (id) => window.open(`${API_URL}/DocumentosSoporte/${id}/xml`,  "_blank");
+  const exportarExcel = ()   => window.open(`${API_URL}/DocumentosSoporte/exportar-excel`, "_blank");
 
   const enviarEmail = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/DocumentosSoporte/${id}/enviar-email`, {
+      const res = await fetch(`${API_URL}/DocumentosSoporte/${id}/enviar-email`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (!response.ok) throw new Error("Error al enviar email");
-      
+      if (!res.ok) throw new Error("Error al enviar email");
       setMensajeExito("Email enviado exitosamente");
       setTimeout(() => setMensajeExito(""), 3000);
-    } catch (error) {
-      alert("Error al enviar email: " + error.message);
+    } catch (err) {
+      alert(err.message);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="container mt-5">
-        <div className="loading-container">
-          <div className="spinner-border text-primary" role="status"></div>
-          <p className="mt-3">Cargando datos...</p>
-        </div>
-      </div>
-    );
-  }
-
+  // ── Error de carga ────────────────────────────────────────────
   if (error) {
     return (
-      <div className="container-error mt-5">
+      <div className="container mt-5">
         <div className="alert alert-danger">
           <h5>Error al cargar documentos soporte</h5>
           <p>{error}</p>
@@ -178,227 +179,349 @@ function DocumentosSoporte() {
   }
 
   return (
-    <div className="container-fluid mt-4 px-4">
+    <div className="ds-container">
 
+      {/* ── Alerta éxito ── */}
       {mensajeExito && (
-        <div className="alert alert-success alert-dismissible fade show">
-          <CheckCircleFill size={20} className="me-2" />
-          <span>{mensajeExito}</span>
-          <button
-            className="btn-close"
-            onClick={() => setMensajeExito("")}
-          ></button>
+        <div className="alert alert-success alert-dismissible fade show mb-3">
+          <CheckCircleFill size={18} className="me-2" />
+          {mensajeExito}
+          <button className="btn-close" onClick={() => setMensajeExito("")} />
         </div>
       )}
 
-      <div className="opcions-header">
-       
-        <div className="filters">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Buscar por número, proveedor o CUDS..."
-            value={buscador}
-            onChange={(e) => setBuscador(e.target.value)}
-          />
-          <select
-            className="form-select"
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          >
-            <option value="recientes">Más recientes</option>
-            <option value="antiguos">Más antiguos</option>
-            <option value="mayor">Mayor valor</option>
-            <option value="menor">Menor valor</option>
-          </select>
-        </div>
-         <button className="btn-crear" onClick={handleNuevoDocumento}>
-          Nuevo Documento Soporte
-        </button>
-      </div>
+      {/* ── Toggle filtros ── */}
+      <button
+        className="ds-toggle-filtros"
+        onClick={() => setFiltrosVisibles((v) => !v)}
+      >
+      {filtrosVisibles ? "Ocultar" : "Mostrar"} criterios de búsqueda
+      </button>
 
-      <div className="card">
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead className="table-header">
+      {/* ── Panel filtros ── */}
+      {filtrosVisibles && (
+        <form className="ds-filtros-panel" onSubmit={handleBuscar}>
+          <div className="ds-filtros-grid">
+
+            {/* ── Columna izquierda ── */}
+            <div className="ds-filtros-col">
+
+              {/* Proveedor */}
+              <div className="ds-filtro-fila">
+                <label className="ds-filtro-label">Proveedor</label>
+                <div className="ds-input-icono">
+                  <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    placeholder="Buscar"
+                    value={filtros.proveedor}
+                    onChange={(e) => handleFiltroChange("proveedor", e.target.value)}
+                  />
+                  <Search size={14} className="ds-icono-buscar" />
+                </div>
+              </div>
+
+              {/* Tipo de transacción */}
+              <div className="ds-filtro-fila">
+                <label className="ds-filtro-label">Tipo de transacción</label>
+                <select
+                  className="form-select form-select-sm"
+                  value={filtros.tipoTransaccion}
+                  onChange={(e) => handleFiltroChange("tipoTransaccion", e.target.value)}
+                >
+                  {TIPOS_TRANSACCION.map((t) => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Factura proveedor */}
+              <div className="ds-filtro-fila">
+                <label className="ds-filtro-label">Factura proveedor</label>
+                <div className="ds-input-icono">
+                  <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    placeholder="Buscar"
+                    value={filtros.facturaProveedor}
+                    onChange={(e) => handleFiltroChange("facturaProveedor", e.target.value)}
+                  />
+                  <Search size={14} className="ds-icono-buscar" />
+                </div>
+              </div>
+            </div>
+
+            {/* ── Columna derecha ── */}
+            <div className="ds-filtros-col">
+
+              {/* Fecha elaboración */}
+              <div className="ds-filtro-fila ds-filtro-fecha">
+                <label className="ds-filtro-label">Fecha elaboración</label>
+                <div className="ds-fecha-controles">
+                  <select
+                    className="form-select form-select-sm ds-select-ano"
+                    value={filtros.ano}
+                    onChange={(e) => handleFiltroChange("ano", Number(e.target.value))}
+                  >
+                    {ANOS.map((a) => (
+                      <option key={a} value={a}>{a}</option>
+                    ))}
+                  </select>
+                  <select
+                    className="form-select form-select-sm ds-select-periodo"
+                    value={filtros.periodo}
+                    onChange={(e) => handleFiltroChange("periodo", e.target.value)}
+                  >
+                    {PERIODOS.map((p) => (
+                      <option key={p.value} value={p.value}>{p.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="ds-fecha-rangos">
+                  <div className="ds-fecha-input">
+                    <input
+                      type="date"
+                      className="form-control form-control-sm"
+                      value={filtros.fechaDesde}
+                      onChange={(e) => {
+                        handleFiltroChange("fechaDesde", e.target.value);
+                        handleFiltroChange("periodo", "rango");
+                      }}
+                    />
+                    <button type="button" className="ds-fecha-clear"
+                      onClick={() => handleFiltroChange("fechaDesde", "")}>
+                      <XCircle size={13} />
+                    </button>
+                    <button type="button" className="ds-fecha-calendar">
+                      <Calendar3 size={13} />
+                    </button>
+                  </div>
+                  <div className="ds-fecha-input">
+                    <input
+                      type="date"
+                      className="form-control form-control-sm"
+                      value={filtros.fechaHasta}
+                      onChange={(e) => {
+                        handleFiltroChange("fechaHasta", e.target.value);
+                        handleFiltroChange("periodo", "rango");
+                      }}
+                    />
+                    <button type="button" className="ds-fecha-clear"
+                      onClick={() => handleFiltroChange("fechaHasta", "")}>
+                      <XCircle size={13} />
+                    </button>
+                    <button type="button" className="ds-fecha-calendar">
+                      <Calendar3 size={13} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Creado por */}
+              <div className="ds-filtro-fila">
+                <label className="ds-filtro-label">Creado por</label>
+                <div className="ds-input-icono">
+                  <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    placeholder="Buscar"
+                    value={filtros.creadoPor}
+                    onChange={(e) => handleFiltroChange("creadoPor", e.target.value)}
+                  />
+                  <Search size={14} className="ds-icono-buscar" />
+                </div>
+              </div>
+
+              {/* Envío a la DIAN */}
+              <div className="ds-filtro-fila">
+                <label className="ds-filtro-label">Envío a la Dian</label>
+                <select
+                  className="form-select form-select-sm"
+                  value={filtros.envioDian}
+                  onChange={(e) => handleFiltroChange("envioDian", e.target.value)}
+                >
+                  {OPCIONES_DIAN.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Botones filtros */}
+          <div className="ds-filtros-acciones">
+            <button type="submit" className="ds-btn-buscar">Buscar</button>
+            <button type="button" className="ds-btn-limpiar" onClick={limpiarFiltros}>
+              Limpiar filtros
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* ── Tabla ── */}
+      <div className="ds-tabla-wrapper">
+
+        {/* Barra top: botón nuevo + exportar */}
+        <div className="ds-tabla-topbar">
+          
+          <button className="ds-btn-excel" onClick={exportarExcel} title="Exportar a Excel">
+            <FileEarmarkExcel size={18} />
+          </button>
+          <button className="btn-crear"
+            onClick={() => navigate('/nuevo-documento-soporte')}>
+            Nuevo Documento Soporte
+          </button>
+        </div>
+
+        <div className="table-responsive">
+          <table className="table ds-tabla mb-0">
+            <thead>
+              <tr>
+                <th>Tipo de transacción</th>
+                <th>Comprobante</th>
+                <th>Factura proveedor</th>
+                <th>Fecha elaboración</th>
+                <th>Identificación</th>
+                <th>Sucursal</th>
+                <th>Proveedor</th>
+                <th>Estado envío de correo</th>
+                <th className="text-end">Valor</th>
+                <th>Moneda</th>
+                <th>Envío a la Dian</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
                 <tr>
-                  <th>N° Documento</th>
-                  <th>CUDS</th>
-                  <th>Fecha</th>
-                  <th>Proveedor</th>
-                  <th>NIT Proveedor</th>
-                  <th>Descripción</th>
-                  <th>Valor Total</th>
-                  <th>Estado DIAN</th>
-                  <th>Acciones</th>
+                  <td colSpan="12" className="text-center py-5">
+                    <div className="spinner-border spinner-border-sm text-primary me-2" />
+                    Cargando...
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filtrados.length === 0 ? (
-                  <tr>
-                    <td colSpan="9" className="text-center py-4 text-muted">
-                      No hay documentos soporte registrados
+              ) : documentos.length === 0 ? (
+                <tr>
+                  <td colSpan="12" className="ds-empty">
+                    No se encontraron resultados para tu búsqueda
+                  </td>
+                </tr>
+              ) : (
+                documentos.map((doc) => (
+                  <tr key={doc.id}>
+                    <td><small>{doc.tipoTransaccion || "—"}</small></td>
+                    <td><strong>{doc.numeroDocumento}</strong></td>
+                    <td><small>{doc.facturaProveedor || "—"}</small></td>
+                    <td>
+                      <small>
+                        {doc.fechaGeneracion
+                          ? new Date(doc.fechaGeneracion).toLocaleDateString("es-CO")
+                          : "—"}
+                      </small>
+                    </td>
+                    <td><small>{doc.proveedorNit || "—"}</small></td>
+                    <td><small>{doc.sucursal || "—"}</small></td>
+                    <td>{doc.proveedorNombre}</td>
+                    <td>
+                      <span className={`ds-badge-correo ${
+                        doc.estadoCorreo === "Enviado"  ? "ds-badge-enviado"  :
+                        doc.estadoCorreo === "Error"    ? "ds-badge-error"    :
+                        "ds-badge-pendiente"
+                      }`}>
+                        {doc.estadoCorreo || "Pendiente"}
+                      </span>
+                    </td>
+                    <td className="text-end">
+                      <strong>${doc.valorTotal?.toLocaleString("es-CO") ?? "0"}</strong>
+                    </td>
+                    <td><small>{doc.moneda || "COP"}</small></td>
+                    <td>
+                      <span className={`ds-badge-dian ${
+                        doc.estadoDian === "Aceptado"  ? "ds-badge-aceptado"  :
+                        doc.estadoDian === "Rechazado" ? "ds-badge-rechazado" :
+                        "ds-badge-pendiente"
+                      }`}>
+                        {doc.estadoDian || "Pendiente"}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="ds-acciones">
+                        <button className="ds-btn-accion ds-btn-ver"
+                          onClick={() => setDocumentoVer(doc)} title="Ver">
+                          <Eye size={14} />
+                        </button>
+                        <button className="ds-btn-accion ds-btn-pdf"
+                          onClick={() => descargarPDF(doc.id)} title="PDF">
+                          <FileEarmarkPdf size={14} />
+                        </button>
+                        <button className="ds-btn-accion ds-btn-xml"
+                          onClick={() => descargarXML(doc.id)} title="XML">
+                          <FileEarmarkCode size={14} />
+                        </button>
+                        <button className="ds-btn-accion ds-btn-email"
+                          onClick={() => enviarEmail(doc.id)} title="Email">
+                          <Envelope size={14} />
+                        </button>
+                        <button className="ds-btn-accion ds-btn-editar"
+                          onClick={() => { setDocumentoEditando(doc); setMostrarModal(true); }}
+                          title="Editar"
+                          disabled={doc.estadoDian === "Aceptado"}>
+                          <Pencil size={14} />
+                        </button>
+                        <button className="ds-btn-accion ds-btn-eliminar-tbl"
+                          onClick={() => setDocumentoAEliminar(doc)} title="Eliminar">
+                          <Trash size={14} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                ) : (
-                  filtrados.map((doc) => (
-                    <tr key={doc.id}>
-                      <td>
-                        <strong>{doc.numeroDocumento}</strong>
-                      </td>
-                      <td>
-                        <small className="text-muted">
-                          {doc.cuds?.substring(0, 20)}...
-                        </small>
-                      </td>
-                      <td>
-                        {new Date(doc.fechaGeneracion).toLocaleDateString("es-CO")}
-                      </td>
-                      <td>{doc.proveedorNombre}</td>
-                      <td>{doc.proveedorNit}</td>
-                      <td>{doc.descripcion}</td>
-                      <td>
-                        <strong>
-                          ${doc.valorTotal?.toLocaleString("es-CO")}
-                        </strong>
-                      </td>
-                      <td>
-                        <span
-                          className={`badge ${
-                            doc.estadoDian === "Aceptado"
-                              ? "bg-success"
-                              : doc.estadoDian === "Rechazado"
-                              ? "bg-danger"
-                              : "bg-warning"
-                          }`}
-                        >
-                          {doc.estadoDian || "Pendiente"}
-                        </span>
-                      </td>
-                      <td>
-                        <div className="btn-group-acciones">
-                          <button
-                            className="btn btn-sm btn-ver"
-                            onClick={() => setDocumentoVer(doc)}
-                            title="Ver detalles"
-                          >
-                            <Eye size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-pdf"
-                            onClick={() => descargarPDF(doc.id)}
-                            title="Descargar PDF"
-                          >
-                            <FileEarmarkPdf size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-xml"
-                            onClick={() => descargarXML(doc.id)}
-                            title="Descargar XML"
-                          >
-                            <FileEarmarkCode size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-email"
-                            onClick={() => enviarEmail(doc.id)}
-                            title="Enviar por email"
-                          >
-                            <Envelope size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-editar"
-                            onClick={() => handleEditarDocumento(doc)}
-                            title="Editar"
-                            disabled={doc.estadoDian === "Aceptado"}
-                          >
-                            <Pencil size={16} />
-                          </button>
-                          <button
-                            className="btn btn-sm btn-eliminar"
-                            onClick={() => setDocumentoAEliminar(doc)}
-                            title="Eliminar"
-                          >
-                            <Trash size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* Modal Ver Detalles */}
+      {/* ── Modal Ver detalles ── */}
       {documentoVer && (
-        <div className="modal-overlay" onClick={() => setDocumentoVer(null)}>
-          <div className="modal-ver" onClick={(e) => e.stopPropagation()}>
-            <h5>
-              <FileEarmarkText className="me-2" />
-              Detalles del Documento Soporte
-            </h5>
-            <table className="table table-bordered">
-              <tbody>
-                <tr>
-                  <th>Número Documento</th>
-                  <td>{documentoVer.numeroDocumento}</td>
-                </tr>
-                <tr>
-                  <th>CUDS</th>
-                  <td><small>{documentoVer.cuds}</small></td>
-                </tr>
-                <tr>
-                  <th>Fecha Generación</th>
-                  <td>
-                    {new Date(documentoVer.fechaGeneracion).toLocaleString("es-CO")}
-                  </td>
-                </tr>
-                <tr>
-                  <th>Proveedor</th>
-                  <td>{documentoVer.proveedorNombre}</td>
-                </tr>
-                <tr>
-                  <th>NIT Proveedor</th>
-                  <td>{documentoVer.proveedorNit}</td>
-                </tr>
-                <tr>
-                  <th>Descripción</th>
-                  <td>{documentoVer.descripcion}</td>
-                </tr>
-                <tr>
-                  <th>Valor Total</th>
-                  <td>
-                    <strong>
-                      ${documentoVer.valorTotal?.toLocaleString("es-CO")}
-                    </strong>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Estado DIAN</th>
-                  <td>
-                    <span
-                      className={`badge ${
-                        documentoVer.estadoDian === "Aceptado"
-                          ? "bg-success"
-                          : documentoVer.estadoDian === "Rechazado"
-                          ? "bg-danger"
-                          : "bg-warning"
-                      }`}
-                    >
-                      {documentoVer.estadoDian || "Pendiente"}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div className="modal-actions">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setDocumentoVer(null)}
-              >
+        <div className="ds-modal-overlay" onClick={() => setDocumentoVer(null)}>
+          <div className="ds-modal-ver" onClick={(e) => e.stopPropagation()}>
+            <div className="ds-modal-header">
+              <h6 className="mb-0">Detalles del Documento Soporte</h6>
+              <button className="btn-close btn-close-sm" onClick={() => setDocumentoVer(null)} />
+            </div>
+            <div className="ds-modal-body">
+              <table className="table table-sm table-borderless">
+                <tbody>
+                  {[
+                    ["Número Documento", documentoVer.numeroDocumento],
+                    ["CUDS",            <small key="cuds">{documentoVer.cuds}</small>],
+                    ["Fecha Generación", documentoVer.fechaGeneracion
+                      ? new Date(documentoVer.fechaGeneracion).toLocaleString("es-CO") : "—"],
+                    ["Proveedor",       documentoVer.proveedorNombre],
+                    ["NIT Proveedor",   documentoVer.proveedorNit],
+                    ["Descripción",     documentoVer.descripcion],
+                    ["Valor Total",     <strong key="val">${documentoVer.valorTotal?.toLocaleString("es-CO")}</strong>],
+                    ["Estado DIAN", (
+                      <span key="dian" className={`ds-badge-dian ${
+                        documentoVer.estadoDian === "Aceptado"  ? "ds-badge-aceptado"  :
+                        documentoVer.estadoDian === "Rechazado" ? "ds-badge-rechazado" :
+                        "ds-badge-pendiente"
+                      }`}>
+                        {documentoVer.estadoDian || "Pendiente"}
+                      </span>
+                    )],
+                  ].map(([key, val]) => (
+                    <tr key={key}>
+                      <th className="text-muted fw-normal" style={{ width: "160px" }}>{key}</th>
+                      <td>{val}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="ds-modal-footer">
+              <button className="btn btn-sm btn-outline-secondary"
+                onClick={() => setDocumentoVer(null)}>
                 Cerrar
               </button>
             </div>
@@ -406,42 +529,37 @@ function DocumentosSoporte() {
         </div>
       )}
 
+      {/* ── Modal Confirmar eliminar ── */}
       {documentoAEliminar && (
-        <div className="modal-overlay" onClick={() => setDocumentoAEliminar(null)}>
-          <div className="modal-eliminar" onClick={(e) => e.stopPropagation()}>
-            <h5>¿Eliminar documento soporte?</h5>
-            <p className="text-center text-muted mb-4">
+        <div className="ds-modal-overlay" onClick={() => setDocumentoAEliminar(null)}>
+          <div className="ds-modal-eliminar" onClick={(e) => e.stopPropagation()}>
+            <h6 className="mb-3">¿Eliminar documento soporte?</h6>
+            <p className="text-muted small text-center mb-4">
               Esta acción no se puede deshacer. El documento{" "}
-              <strong>{documentoAEliminar.numeroDocumento}</strong> será eliminado
-              permanentemente.
+              <strong>{documentoAEliminar.numeroDocumento}</strong> será eliminado permanentemente.
             </p>
-            <div className="modal-actions">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={() => setDocumentoAEliminar(null)}
-              >
+            <div className="ds-modal-footer">
+              <button className="btn btn-sm btn-outline-secondary"
+                onClick={() => setDocumentoAEliminar(null)}>
                 Cancelar
               </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => eliminarDocumento(documentoAEliminar.id)}
-              >
-                <Trash className="me-2" size={16} />
-                Eliminar
+              <button className="btn btn-sm btn-danger"
+                onClick={() => eliminarDocumento(documentoAEliminar.id)}>
+                <Trash size={14} className="me-1" /> Eliminar
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {mostrarModal && (
-        <ModalDocumentoSoporte
-          isOpen={mostrarModal}
-          onClose={handleCerrarModal}
-          onSuccess={handleGuardadoExitoso}
-          documentoEditar={documentoEditando}
-        />
-      )}
+      {/* ── Modal Crear / Editar ── */}
+      <ModalDocumentoSoporte
+        isOpen={mostrarModal}
+        onClose={() => { setMostrarModal(false); setDocumentoEditando(null); }}
+        onSuccess={handleGuardadoExitoso}
+        documentoEditar={documentoEditando}
+      />
+
     </div>
   );
 }

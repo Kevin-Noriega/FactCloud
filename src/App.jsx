@@ -20,6 +20,10 @@ import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Productos from "./components/ProductosServicios/Productos";
 import Facturas from "./components/ventas/documentosVenta/Facturas";
+import NuevaFactura from "./pages/NuevaFactura";
+import NuevoDocumentoSoporte from "./pages/NuevoDocumentoSoporte"
+import NuevaNotaCredito from "./pages/NuevaNotaCredito"
+import NuevaNotaDedito from "./pages/NuevaNotaDebito"
 import Ventas from "./pages/Ventas";
 import ComprasGastos from "./pages/ComprasGastos";
 import DocumentoSoporte from "./components/comprasGastos/DocumentoSoporte";
@@ -91,6 +95,10 @@ function App() {
 
 
               <Route path="/ventas" element={<Ventas />} />
+              <Route path="/nueva-factura" element={<NuevaFactura />} />
+              <Route path="/nuevo-documento-soporte" element={<NuevoDocumentoSoporte/>}/>
+              <Route path="/nueva-nota-credito" element={<NuevaNotaCredito/>}/>
+              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito/>}/>
               <Route path="/compras-gastos" element={<ComprasGastos />} />
               <Route path="/facturas" element={<Facturas />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />

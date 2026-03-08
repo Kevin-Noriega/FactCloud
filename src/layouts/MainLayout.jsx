@@ -9,10 +9,10 @@ import {
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import Sidebar from "../layouts/Sidebar";
-import ModalCrear from "../components/dashboard/ModalCrear";
-import ModalConfiguracion from "../components/dashboard/ModalConfiguracion";
-import ModalNotificaciones from "../components/dashboard/ModalNotificaciones";
-import ModalAyuda from "../components/dashboard/ModalAyuda";
+import ModalCrear from "../components/modals/ModalCrear";
+import ModalConfiguracion from "../components/modals/ModalConfiguracion";
+import ModalNotificaciones from "../components/modals/ModalNotificaciones";
+import ModalAyuda from "../components/modals/ModalAyuda";
 import UserMenu from "../components/dashboard/UserMenu";
 import { useUsuarios } from "../hooks/useUsuarios";
 import { useNotificacionesNoLeidas } from "../hooks/useNotificaciones";

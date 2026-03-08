@@ -157,7 +157,6 @@ export default function Login() {
               {loading ? (
                 <>
                   <span className="login-spinner"></span>
-                  Ingresando...
                 </>
               ) : (
                 "Iniciar sesión"

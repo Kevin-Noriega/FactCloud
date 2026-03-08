@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import ModalFacturaPDF from "../../dashboard/ModalfacturaPDF.jsx";
-import ModalPago from "../../dashboard/ModalPago.jsx";
-import ModalCrearFactura from "../../dashboard/ModalCrearFactura.jsx";
+import ModalFacturaPDF from "../../modals/ModalfacturaPDF.jsx";
+import ModalPago from "../../modals/ModalPago.jsx";
+import ModalCrearFactura from "../../modals/ModalCrearFactura.jsx";
 import { createConnection } from "../../../SignalR/SignalConector.jsx";
 import { toast, ToastContainer } from "react-toastify";
 import axiosClient from "../../../api/axiosClient.js";
+import { useNavigate } from "react-router-dom";
+
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -20,6 +22,7 @@ function Facturas() {
   const connectionRef = useRef(null);
   const [facturaVista, setFacturaVista] = useState(null);
   const [filtro, setFiltro] = useState("recientes");
+  const navigate = useNavigate();
 
   const enviarFacturaPorCorreo = async (factId) => {
     try {
@@ -207,7 +210,7 @@ function Facturas() {
         </div>
         <button
           className="btn-crear"
-          onClick={() => setMostrarFormulario(true)}
+          onClick={() => navigate('/nueva-factura')}
         >
           Nueva Factura
         </button>
