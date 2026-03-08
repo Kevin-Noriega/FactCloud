@@ -30,7 +30,7 @@ import DocumentoSoporte from "./components/comprasGastos/DocumentoSoporte";
 import Reportes from "./pages/Reportes";
 import Perfil from "./pages/Perfil";
 import CrearProductoPage from "./components/dashboard/CrearProductPage";
-
+import ImportarProductosExcel from "./components/ProductosServicios/ImportarProductoExcel";
 // Páginas de E-commerce
 import Tienda from "./pages/Tienda";
 import Checkout from "./pages/Checkout";
@@ -92,7 +92,10 @@ function App() {
                 path="/crearProducto/editar/:id"
                 element={<CrearProductoPage />}
               />
-
+              <Route
+                path="/productos/importar-excel"
+                element={<ImportarProductosExcel />}
+              />
 
               <Route path="/ventas" element={<Ventas />} />
               <Route path="/nueva-factura" element={<NuevaFactura />} />
