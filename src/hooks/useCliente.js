@@ -1,72 +1,46 @@
 import { useState, useEffect } from "react";
-import { API_URL } from "../api/config";
+import api from "../api/axios.js";
 
 const ESTADO_INICIAL = {
-  nombre: "",
-  apellido: "",
-  tipoIdentificacion: "",
+  nombre:               "",
+  apellido:             "",
+  tipoIdentificacion:   "CC",   // ✅ valor por defecto — evita el 400
   numeroIdentificacion: "",
-  digitoVerificacion: "",
-  tipoPersona: "",
-  regimenTributario: "",
-  regimenFiscal: "",
-  correo: "",
-  telefono: "",
-  departamento: "",
-  ciudad: "",
-  ciudadCodigo: "",
-  departamentoCodigo: "",
-  direccion: "",
-  codigoPostal: "",
-  retenedorIVA: false,
-  retenedorICA: false,
-  retenedorRenta: false,
-  autoretenedorRenta: false,
-  estado: true,
-  pais: "CO",
-  nombreComercial: "",
-  actividadEconomicaCIIU: "",
+  digitoVerificacion:   "",
+  tipoPersona:          "persona",
+  correo:               "",
+  telefono:             "",
+  ciudad:               "",
+  direccion:            "",
+  codigoPostal:         "",
+  nombreComercial:      "",
 };
 
 export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
-  const [cliente, setCliente] = useState(ESTADO_INICIAL);
+  const [cliente,   setCliente]   = useState(ESTADO_INICIAL);
   const [guardando, setGuardando] = useState(false);
 
-  // Carga datos al abrir en modo edición, limpia en modo creación
   useEffect(() => {
     if (clienteEditando) {
       setCliente({
-        nombre: clienteEditando.nombre || "",
-        apellido: clienteEditando.apellido || "",
-        tipoIdentificacion: clienteEditando.tipoIdentificacion || "",
+        nombre:               clienteEditando.nombre               || "",
+        apellido:             clienteEditando.apellido             || "",
+        tipoIdentificacion:   clienteEditando.tipoIdentificacion   || "CC",
         numeroIdentificacion: clienteEditando.numeroIdentificacion || "",
-        digitoVerificacion: clienteEditando.digitoVerificacion || "",
-        tipoPersona: clienteEditando.tipoPersona || "",
-        regimenTributario: clienteEditando.regimenTributario || "",
-        regimenFiscal: clienteEditando.regimenFiscal || "",
-        correo: clienteEditando.correo || "",
-        telefono: clienteEditando.telefono || "",
-        departamento: clienteEditando.departamento || "",
-        ciudad: clienteEditando.ciudad || "",
-        ciudadCodigo: clienteEditando.ciudadCodigo || "",
-        departamentoCodigo: clienteEditando.departamentoCodigo || "",
-        direccion: clienteEditando.direccion || "",
-        codigoPostal: clienteEditando.codigoPostal || "",
-        retenedorIVA: !!clienteEditando.retenedorIVA,
-        retenedorICA: !!clienteEditando.retenedorICA,
-        retenedorRenta: !!clienteEditando.retenedorRenta,
-        autoretenedorRenta: !!clienteEditando.autoretenedorRenta,
-        estado: clienteEditando.estado ?? true,
-        pais: clienteEditando.pais || "CO",
-        nombreComercial: clienteEditando.nombreComercial || "",
-        actividadEconomicaCIIU: clienteEditando.actividadEconomicaCIIU || "",
+        digitoVerificacion:   clienteEditando.dv                   || "",
+        tipoPersona:          clienteEditando.tipo                 || "persona",
+        correo:               clienteEditando.correoFacturacion    || "",
+        telefono:             clienteEditando.telefonoFacturacion  || "",
+        ciudad:               clienteEditando.ciudad               || "",
+        direccion:            clienteEditando.direccion            || "",
+        codigoPostal:         clienteEditando.codigoPostal         || "",
+        nombreComercial:      clienteEditando.nombreComercial      || "",
       });
     } else {
       setCliente(ESTADO_INICIAL);
     }
   }, [clienteEditando, open]);
 
-  // Maneja inputs normales y checkboxes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setCliente((prev) => ({
@@ -75,30 +49,18 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     }));
   };
 
-  // Maneja cualquier campo por nombre (para react-select)
-  const handleSelectChange = (campo, valor) => {
+  const handleSelectChange = (campo, valor) =>
     setCliente((prev) => ({ ...prev, [campo]: valor }));
-  };
 
-  // Maneja cambio de departamento limpiando ciudad
-  const handleDepartamentoChange = (opt) => {
+  const handleDepartamentoChange = (opt) =>
     setCliente((prev) => ({
       ...prev,
-      departamento: opt ? opt.value : "",
-      departamentoCodigo: opt ? opt.departamentoCodigo : "",
-      ciudad: "",
-      ciudadCodigo: "",
+      departamento: opt?.value || "",
+      ciudad:       "",
     }));
-  };
 
-  // Maneja cambio de ciudad
-  const handleCiudadChange = (opt) => {
-    setCliente((prev) => ({
-      ...prev,
-      ciudad: opt ? opt.value : "",
-      ciudadCodigo: opt ? opt.ciudadCodigo : "",
-    }));
-  };
+  const handleCiudadChange = (opt) =>
+    setCliente((prev) => ({ ...prev, ciudad: opt?.value || "" }));
 
   const limpiarFormulario = () => setCliente(ESTADO_INICIAL);
 
@@ -112,73 +74,66 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     if (e.target === e.currentTarget) handleClose();
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // ✅ Recibe extraData como objeto plano — sin hack del evento
+  const handleSubmit = async (extraData = {}) => {
     setGuardando(true);
 
+    // Payload mapeado exactamente al CrearClienteDto
+    const payload = {
+      tipo:                        cliente.tipoPersona          || "persona",
+      tipoIdentificacion:          cliente.tipoIdentificacion   || "CC",
+      numeroIdentificacion:        cliente.numeroIdentificacion,
+      dv:                          cliente.digitoVerificacion   || null,
+      codigoSucursal:              extraData.codigoSucursal     || "0",
+      nombre:                      cliente.nombre,
+      apellido:                    cliente.apellido             || "",
+      nombreComercial:             cliente.nombreComercial      || "",
+      ciudad:                      cliente.ciudad               || "",
+      direccion:                   cliente.direccion            || "",
+      codigoPostal:                extraData.codigoPostal       || cliente.codigoPostal || "",
+      // Facturación
+      nombreContactoFacturacion:   extraData.nombreContactoFact   || "",
+      apellidoContactoFacturacion: extraData.apellidoContactoFact || "",
+      correoFacturacion:           extraData.correoFact           || cliente.correo || "",
+      tipoRegimenIva:              extraData.tipoRegimenIva       || "",
+      indicativoFacturacion:       extraData.indicativoFact       || "",
+      telefonoFacturacion:         extraData.telefonoFact         || cliente.telefono || "",
+      // Tipo de tercero
+      esCliente:                   extraData.esCliente   ?? true,
+      esProveedor:                 extraData.esProveedor ?? false,
+      esEmpleado:                  extraData.esEmpleado  ?? false,
+      // Responsabilidades y colecciones
+      responsabilidades:           extraData.responsabilidades || ["R-99-PN"],
+      telefonos:                   extraData.telefonos         || [],
+      contactos:                   extraData.contactos         || [],
+    };
+
     try {
-      const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
-      if (!usuarioGuardado) {
-        alert("No se encontró un usuario autenticado.");
-        return;
+      if (clienteEditando) {
+        const { data } = await api.put(`/Clientes/${clienteEditando.id}`, payload);
+        onSuccess(data, "Cliente modificado con éxito.");
+      } else {
+        const { data } = await api.post("/Clientes", payload);
+        onSuccess(data, "Cliente agregado con éxito.");
       }
-
-      const payload = {
-        ...(clienteEditando && { id: clienteEditando.id }),
-        nombre: cliente.nombre,
-        apellido: cliente.apellido,
-        tipoIdentificacion: cliente.tipoIdentificacion,
-        numeroIdentificacion: cliente.numeroIdentificacion,
-        digitoVerificacion: cliente.digitoVerificacion || null,
-        tipoPersona: cliente.tipoPersona,
-        regimenTributario: cliente.regimenTributario,
-        regimenFiscal: cliente.regimenFiscal,
-        correo: cliente.correo,
-        telefono: cliente.telefono || "",
-        departamento: cliente.departamento,
-        ciudad: cliente.ciudad,
-        direccion: cliente.direccion,
-        codigoPostal: cliente.codigoPostal || "",
-        retenedorIVA: !!cliente.retenedorIVA,
-        retenedorICA: !!cliente.retenedorICA,
-        retenedorRenta: !!cliente.retenedorRenta,
-        autoretenedorRenta: !!cliente.autoretenedorRenta,
-        estado: cliente.estado ?? true,
-        ciudadCodigo: cliente.ciudadCodigo || "",
-        departamentoCodigo: cliente.departamentoCodigo || "",
-        pais: cliente.pais || "CO",
-        nombreComercial: cliente.nombreComercial || "",
-        actividadEconomicaCIIU: cliente.actividadEconomicaCIIU || "",
-        usuarioId: usuarioGuardado.id,
-      };
-
-      const token = localStorage.getItem("token");
-      const url = clienteEditando
-        ? `${API_URL}/Clientes/${clienteEditando.id}`
-        : `${API_URL}/Clientes`;
-      const method = clienteEditando ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error(await res.text());
-
-      const clienteGuardado = await res.json();
-      const mensaje = clienteEditando
-        ? "Cliente modificado con éxito."
-        : "Cliente agregado con éxito.";
-
-      onSuccess(clienteGuardado, mensaje);
       limpiarFormulario();
       onClose();
     } catch (error) {
-      alert("Error al guardar cliente: " + error.message);
+      if (error.response?.status === 409) {
+        alert(error.response.data?.mensaje || "Ya existe un cliente con esa identificación.");
+      } else if (error.response?.status === 400) {
+        const errores = error.response?.data?.errors;
+        if (errores) {
+          const lista = Object.entries(errores)
+            .map(([k, v]) => `• ${k}: ${v.join(", ")}`)
+            .join("\n");
+          alert("Datos inválidos:\n" + lista);
+        } else {
+          alert("Error 400: " + JSON.stringify(error.response?.data));
+        }
+      } else {
+        alert("Error al guardar cliente: " + (error.response?.data?.mensaje || error.message));
+      }
     } finally {
       setGuardando(false);
     }

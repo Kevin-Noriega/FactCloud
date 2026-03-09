@@ -21,21 +21,15 @@ function ModalCrear({ open, onClose }) {
     return () => { document.body.style.overflow = "auto"; };
   }, [open]);
 
-  // ── Helpers ───────────────────────────────────────────────────────
-
-  /** Abre un sub-modal (factura, cliente, producto, etc.) */
   const abrirModal = (tipo) => setModalActivo(tipo);
 
-  /** Navega a una ruta Y cierra el modal principal */
   const navegar = (ruta) => {
-    onClose();          // ✅ siempre cerrar primero
+    onClose();          
     navigate(ruta);
   };
 
-  /** Cerrar sub-modal sin navegar (usuario canceló) */
   const cerrarSubModal = () => setModalActivo(null);
 
-  /** Sub-modal guardó exitosamente → cerrar todo y navegar si hay ruta */
   const subModalExitoso = (ruta) => {
     setModalActivo(null);
     onClose();
@@ -56,7 +50,8 @@ function ModalCrear({ open, onClose }) {
       <div className="modal-overlay-crear" onClick={handleOverlayClick} />
 
       {/* ── Modal principal ── */}
-      <div className="modal-container-crear">
+      <div className="modal-container-crear" onClick={handleOverlayClick} >
+        
         <div
           className="modal-content-crear"
           onClick={(e) => e.stopPropagation()}
@@ -90,7 +85,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => abrirModal("cliente")}
+                        onClick={() => navegar("/nuevo-cliente")} 
                       >
                         <People className="menu-icon-crear" />
                         <span>Cliente</span>
