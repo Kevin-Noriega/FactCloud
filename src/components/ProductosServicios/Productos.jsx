@@ -269,7 +269,7 @@ function Productos() {
                                     {prod.impuestoCargo}
                                   </span>
                                 ) : (
-                                  "—"
+                                  " "
                                 )}
                                 {prod.retencion && (
                                   <span className="ms-1 text-muted small">
@@ -280,11 +280,11 @@ function Productos() {
                               <td>
                                 {prod.activo ? (
                                   <span className="text-success d-flex align-items-center gap-1">
-                                    ✅ Activo
+                                    Activo
                                   </span>
                                 ) : (
                                   <span className="text-warning d-flex align-items-center gap-1">
-                                    ⚠️ Inactivo
+                                    Inactivo
                                   </span>
                                 )}
                               </td>
