@@ -21,19 +21,20 @@ import Clientes from "./pages/Clientes";
 import Productos from "./components/ProductosServicios/Productos";
 import Facturas from "./components/ventas/documentosVenta/Facturas";
 import NuevaFactura from "./pages/NuevaFactura";
-import NuevoDocumentoSoporte from "./pages/NuevoDocumentoSoporte"
-import NuevaNotaCredito from "./pages/NuevaNotaCredito"
-import NuevaNotaDedito from "./pages/NuevaNotaDebito"
+import NuevoDocumentoSoporte from "./pages/NuevoDocumentoSoporte";
+import NuevaNotaCredito from "./pages/NuevaNotaCredito";
+import NuevaNotaDedito from "./pages/NuevaNotaDebito";
 import Ventas from "./pages/Ventas";
 import ComprasGastos from "./pages/ComprasGastos";
 import DocumentoSoporte from "./components/comprasGastos/DocumentoSoporte";
 import Reportes from "./pages/Reportes";
 import Perfil from "./pages/Perfil";
-import CrearProductoPage from "./components/dashboard/CrearProductPage";
+import NuevoProducto_Servicio from "./pages/NuevoProducto_Servicio";
 import ImportarProductosExcel from "./components/ProductosServicios/ImportarProductoExcel";
 // Páginas de E-commerce
 import Tienda from "./pages/Tienda";
 import Checkout from "./pages/Checkout";
+import NuevoCliente from "./pages/NuevoCliente";
 
 // Componente 404
 const NotFound = () => (
@@ -87,10 +88,13 @@ function App() {
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/productos" element={<Productos />} />
 
-              <Route path="/crearProducto" element={<CrearProductoPage />} />
+              <Route
+                path="/crearProducto"
+                element={<NuevoProducto_Servicio />}
+              />
               <Route
                 path="/crearProducto/editar/:id"
-                element={<CrearProductoPage />}
+                element={<NuevoProducto_Servicio />}
               />
               <Route
                 path="/productos/importar-excel"
@@ -99,9 +103,16 @@ function App() {
 
               <Route path="/ventas" element={<Ventas />} />
               <Route path="/nueva-factura" element={<NuevaFactura />} />
-              <Route path="/nuevo-documento-soporte" element={<NuevoDocumentoSoporte/>}/>
-              <Route path="/nueva-nota-credito" element={<NuevaNotaCredito/>}/>
-              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito/>}/>
+              <Route
+                path="/nuevo-documento-soporte"
+                element={<NuevoDocumentoSoporte />}
+              />
+              <Route
+                path="/nueva-nota-credito"
+                element={<NuevaNotaCredito />}
+              />
+              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
+              <Route path="/nuevo-cliente" element={<NuevoCliente />} />
               <Route path="/compras-gastos" element={<ComprasGastos />} />
               <Route path="/facturas" element={<Facturas />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />

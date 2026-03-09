@@ -1,6 +1,54 @@
-/* ============================================================
-   DOCBASE.CSS
-   ============================================================ */
+.doc-uso-banner {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : 8px;
+  background   : #f0eeff;
+  border       : 1px solid #d4caff;
+  border-left  : 4px solid #1800ad;
+  border-radius: 10px;
+  padding      : 8px 16px;
+  margin-bottom: 20px;
+  transition   : all 0.2s;
+}
+.doc-uso-banner.peligro {
+  background        : #fff8e6;
+  border-color      : #f59e0b;
+  border-left-color : #d97706;
+}
+.doc-uso-banner.agotado {
+  background        : #fff1f1;
+  border-color      : #fca5a5;
+  border-left-color : #dc2626;
+}
+.doc-uso-texto {
+  display       : flex;
+  align-items   : center;
+  gap           : 8px;
+}
+.doc-uso-label {
+  font-size  : 0.8rem;
+  color      : #6b7280;
+  font-weight: 500;
+}
+.doc-uso-nums {
+  font-size  : 0.9rem;
+  color      : #1a202c;
+}
+.doc-uso-nums strong            { color: #1800ad; }
+.doc-uso-banner.peligro .doc-uso-nums strong { color: #d97706; }
+.doc-uso-banner.agotado .doc-uso-nums strong { color: #dc2626; }
+.doc-uso-sep { margin: 0 3px; color: #9ca3af; }
+
+.doc-uso-pct {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1800ad;
+  min-width: 36px;
+  text-align: right;
+}
+.doc-uso-banner.peligro .doc-uso-pct { color: #d97706; }
+.doc-uso-banner.agotado .doc-uso-pct { color: #dc2626; }
+
 :root {
   --doc-radius : 10px;
   --doc-border : #e4e7ec;

@@ -62,31 +62,35 @@ export const useFactura = () => {
     }
   }, []);
 
-  // ── Cargar datos iniciales ──────────────────────────────────────
-  useEffect(() => {
-    const cargarDatos = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const headers = { Authorization: `Bearer ${token}` };
+// ── Cargar datos iniciales ──────────────────────────────────────
+useEffect(() => {
+  const cargarDatos = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
 
-        const [resClientes, resProductos, resConteo] = await Promise.all([
-          fetch(`${API_URL}/Clientes`, { headers }),
-          fetch(`${API_URL}/Productos`, { headers }),
-          fetch(`${API_URL}/Facturas/conteo-uso`, { headers }),
-        ]);
+      const [resClientes, resProductos, resStats] = await Promise.all([
+        fetch(`${API_URL}/Clientes`, { headers }),
+        fetch(`${API_URL}/Productos`, { headers }),
+        fetch(`${API_URL}/Planes/estadisticas`, { headers }), // ✅ usa estadisticas
+      ]);
 
-        if (resClientes.ok) setClientes(await resClientes.json());
-        if (resProductos.ok) setProductos(await resProductos.json());
-        if (resConteo.ok) {
-          const conteo = await resConteo.json();
-          setFacturasUsadas({ usadas: conteo.usadas, limite: conteo.limite });
-        }
-      } catch (error) {
-        console.error("Error al cargar datos:", error);
+      if (resClientes.ok) setClientes(await resClientes.json());
+      if (resProductos.ok) setProductos(await resProductos.json());
+      if (resStats.ok) {
+        const stats = await resStats.json();
+        setFacturasUsadas({
+          usadas: stats.documentosUsados,  // ✅ campo de estadisticas
+          limite: stats.documentosLimite,  // ✅ campo de estadisticas
+        });
       }
-    };
-    cargarDatos();
-  }, []);
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+    }
+  };
+  cargarDatos();
+}, []);
+
 
   // ── Cargar contactos al cambiar de cliente ──────────────────────
   useEffect(() => {
@@ -343,6 +347,29 @@ export const useFactura = () => {
       alert("Error al crear factura: " + error.message);
     }
   };
+// ── Agregar cliente desde modal ─────────────────────────────────
+const agregarClienteLocal = (nuevoCliente) => {
+  setClientes((prev) => [...prev, nuevoCliente]);
+  setFactura((f) => ({ ...f, clienteId: nuevoCliente.id, contactoId: "" }));
+};
+
+// ── Agregar producto desde modal ────────────────────────────────
+const agregarProductoLocal = (nuevoProducto) => {
+  setProductos((prev) => [...prev, nuevoProducto]);
+  setProductosSeleccionados((prev) => [
+    ...prev,
+    {
+      productoId:          nuevoProducto.id,
+      descripcion:         nuevoProducto.nombre,
+      cantidad:            1,
+      precioUnitario:      nuevoProducto.precioUnitario ?? 0,
+      unidadMedida:        nuevoProducto.unidadMedida ?? "Unidad",
+      porcentajeDescuento: 0,
+      tarifaIVA:           nuevoProducto.tarifaIVA ?? 0,
+      tarifaINC:           nuevoProducto.tarifaINC ?? 0,
+    },
+  ]);
+};
 
 return {
     // Datos base
@@ -354,7 +381,8 @@ return {
     // Código de barras
     codigoBarras, setCodigoBarras,
     barcodeInputRef,
-    // ✅ Formas de pago (faltaban estas)
+      agregarClienteLocal, 
+  agregarProductoLocal, 
     formasPago,
     totalFormasPago,
     agregarFormaPago,
