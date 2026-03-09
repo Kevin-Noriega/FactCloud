@@ -61,4 +61,21 @@ export const wompiService = {
     const response = await api.get(`/payment/transaction/${transactionId}`);
     return response.data;
   },
+
+  //pse
+  // Agregar al objeto wompiService existente
+  async getFinancialInstitutions() {
+    const response = await api.get("/payment/pse/bancos");
+    return response.data.data; // array de { financial_institution_code, name }
+  },
+
+  async createPSETransaction(datos) {
+    const response = await api.post("/payment/pse/crear-transaccion", datos);
+    return response.data; // { transaccionId }
+  },
+
+  async getTransactionStatus(transaccionId) {
+    const response = await api.get(`/payment/pse/estado/${transaccionId}`);
+    return response.data; // { status, asyncPaymentUrl }
+  },
 };
