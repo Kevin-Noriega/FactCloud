@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../api/config";
-
+import { useAuth } from "../hooks/useAuth";
+import axiosClient from "../api/axiosClient";
+import { getAccessToken } from "../api/axiosClient";
 export const useFactura = () => {
   const navigate = useNavigate();
 
@@ -10,8 +11,11 @@ export const useFactura = () => {
   const [productosSeleccionados, setProductosSeleccionados] = useState([]);
   const [codigoBarras, setCodigoBarras] = useState("");
   const barcodeInputRef = useRef(null);
-
-  const [facturasUsadas, setFacturasUsadas] = useState({ usadas: 0, limite: 0 });
+  const { isAuthenticated, loading } = useAuth();
+  const [facturasUsadas, setFacturasUsadas] = useState({
+    usadas: 0,
+    limite: 0,
+  });
   const [contactos, setContactos] = useState([]);
 
   const [factura, setFactura] = useState({
@@ -25,9 +29,7 @@ export const useFactura = () => {
     fechaVencimiento: "",
   });
 
-  const [formasPago, setFormasPago] = useState([
-    { metodo: "", valor: "" },
-  ]);
+  const [formasPago, setFormasPago] = useState([{ metodo: "", valor: "" }]);
 
   const [retelCA, setRetelCA] = useState({ tipo: "", valor: 0 });
 
@@ -48,7 +50,7 @@ export const useFactura = () => {
 
   const totalFormasPago = formasPago.reduce(
     (acc, fp) => acc + (parseFloat(fp.valor) || 0),
-    0
+    0,
   );
 
   // ── Cargar prefijo del usuario ──────────────────────────────────
@@ -62,56 +64,42 @@ export const useFactura = () => {
     }
   }, []);
 
-// ── Cargar datos iniciales ──────────────────────────────────────
-useEffect(() => {
-  const cargarDatos = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
+  // ── Cargar datos iniciales ──────────────────────────────────────
+  useEffect(() => {
+    if (!isAuthenticated || loading) return; // ← agrega || loading
 
-      const [resClientes, resProductos, resStats] = await Promise.all([
-        fetch(`${API_URL}/Clientes`, { headers }),
-        fetch(`${API_URL}/Productos`, { headers }),
-        fetch(`${API_URL}/Planes/estadisticas`, { headers }), // ✅ usa estadisticas
-      ]);
-
-      if (resClientes.ok) setClientes(await resClientes.json());
-      if (resProductos.ok) setProductos(await resProductos.json());
-      if (resStats.ok) {
-        const stats = await resStats.json();
+    const cargarDatos = async () => {
+      try {
+        const [resClientes, resProductos, resStats] = await Promise.all([
+          axiosClient.get("/Clientes"),
+          axiosClient.get("/Productos"),
+          axiosClient.get("/Planes/estadisticas"),
+        ]);
+        setClientes(resClientes.data);
+        setProductos(resProductos.data);
         setFacturasUsadas({
-          usadas: stats.documentosUsados,  // ✅ campo de estadisticas
-          limite: stats.documentosLimite,  // ✅ campo de estadisticas
+          usadas: resStats.data.documentosUsados,
+          limite: resStats.data.documentosLimite,
         });
+      } catch (error) {
+        console.error("Error al cargar datos:", error);
       }
-    } catch (error) {
-      console.error("Error al cargar datos:", error);
-    }
-  };
-  cargarDatos();
-}, []);
+    };
 
+    cargarDatos();
+  }, [isAuthenticated, loading]);
 
   // ── Cargar contactos al cambiar de cliente ──────────────────────
+  // ✅ Solo UNO — borra el duplicado que tenías arriba
   useEffect(() => {
     if (!factura.clienteId) {
       setContactos([]);
       return;
     }
-    const cargarContactos = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-          `${API_URL}/Clientes/${factura.clienteId}/contactos`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (res.ok) setContactos(await res.json());
-        else setContactos([]);
-      } catch {
-        setContactos([]);
-      }
-    };
-    cargarContactos();
+    axiosClient
+      .get(`/Clientes/${factura.clienteId}/contactos`)
+      .then((res) => setContactos(res.data))
+      .catch(() => setContactos([]));
   }, [factura.clienteId]);
 
   // ── Agregar contacto desde modal ────────────────────────────────
@@ -126,7 +114,7 @@ useEffect(() => {
     if (!codigo) return;
 
     const producto = productos.find(
-      (p) => String(p.codigoBarras || "").trim() === codigo
+      (p) => String(p.codigoBarras || "").trim() === codigo,
     );
 
     if (!producto) {
@@ -136,7 +124,7 @@ useEffect(() => {
 
     setProductosSeleccionados((prev) => {
       const idx = prev.findIndex(
-        (item) => Number(item.productoId) === Number(producto.id)
+        (item) => Number(item.productoId) === Number(producto.id),
       );
       if (idx !== -1) {
         const act = [...prev];
@@ -205,7 +193,7 @@ useEffect(() => {
 
   const eliminarProducto = (index) => {
     setProductosSeleccionados(
-      productosSeleccionados.filter((_, i) => i !== index)
+      productosSeleccionados.filter((_, i) => i !== index),
     );
   };
 
@@ -262,23 +250,35 @@ useEffect(() => {
     e.preventDefault();
 
     const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
-    if (!usuarioGuardado) { alert("Usuario no autenticado."); return; }
-    if (!factura.tipoFactura) { alert("Selecciona el tipo de factura."); return; }
-    if (!factura.clienteId) { alert("Selecciona un cliente."); return; }
-    if (productosSeleccionados.length === 0) { alert("Agrega al menos un producto."); return; }
+    if (!usuarioGuardado) {
+      alert("Usuario no autenticado.");
+      return;
+    }
+    if (!factura.tipoFactura) {
+      alert("Selecciona el tipo de factura.");
+      return;
+    }
+    if (!factura.clienteId) {
+      alert("Selecciona un cliente.");
+      return;
+    }
+    if (productosSeleccionados.length === 0) {
+      alert("Agrega al menos un producto.");
+      return;
+    }
 
     const totales = calcularTotales();
     const diferencia = Math.abs(totalFormasPago - totales.totalFactura);
     if (diferencia > 0.01) {
       alert(
         `El total de las formas de pago (${totalFormasPago.toLocaleString("es-CO", { minimumFractionDigits: 2 })}) ` +
-        `no coincide con el total neto (${totales.totalFactura.toLocaleString("es-CO", { minimumFractionDigits: 2 })}).`
+          `no coincide con el total neto (${totales.totalFactura.toLocaleString("es-CO", { minimumFractionDigits: 2 })}).`,
       );
       return;
     }
 
     try {
-      const token = localStorage.getItem("token");
+      // ❌ Elimina: const token = localStorage.getItem("token");
 
       const payload = {
         usuarioId: usuarioGuardado.id,
@@ -307,7 +307,9 @@ useEffect(() => {
         enviadaDIAN: false,
         moneda: "COP",
         fechaVencimiento: factura.fechaVencimiento || null,
-        CUFE: "", QR: "", ambienteDIAN: "",
+        CUFE: "",
+        QR: "",
+        ambienteDIAN: "",
         detalleFacturas: productosSeleccionados.map((item) => {
           const linea = calcularLinea(item);
           return {
@@ -330,66 +332,66 @@ useEffect(() => {
         }),
       };
 
-      const res = await fetch(`${API_URL}/Facturas`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error(await res.text());
+      // ✅ axiosClient — sin fetch, sin token manual
+      await axiosClient.post("/Facturas", payload);
 
       alert("Factura creada exitosamente");
       navigate("/ventas");
     } catch (error) {
-      alert("Error al crear factura: " + error.message);
+      alert(
+        "Error al crear factura: " +
+          (error.response?.data?.message || error.message),
+      );
     }
   };
-// ── Agregar cliente desde modal ─────────────────────────────────
-const agregarClienteLocal = (nuevoCliente) => {
-  setClientes((prev) => [...prev, nuevoCliente]);
-  setFactura((f) => ({ ...f, clienteId: nuevoCliente.id, contactoId: "" }));
-};
 
-// ── Agregar producto desde modal ────────────────────────────────
-const agregarProductoLocal = (nuevoProducto) => {
-  setProductos((prev) => [...prev, nuevoProducto]);
-  setProductosSeleccionados((prev) => [
-    ...prev,
-    {
-      productoId:          nuevoProducto.id,
-      descripcion:         nuevoProducto.nombre,
-      cantidad:            1,
-      precioUnitario:      nuevoProducto.precioUnitario ?? 0,
-      unidadMedida:        nuevoProducto.unidadMedida ?? "Unidad",
-      porcentajeDescuento: 0,
-      tarifaIVA:           nuevoProducto.tarifaIVA ?? 0,
-      tarifaINC:           nuevoProducto.tarifaINC ?? 0,
-    },
-  ]);
-};
+  // ── Agregar cliente desde modal ─────────────────────────────────
+  const agregarClienteLocal = (nuevoCliente) => {
+    setClientes((prev) => [...prev, nuevoCliente]);
+    setFactura((f) => ({ ...f, clienteId: nuevoCliente.id, contactoId: "" }));
+  };
 
-return {
+  // ── Agregar producto desde modal ────────────────────────────────
+  const agregarProductoLocal = (nuevoProducto) => {
+    setProductos((prev) => [...prev, nuevoProducto]);
+    setProductosSeleccionados((prev) => [
+      ...prev,
+      {
+        productoId: nuevoProducto.id,
+        descripcion: nuevoProducto.nombre,
+        cantidad: 1,
+        precioUnitario: nuevoProducto.precioUnitario ?? 0,
+        unidadMedida: nuevoProducto.unidadMedida ?? "Unidad",
+        porcentajeDescuento: 0,
+        tarifaIVA: nuevoProducto.tarifaIVA ?? 0,
+        tarifaINC: nuevoProducto.tarifaINC ?? 0,
+      },
+    ]);
+  };
+
+  return {
     // Datos base
-    factura, setFactura,
-    clientes, productos,
+    factura,
+    setFactura,
+    clientes,
+    productos,
     contactos,
     facturasUsadas,
     productosSeleccionados,
     // Código de barras
-    codigoBarras, setCodigoBarras,
+    codigoBarras,
+    setCodigoBarras,
     barcodeInputRef,
-      agregarClienteLocal, 
-  agregarProductoLocal, 
+    agregarClienteLocal,
+    agregarProductoLocal,
     formasPago,
     totalFormasPago,
     agregarFormaPago,
     actualizarFormaPago,
     eliminarFormaPago,
     // ✅ RetelCA (faltaba esto)
-    retelCA, setRetelCA,
+    retelCA,
+    setRetelCA,
     // Contactos
     agregarContactoLocal,
     // Productos
@@ -404,5 +406,4 @@ return {
     handleSubmit,
     navigate,
   };
-
 };
