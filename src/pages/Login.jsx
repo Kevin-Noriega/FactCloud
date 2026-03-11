@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../api/config";
 import "../styles/Login.css";
 import { Eye, EyeSlash, EnvelopeFill, LockFill } from "react-bootstrap-icons";
 import { useAuth } from "../hooks/useAuth";
+
 export default function Login() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -16,23 +16,15 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-
     setLoading(true);
     setError("");
 
     try {
-      console.log("🔵 Iniciando login desde componente");
-
-      await login(correo, contrasena);
-
-      console.log("🎉 Login exitoso, navegando a dashboard");
-
-      // ✅ CAMBIO CRÍTICO: Navegar inmediatamente, sin setTimeout
+      console.log("🔵 Iniciando login");
+      await login(correo, contrasena); // ✅ AuthContext guarda todo internamente
+      console.log("🎉 Login exitoso");
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      console.error("❌ Error capturado en handleSubmit:", err);
-
-      // Manejar errores específicos del backend
       if (err.response?.status === 423) {
         setError(
           `Cuenta desactivada. ${err.response.data.diasRestantes} días para reactivar.`,
@@ -47,12 +39,9 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
-
-    
-};
+    // ✅ Nada más aquí — sin localStorage.setItem, sin data.token
+  };
+  // ... JSX
 
   const estiloAnimacion = document.createElement("style");
   estiloAnimacion.innerHTML = `
