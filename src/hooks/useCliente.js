@@ -4,7 +4,7 @@ import api from "../api/axios.js";
 const ESTADO_INICIAL = {
   nombre:               "",
   apellido:             "",
-  tipoIdentificacion:   "CC",   // ✅ valor por defecto — evita el 400
+  tipoIdentificacion:   "CC",  
   numeroIdentificacion: "",
   digitoVerificacion:   "",
   tipoPersona:          "persona",

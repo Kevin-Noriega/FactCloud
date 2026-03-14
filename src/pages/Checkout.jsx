@@ -16,6 +16,7 @@ import Select from "react-select";
 import tipoIdentificacion from "../utils/TiposDocumentos.json";
 
 import ciudades from "../utils/Ciudades.json";
+import { ModalDetalles } from "../components/checkout/ModalDetalles";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -28,6 +29,9 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [sameAsOwner, setSameAsOwner] = useState(false);
+  const [checkoutData, setCheckoutData] = useState(null);
+
+  const [mostrarVerDetalles, setMostrarVerDetalles] = useState(false);
 
   const [formData, setFormData] = useState({
     cardNumber: "",
@@ -57,11 +61,12 @@ export default function Checkout() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const data = localStorage.getItem("checkoutData");
+    if (data) {
+      setCheckoutData(JSON.parse(data));
+    }
     const planData = localStorage.getItem("selectedPlan");
     const registroDataLocal = localStorage.getItem("registroData");
-
-    console.log("📦 planData raw:", planData);
-    console.log("📦 registroData raw:", registroDataLocal);
 
     if (!planData || !registroDataLocal) {
       alert("Datos incompletos. Inicia el proceso nuevamente.");
@@ -72,16 +77,11 @@ export default function Checkout() {
     const parsedPlan = JSON.parse(planData);
     const parsedRegistro = JSON.parse(registroDataLocal);
 
-    console.log("✅ Plan parseado:", parsedPlan);
-    console.log("✅ Registro parseado:", parsedRegistro);
-
     // ✅ NORMALIZAR: Agregar planPrice desde annualPrice
     const normalizedPlan = {
       ...parsedPlan,
       planPrice: parsedPlan.precioAnual || 0,
     };
-
-    console.log("✅ Plan normalizado:", normalizedPlan);
 
     setPlan(normalizedPlan);
     setUser(parsedRegistro);
@@ -996,7 +996,7 @@ export default function Checkout() {
                 <div className="plan-banner-content">
                   <CheckCircleFill />
                   <p className="plan-banner-title">
-                    ¡Último paso! Completa el pago del plan {plan.planName}
+                    ¡Último paso! Completa el pago del plan {plan.nombre}
                   </p>
                 </div>
               </div>
@@ -1009,20 +1009,53 @@ export default function Checkout() {
                   <div className="producto-item">
                     <div className="producto-info">
                       <span className="producto-nombre">
-                        Plan {plan.planName}
+                        Plan {plan.nombre}
                       </span>
+
+                      <button
+                        className="ver-detalle"
+                        title="Detalles"
+                        onClick={() => setMostrarVerDetalles(true)}
+                      >
+                        Ver detalle
+                      </button>
                     </div>
                     <span className="producto-precio">
-                      ${plan?.planPrice?.toLocaleString("es-CO") ?? "0"}
+                      $
+                      {plan.descuentoActivo
+                        ? Math.round(
+                            plan.precioAnual /
+                              (1 - plan.descuentoPorcentaje / 100),
+                          ).toLocaleString("es-CO")
+                        : (plan.precioAnual ?? 0).toLocaleString(
+                            "es-CO",
+                          )}
                     </span>
                   </div>
+                  <div className="descuento-item">
+                      <span>
+                        Descuento ({plan.descuentoPorcentaje}%)
+                      </span>
+                      <span className="descuento-valor">
+                        -${checkoutData?.descuentoPlan.toLocaleString("es-CO")}
+                      </span>
+                    </div>
 
                   <div className="subtotal">
                     <span>Subtotal</span>
                     <span>
-                      ${plan?.planPrice?.toLocaleString("es-CO") ?? "0"}
+                      ${plan?.precioAnual.toLocaleString("es-CO") ?? "0"}
                     </span>
                   </div>
+                  
+                  {checkoutData?.descuentoCupon > 0 && (
+                    <div className="cupon">
+                      <span>Descuento cupón</span>
+                      <span className="descuento-cupon">
+                        -${checkoutData.descuentoCupon.toLocaleString("es-CO")}
+                      </span>
+                    </div>
+                  )}
 
                   <div className="impuestos">
                     <span>Impuestos</span>
@@ -1032,7 +1065,8 @@ export default function Checkout() {
                   <div className="total">
                     <strong>Total a pagar</strong>
                     <strong className="total-precio">
-                      ${plan?.planPrice?.toLocaleString("es-CO") ?? "0"}
+                      $
+                      {checkoutData?.totalFinal?.toLocaleString("es-CO") ?? "0"}
                     </strong>
                   </div>
 
@@ -1062,6 +1096,11 @@ export default function Checkout() {
               </div>
             </div>
           )}
+          <ModalDetalles
+                      isOpen={mostrarVerDetalles}
+                      onClose={() => setMostrarVerDetalles(false)}
+                      plan={plan}
+                    />
         </div>
       </div>
     </div>

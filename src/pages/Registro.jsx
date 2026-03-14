@@ -39,6 +39,14 @@ export default function Registro() {
 
   const onlyDigits = (s) => /^\d+$/.test(s);
   const isBlank = (s) => !s || !s.trim();
+  const separarNombreApellido = (nombreCompleto) => {
+    const partes = nombreCompleto.trim().split(" ");
+
+    const nombre = partes.shift(); // primer nombre
+    const apellido = partes.join(" "); // todo lo demás
+
+    return { nombre, apellido };
+  };
 
   const cupones = useCupones(selectedPlan?.id);
   useEffect(() => {
@@ -60,7 +68,6 @@ export default function Registro() {
       </div>
     );
 
-  // Calcular precio original (antes del descuento del plan)
   const precioOriginal = selectedPlan.descuentoActivo
     ? Math.round(
         selectedPlan.precioAnual / (1 - selectedPlan.descuentoPorcentaje / 100),
@@ -72,19 +79,21 @@ export default function Registro() {
     ? precioOriginal - selectedPlan.precioAnual
     : 0;
 
-  // Subtotal es el precio anual del plan (ya con descuento del plan aplicado)
   const subtotal = selectedPlan.precioAnual;
 
-  // Calcular descuento del cupón
   const descuentoCupon = cupones.coupon
-    ? subtotal - (cupones.coupon.priceAfterDiscount || subtotal)
+    ? cupones.coupon.priceAfterDiscount != null
+      ? subtotal - cupones.coupon.priceAfterDiscount
+      : Math.round(subtotal * (cupones.coupon.discountPercent / 100))
     : 0;
 
-  // Total final
-  const totalFinal = cupones.coupon ? cupones.total : subtotal;
+  const totalFinal = cupones.coupon
+    ? (cupones.total ?? subtotal - descuentoCupon)
+    : subtotal;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -97,7 +106,7 @@ export default function Registro() {
     const allowedTipos = new Set(tipoOptions.map((x) => x.value));
 
     // 1) Tipo documento
-    if (!formData.tipoIdentificacion) {
+    if (isBlank(formData.tipoIdentificacion)) {
       newErrors.tipoIdentificacion = "Selecciona un tipo de documento";
     } else if (!allowedTipos.has(formData.tipoIdentificacion)) {
       newErrors.tipoIdentificacion = "Tipo de documento inválido";
@@ -105,7 +114,8 @@ export default function Registro() {
 
     // 2) Número documento
     const doc = (formData.numeroIdentificacion ?? "").trim();
-    if (!doc) newErrors.numeroIdentificacion = "El documento es obligatorio";
+    if (isBlank(doc))
+      newErrors.numeroIdentificacion = "El documento es obligatorio";
     else if (!onlyDigits(doc))
       newErrors.numeroIdentificacion = "Solo se permiten números";
     else {
@@ -123,7 +133,9 @@ export default function Registro() {
 
     // 3) Nombre
     const nombre = (formData.nombreCompleto ?? "").trim();
-    if (!nombre) newErrors.nombreCompleto = "Nombre completo es obligatorio";
+    const { nombre: nombreSeparado, apellido } = separarNombreApellido(nombre);
+    if (isBlank(nombre))
+      newErrors.nombreCompleto = "Nombre completo es obligatorio";
     else {
       const okChars = /^[\p{L}\p{M} ]+$/u; // letras, tildes y espacios
       if (!okChars.test(nombre))
@@ -132,29 +144,27 @@ export default function Registro() {
       if (nombre.length > 80)
         newErrors.nombreCompleto = "Muy largo (máximo 80)";
     }
-
     // 4) Teléfono
     const tel = (formData.telefono ?? "").trim();
-    if (!tel) newErrors.telefono = "Teléfono es obligatorio";
+    if (isBlank(tel)) newErrors.telefono = "Teléfono es obligatorio";
     else if (!onlyDigits(tel)) newErrors.telefono = "Teléfono solo dígitos";
     else if (tel.length !== 10)
       newErrors.telefono = "Teléfono debe tener 10 dígitos";
 
     // 5) Email
     const email = (formData.email ?? "").trim();
-    if (!email) newErrors.email = "Email es obligatorio";
+    if (isBlank(email)) newErrors.email = "Email es obligatorio";
     else {
       if (/\s/.test(email)) newErrors.email = "Email no debe tener espacios";
-      const basicEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!basicEmail.test(email))
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
         newErrors.email = "Formato de email inválido";
       if (email.length > 254) newErrors.email = "Email demasiado largo";
     }
 
     // 6) Confirm email
     const confirmEmail = (formData.confirmEmail ?? "").trim();
-    if (!confirmEmail) newErrors.confirmEmail = "Confirma tu email";
-    else if (email && confirmEmail !== email)
+    if (isBlank(confirmEmail)) newErrors.confirmEmail = "Confirma tu email";
+    else if (!isBlank(email) && confirmEmail !== email)
       newErrors.confirmEmail = "Los emails no coinciden";
 
     // 7) Password
@@ -174,8 +184,9 @@ export default function Registro() {
 
     // 8) Confirm password
     const confirmPass = formData.confirmPassword ?? "";
-    if (!confirmPass) newErrors.confirmPassword = "Confirma tu contraseña";
-    else if (pass && confirmPass !== pass)
+    if (isBlank(confirmPass))
+      newErrors.confirmPassword = "Confirma tu contraseña";
+    else if (!isBlank(pass) && confirmPass !== pass)
       newErrors.confirmPassword = "Las contraseñas no coinciden";
 
     // 9) Términos
@@ -191,13 +202,23 @@ export default function Registro() {
       const registroData = {
         tipoIdentificacion: formData.tipoIdentificacion,
         numeroIdentificacion: doc,
-        nombre: nombre,
+        nombre: nombreSeparado,
+        apellido: apellido,
         telefono: tel,
         email: email.toLowerCase(),
         password: pass,
       };
 
+      const checkoutData = {
+        plan: selectedPlan,
+        totalFinal: totalFinal,
+        descuentoPlan: descuentoPlan,
+        descuentoCupon: descuentoCupon,
+        cupon: cupones.coupon,
+      };
+
       localStorage.setItem("registroData", JSON.stringify(registroData));
+      localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
       navigate("/checkout");
     } catch (error) {
       console.error("Error guardando datos:", error);
@@ -425,10 +446,7 @@ export default function Registro() {
                     name="password"
                     value={formData.password}
                     onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        password: e.target.value, // NO hagas trim aquí
-                      }));
+                      handleChange(e);
                       setErrors((prev) => ({
                         ...prev,
                         password: undefined,
@@ -436,9 +454,9 @@ export default function Registro() {
                       }));
                     }}
                     placeholder="Contraseña *"
-                    autoComplete="new-password" // registro [web:83]
-                    minLength={8} // ok en password [web:89]
-                    maxLength={64} // ok en password [web:89]
+                    autoComplete="new-password"
+                    minLength={8}
+                    maxLength={64}
                     className={errors.password ? "input-error" : ""}
                     required
                   />
@@ -454,22 +472,20 @@ export default function Registro() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        confirmPassword: e.target.value,
-                      }));
+                      handleChange(e);
                       setErrors((prev) => ({
                         ...prev,
                         confirmPassword: undefined,
                       }));
                     }}
                     placeholder="Confirmar contraseña *"
-                    autoComplete="new-password" // confirm [web:83]
+                    autoComplete="new-password"
                     minLength={8}
                     maxLength={64}
                     className={errors.confirmPassword ? "input-error" : ""}
                     required
                   />
+
                   {errors.confirmPassword && (
                     <p className="text-danger small mt-1">
                       {errors.confirmPassword}
@@ -485,10 +501,7 @@ export default function Registro() {
                   name="aceptaTerminos"
                   checked={formData.aceptaTerminos}
                   onChange={(e) => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      aceptaTerminos: e.target.checked,
-                    }));
+                    handleChange(e);
                     setErrors((prev) => ({
                       ...prev,
                       aceptaTerminos: undefined,
@@ -576,12 +589,7 @@ export default function Registro() {
                         Descuento ({selectedPlan.descuentoPorcentaje}%)
                       </span>
                       <span className="descuento-valor">
-                        -$
-                        {Math.round(
-                          selectedPlan.precioAnual /
-                            (1 - selectedPlan.descuentoPorcentaje / 100) -
-                            selectedPlan.precioAnual,
-                        ).toLocaleString("es-CO")}
+                        -${descuentoPlan.toLocaleString("es-CO")}
                       </span>
                     </div>
                   )}
@@ -592,7 +600,6 @@ export default function Registro() {
                       ${(selectedPlan.precioAnual ?? 0).toLocaleString("es-CO")}
                     </span>
                   </div>
-
                   {cupones.coupon && (
                     <div className="cupon">
                       <span>
