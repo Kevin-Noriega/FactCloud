@@ -441,7 +441,50 @@
 .ds-badge-rechazado { background: #fdecea; color: #c0392b; }
 .ds-badge-enviado   { background: #e3f2fd; color: #1565c0; }
 
-/* ── Tabla dashboard ──────────────────────────────────────── */
+/* Inputs prefijo + consecutivo en fila */
+.doc-comprobante-inputs {
+  display: flex;
+  gap: 8px;
+}
+.doc-prefijo {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+/* Fila de retenciones en totales */
+.doc-retelca-row {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+}
+.doc-retelca-select { width: 130px; }
+.doc-retelca-valor  { font-size: 0.9rem; min-width: 60px; text-align: right; }
+
+/* Select en formas de pago */
+.doc-pago-select { flex: 1; }
+.doc-info-icon {
+  display        : inline-flex;
+  align-items    : center;
+  justify-content: center;
+  width          : 15px;
+  height         : 15px;
+  border-radius  : 50%;
+  background     : #e0e7ff;
+  color          : #4f46e5;
+  font-size      : 0.65rem;
+  font-style     : normal;
+  font-weight    : 700;
+  cursor         : pointer;
+  margin-left    : 5px;
+  vertical-align : middle;
+  flex-shrink    : 0;
+  transition     : background 0.15s;
+  user-select    : none;
+}
+.doc-info-icon:hover {
+  background: #c7d2fe;
+}
+
 
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 960px) {
