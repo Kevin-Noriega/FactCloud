@@ -14,7 +14,7 @@ import ModalCrearContacto from "../components/modals/ModalCrearContacto";
 import ModalCrearCliente from "../components/modals/ModalCrearCliente";
 import ModalCrearProducto from "../components/modals/ModalCrearProducto";
 import "../styles/pages/DocBase.css";
-import { useId } from "react"; // ✅ built-in, siempre único
+import { useId } from "react"; 
 
 function TooltipInfo({ texto }) {
   const id = useId(); 

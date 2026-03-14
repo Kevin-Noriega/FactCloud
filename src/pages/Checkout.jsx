@@ -1250,7 +1250,7 @@ export default function Checkout() {
                       ${plan?.precioAnual.toLocaleString("es-CO") ?? "0"}
                     </span>
                   </div>
-                  
+
                   {checkoutData?.descuentoCupon > 0 && (
                     <div className="cupon">
                       <span>Descuento cupón</span>

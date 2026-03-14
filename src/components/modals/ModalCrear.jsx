@@ -94,7 +94,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => navegar("/nueva-nota-credito")}  // ✅ cierra y navega
+                        onClick={() => navegar("/nueva-nota-credito")}  
                       >
                         <FileText className="menu-icon-crear" />
                         <span>Nota crédito</span>
@@ -130,7 +130,7 @@ function ModalCrear({ open, onClose }) {
                     <li>
                       <button
                         className="menu-item-crear"
-                        onClick={() => navegar("/proveedores")}
+                        onClick={() => navegar("/nuevo-cliente")}
                       >
                         <Truck className="menu-icon-crear" />
                         <span>Proveedor</span>
