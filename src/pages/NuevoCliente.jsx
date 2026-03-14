@@ -80,20 +80,29 @@ const RESPS = [
   { codigo: "R-99-PN", label: "No aplica - Otros" },
 ];
 
-export default function NuevoCliente() {
+export default function NuevoCliente({ tipoInicial, nombreInicial, onSuccessExterno }) {
   const navigate = useNavigate();
 
-  const { cliente, guardando, handleChange, handleSubmit } = useCliente({
+  const [tipoTercero, setTipoTercero] = useState(
+    tipoInicial ?? { clientes: true }
+  );
+
+ const { cliente, guardando, handleChange, handleSubmit } = useCliente({
     clienteEditando: null,
     open: true,
-    onSuccess: (_, msg) => {
-      alert(msg);
-      navigate(-1);
+    onSuccess: (nuevoRegistro, msg) => {
+      if (onSuccessExterno) {
+        onSuccessExterno(nuevoRegistro);   
+      } else {
+        alert(msg);
+        navigate(-1);
+      }
     },
-    onClose: () => navigate(-1),
+    onClose: () => {
+      if (!onSuccessExterno) navigate(-1);
+    },
   });
 
-  const [tipoTercero, setTipoTercero] = useState({ clientes: true });
   const [telefonos, setTelefonos] = useState([
     { indicativo: "605", telefono: "", extension: "" },
   ]);
@@ -129,7 +138,11 @@ export default function NuevoCliente() {
       apellidoContactoFact: cliente.apellido || "",
     }));
   }, [cliente.nombre, cliente.apellido]);
-
+  useEffect(() => {
+    if (nombreInicial?.trim()) {
+      handleChange({ target: { name: "nombre", value: nombreInicial } });
+    }
+  }, []);     
   useEffect(() => {
     setContactoFact((p) => ({ ...p, correoFact: cliente.correo || "" }));
   }, [cliente.correo]);
@@ -195,12 +208,16 @@ export default function NuevoCliente() {
         })),
     });
   };
+const tituloFormulario =
+    tipoInicial?.proveedores ? "Crear proveedor" :
+    tipoInicial?.empleados   ? "Crear empleado"  :
+    "Crear cliente";
 
   return (
     <div className="crear-cliente-wrap">
       {/* HEADER */}
       <div className="cc-header">
-        <h2 className="cc-title">Crear cliente</h2>
+        <h2 className="cc-title">{tituloFormulario}</h2>
         <div className="cc-header-actions">
           <button
             className="btn-cancelar"

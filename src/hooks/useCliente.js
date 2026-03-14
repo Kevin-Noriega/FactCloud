@@ -4,13 +4,13 @@ import api from "../api/axios.js";
 const ESTADO_INICIAL = {
   nombre:               "",
   apellido:             "",
-  tipoIdentificacion:   "CC",  
+  tipoIdentificacion:   "CC",
   numeroIdentificacion: "",
   digitoVerificacion:   "",
   tipoPersona:          "persona",
   correo:               "",
   telefono:             "",
-    departamento:         "", 
+  departamento:         "",
   ciudad:               "",
   direccion:            "",
   codigoPostal:         "",
@@ -21,6 +21,7 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
   const [cliente,   setCliente]   = useState(ESTADO_INICIAL);
   const [guardando, setGuardando] = useState(false);
 
+  // ── Carga datos al editar ──────────────────────────────────────
   useEffect(() => {
     if (clienteEditando) {
       setCliente({
@@ -32,6 +33,7 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
         tipoPersona:          clienteEditando.tipo                 || "persona",
         correo:               clienteEditando.correoFacturacion    || "",
         telefono:             clienteEditando.telefonoFacturacion  || "",
+        departamento:         clienteEditando.departamento         || "",
         ciudad:               clienteEditando.ciudad               || "",
         direccion:            clienteEditando.direccion            || "",
         codigoPostal:         clienteEditando.codigoPostal         || "",
@@ -42,6 +44,7 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     }
   }, [clienteEditando, open]);
 
+  // ── Handlers ──────────────────────────────────────────────────
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setCliente((prev) => ({
@@ -75,41 +78,40 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     if (e.target === e.currentTarget) handleClose();
   };
 
-  // ✅ Recibe extraData como objeto plano — sin hack del evento
+  // ── Submit — recibe extraData como objeto plano ────────────────
   const handleSubmit = async (extraData = {}) => {
     setGuardando(true);
 
-    // Payload mapeado exactamente al CrearClienteDto
-   const payload = {
-  tipoPersona:                 cliente.tipoPersona          || "persona",  // ✅ era "tipo"
-  tipoIdentificacion:          cliente.tipoIdentificacion   || "CC",
-  numeroIdentificacion:        cliente.numeroIdentificacion,
-  dv:                          cliente.digitoVerificacion   || null,
-  codigoSucursal:              extraData.codigoSucursal     || "0",
-  nombre:                      cliente.nombre,
-  apellido:                    cliente.apellido             || "",
-  nombreComercial:             cliente.nombreComercial      || "",
-  departamento:                cliente.departamento         || "",          // ✅ faltaba
-  ciudad:                      cliente.ciudad               || "",
-  direccion:                   cliente.direccion            || "",
-  codigoPostal:                extraData.codigoPostal       || cliente.codigoPostal || "",
-  correo:                      cliente.correo               || "",          // ✅ faltaba
-  // Facturación
-  nombreContactoFacturacion:   extraData.nombreContactoFact   || "",
-  apellidoContactoFacturacion: extraData.apellidoContactoFact || "",
-  correoFacturacion:           extraData.correoFact           || cliente.correo || "",
-  regimenTributario:          extraData.tipoRegimenIva       || "",        // ✅ era tipoRegimenIva
-  indicativoFacturacion:       extraData.indicativoFact       || "",
-  telefonoFacturacion:         extraData.telefonoFact         || cliente.telefono || "",
-  // Tipo de tercero
-  esCliente:                   extraData.esCliente   ?? true,
-  esProveedor:                 extraData.esProveedor ?? false,
-  esEmpleado:                  extraData.esEmpleado  ?? false,
-  // Colecciones
-  responsabilidades:           extraData.responsabilidades || ["R-99-PN"],
-  telefonos:                   extraData.telefonos         || [],
-  contactos:                   extraData.contactos         || [],
-};
+    const payload = {
+      tipoPersona:                 cliente.tipoPersona          || "persona",
+      tipoIdentificacion:          cliente.tipoIdentificacion   || "CC",
+      numeroIdentificacion:        cliente.numeroIdentificacion,
+      dv:                          cliente.digitoVerificacion   || null,
+      codigoSucursal:              extraData.codigoSucursal     || "0",
+      nombre:                      cliente.nombre,
+      apellido:                    cliente.apellido             || "",
+      nombreComercial:             cliente.nombreComercial      || "",
+      departamento:                cliente.departamento         || "",
+      ciudad:                      cliente.ciudad               || "",
+      direccion:                   cliente.direccion            || "",
+      codigoPostal:                extraData.codigoPostal       || cliente.codigoPostal || "",
+      correo:                      cliente.correo               || "",
+      // Facturación
+      nombreContactoFacturacion:   extraData.nombreContactoFact   || "",
+      apellidoContactoFacturacion: extraData.apellidoContactoFact || "",
+      correoFacturacion:           extraData.correoFact           || cliente.correo || "",
+      regimenTributario:           extraData.RegimenTributario    || "",  // ✅ fix: coincide con NuevoCliente
+      indicativoFacturacion:       extraData.indicativoFact       || "",
+      telefonoFacturacion:         extraData.telefonoFact         || cliente.telefono || "",
+      // Tipo de tercero
+      esCliente:                   extraData.esCliente   ?? true,
+      esProveedor:                 extraData.esProveedor ?? false,
+      esEmpleado:                  extraData.esEmpleado  ?? false,
+      // Colecciones
+      responsabilidades:           extraData.responsabilidades || ["R-99-PN"],
+      telefonos:                   extraData.telefonos         || [],
+      contactos:                   extraData.contactos         || [],
+    };
 
     try {
       if (clienteEditando) {
@@ -135,7 +137,7 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
           alert("Error 400: " + JSON.stringify(error.response?.data));
         }
       } else {
-        alert("Error al guardar cliente: " + (error.response?.data?.mensaje || error.message));
+        alert("Error al guardar: " + (error.response?.data?.mensaje || error.message));
       }
     } finally {
       setGuardando(false);
