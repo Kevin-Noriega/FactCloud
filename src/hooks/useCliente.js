@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import api from "../api/axios.js";
+import axiosClient from "../api/axiosClient";
+
+const CONTACTO_VACIO = {
+  nombre: "", apellido: "", correo: "", cargo: "", indicativo: "", telefono: "",
+};
 
 const ESTADO_INICIAL = {
   nombre:               "",
@@ -26,16 +30,30 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       setCliente({
         nombre:               clienteEditando.nombre               || "",
         apellido:             clienteEditando.apellido             || "",
-        tipoIdentificacion:   clienteEditando.tipoIdentificacion   || "CC",
+        tipoIdentificacion:   clienteEditando.tipoIdentificacion   || "",
         numeroIdentificacion: clienteEditando.numeroIdentificacion || "",
-        digitoVerificacion:   clienteEditando.dv                   || "",
-        tipoPersona:          clienteEditando.tipo                 || "persona",
-        correo:               clienteEditando.correoFacturacion    || "",
-        telefono:             clienteEditando.telefonoFacturacion  || "",
+        digitoVerificacion:   clienteEditando.digitoVerificacion   || "",
+        tipoPersona:          clienteEditando.tipoPersona          || "",
+        regimenTributario:    clienteEditando.regimenTributario    || "",
+        regimenFiscal:        clienteEditando.regimenFiscal        || "",
+        nombreComercial:      clienteEditando.nombreComercial      || "",
+        actividadEconomicaCIIU: clienteEditando.actividadEconomicaCIIU || "",
+        correo:               clienteEditando.correo               || "",
+        telefono:             clienteEditando.telefono             || "",
+        departamento:         clienteEditando.departamento         || "",
+        departamentoCodigo:   clienteEditando.departamentoCodigo   || "",
         ciudad:               clienteEditando.ciudad               || "",
+        ciudadCodigo:         clienteEditando.ciudadCodigo         || "",
         direccion:            clienteEditando.direccion            || "",
         codigoPostal:         clienteEditando.codigoPostal         || "",
-        nombreComercial:      clienteEditando.nombreComercial      || "",
+        retenedorIVA:         clienteEditando.retenedorIVA         || false,
+        retenedorRenta:       clienteEditando.retenedorRenta       || false,
+        autoretenedorRenta:   clienteEditando.autoretenedorRenta   || false,
+        retenedorICA:         clienteEditando.retenedorICA         || false,
+        // ✅ carga contactos existentes o arranca con uno vacío
+        contactos: clienteEditando.contactos?.length
+          ? clienteEditando.contactos
+          : [{ ...CONTACTO_VACIO }],
       });
     } else {
       setCliente(ESTADO_INICIAL);
@@ -56,17 +74,42 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
   const handleDepartamentoChange = (opt) =>
     setCliente((prev) => ({
       ...prev,
-      departamento: opt?.value || "",
-      ciudad:       "",
+      departamento:       opt?.label || "",
+      departamentoCodigo: opt?.value || "",
+      ciudad:             "",
+      ciudadCodigo:       "",
     }));
 
   const handleCiudadChange = (opt) =>
-    setCliente((prev) => ({ ...prev, ciudad: opt?.value || "" }));
+    setCliente((prev) => ({
+      ...prev,
+      ciudad:      opt?.label || "",
+      ciudadCodigo: opt?.value || "",
+    }));
+
+  // ✅ Funciones de contactos DENTRO del hook
+  const agregarContacto = () =>
+    setCliente((prev) => ({
+      ...prev,
+      contactos: [...prev.contactos, { ...CONTACTO_VACIO }],
+    }));
+
+  const handleContactoChange = (index, campo, valor) =>
+    setCliente((prev) => {
+      const nuevos = [...prev.contactos];
+      nuevos[index] = { ...nuevos[index], [campo]: valor };
+      return { ...prev, contactos: nuevos };
+    });
+
+  const eliminarContacto = (index) =>
+    setCliente((prev) => ({
+      ...prev,
+      contactos: prev.contactos.filter((_, i) => i !== index),
+    }));
 
   const limpiarFormulario = () => setCliente(ESTADO_INICIAL);
 
-  const handleClose = (e) => {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
+  const handleClose = () => {
     limpiarFormulario();
     onClose();
   };
@@ -75,8 +118,8 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     if (e.target === e.currentTarget) handleClose();
   };
 
-  // ✅ Recibe extraData como objeto plano — sin hack del evento
-  const handleSubmit = async (extraData = {}) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setGuardando(true);
 
     // Payload mapeado exactamente al CrearClienteDto
@@ -113,18 +156,16 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
 
     try {
       if (clienteEditando) {
-        const { data } = await api.put(`/Clientes/${clienteEditando.id}`, payload);
-        onSuccess(data, "Cliente modificado con éxito.");
+        await axiosClient.put(`/Clientes/${clienteEditando.id}`, payload);
+        onSuccess("Cliente actualizado con éxito.");
       } else {
-        const { data } = await api.post("/Clientes", payload);
-        onSuccess(data, "Cliente agregado con éxito.");
+        await axiosClient.post("/Clientes", payload);
+        onSuccess("Cliente creado con éxito.");
       }
       limpiarFormulario();
       onClose();
     } catch (error) {
-      if (error.response?.status === 409) {
-        alert(error.response.data?.mensaje || "Ya existe un cliente con esa identificación.");
-      } else if (error.response?.status === 400) {
+      if (error.response?.status === 400) {
         const errores = error.response?.data?.errors;
         if (errores) {
           const lista = Object.entries(errores)
@@ -134,8 +175,11 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
         } else {
           alert("Error 400: " + JSON.stringify(error.response?.data));
         }
+      } else if (error.response?.status === 409) {
+        alert("Ya existe un cliente con esa identificación.");
       } else {
-        alert("Error al guardar cliente: " + (error.response?.data?.mensaje || error.message));
+        alert("Error al guardar: " + (error.message || "Error desconocido"));
+        console.error(error);
       }
     } finally {
       setGuardando(false);
@@ -152,5 +196,9 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     handleSubmit,
     handleClose,
     handleOverlayClick,
+    // ✅ exponer funciones de contactos
+    agregarContacto,
+    handleContactoChange,
+    eliminarContacto,
   };
 };

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../api/config";
-
+import { useAuth } from "../hooks/useAuth";
+import axiosClient from "../api/axiosClient";
+import { getAccessToken } from "../api/axiosClient";
 export const useFactura = () => {
   const navigate = useNavigate();
 
@@ -10,8 +11,11 @@ export const useFactura = () => {
   const [productosSeleccionados, setProductosSeleccionados] = useState([]);
   const [codigoBarras, setCodigoBarras] = useState("");
   const barcodeInputRef = useRef(null);
-
-  const [facturasUsadas, setFacturasUsadas] = useState({ usadas: 0, limite: 0 });
+  const { isAuthenticated, loading } = useAuth();
+  const [facturasUsadas, setFacturasUsadas] = useState({
+    usadas: 0,
+    limite: 0,
+  });
   const [contactos, setContactos] = useState([]);
 
   const [factura, setFactura] = useState({
@@ -24,9 +28,7 @@ export const useFactura = () => {
     observaciones: "",
   });
 
-  const [formasPago, setFormasPago] = useState([
-    { metodo: "", valor: "" },
-  ]);
+  const [formasPago, setFormasPago] = useState([{ metodo: "", valor: "" }]);
 
   const [retelCA, setRetelCA] = useState({ tipo: "", valor: 0 });
 
@@ -47,7 +49,7 @@ export const useFactura = () => {
 
   const totalFormasPago = formasPago.reduce(
     (acc, fp) => acc + (parseFloat(fp.valor) || 0),
-    0
+    0,
   );
 
   // ── Cargar prefijo del usuario ──────────────────────────────────
@@ -61,56 +63,42 @@ export const useFactura = () => {
     }
   }, []);
 
-// ── Cargar datos iniciales ──────────────────────────────────────
-useEffect(() => {
-  const cargarDatos = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = { Authorization: `Bearer ${token}` };
+  // ── Cargar datos iniciales ──────────────────────────────────────
+  useEffect(() => {
+    if (!isAuthenticated || loading) return; // ← agrega || loading
 
-      const [resClientes, resProductos, resStats] = await Promise.all([
-        fetch(`${API_URL}/Clientes`, { headers }),
-        fetch(`${API_URL}/Productos`, { headers }),
-        fetch(`${API_URL}/Planes/estadisticas`, { headers }), // ✅ usa estadisticas
-      ]);
-
-      if (resClientes.ok) setClientes(await resClientes.json());
-      if (resProductos.ok) setProductos(await resProductos.json());
-      if (resStats.ok) {
-        const stats = await resStats.json();
+    const cargarDatos = async () => {
+      try {
+        const [resClientes, resProductos, resStats] = await Promise.all([
+          axiosClient.get("/Clientes"),
+          axiosClient.get("/Productos"),
+          axiosClient.get("/Planes/estadisticas"),
+        ]);
+        setClientes(resClientes.data);
+        setProductos(resProductos.data);
         setFacturasUsadas({
-          usadas: stats.documentosUsados,  // ✅ campo de estadisticas
-          limite: stats.documentosLimite,  // ✅ campo de estadisticas
+          usadas: resStats.data.documentosUsados,
+          limite: resStats.data.documentosLimite,
         });
+      } catch (error) {
+        console.error("Error al cargar datos:", error);
       }
-    } catch (error) {
-      console.error("Error al cargar datos:", error);
-    }
-  };
-  cargarDatos();
-}, []);
+    };
 
+    cargarDatos();
+  }, [isAuthenticated, loading]);
 
   // ── Cargar contactos al cambiar de cliente ──────────────────────
+  // ✅ Solo UNO — borra el duplicado que tenías arriba
   useEffect(() => {
     if (!factura.clienteId) {
       setContactos([]);
       return;
     }
-    const cargarContactos = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-          `${API_URL}/Clientes/${factura.clienteId}/contactos`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (res.ok) setContactos(await res.json());
-        else setContactos([]);
-      } catch {
-        setContactos([]);
-      }
-    };
-    cargarContactos();
+    axiosClient
+      .get(`/Clientes/${factura.clienteId}/contactos`)
+      .then((res) => setContactos(res.data))
+      .catch(() => setContactos([]));
   }, [factura.clienteId]);
 
   // ── Agregar contacto desde modal ────────────────────────────────
@@ -125,7 +113,7 @@ useEffect(() => {
     if (!codigo) return;
 
     const producto = productos.find(
-      (p) => String(p.codigoBarras || "").trim() === codigo
+      (p) => String(p.codigoBarras || "").trim() === codigo,
     );
 
     if (!producto) {
@@ -135,7 +123,7 @@ useEffect(() => {
 
     setProductosSeleccionados((prev) => {
       const idx = prev.findIndex(
-        (item) => Number(item.productoId) === Number(producto.id)
+        (item) => Number(item.productoId) === Number(producto.id),
       );
       if (idx !== -1) {
         const act = [...prev];
@@ -204,7 +192,7 @@ useEffect(() => {
 
   const eliminarProducto = (index) => {
     setProductosSeleccionados(
-      productosSeleccionados.filter((_, i) => i !== index)
+      productosSeleccionados.filter((_, i) => i !== index),
     );
   };
 
@@ -383,25 +371,47 @@ const totalesMemo = useMemo(
 );
 
 
-return {
+  // ── Agregar producto desde modal ────────────────────────────────
+  const agregarProductoLocal = (nuevoProducto) => {
+    setProductos((prev) => [...prev, nuevoProducto]);
+    setProductosSeleccionados((prev) => [
+      ...prev,
+      {
+        productoId: nuevoProducto.id,
+        descripcion: nuevoProducto.nombre,
+        cantidad: 1,
+        precioUnitario: nuevoProducto.precioUnitario ?? 0,
+        unidadMedida: nuevoProducto.unidadMedida ?? "Unidad",
+        porcentajeDescuento: 0,
+        tarifaIVA: nuevoProducto.tarifaIVA ?? 0,
+        tarifaINC: nuevoProducto.tarifaINC ?? 0,
+      },
+    ]);
+  };
+
+  return {
     // Datos base
-    factura, setFactura,
-    clientes, productos,
+    factura,
+    setFactura,
+    clientes,
+    productos,
     contactos,
     facturasUsadas,
     productosSeleccionados,
     // Código de barras
-    codigoBarras, setCodigoBarras,
+    codigoBarras,
+    setCodigoBarras,
     barcodeInputRef,
-      agregarClienteLocal, 
-  agregarProductoLocal, 
+    agregarClienteLocal,
+    agregarProductoLocal,
     formasPago,
     totalFormasPago,
     agregarFormaPago,
     actualizarFormaPago,
     eliminarFormaPago,
     // ✅ RetelCA (faltaba esto)
-    retelCA, setRetelCA,
+    retelCA,
+    setRetelCA,
     // Contactos
     agregarContactoLocal,
     // Productos
@@ -416,5 +426,4 @@ return {
     handleSubmit,
     navigate,
   };
-
 };
