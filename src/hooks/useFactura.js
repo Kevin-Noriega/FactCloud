@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import axiosClient from "../api/axiosClient";
@@ -26,7 +26,6 @@ export const useFactura = () => {
     numeroFactura: "",
     prefijo: "",
     observaciones: "",
-    fechaVencimiento: "",
   });
 
   const [formasPago, setFormasPago] = useState([{ metodo: "", valor: "" }]);
@@ -246,110 +245,131 @@ export const useFactura = () => {
   };
 
   // ── Submit ──────────────────────────────────────────────────────
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
-    if (!usuarioGuardado) {
-      alert("Usuario no autenticado.");
-      return;
-    }
-    if (!factura.tipoFactura) {
-      alert("Selecciona el tipo de factura.");
-      return;
-    }
-    if (!factura.clienteId) {
-      alert("Selecciona un cliente.");
-      return;
-    }
-    if (productosSeleccionados.length === 0) {
-      alert("Agrega al menos un producto.");
-      return;
-    }
+  const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
+  if (!usuarioGuardado) { alert("Usuario no autenticado."); return; }
+  if (!factura.tipoFactura) { alert("Selecciona el tipo de factura."); return; }
+  if (!factura.clienteId)   { alert("Selecciona un cliente."); return; }
+  if (productosSeleccionados.length === 0) { alert("Agrega al menos un producto."); return; }
 
-    const totales = calcularTotales();
-    const diferencia = Math.abs(totalFormasPago - totales.totalFactura);
-    if (diferencia > 0.01) {
-      alert(
-        `El total de las formas de pago (${totalFormasPago.toLocaleString("es-CO", { minimumFractionDigits: 2 })}) ` +
-          `no coincide con el total neto (${totales.totalFactura.toLocaleString("es-CO", { minimumFractionDigits: 2 })}).`,
-      );
-      return;
-    }
+  const totales    = calcularTotales();
+  const diferencia = Math.abs(totalFormasPago - totales.totalFactura);
+  if (diferencia > 0.01) {
+    alert(`El total de formas de pago no coincide con el total neto.`);
+    return;
+  }
 
-    try {
-      // ❌ Elimina: const token = localStorage.getItem("token");
+  // ✅ Genera AQUÍ — justo antes del fetch
+  const prefijo        = (factura.prefijo?.trim()) || "FAC";
+  const consecutivo    = Date.now();
+  const numeroGenerado = `${prefijo}-${consecutivo}`;  // ← "FAC-1710000000000"
 
-      const payload = {
-        usuarioId: usuarioGuardado.id,
-        clienteId: parseInt(factura.clienteId),
-        contactoId: factura.contactoId || null,
-        tipoFactura: factura.tipoFactura,
-        numeroFactura: `${factura.prefijo}-${Date.now()}`,
-        prefijo: factura.prefijo,
-        fechaEmision: new Date(factura.fechaElaboracion).toISOString(),
-        horaEmision: new Date().toTimeString().split(" ")[0],
-        subtotal: totales.subtotal,
-        totalIVA: totales.totalIVA,
-        totalINC: totales.totalINC,
-        totalDescuentos: totales.totalDescuentos,
+  console.log("numeroFactura generado:", numeroGenerado); // verifica en consola
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const payload = {
+        usuarioId:        usuarioGuardado.id,
+        clienteId:        parseInt(factura.clienteId),
+        contactoId:       factura.contactoId || null,
+        tipoFactura:      factura.tipoFactura,
+        prefijo:          prefijo,
+        numeroFactura:    numeroGenerado,   // ✅ nunca vacío
+        fechaEmision:     new Date(factura.fechaElaboracion).toISOString(),
+        horaEmision:      new Date().toTimeString().split(" ")[0],
+        subtotal:         totales.subtotal,
+        totalIVA:         totales.totalIVA,
+        totalINC:         totales.totalINC,
+        totalDescuentos:  totales.totalDescuentos,
         totalRetenciones: retelCA.valor || 0,
-        totalFactura: totales.totalFactura,
+        totalFactura:     totales.totalFactura,
         formasPago: formasPago
           .filter((fp) => fp.metodo)
           .map((fp) => ({
             metodoPagoCodigo: fp.metodo,
-            valor: parseFloat(fp.valor) || 0,
+            valor:            parseFloat(fp.valor) || 0,
           })),
-        retelCA: retelCA.tipo ? retelCA : null,
-        observaciones: factura.observaciones,
-        estado: "Pendiente",
-        enviadaDIAN: false,
-        moneda: "COP",
-        fechaVencimiento: factura.fechaVencimiento || null,
-        CUFE: "",
-        QR: "",
-        ambienteDIAN: "",
+        retelCA:       retelCA.tipo ? retelCA : null,
+        observaciones: factura.observaciones || "",
+        estado:        "Pendiente",
+        enviadaDIAN:   false,
+        moneda:        "COP",
+        fechaVencimiento: null,
+        CUFE: "", QR: "", ambienteDIAN: "",
         detalleFacturas: productosSeleccionados.map((item) => {
           const linea = calcularLinea(item);
           return {
-            productoId: parseInt(item.productoId),
-            descripcion: item.descripcion,
-            cantidad: parseInt(item.cantidad),
-            unidadMedida: item.unidadMedida,
-            precioUnitario: parseFloat(item.precioUnitario),
+            productoId:          parseInt(item.productoId)            || 0,
+            descripcion:         item.descripcion,
+            cantidad:            parseInt(item.cantidad)              || 1,
+            unidadMedida:        item.unidadMedida,
+            precioUnitario:      parseFloat(item.precioUnitario)      || 0,
             porcentajeDescuento: parseFloat(item.porcentajeDescuento) || 0,
-            valorDescuento: linea.valorDescuento,
-            subtotalLinea: linea.baseImponible,
-            tarifaIVA: parseFloat(item.tarifaIVA),
-            valorIVA: linea.valorIVA,
-            tarifaINC: parseFloat(item.tarifaINC) || 0,
-            valorINC: linea.valorINC,
-            totalLinea: linea.totalLinea,
-            codigoUNSPSC: "",
-            codigoInterno: "",
+            valorDescuento:      linea.valorDescuento,
+            subtotalLinea:       linea.baseImponible,
+            tarifaIVA:           parseFloat(item.tarifaIVA)           || 0,
+            valorIVA:            linea.valorIVA,
+            tarifaINC:           parseFloat(item.tarifaINC)           || 0,
+            valorINC:            linea.valorINC,
+            totalLinea:          linea.totalLinea,
+            codigoUNSPSC:        "",
+            codigoInterno:       "",
           };
         }),
-      };
+       
+    };   
 
-      // ✅ axiosClient — sin fetch, sin token manual
-      await axiosClient.post("/Facturas", payload);
+    console.log("payload enviado:", JSON.stringify(payload, null, 2)); // debug
 
-      alert("Factura creada exitosamente");
-      navigate("/ventas");
-    } catch (error) {
-      alert(
-        "Error al crear factura: " +
-          (error.response?.data?.message || error.message),
-      );
-    }
-  };
+    const res = await fetch(`${API_URL}/Facturas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:  `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  // ── Agregar cliente desde modal ─────────────────────────────────
-  const agregarClienteLocal = (nuevoCliente) => {
-    setClientes((prev) => [...prev, nuevoCliente]);
-    setFactura((f) => ({ ...f, clienteId: nuevoCliente.id, contactoId: "" }));
-  };
+    if (!res.ok) throw new Error(await res.text());
+
+    alert("Factura creada exitosamente");
+    navigate("/ventas");
+  } catch (error) {
+    alert("Error al crear factura: " + error.message);
+  }
+};
+
+// ── Agregar cliente desde modal ─────────────────────────────────
+const agregarClienteLocal = (nuevoCliente) => {
+  setClientes((prev) => [...prev, nuevoCliente]);
+  setFactura((f) => ({ ...f, clienteId: nuevoCliente.id, contactoId: "" }));
+};
+
+// ── Agregar producto desde modal ────────────────────────────────
+const agregarProductoLocal = (nuevoProducto) => {
+  setProductos((prev) => [...prev, nuevoProducto]);
+  setProductosSeleccionados((prev) => [
+    ...prev,
+    {
+      productoId:          nuevoProducto.id,
+      descripcion:         nuevoProducto.nombre,
+      cantidad:            1,
+      precioUnitario:      nuevoProducto.precioUnitario ?? 0,
+      unidadMedida:        nuevoProducto.unidadMedida ?? "Unidad",
+      porcentajeDescuento: 0,
+      tarifaIVA:           nuevoProducto.tarifaIVA ?? 0,
+      tarifaINC:           nuevoProducto.tarifaINC ?? 0,
+    },
+  ]);
+};
+const totalesMemo = useMemo(
+  () => calcularTotales(),
+  [productosSeleccionados]  // solo recalcula cuando cambian productos
+);
+
 
   // ── Agregar producto desde modal ────────────────────────────────
   const agregarProductoLocal = (nuevoProducto) => {
@@ -401,7 +421,7 @@ export const useFactura = () => {
     actualizarProducto,
     eliminarProducto,
     calcularLinea,
-    totales: calcularTotales(),
+      totales: totalesMemo,
     // Submit
     handleSubmit,
     navigate,

@@ -6,29 +6,19 @@ const CONTACTO_VACIO = {
 };
 
 const ESTADO_INICIAL = {
-  nombre: "",
-  apellido: "",
-  tipoIdentificacion: "",
+  nombre:               "",
+  apellido:             "",
+  tipoIdentificacion:   "CC",  
   numeroIdentificacion: "",
-  digitoVerificacion: "",
-  tipoPersona: "",
-  regimenTributario: "",
-  regimenFiscal: "",
-  nombreComercial: "",
-  actividadEconomicaCIIU: "",
-  correo: "",
-  telefono: "",
-  departamento: "",
-  departamentoCodigo: "",
-  ciudad: "",
-  ciudadCodigo: "",
-  direccion: "",
-  codigoPostal: "",
-  retenedorIVA: false,
-  retenedorRenta: false,
-  autoretenedorRenta: false,
-  retenedorICA: false,
-  contactos: [{ ...CONTACTO_VACIO }], // ✅ siempre arranca con una fila vacía
+  digitoVerificacion:   "",
+  tipoPersona:          "persona",
+  correo:               "",
+  telefono:             "",
+    departamento:         "", 
+  ciudad:               "",
+  direccion:            "",
+  codigoPostal:         "",
+  nombreComercial:      "",
 };
 
 export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
@@ -132,25 +122,37 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     e.preventDefault();
     setGuardando(true);
 
-    const payload = {
-      nombre:               cliente.nombre,
-      apellido:             cliente.apellido,
-      nombreComercial:      cliente.nombreComercial      || null,
-      tipoIdentificacion:   cliente.tipoIdentificacion,
-      numeroIdentificacion: cliente.numeroIdentificacion,
-      digitoVerificacion:   cliente.digitoVerificacion
-                              ? parseInt(cliente.digitoVerificacion)
-                              : null,
-      tipoPersona:          cliente.tipoPersona,
-      regimenTributario:    cliente.regimenTributario,
-      correo:               cliente.correo,
-      telefono:             cliente.telefono             || null,
-      departamento:         cliente.departamento,
-      ciudad:               cliente.ciudad,
-      direccion:            cliente.direccion,
-      codigoPostal:         cliente.codigoPostal         || null,
-      contactos:            cliente.contactos.filter(c => c.nombre.trim() !== ""),
-    };
+    // Payload mapeado exactamente al CrearClienteDto
+   const payload = {
+  tipoPersona:                 cliente.tipoPersona          || "persona",  // ✅ era "tipo"
+  tipoIdentificacion:          cliente.tipoIdentificacion   || "CC",
+  numeroIdentificacion:        cliente.numeroIdentificacion,
+  dv:                          cliente.digitoVerificacion   || null,
+  codigoSucursal:              extraData.codigoSucursal     || "0",
+  nombre:                      cliente.nombre,
+  apellido:                    cliente.apellido             || "",
+  nombreComercial:             cliente.nombreComercial      || "",
+  departamento:                cliente.departamento         || "",          // ✅ faltaba
+  ciudad:                      cliente.ciudad               || "",
+  direccion:                   cliente.direccion            || "",
+  codigoPostal:                extraData.codigoPostal       || cliente.codigoPostal || "",
+  correo:                      cliente.correo               || "",          // ✅ faltaba
+  // Facturación
+  nombreContactoFacturacion:   extraData.nombreContactoFact   || "",
+  apellidoContactoFacturacion: extraData.apellidoContactoFact || "",
+  correoFacturacion:           extraData.correoFact           || cliente.correo || "",
+  regimenTributario:          extraData.tipoRegimenIva       || "",        // ✅ era tipoRegimenIva
+  indicativoFacturacion:       extraData.indicativoFact       || "",
+  telefonoFacturacion:         extraData.telefonoFact         || cliente.telefono || "",
+  // Tipo de tercero
+  esCliente:                   extraData.esCliente   ?? true,
+  esProveedor:                 extraData.esProveedor ?? false,
+  esEmpleado:                  extraData.esEmpleado  ?? false,
+  // Colecciones
+  responsabilidades:           extraData.responsabilidades || ["R-99-PN"],
+  telefonos:                   extraData.telefonos         || [],
+  contactos:                   extraData.contactos         || [],
+};
 
     try {
       if (clienteEditando) {

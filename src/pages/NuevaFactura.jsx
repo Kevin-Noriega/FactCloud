@@ -14,17 +14,18 @@ import ModalCrearContacto from "../components/modals/ModalCrearContacto";
 import ModalCrearCliente from "../components/modals/ModalCrearCliente";
 import ModalCrearProducto from "../components/modals/ModalCrearProducto";
 import "../styles/pages/DocBase.css";
+import { useId } from "react"; // ✅ built-in, siempre único
 
-/* ── Tooltip reutilizable ─────────────────────────── */
-let _ttc = 0;
 function TooltipInfo({ texto }) {
-  const [id] = React.useState(() => `tt-nf-${_ttc++}`);
+  const id = useId(); 
+
   return (
     <>
       <i
         className="doc-info-icon"
         data-tooltip-id={id}
         data-tooltip-place="top"
+        aria-label="Más información"
       >
         i
       </i>
@@ -42,16 +43,9 @@ function TooltipInfo({ texto }) {
 /* ── NoOptions ────────────────────────────────────── */
 const NoOptionsCliente = ({ inputValue, onCrear }) => (
   <div>
-    {inputValue && (
-      <div className="doc-select-empty">No se encontró "{inputValue}"</div>
-    )}
-    <div
-      className="doc-dropdown-item doc-dropdown-crear"
-      onMouseDown={(e) => {
-        e.preventDefault();
-        onCrear(inputValue);
-      }}
-    >
+    {inputValue && <div className="doc-select-empty">No se encontró "{inputValue}"</div>}
+    <div className="doc-dropdown-item doc-dropdown-crear"
+      onMouseDown={(e) => { e.preventDefault(); onCrear(inputValue); }}>
       <PlusCircle size={13} /> Crear cliente "{inputValue || "nuevo"}"
     </div>
   </div>
@@ -59,29 +53,17 @@ const NoOptionsCliente = ({ inputValue, onCrear }) => (
 
 const NoOptionsProducto = ({ inputValue, onCrear }) => (
   <div>
-    {inputValue && (
-      <div className="doc-select-empty">No se encontró "{inputValue}"</div>
-    )}
-    <div
-      className="doc-dropdown-item doc-dropdown-crear"
-      onMouseDown={(e) => {
-        e.preventDefault();
-        onCrear(inputValue);
-      }}
-    >
+    {inputValue && <div className="doc-select-empty">No se encontró "{inputValue}"</div>}
+    <div className="doc-dropdown-item doc-dropdown-crear"
+      onMouseDown={(e) => { e.preventDefault(); onCrear(inputValue); }}>
       <PlusCircle size={13} /> Crear producto "{inputValue || "nuevo"}"
     </div>
   </div>
 );
 
 const NoOptionsContacto = ({ onAbrirModal }) => (
-  <div
-    className="doc-dropdown-item doc-dropdown-crear"
-    onMouseDown={(e) => {
-      e.preventDefault();
-      onAbrirModal();
-    }}
-  >
+  <div className="doc-dropdown-item doc-dropdown-crear"
+    onMouseDown={(e) => { e.preventDefault(); onAbrirModal(); }}>
     <PlusCircle size={13} /> Crear nuevo contacto
   </div>
 );
@@ -167,23 +149,20 @@ export default function NuevaFactura() {
   const [touched, setTouched] = useState({});
   const [submitIntentado, setSubmitIntentado] = useState(false);
 
-  const marcar = (campo) => setTouched((p) => ({ ...p, [campo]: true }));
+  const marcar       = (campo) => setTouched((p) => ({ ...p, [campo]: true }));
   const mostrarError = (campo) => submitIntentado || !!touched[campo];
 
-  const handleCrearCli = (n) => {
-    setNombreSugeridoCliente(n || "");
-    setMostrarModalCliente(true);
-  };
-  const handleCrearPro = (n) => {
-    setNombreSugeridoProducto(n || "");
-    setMostrarModalProducto(true);
-  };
+  const handleCrearCli = (n) => { setNombreSugeridoCliente(n  || ""); setMostrarModalCliente(true);  };
+  const handleCrearPro = (n) => { setNombreSugeridoProducto(n || ""); setMostrarModalProducto(true); };
 
   const pagoCoincide = Math.abs(totalFormasPago - totales.totalFactura) <= 0.01;
-  const fmt = (n) =>
-    (Number(n) || 0).toLocaleString("es-CO", { minimumFractionDigits: 2 });
+  const fmt = (n) => (Number(n) || 0).toLocaleString("es-CO", { minimumFractionDigits: 2 });
+// En consola del navegador — solo para testing
+const u = JSON.parse(localStorage.getItem("usuario"));
+u.prefijoAutorizadoDIAN = "FACT";
+localStorage.setItem("usuario", JSON.stringify(u));
 
-  /* ── Opciones memoizadas ─────────────────────── */
+  /* ── Opciones ────────────────────────────────── */
   const opcionesClientes = clientes.map((c) => ({
     value: c.id,
     label: `${c.nombre}${c.apellido ? " " + c.apellido : ""} — ${c.numeroIdentificacion}`,
@@ -194,7 +173,7 @@ export default function NuevaFactura() {
     label: `${c.nombre}${c.cargo ? " — " + c.cargo : ""}`,
   }));
 
-  const opcionesProductos = (idx) =>
+  const opcionesProductos = () =>
     productos.map((p) => ({
       value: p.id,
       label: `${p.nombre} — $${(p.precioUnitario || 0).toLocaleString("es-CO")}`,
@@ -207,35 +186,27 @@ export default function NuevaFactura() {
         <h4 className="doc-titulo">Nueva factura de venta</h4>
       </div>
 
-      {facturasUsadas.limite > 0 &&
-        (() => {
-          const pct = Math.round(
-            (facturasUsadas.usadas / facturasUsadas.limite) * 100,
-          );
-          const enPeligro = pct >= 80;
-          const agotado = facturasUsadas.usadas >= facturasUsadas.limite;
-          return (
-            <div
-              className={`doc-uso-banner ${agotado ? "agotado" : enPeligro ? "peligro" : ""}`}
-            >
-              <div className="doc-uso-texto">
-                <span className="doc-uso-label">Tus facturas usadas</span>
-                <span className="doc-uso-nums">
-                  <strong>{facturasUsadas.usadas}</strong>
-                  <span className="doc-uso-sep">/</span>
-                  {facturasUsadas.limite}
-                </span>
-              </div>
+      {/* ── Banner uso ── */}
+      {facturasUsadas.limite > 0 && (() => {
+        const pct       = Math.round((facturasUsadas.usadas / facturasUsadas.limite) * 100);
+        const enPeligro = pct >= 80;
+        const agotado   = facturasUsadas.usadas >= facturasUsadas.limite;
+        return (
+          <div className={`doc-uso-banner ${agotado ? "agotado" : enPeligro ? "peligro" : ""}`}>
+            <div className="doc-uso-texto">
+              <span className="doc-uso-label">Tus facturas usadas</span>
+              <span className="doc-uso-nums">
+                <strong>{facturasUsadas.usadas}</strong>
+                <span className="doc-uso-sep">/</span>
+                {facturasUsadas.limite}
+              </span>
             </div>
-          );
-        })()}
+          </div>
+        );
+      })()}
 
-      <form
-        onSubmit={(e) => {
-          setSubmitIntentado(true);
-          handleSubmit(e);
-        }}
-      >
+      <form onSubmit={(e) => { setSubmitIntentado(true); handleSubmit(e); }}>
+
         {/* ══ Información básica ══ */}
         <h6 className="doc-section-title">Información básica</h6>
         <div className="doc-header-grid" style={{ marginTop: 12 }}>
@@ -250,18 +221,12 @@ export default function NuevaFactura() {
               <select
                 className={`form-select form-select-sm ${mostrarError("tipoFactura") && !factura.tipoFactura ? "is-invalid" : ""}`}
                 value={factura.tipoFactura}
-                onChange={(e) =>
-                  setFactura({ ...factura, tipoFactura: e.target.value })
-                }
+                onChange={(e) => setFactura({ ...factura, tipoFactura: e.target.value })}
                 onBlur={() => marcar("tipoFactura")}
               >
-                <option value="" disabled>
-                  Seleccionar tipo...
-                </option>
+                <option value="" disabled>Seleccionar tipo...</option>
                 {TIPOS_FACTURA.map((t) => (
-                  <option key={t.value} value={t.value}>
-                    {t.label}
-                  </option>
+                  <option key={t.value} value={t.value}>{t.label}</option>
                 ))}
               </select>
               {mostrarError("tipoFactura") && !factura.tipoFactura && (
@@ -283,17 +248,8 @@ export default function NuevaFactura() {
                 )}
                 menuPortalTarget={document.body}
                 options={opcionesClientes}
-                value={
-                  opcionesClientes.find((o) => o.value === factura.clienteId) ??
-                  null
-                }
-                onChange={(opt) =>
-                  setFactura((p) => ({
-                    ...p,
-                    clienteId: opt?.value ?? "",
-                    contactoId: "",
-                  }))
-                }
+                value={opcionesClientes.find((o) => o.value === factura.clienteId) ?? null}
+                onChange={(opt) => setFactura((p) => ({ ...p, clienteId: opt?.value ?? "", contactoId: "" }))}
                 onBlur={() => marcar("clienteId")}
                 noOptionsMessage={({ inputValue }) => (
                   <NoOptionsCliente
@@ -321,26 +277,11 @@ export default function NuevaFactura() {
                 styles={mkSelectStyles()}
                 menuPortalTarget={document.body}
                 options={opcionesContactos}
-                value={
-                  opcionesContactos.find(
-                    (o) => o.value === factura.contactoId,
-                  ) ?? null
-                }
-                onChange={(opt) =>
-                  setFactura((p) => ({ ...p, contactoId: opt?.value ?? "" }))
-                }
-                noOptionsMessage={() =>
-                  // ✅ AQUÍ es donde va el cambio
-                  factura.clienteId ? (
-                    <NoOptionsContacto
-                      onAbrirModal={() => setMostrarModalContacto(true)}
-                    />
-                  ) : (
-                    <span className="doc-select-empty">
-                      Selecciona un cliente primero
-                    </span>
-                  )
-                }
+                value={opcionesContactos.find((o) => o.value === factura.contactoId) ?? null}
+                onChange={(opt) => setFactura((p) => ({ ...p, contactoId: opt?.value ?? "" }))}
+                noOptionsMessage={() => (
+                  <NoOptionsContacto onAbrirModal={() => setMostrarModalContacto(true)} />
+                )}
                 isDisabled={!factura.clienteId}
                 isClearable
                 placeholder={
@@ -351,7 +292,7 @@ export default function NuevaFactura() {
               />
             </div>
 
-            {/* Fecha */}
+            {/* Fecha elaboración */}
             <div className="doc-field">
               <label className="doc-label">Fecha de elaboración</label>
               <input
@@ -359,32 +300,32 @@ export default function NuevaFactura() {
                 className="form-control form-control-sm"
                 style={{ borderLeft: "3px solid #1a73e8" }}
                 value={factura.fechaElaboracion}
-                onChange={(e) =>
-                  setFactura({ ...factura, fechaElaboracion: e.target.value })
-                }
+                onChange={(e) => setFactura({ ...factura, fechaElaboracion: e.target.value })}
               />
             </div>
           </div>
 
           {/* Columna derecha */}
           <div className="doc-col">
-            {/* Número */}
+
             <div className="doc-field">
               <label className="doc-label">
                 Número
                 <TooltipInfo texto="Generado automáticamente según el rango autorizado por la DIAN." />
               </label>
               <div className="doc-comprobante-inputs">
+                {/* Prefijo */}
                 <input
                   type="text"
                   className="form-control form-control-sm doc-prefijo text-center fw-bold"
                   value={factura.prefijo}
+                  placeholder="Prefijo"
                   readOnly
                 />
                 <input
                   type="text"
                   className="form-control form-control-sm text-center text-primary fw-bold"
-                  value={factura.numeroFactura}
+                  value=""
                   placeholder="Auto"
                   readOnly
                 />
@@ -416,22 +357,6 @@ export default function NuevaFactura() {
                   Agregar
                 </button>
               </div>
-            </div>
-
-            {/* Fecha vencimiento */}
-            <div className="doc-field">
-              <label className="doc-label">
-                Fecha de vencimiento
-                <TooltipInfo texto="Fecha límite de pago (opcional)." />
-              </label>
-              <input
-                type="date"
-                className="form-control form-control-sm"
-                value={factura.fechaVencimiento || ""}
-                onChange={(e) =>
-                  setFactura({ ...factura, fechaVencimiento: e.target.value })
-                }
-              />
             </div>
           </div>
         </div>
@@ -475,7 +400,7 @@ export default function NuevaFactura() {
                 ) : (
                   productosSeleccionados.map((item, idx) => {
                     const linea = calcularLinea(item);
-                    const opts = opcionesProductos(idx);
+                    const opts  = opcionesProductos();
                     return (
                       <tr key={idx}>
                         <td className="doc-td-num">{idx + 1}</td>
@@ -490,17 +415,8 @@ export default function NuevaFactura() {
                               }),
                             }}
                             options={opts}
-                            value={
-                              opts.find((o) => o.value === item.productoId) ??
-                              null
-                            }
-                            onChange={(opt) =>
-                              actualizarProducto(
-                                idx,
-                                "productoId",
-                                opt?.value ?? "",
-                              )
-                            }
+                            value={opts.find((o) => o.value === item.productoId) ?? null}
+                            onChange={(opt) => actualizarProducto(idx, "productoId", opt?.value ?? "")}
                             noOptionsMessage={({ inputValue }) => (
                               <NoOptionsProducto
                                 inputValue={inputValue}
@@ -512,65 +428,25 @@ export default function NuevaFactura() {
                           />
                         </td>
                         <td>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm text-end doc-num-input"
-                            value={item.cantidad}
-                            min="1"
-                            onChange={(e) =>
-                              actualizarProducto(
-                                idx,
-                                "cantidad",
-                                e.target.value,
-                              )
-                            }
-                          />
+                          <input type="number" className="form-control form-control-sm text-end doc-num-input"
+                            value={item.cantidad} min="1"
+                            onChange={(e) => actualizarProducto(idx, "cantidad", e.target.value)} />
                         </td>
                         <td>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm text-end doc-num-input"
-                            value={item.precioUnitario}
-                            step="0.01"
-                            min="0"
-                            onChange={(e) =>
-                              actualizarProducto(
-                                idx,
-                                "precioUnitario",
-                                e.target.value,
-                              )
-                            }
-                          />
+                          <input type="number" className="form-control form-control-sm text-end doc-num-input"
+                            value={item.precioUnitario} step="0.01" min="0"
+                            onChange={(e) => actualizarProducto(idx, "precioUnitario", e.target.value)} />
                         </td>
                         <td>
-                          <input
-                            type="number"
-                            className="form-control form-control-sm text-end doc-num-input"
-                            value={item.porcentajeDescuento}
-                            min="0"
-                            max="100"
-                            step="0.01"
-                            onChange={(e) =>
-                              actualizarProducto(
-                                idx,
-                                "porcentajeDescuento",
-                                e.target.value,
-                              )
-                            }
-                          />
+                          <input type="number" className="form-control form-control-sm text-end doc-num-input"
+                            value={item.porcentajeDescuento} min="0" max="100" step="0.01"
+                            onChange={(e) => actualizarProducto(idx, "porcentajeDescuento", e.target.value)} />
                         </td>
                         <td>
                           <select
                             className="form-select form-select-sm doc-select-item"
                             value={item.tarifaIVA}
-                            onChange={(e) =>
-                              actualizarProducto(
-                                idx,
-                                "tarifaIVA",
-                                e.target.value,
-                              )
-                            }
-                          >
+                            onChange={(e) => actualizarProducto(idx, "tarifaIVA", e.target.value)}>
                             <option value="0">0%</option>
                             <option value="5">5%</option>
                             <option value="19">19%</option>
@@ -580,14 +456,7 @@ export default function NuevaFactura() {
                           <select
                             className="form-select form-select-sm doc-select-item"
                             value={item.tarifaINC}
-                            onChange={(e) =>
-                              actualizarProducto(
-                                idx,
-                                "tarifaINC",
-                                e.target.value,
-                              )
-                            }
-                          >
+                            onChange={(e) => actualizarProducto(idx, "tarifaINC", e.target.value)}>
                             <option value="0">0%</option>
                             <option value="2">2%</option>
                             <option value="8">8%</option>
@@ -598,11 +467,7 @@ export default function NuevaFactura() {
                           ${fmt(linea.totalLinea)}
                         </td>
                         <td>
-                          <button
-                            type="button"
-                            className="doc-btn-trash"
-                            onClick={() => eliminarProducto(idx)}
-                          >
+                          <button type="button" className="doc-btn-trash" onClick={() => eliminarProducto(idx)}>
                             <Trash size={13} />
                           </button>
                         </td>
@@ -627,33 +492,16 @@ export default function NuevaFactura() {
                 <select
                   className="form-select form-select-sm doc-pago-select"
                   value={fp.metodo}
-                  onChange={(e) =>
-                    actualizarFormaPago(idx, "metodo", e.target.value)
-                  }
-                >
+                  onChange={(e) => actualizarFormaPago(idx, "metodo", e.target.value)}>
                   <option value="">Selecciona forma de pago</option>
                   {OPCIONES_FORMA_PAGO.map((op) => (
-                    <option key={op.value} value={op.value}>
-                      {op.label}
-                    </option>
+                    <option key={op.value} value={op.value}>{op.label}</option>
                   ))}
                 </select>
-                <input
-                  type="number"
-                  className="form-control form-control-sm text-end doc-pago-valor"
-                  value={fp.valor}
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0"
-                  onChange={(e) =>
-                    actualizarFormaPago(idx, "valor", e.target.value)
-                  }
-                />
-                <button
-                  type="button"
-                  className="doc-btn-trash"
-                  onClick={() => eliminarFormaPago(idx)}
-                >
+                <input type="number" className="form-control form-control-sm text-end doc-pago-valor"
+                  value={fp.valor} placeholder="0.00" step="0.01" min="0"
+                  onChange={(e) => actualizarFormaPago(idx, "valor", e.target.value)} />
+                <button type="button" className="doc-btn-trash" onClick={() => eliminarFormaPago(idx)}>
                   <Trash size={13} />
                 </button>
               </div>
@@ -724,10 +572,7 @@ export default function NuevaFactura() {
                 <select
                   className="form-select form-select-sm doc-retelca-select"
                   value={retelCA.tipo}
-                  onChange={(e) =>
-                    setRetelCA({ tipo: e.target.value, valor: 0 })
-                  }
-                >
+                  onChange={(e) => setRetelCA({ tipo: e.target.value, valor: 0 })}>
                   <option value=""></option>
                   <option value="retefuente">Retefuente</option>
                   <option value="reteiva">ReteIVA</option>
@@ -751,19 +596,13 @@ export default function NuevaFactura() {
             rows={4}
             placeholder="Aquí puedes ingresar comentarios adicionales o información para tu cliente..."
             value={factura.observaciones}
-            onChange={(e) =>
-              setFactura({ ...factura, observaciones: e.target.value })
-            }
-          />
+            onChange={(e) => setFactura({ ...factura, observaciones: e.target.value })} />
           <label className="doc-adjuntar">
-            <input
-              type="file"
-              className="d-none"
+            <input type="file" className="d-none"
               onChange={(e) => {
                 const f = e.target.files[0];
                 if (f) setFactura((p) => ({ ...p, archivo: f }));
-              }}
-            />
+              }} />
             <Paperclip size={14} /> Adjuntar archivo
             {factura.archivo && (
               <span className="doc-archivo-nombre">{factura.archivo.name}</span>
@@ -773,11 +612,7 @@ export default function NuevaFactura() {
 
         {/* ══ Footer sticky ══ */}
         <div className="doc-footer">
-          <button
-            type="button"
-            className="doc-btn-cancelar"
-            onClick={() => navigate("/ventas")}
-          >
+          <button type="button" className="doc-btn-cancelar" onClick={() => navigate("/ventas")}>
             Cancelar
           </button>
           <button type="submit" className="doc-btn-guardar-enviar">
@@ -791,10 +626,7 @@ export default function NuevaFactura() {
         <ModalCrearContacto
           clienteId={factura.clienteId}
           onClose={() => setMostrarModalContacto(false)}
-          onSuccess={(c) => {
-            agregarContactoLocal(c);
-            setMostrarModalContacto(false);
-          }}
+          onSuccess={(c) => { agregarContactoLocal(c); setMostrarModalContacto(false); }}
         />
       )}
       {mostrarModalCliente && (
@@ -802,10 +634,7 @@ export default function NuevaFactura() {
           open
           nombreSugerido={nombreSugeridoCliente}
           onClose={() => setMostrarModalCliente(false)}
-          onSuccess={(c) => {
-            agregarClienteLocal(c);
-            setMostrarModalCliente(false);
-          }}
+          onSuccess={(c) => { agregarClienteLocal(c); setMostrarModalCliente(false); }}
         />
       )}
       {mostrarModalProducto && (
@@ -813,10 +642,7 @@ export default function NuevaFactura() {
           open
           nombreSugerido={nombreSugeridoProducto}
           onClose={() => setMostrarModalProducto(false)}
-          onSuccess={(p) => {
-            agregarProductoLocal(p);
-            setMostrarModalProducto(false);
-          }}
+          onSuccess={(p) => { agregarProductoLocal(p); setMostrarModalProducto(false); }}
         />
       )}
     </div>
