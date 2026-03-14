@@ -25,33 +25,23 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
   const [cliente,   setCliente]   = useState(ESTADO_INICIAL);
   const [guardando, setGuardando] = useState(false);
 
-  // ── Carga datos al editar ──────────────────────────────────────
   useEffect(() => {
     if (clienteEditando) {
       setCliente({
         nombre:               clienteEditando.nombre               || "",
         apellido:             clienteEditando.apellido             || "",
-        tipoIdentificacion:   clienteEditando.tipoIdentificacion   || "",
+        tipoIdentificacion:   clienteEditando.tipoIdentificacion   || "CC",
         numeroIdentificacion: clienteEditando.numeroIdentificacion || "",
         digitoVerificacion:   clienteEditando.digitoVerificacion   || "",
-        tipoPersona:          clienteEditando.tipoPersona          || "",
+        tipoPersona:          clienteEditando.tipoPersona          || "persona",
         regimenTributario:    clienteEditando.regimenTributario    || "",
-        regimenFiscal:        clienteEditando.regimenFiscal        || "",
         nombreComercial:      clienteEditando.nombreComercial      || "",
-        actividadEconomicaCIIU: clienteEditando.actividadEconomicaCIIU || "",
         correo:               clienteEditando.correo               || "",
         telefono:             clienteEditando.telefono             || "",
         departamento:         clienteEditando.departamento         || "",
-        departamentoCodigo:   clienteEditando.departamentoCodigo   || "",
         ciudad:               clienteEditando.ciudad               || "",
-        ciudadCodigo:         clienteEditando.ciudadCodigo         || "",
         direccion:            clienteEditando.direccion            || "",
         codigoPostal:         clienteEditando.codigoPostal         || "",
-        retenedorIVA:         clienteEditando.retenedorIVA         || false,
-        retenedorRenta:       clienteEditando.retenedorRenta       || false,
-        autoretenedorRenta:   clienteEditando.autoretenedorRenta   || false,
-        retenedorICA:         clienteEditando.retenedorICA         || false,
-        // ✅ carga contactos existentes o arranca con uno vacío
         contactos: clienteEditando.contactos?.length
           ? clienteEditando.contactos
           : [{ ...CONTACTO_VACIO }],
@@ -61,7 +51,6 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     }
   }, [clienteEditando, open]);
 
-  // ── Handlers ──────────────────────────────────────────────────
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setCliente((prev) => ({
@@ -70,7 +59,7 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     }));
   };
 
-  const handleSelectChange = (campo, valor) =>
+  const handleSelectChange    = (campo, valor) =>
     setCliente((prev) => ({ ...prev, [campo]: valor }));
 
   const handleDepartamentoChange = (opt) =>
@@ -89,11 +78,10 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       ciudadCodigo: opt?.value || "",
     }));
 
-  // ✅ Funciones de contactos DENTRO del hook
   const agregarContacto = () =>
     setCliente((prev) => ({
       ...prev,
-      contactos: [...prev.contactos, { ...CONTACTO_VACIO }],
+      contactos: [...(prev.contactos || []), { ...CONTACTO_VACIO }],
     }));
 
   const handleContactoChange = (index, campo, valor) =>
@@ -109,18 +97,11 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       contactos: prev.contactos.filter((_, i) => i !== index),
     }));
 
-  const limpiarFormulario = () => setCliente(ESTADO_INICIAL);
+  const limpiarFormulario   = () => setCliente(ESTADO_INICIAL);
+  const handleClose         = () => { limpiarFormulario(); onClose(); };
+  const handleOverlayClick  = (e) => { if (e.target === e.currentTarget) handleClose(); };
 
-  const handleClose = () => {
-    limpiarFormulario();
-    onClose();
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) handleClose();
-  };
-
-  // ── Submit — recibe extraData como objeto plano ────────────────
+  // ── Submit ─────────────────────────────────────────────────────
   const handleSubmit = async (extraData = {}) => {
     setGuardando(true);
 
@@ -138,18 +119,15 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       direccion:                   cliente.direccion            || "",
       codigoPostal:                extraData.codigoPostal       || cliente.codigoPostal || "",
       correo:                      cliente.correo               || "",
-      // Facturación
       nombreContactoFacturacion:   extraData.nombreContactoFact   || "",
       apellidoContactoFacturacion: extraData.apellidoContactoFact || "",
       correoFacturacion:           extraData.correoFact           || cliente.correo || "",
-      regimenTributario:           extraData.RegimenTributario    || "",  // ✅ fix: coincide con NuevoCliente
+      regimenTributario:           extraData.RegimenTributario    || "",  // ✅ fix typo
       indicativoFacturacion:       extraData.indicativoFact       || "",
       telefonoFacturacion:         extraData.telefonoFact         || cliente.telefono || "",
-      // Tipo de tercero
       esCliente:                   extraData.esCliente   ?? true,
       esProveedor:                 extraData.esProveedor ?? false,
       esEmpleado:                  extraData.esEmpleado  ?? false,
-      // Colecciones
       responsabilidades:           extraData.responsabilidades || ["R-99-PN"],
       telefonos:                   extraData.telefonos         || [],
       contactos:                   extraData.contactos         || [],
@@ -157,16 +135,18 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
 
     try {
       if (clienteEditando) {
-        await axiosClient.put(`/Clientes/${clienteEditando.id}`, payload);
-        onSuccess("Cliente actualizado con éxito.");
+        const { data } = await axiosClient.put(`/Clientes/${clienteEditando.id}`, payload);
+        onSuccess(data, "Cliente modificado con éxito.");
       } else {
-        await axiosClient.post("/Clientes", payload);
-        onSuccess("Cliente creado con éxito.");
+        const { data } = await axiosClient.post("/Clientes", payload);
+        onSuccess(data, "Cliente creado con éxito.");
       }
       limpiarFormulario();
       onClose();
     } catch (error) {
-      if (error.response?.status === 400) {
+      if (error.response?.status === 409) {
+        alert("Ya existe un cliente con esa identificación.");
+      } else if (error.response?.status === 400) {
         const errores = error.response?.data?.errors;
         if (errores) {
           const lista = Object.entries(errores)
@@ -176,11 +156,8 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
         } else {
           alert("Error 400: " + JSON.stringify(error.response?.data));
         }
-      } else if (error.response?.status === 409) {
-        alert("Ya existe un cliente con esa identificación.");
       } else {
         alert("Error al guardar: " + (error.response?.data?.mensaje || error.message));
-        alert("Error al guardar: " + (error.message || "Error desconocido"));
         console.error(error);
       }
     } finally {
@@ -189,18 +166,10 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
   };
 
   return {
-    cliente,
-    guardando,
-    handleChange,
-    handleSelectChange,
-    handleDepartamentoChange,
-    handleCiudadChange,
-    handleSubmit,
-    handleClose,
-    handleOverlayClick,
-    // ✅ exponer funciones de contactos
-    agregarContacto,
-    handleContactoChange,
-    eliminarContacto,
+    cliente, guardando,
+    handleChange, handleSelectChange,
+    handleDepartamentoChange, handleCiudadChange,
+    handleSubmit, handleClose, handleOverlayClick,
+    agregarContacto, handleContactoChange, eliminarContacto,
   };
 };
