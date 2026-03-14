@@ -331,8 +331,8 @@ const handleSubmit = async (e) => {
             codigoInterno:       "",
           };
         }),
-       
-    };   
+        // ✅ cierra factura
+    };   // ✅ cierra payload
 
     console.log("payload enviado:", JSON.stringify(payload, null, 2)); // debug
 

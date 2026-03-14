@@ -11,10 +11,10 @@ import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import { useFactura } from "../hooks/useFactura";
 import ModalCrearContacto from "../components/modals/ModalCrearContacto";
-import ModalCrearCliente  from "../components/modals/ModalCrearCliente";
+import ModalCrearCliente from "../components/modals/ModalCrearCliente";
 import ModalCrearProducto from "../components/modals/ModalCrearProducto";
 import "../styles/pages/DocBase.css";
-import { useId } from "react"; // ✅ built-in, siempre único
+import { useId } from "react"; 
 
 function TooltipInfo({ texto }) {
   const id = useId(); 
@@ -75,11 +75,11 @@ const TIPOS_FACTURA = [
 ];
 
 const OPCIONES_FORMA_PAGO = [
-  { value: "10",  label: "Efectivo" },
-  { value: "42",  label: "Transferencia bancaria" },
-  { value: "48",  label: "Tarjeta de crédito" },
-  { value: "49",  label: "Tarjeta débito" },
-  { value: "20",  label: "Crédito" },
+  { value: "10", label: "Efectivo" },
+  { value: "42", label: "Transferencia bancaria" },
+  { value: "48", label: "Tarjeta de crédito" },
+  { value: "49", label: "Tarjeta débito" },
+  { value: "20", label: "Crédito" },
   { value: "ZZZ", label: "Otro" },
 ];
 
@@ -93,14 +93,16 @@ const mkSelectStyles = (invalid = false) => ({
     borderColor: invalid ? "#dc3545" : state.isFocused ? "#1a73e8" : "#ced4da",
     boxShadow: invalid
       ? "0 0 0 0.2rem rgba(220,53,69,0.15)"
-      : state.isFocused ? "0 0 0 0.2rem rgba(26,115,232,0.15)" : "none",
+      : state.isFocused
+        ? "0 0 0 0.2rem rgba(26,115,232,0.15)"
+        : "none",
     fontSize: "0.875rem",
   }),
-  valueContainer:     (b) => ({ ...b, padding: "0 10px" }),
-  input:              (b) => ({ ...b, margin: 0, padding: 0 }),
-  dropdownIndicator:  (b) => ({ ...b, padding: "0 6px" }),
-  indicatorSeparator: ()  => ({ display: "none" }),
-  menu:               (b) => ({ ...b, zIndex: 9999, fontSize: "0.875rem" }),
+  valueContainer: (b) => ({ ...b, padding: "0 10px" }),
+  input: (b) => ({ ...b, margin: 0, padding: 0 }),
+  dropdownIndicator: (b) => ({ ...b, padding: "0 6px" }),
+  indicatorSeparator: () => ({ display: "none" }),
+  menu: (b) => ({ ...b, zIndex: 9999, fontSize: "0.875rem" }),
 });
 
 /* ═══════════════════════════════════════════════════
@@ -108,26 +110,44 @@ const mkSelectStyles = (invalid = false) => ({
 ═══════════════════════════════════════════════════ */
 export default function NuevaFactura() {
   const {
-    factura, setFactura,
-    clientes, productos, contactos,
-    facturasUsadas, productosSeleccionados,
-    codigoBarras, setCodigoBarras, barcodeInputRef,
-    formasPago, totalFormasPago,
-    agregarFormaPago, actualizarFormaPago, eliminarFormaPago,
-    retelCA, setRetelCA,
-    agregarContactoLocal, agregarClienteLocal, agregarProductoLocal,
-    agregarPorCodigoBarras, handleBarcodeInput,
-    agregarProductoManual, actualizarProducto, eliminarProducto,
-    calcularLinea, totales, handleSubmit, navigate,
+    factura,
+    setFactura,
+    clientes,
+    productos,
+    contactos,
+    facturasUsadas,
+    productosSeleccionados,
+    codigoBarras,
+    setCodigoBarras,
+    barcodeInputRef,
+    formasPago,
+    totalFormasPago,
+    agregarFormaPago,
+    actualizarFormaPago,
+    eliminarFormaPago,
+    retelCA,
+    setRetelCA,
+    agregarContactoLocal,
+    agregarClienteLocal,
+    agregarProductoLocal,
+    agregarPorCodigoBarras,
+    handleBarcodeInput,
+    agregarProductoManual,
+    actualizarProducto,
+    eliminarProducto,
+    calcularLinea,
+    totales,
+    handleSubmit,
+    navigate,
   } = useFactura();
 
-  const [mostrarModalContacto,   setMostrarModalContacto]   = useState(false);
-  const [mostrarModalCliente,    setMostrarModalCliente]    = useState(false);
-  const [mostrarModalProducto,   setMostrarModalProducto]   = useState(false);
-  const [nombreSugeridoCliente,  setNombreSugeridoCliente]  = useState("");
+  const [mostrarModalContacto, setMostrarModalContacto] = useState(false);
+  const [mostrarModalCliente, setMostrarModalCliente] = useState(false);
+  const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
+  const [nombreSugeridoCliente, setNombreSugeridoCliente] = useState("");
   const [nombreSugeridoProducto, setNombreSugeridoProducto] = useState("");
-  const [touched,                setTouched]                = useState({});
-  const [submitIntentado,        setSubmitIntentado]        = useState(false);
+  const [touched, setTouched] = useState({});
+  const [submitIntentado, setSubmitIntentado] = useState(false);
 
   const marcar       = (campo) => setTouched((p) => ({ ...p, [campo]: true }));
   const mostrarError = (campo) => submitIntentado || !!touched[campo];
@@ -161,7 +181,6 @@ localStorage.setItem("usuario", JSON.stringify(u));
 
   return (
     <div className="doc-container">
-
       {/* ── Título ── */}
       <div className="doc-titulo-row">
         <h4 className="doc-titulo">Nueva factura de venta</h4>
@@ -191,10 +210,8 @@ localStorage.setItem("usuario", JSON.stringify(u));
         {/* ══ Información básica ══ */}
         <h6 className="doc-section-title">Información básica</h6>
         <div className="doc-header-grid" style={{ marginTop: 12 }}>
-
           {/* Columna izquierda */}
           <div className="doc-col">
-
             {/* Tipo de factura */}
             <div className="doc-field">
               <label className="doc-label">
@@ -213,7 +230,9 @@ localStorage.setItem("usuario", JSON.stringify(u));
                 ))}
               </select>
               {mostrarError("tipoFactura") && !factura.tipoFactura && (
-                <div className="invalid-feedback d-block">El tipo de factura es obligatorio</div>
+                <div className="invalid-feedback d-block">
+                  El tipo de factura es obligatorio
+                </div>
               )}
             </div>
 
@@ -224,20 +243,27 @@ localStorage.setItem("usuario", JSON.stringify(u));
                 <TooltipInfo texto="Selecciona el cliente al que emitirás la factura." />
               </label>
               <Select
-                styles={mkSelectStyles(mostrarError("clienteId") && !factura.clienteId)}
+                styles={mkSelectStyles(
+                  mostrarError("clienteId") && !factura.clienteId,
+                )}
                 menuPortalTarget={document.body}
                 options={opcionesClientes}
                 value={opcionesClientes.find((o) => o.value === factura.clienteId) ?? null}
                 onChange={(opt) => setFactura((p) => ({ ...p, clienteId: opt?.value ?? "", contactoId: "" }))}
                 onBlur={() => marcar("clienteId")}
                 noOptionsMessage={({ inputValue }) => (
-                  <NoOptionsCliente inputValue={inputValue} onCrear={handleCrearCli} />
+                  <NoOptionsCliente
+                    inputValue={inputValue}
+                    onCrear={handleCrearCli}
+                  />
                 )}
                 isClearable
                 placeholder="Buscar cliente..."
               />
               {mostrarError("clienteId") && !factura.clienteId && (
-                <small style={{ color: "var(--danger)", fontSize: "0.78rem" }}>El cliente es obligatorio</small>
+                <small style={{ color: "var(--danger)", fontSize: "0.78rem" }}>
+                  El cliente es obligatorio
+                </small>
               )}
             </div>
 
@@ -258,7 +284,11 @@ localStorage.setItem("usuario", JSON.stringify(u));
                 )}
                 isDisabled={!factura.clienteId}
                 isClearable
-                placeholder={factura.clienteId ? "Seleccionar contacto..." : "Selecciona un cliente primero"}
+                placeholder={
+                  factura.clienteId
+                    ? "Seleccionar contacto..."
+                    : "Selecciona un cliente primero"
+                }
               />
             </div>
 
@@ -319,7 +349,11 @@ localStorage.setItem("usuario", JSON.stringify(u));
                   placeholder="Código de barras..."
                   autoComplete="off"
                 />
-                <button type="button" className="btn btn-success" onClick={agregarPorCodigoBarras}>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={agregarPorCodigoBarras}
+                >
                   Agregar
                 </button>
               </div>
@@ -331,7 +365,11 @@ localStorage.setItem("usuario", JSON.stringify(u));
         <div style={{ marginBottom: 28 }}>
           <div className="d-flex justify-content-between align-items-center mb-2">
             <h6 className="doc-section-title mb-0">Detalle de productos</h6>
-            <button type="button" className="btn btn-sm btn-primary" onClick={agregarProductoManual}>
+            <button
+              type="button"
+              className="btn btn-sm btn-primary"
+              onClick={agregarProductoManual}
+            >
               + Agregar fila
             </button>
           </div>
@@ -355,7 +393,8 @@ localStorage.setItem("usuario", JSON.stringify(u));
                 {productosSeleccionados.length === 0 ? (
                   <tr>
                     <td colSpan="9" className="doc-tabla-empty">
-                      No hay productos. Escanea un código o agrega una fila manual.
+                      No hay productos. Escanea un código o agrega una fila
+                      manual.
                     </td>
                   </tr>
                 ) : (
@@ -379,7 +418,10 @@ localStorage.setItem("usuario", JSON.stringify(u));
                             value={opts.find((o) => o.value === item.productoId) ?? null}
                             onChange={(opt) => actualizarProducto(idx, "productoId", opt?.value ?? "")}
                             noOptionsMessage={({ inputValue }) => (
-                              <NoOptionsProducto inputValue={inputValue} onCrear={handleCrearPro} />
+                              <NoOptionsProducto
+                                inputValue={inputValue}
+                                onCrear={handleCrearPro}
+                              />
                             )}
                             isClearable
                             placeholder="Buscar producto..."
@@ -401,7 +443,8 @@ localStorage.setItem("usuario", JSON.stringify(u));
                             onChange={(e) => actualizarProducto(idx, "porcentajeDescuento", e.target.value)} />
                         </td>
                         <td>
-                          <select className="form-select form-select-sm doc-select-item"
+                          <select
+                            className="form-select form-select-sm doc-select-item"
                             value={item.tarifaIVA}
                             onChange={(e) => actualizarProducto(idx, "tarifaIVA", e.target.value)}>
                             <option value="0">0%</option>
@@ -410,7 +453,8 @@ localStorage.setItem("usuario", JSON.stringify(u));
                           </select>
                         </td>
                         <td>
-                          <select className="form-select form-select-sm doc-select-item"
+                          <select
+                            className="form-select form-select-sm doc-select-item"
                             value={item.tarifaINC}
                             onChange={(e) => actualizarProducto(idx, "tarifaINC", e.target.value)}>
                             <option value="0">0%</option>
@@ -419,7 +463,9 @@ localStorage.setItem("usuario", JSON.stringify(u));
                             <option value="16">16%</option>
                           </select>
                         </td>
-                        <td className="text-end fw-semibold">${fmt(linea.totalLinea)}</td>
+                        <td className="text-end fw-semibold">
+                          ${fmt(linea.totalLinea)}
+                        </td>
                         <td>
                           <button type="button" className="doc-btn-trash" onClick={() => eliminarProducto(idx)}>
                             <Trash size={13} />
@@ -436,7 +482,6 @@ localStorage.setItem("usuario", JSON.stringify(u));
 
         {/* ══ Formas de pago + Totales ══ */}
         <div className="doc-pago-totales">
-
           {/* Formas de pago */}
           <div>
             <h6 className="doc-section-title">Formas de pago</h6>
@@ -444,7 +489,8 @@ localStorage.setItem("usuario", JSON.stringify(u));
 
             {formasPago.map((fp, idx) => (
               <div key={idx} className="doc-pago-fila">
-                <select className="form-select form-select-sm doc-pago-select"
+                <select
+                  className="form-select form-select-sm doc-pago-select"
                   value={fp.metodo}
                   onChange={(e) => actualizarFormaPago(idx, "metodo", e.target.value)}>
                   <option value="">Selecciona forma de pago</option>
@@ -462,23 +508,32 @@ localStorage.setItem("usuario", JSON.stringify(u));
             ))}
 
             <div className="doc-hr" />
-            <button type="button" className="doc-btn-agregar-pago" onClick={agregarFormaPago}>
+            <button
+              type="button"
+              className="doc-btn-agregar-pago"
+              onClick={agregarFormaPago}
+            >
               + Agregar otra forma de pago
             </button>
             <div className="doc-hr" />
 
             <div className="doc-total-pagos">
-              <span className="doc-total-pagos-label">Total formas de pago:</span>
+              <span className="doc-total-pagos-label">
+                Total formas de pago:
+              </span>
               <span className="doc-total-pagos-valor">
                 {fmt(totalFormasPago)}
-                {pagoCoincide
-                  ? <CheckCircleFill size={18} className="doc-check-ok" />
-                  : <XCircleFill     size={18} className="doc-check-err" />}
+                {pagoCoincide ? (
+                  <CheckCircleFill size={18} className="doc-check-ok" />
+                ) : (
+                  <XCircleFill size={18} className="doc-check-err" />
+                )}
               </span>
             </div>
             {!pagoCoincide && totalFormasPago > 0 && (
               <p className="doc-pagos-error">
-                El total debe coincidir con el total neto ({fmt(totales.totalFactura)})
+                El total debe coincidir con el total neto (
+                {fmt(totales.totalFactura)})
               </p>
             )}
           </div>
@@ -491,7 +546,9 @@ localStorage.setItem("usuario", JSON.stringify(u));
             </div>
             <div className="doc-totales-fila">
               <span>Descuentos:</span>
-              <span className="text-danger">-{fmt(totales.totalDescuentos)}</span>
+              <span className="text-danger">
+                -{fmt(totales.totalDescuentos)}
+              </span>
             </div>
             <div className="doc-totales-fila">
               <span>Subtotal:</span>
@@ -512,7 +569,8 @@ localStorage.setItem("usuario", JSON.stringify(u));
             <div className="doc-totales-fila">
               <span>RetelCA:</span>
               <div className="doc-retelca-row">
-                <select className="form-select form-select-sm doc-retelca-select"
+                <select
+                  className="form-select form-select-sm doc-retelca-select"
                   value={retelCA.tipo}
                   onChange={(e) => setRetelCA({ tipo: e.target.value, valor: 0 })}>
                   <option value=""></option>
@@ -533,7 +591,9 @@ localStorage.setItem("usuario", JSON.stringify(u));
         {/* ══ Observaciones ══ */}
         <div className="doc-observaciones">
           <h6 className="doc-section-title">Observaciones</h6>
-          <textarea className="form-control doc-textarea" rows={4}
+          <textarea
+            className="form-control doc-textarea"
+            rows={4}
             placeholder="Aquí puedes ingresar comentarios adicionales o información para tu cliente..."
             value={factura.observaciones}
             onChange={(e) => setFactura({ ...factura, observaciones: e.target.value })} />

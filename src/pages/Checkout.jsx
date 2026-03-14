@@ -20,7 +20,8 @@ import { ModalDetalles } from "../components/checkout/ModalDetalles";
 
 export default function Checkout() {
   const navigate = useNavigate();
-
+  const [bankList, setBankList] = useState([]);
+  const [psePersonType, setPsePersonType] = useState("Natural");
   const [plan, setPlan] = useState(null);
   const [user, setUser] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("CARD");
@@ -73,6 +74,10 @@ export default function Checkout() {
       navigate("/planes");
       return;
     }
+    wompiService
+      .getFinancialInstitutions()
+      .then((banks) => setBankList(banks))
+      .catch((err) => console.error("Error cargando bancos:", err));
 
     const parsedPlan = JSON.parse(planData);
     const parsedRegistro = JSON.parse(registroDataLocal);
@@ -965,26 +970,224 @@ export default function Checkout() {
 
               {/* PSE */}
               {paymentMethod === "PSE" && (
-                <div className="pse-section">
-                  <h3>Banco</h3>
-                  <div className="form-group">
-                    <select
-                      name="banco"
-                      value={formData.banco}
-                      onChange={handleChange}
-                      className={errors.banco ? "input-error" : ""}
-                    >
-                      <option value="">Selecciona tu banco</option>
-                      <option value="1007">Bancolombia</option>
-                      <option value="1051">Davivienda</option>
-                      <option value="1013">BBVA</option>
-                      <option value="1001">Banco de Bogotá</option>
-                    </select>
-                    {errors.banco && (
-                      <span className="error-msg">{errors.banco}</span>
-                    )}
+                <>
+                  {/* INFORMACIÓN DEL TITULAR (misma sección que en CARD) */}
+                  <div className="owner-section">
+                    <h3>Información de la forma de pago</h3>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="nombres"
+                          placeholder="Nombres *"
+                          value={formData.nombres}
+                          onChange={handleChange}
+                          className={errors.nombres ? "input-error" : ""}
+                        />
+                        {errors.nombres && (
+                          <span className="error-msg">{errors.nombres}</span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="apellidos"
+                          placeholder="Apellidos *"
+                          value={formData.apellidos}
+                          onChange={handleChange}
+                          className={errors.apellidos ? "input-error" : ""}
+                        />
+                        {errors.apellidos && (
+                          <span className="error-msg">{errors.apellidos}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Selector de banco */}
+                    <div className="form-row">
+                      <div className="form-group">
+                        <Select
+                          name="banco"
+                          options={bankList.map((b) => ({
+                            value: b.financial_institution_code,
+                            label: b.name,
+                          }))}
+                          value={
+                            formData.banco
+                              ? {
+                                  value: formData.banco,
+                                  label: bankList.find(
+                                    (b) =>
+                                      b.financial_institution_code ===
+                                      formData.banco,
+                                  )?.name,
+                                }
+                              : null
+                          }
+                          onChange={(opt) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              banco: opt ? opt.value : "",
+                            }))
+                          }
+                          isClearable
+                          placeholder="Banco *"
+                          className={errors.banco ? "input-error" : ""}
+                        />
+                        {errors.banco && (
+                          <span className="error-msg">{errors.banco}</span>
+                        )}
+                      </div>
+
+                      {/* Tipo de persona */}
+                      <div className="form-group">
+                        <select
+                          name="psePersonType"
+                          value={psePersonType}
+                          onChange={(e) => setPsePersonType(e.target.value)}
+                        >
+                          <option value="Natural">Natural</option>
+                          <option value="Juridica">Jurídica</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <Select
+                          name="tipoIdentificacion"
+                          options={tipoIdentificacion.map((ti) => ({
+                            value: ti.codigo,
+                            label: `${ti.codigo} - ${ti.nombre}`,
+                          }))}
+                          value={
+                            formData.tipoIdentificacion
+                              ? {
+                                  value: formData.tipoIdentificacion,
+                                  label: formData.tipoIdentificacion,
+                                }
+                              : null
+                          }
+                          onChange={(opt) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              tipoIdentificacion: opt ? opt.value : "",
+                            }))
+                          }
+                          isClearable
+                          placeholder="Tipo de documento *"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="numeroIdentificacion"
+                          placeholder="Número de documento *"
+                          value={formData.numeroIdentificacion}
+                          onChange={handleChange}
+                          className={
+                            errors.numeroIdentificacion ? "input-error" : ""
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <input
+                          type="email"
+                          name="email"
+                          placeholder="Email *"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className={errors.email ? "input-error" : ""}
+                        />
+                        {errors.email && (
+                          <span className="error-msg">{errors.email}</span>
+                        )}
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="tel"
+                          name="telefono"
+                          placeholder="Celular *"
+                          value={formData.telefono}
+                          onChange={handleChange}
+                          className={errors.telefono ? "input-error" : ""}
+                          maxLength={10}
+                        />
+                        {errors.telefono && (
+                          <span className="error-msg">{errors.telefono}</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
+
+                  {/* DATOS DE FACTURACIÓN */}
+                  <div className="billing-section">
+                    <h3>Datos de facturación</h3>
+                    <div className="form-checkbox">
+                      <input
+                        type="checkbox"
+                        id="same-as-owner-pse"
+                        checked={sameAsOwner}
+                        onChange={(e) => handleSameAsOwner(e.target.checked)}
+                      />
+                      <label htmlFor="same-as-owner-pse">
+                        Los datos de facturación son los mismos suministrados
+                        previamente
+                      </label>
+                    </div>
+
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        name="razonSocial"
+                        placeholder="Nombre o razón social *"
+                        value={formData.razonSocial}
+                        onChange={handleChange}
+                        className={errors.razonSocial ? "input-error" : ""}
+                      />
+                      {errors.razonSocial && (
+                        <span className="error-msg">{errors.razonSocial}</span>
+                      )}
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="nit"
+                          placeholder="NIT o cédula *"
+                          value={formData.nit}
+                          onChange={handleChange}
+                          className={errors.nit ? "input-error" : ""}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="digitoVerificacion"
+                          placeholder="Dígito de verificación (si aplica)"
+                          value={formData.digitoVerificacion}
+                          onChange={handleChange}
+                          maxLength={1}
+                        />
+                      </div>
+                    </div>
+                    {/* ... resto de campos de facturación igual que en CARD */}
+                  </div>
+
+                  {/* AVISO REDIRECCIÓN */}
+                  <div className="pse-redirect-notice">
+                    <span>ℹ️</span>
+                    <p>
+                      Serás dirigido al sitio web de <strong>PSE</strong> para
+                      realizar el pago.
+                    </p>
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -1047,7 +1250,7 @@ export default function Checkout() {
                       ${plan?.precioAnual.toLocaleString("es-CO") ?? "0"}
                     </span>
                   </div>
-                  
+
                   {checkoutData?.descuentoCupon > 0 && (
                     <div className="cupon">
                       <span>Descuento cupón</span>
