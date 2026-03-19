@@ -14,7 +14,6 @@ import axiosClient from "../api/axiosClient";
 export const useUsuarios = () => {
   const queryClient = useQueryClient();
 
-  // Query GET usuario
   const query = useQuery({
     queryKey: ["usuario"],
     queryFn: async () => {
@@ -23,7 +22,6 @@ export const useUsuarios = () => {
 
       const usuarioData = JSON.parse(usuarioGuardado);
 
-      // ✅ Usar el ID que está en localStorage (guardado en el login)
       const userId = usuarioData.id;
 
       if (!userId) {
@@ -31,10 +29,9 @@ export const useUsuarios = () => {
         throw new Error("Sesión expirada. Redirige al login.");
       }
 
-      // 2️⃣ Fetch usuario actualizado desde API usando el ID correcto
       const { data } = await axiosClient.get(`/Usuarios/${userId}`);
 
-      // 3️⃣ Guardar usuario actualizado en localStorage
+ 
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
       return {
@@ -44,6 +41,9 @@ export const useUsuarios = () => {
         documentosRestantes: data.suscripcion?.documentosRestantes ?? 0,
         puedeFacturar: data.suscripcion?.activa || data.suscripcion?.documentosRestantes > 0,
         nombreCompleto: `${data.usuario.nombre} ${data.usuario.apellido ?? ""}`.trim(),
+        nombreNegocio: data.negocio.nombreNegocio,
+        telefonoNegocio: data.negocio.telefono,
+        correoNegocio: data.negocio.correo,
         planNombre: data.usuario.planNombre,
         negocioNit: data.negocio?.nit ?? "",
         fechaDesactivacion: data.fechaDesactivacion
