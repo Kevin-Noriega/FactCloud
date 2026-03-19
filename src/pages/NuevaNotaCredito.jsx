@@ -5,6 +5,7 @@ import {
   Trash, Paperclip, PlusCircle,
   CheckCircleFill, XCircleFill,
   InfoCircleFill,
+  FileText,
 } from "react-bootstrap-icons";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
@@ -16,19 +17,24 @@ function TooltipInfo({ texto }) {
   const id = useId();
   return (
     <>
-      <InfoCircleFill
+      <i
         className="doc-info-icon"
         data-tooltip-id={id}
         data-tooltip-place="top"
-        size={13}
-      />
-      <Tooltip id={id} opacity={1} style={{ maxWidth: 260, fontSize: "0.8rem", zIndex: 9999 }}>
+        aria-label="Más información"
+      >
+        i
+      </i>
+      <Tooltip
+        id={id}
+        opacity={1}
+        style={{ maxWidth: 260, fontSize: "0.8rem", zIndex: 9999 }}
+      >
         {texto}
       </Tooltip>
     </>
   );
 }
-
 /* ── NoOptions ────────────────────────────────────── */
 const NoOptionsFactura = ({ inputValue }) => (
   <div className="doc-select-empty">
@@ -307,17 +313,39 @@ export default function NuevaNotaCredito() {
      RENDER
   ══════════════════════════════════════════════ */
   return (
-    <div className="doc-container">
+     <div className="page-crear">
+      <div className="page-crear-header">
+        {/* Botón FUERA del banner */}
+        <button
+          className="btn btn-volver btn-sm mb-3"
+          onClick={() => navigate(-1)}
+        >
+          ← Volver
+        </button>
 
-      {/* ── Título ── */}
-      <div className="doc-titulo-row">
-        <h4 className="doc-titulo">Nueva nota crédito</h4>
+        {/* Banner */}
+        <div className="page-crear-banner">
+          <div className="page-crear-banner-content">
+            <div className="page-crear-banner-text">
+              <h2 className="page-crear-banner-title">Nueva nota débito</h2>
+              <p className="page-crear-banner-subtitle">
+                Completa el formulario para crear una factura
+              </p>
+            </div>
+            <div className="page-crear-banner-icon">
+              <FileText size={70} />
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div className="page-crear-wrapper">
+        <div className="page-crear-body">
 
       <form onSubmit={handleSubmit}>
 
         {/* ══ Información básica ══ */}
-        <h6 className="doc-section-title">Información básica</h6>
+        <h6 className="section-title-primary">Información básica</h6>
         <div className="doc-header-grid" style={{ marginTop: 12 }}>
 
           {/* Columna izquierda */}
@@ -456,7 +484,7 @@ export default function NuevaNotaCredito() {
         {/* ══ Tabla de productos ══ */}
         <div style={{ marginBottom: 28 }}>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <h6 className="doc-section-title mb-0">Detalle de productos</h6>
+            <h6 className="section-title-primary mb-0">Detalle de productos</h6>
             <button type="button" className="btn btn-sm btn-primary" onClick={agregarProducto}>
               + Agregar fila
             </button>
@@ -564,7 +592,7 @@ export default function NuevaNotaCredito() {
 
           {/* Formas de pago */}
           <div>
-            <h6 className="doc-section-title">Formas de pago</h6>
+            <h6 className="section-title-primary">Formas de pago</h6>
             <div className="doc-hr" />
 
             {formasPago.map((fp, idx) => (
@@ -655,7 +683,7 @@ export default function NuevaNotaCredito() {
 
         {/* ══ Observaciones ══ */}
         <div className="doc-observaciones">
-          <h6 className="doc-section-title">Observaciones</h6>
+          <h6 className="section-title-primary">Observaciones</h6>
           <textarea className="form-control doc-textarea" rows={4}
             placeholder="Comentarios adicionales sobre la nota crédito..."
             value={notaCredito.observaciones}
@@ -663,7 +691,9 @@ export default function NuevaNotaCredito() {
         </div>
 
         {/* ══ Footer sticky ══ */}
-        <div className="doc-footer">
+        
+            <div className="page-crear-footer">
+              <div className="footer-acciones">
           <button type="button" className="doc-btn-cancelar"
             onClick={() => navigate("/ventas")}>
             Cancelar
@@ -672,7 +702,10 @@ export default function NuevaNotaCredito() {
             {saving ? "Guardando..." : "Guardar nota crédito"}
           </button>
         </div>
+        </div>
       </form>
+    </div>
+    </div>
     </div>
   );
 }

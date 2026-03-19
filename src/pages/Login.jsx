@@ -56,13 +56,13 @@ export default function Login() {
         <div className="login-visual-overlay">
           <div className="login-visual-content">
             <img
-              src="/img/LogoFC.png"
+              src="/img/LogoWhite_sinFondo.png"
               alt="FactCloud"
               className="login-visual-logo"
             />
 
             <h2 className="login-visual-title">
-              Bienvenido de nuevo a FactCloud
+              Bienvenido de nuevo
             </h2>
 
             <p className="login-visual-subtitle">
@@ -172,9 +172,9 @@ export default function Login() {
           <button
             type="button"
             className="login-btn-register"
-            onClick={() => navigate("/registro")}
+            onClick={() => navigate("/planes")}
           >
-            Crear cuenta gratis
+            Crear cuenta
           </button>
 
           <footer className="login-footer">

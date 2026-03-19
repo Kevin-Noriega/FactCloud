@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 import axiosClient from "../api/axiosClient";
 import unidadesMedidaDIAN from "../utils/UnidadesMedidas.json";
-import "../styles/CrearProductoPage.css"; // ← nuevo archivo CSS
+import "../styles/PageCrear.css";
 import { BoxSeam, PlusCircle, PencilSquare } from "react-bootstrap-icons"; // ← agrega los iconos
 function NuevoProducto_Servicio() {
   const navigate = useNavigate();
@@ -154,7 +154,6 @@ function NuevoProducto_Servicio() {
       }
     }
 
-    // ✅ PON esto (opcional, pero si lo llenan debe ser 8 dígitos):
     if (
       producto.codigoUNSPSC?.trim() &&
       !/^\d{8}$/.test(producto.codigoUNSPSC)
@@ -265,9 +264,8 @@ function NuevoProducto_Servicio() {
     modelo: "",
     precioUnitario: "",
     costo: "",
-    impuestoCargo: "", // ← reemplaza tipoImpuesto, tarifaIVA, productoExcluido,
-    retencion: "", //   productoExento, gravaINC, tarifaINC, baseGravable,
-    //   retencionFuente, retencionIVA, retencionICA
+    impuestoCargo: "", 
+    retencion: "",
     cantidadDisponible: "",
     cantidadMinima: 0,
     categoria: "",
@@ -361,11 +359,10 @@ function NuevoProducto_Servicio() {
   };
 
   return (
-    // ↓ Reemplaza el overlay + modal-content por un contenedor de página
-    <div className="page-crear-producto">
+    <div className="page-crear">
       {/* HEADER DE PÁGINA */}
 
-      <div className="page-crear-producto__header">
+      <div className="page-crear-header">
         {/* Botón FUERA del banner */}
         <button
           className="btn btn-volver btn-sm mb-3"
@@ -375,21 +372,21 @@ function NuevoProducto_Servicio() {
         </button>
 
         {/* Banner */}
-        <div className="page-crear-producto__banner">
-          <div className="page-crear-producto__banner-content">
-            <div className="page-crear-producto__banner-text">
-              <h2 className="page-crear-producto__banner-title">
+        <div className="page-crear-banner">
+          <div className="page-crear-banner-content">
+            <div className="page-crear-banner-text">
+              <h2 className="page-crear-banner-title">
                 {productoEditando
                   ? `Editar ${producto.esServicio ? "Servicio" : "Producto"}`
                   : `Nuevo ${producto.esServicio ? "Servicio" : "Producto"}`}
               </h2>
-              <p className="page-crear-producto__banner-subtitle">
+              <p className="page-crear-banner-subtitle">
                 {productoEditando
                   ? "Modifica la información del artículo seleccionado."
                   : "Completa el formulario para agregar un nuevo artículo al catálogo."}
               </p>
             </div>
-            <div className="page-crear-producto__banner-icon">
+            <div className="page-crear-banner-icon">
               {productoEditando ? (
                 <PencilSquare size={70} />
               ) : (
@@ -401,8 +398,8 @@ function NuevoProducto_Servicio() {
       </div>
 
       {/* CUERPO DE PÁGINA */}
-      <div className="page-crear-producto__wrapper">
-        <div className="page-crear-producto__body">
+      <div className="page-crear-wrapper">
+        <div className="page-crear-body">
           <form onSubmit={handleSubmit}>
             {/* Selector Producto / Servicio */}
             <div className="tipo-selector-container mb-4">
@@ -435,7 +432,7 @@ function NuevoProducto_Servicio() {
             </div>
 
             {/* ── Información General ── */}
-            <h6 className="section-title-producto-producto">
+            <h6 className="section-title-primary">
               Información General
             </h6>
 
@@ -486,7 +483,6 @@ function NuevoProducto_Servicio() {
                     )}
                   </>
                 ) : (
-                  // ✅ Unidad de medida sube aquí cuando es Servicio
                   <>
                     <label className="form-label">Unidad de Medida</label>
                     <Select
@@ -608,7 +604,7 @@ function NuevoProducto_Servicio() {
             </div>
 
             {/* ── Datos Adicionales con tabs ── */}
-            <h6 className="section-title-producto-producto">
+            <h6 className="section-title-primary">
               Datos Adicionales
             </h6>
 
@@ -800,7 +796,7 @@ function NuevoProducto_Servicio() {
                       </div>
 
                       {/* Stock */}
-                      <h6 className="section-title-producto mt-3">Stock</h6>
+                      <h6 className="section-title mt-3">Stock</h6>
                       <div className="row mb-3">
                         <div className="col-md-4">
                           <label className="form-label">
@@ -875,7 +871,7 @@ function NuevoProducto_Servicio() {
               )}
             </div>
             {/* ── Lista de precios ── */}
-            <h6 className="section-title-producto-producto">
+            <h6 className="section-title-producto-primary">
               Lista de precios
             </h6>
 
@@ -987,7 +983,7 @@ function NuevoProducto_Servicio() {
             </div>
 
             {/* ── Footer ── */}
-            <div className="page-crear-producto__footer">
+            <div className="page-crear-footer">
               <div className="footer-acciones">
                 {/* Botón izquierda */}
                 <button
@@ -1046,7 +1042,7 @@ function NuevoProducto_Servicio() {
                             onClick={() => setDropdownAbierto(false)}
                           />
 
-                          {/* ✅ Dropdown con las dos opciones */}
+                          {/* Dropdown con las dos opciones */}
                           <ul className="dropdown-menu dropdown-menu-end show">
                             <li>
                               <button

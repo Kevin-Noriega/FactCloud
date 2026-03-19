@@ -504,7 +504,7 @@ function Perfil() {
                         <div>
                           <span className="info-label">Correo Empresa</span>
                           <p className="info-value">
-                            {usuario?.negocio?.correo || "N/A"}
+                            {usuario?.negocio?.correo|| "N/A"}
                           </p>
                         </div>
                       </div>

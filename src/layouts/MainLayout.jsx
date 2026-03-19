@@ -53,9 +53,9 @@ function MainLayout() {
         <header className="navbarFact navbar-light bg-white shadow-sm header-fixed px-4 py-3 border-bottom">
           <div className="container-fluid d-flex align-items-center justify-content-between">
 
-            <div className="d-flex align-items-center gap-2 flex-shrink-0">
+            <div className="d-flex align-items-center flex-shrink-0">
               <img
-                src="/img/Logo.png"
+                src="/img/IconoBlue_sinFondo.png"
                 alt="FactCloud Logo"
                 className="fc-logo"
               />
