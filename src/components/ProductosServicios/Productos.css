@@ -1,0 +1,128 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal-filtros {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.18);
+  animation: fadeInScale 0.2s ease;
+}
+
+.modal-filtros-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.modal-filtros-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.modal-impuestos {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+}
+
+.impuestos-cell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.impuesto-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.impuesto-chip.iva {
+  background: #e8f1ff;
+  color: #2f66de;
+}
+
+.impuesto-chip.rte {
+  background: #fff2e2;
+  color: #c97a12;
+}
+
+.impuestos-detalle-btn {
+  text-decoration: none;
+  font-size: 0.82rem;
+  padding: 0 4px;
+}
+
+.impuestos-modal-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.impuesto-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f7f9fc;
+}
+
+.impuesto-item-label {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.impuesto-item-value {
+  font-weight: 700;
+  color: #1f2937;
+}
+.btn-filtros,
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-filtros i,
+.btn-export i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
