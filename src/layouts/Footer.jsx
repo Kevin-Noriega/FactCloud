@@ -6,7 +6,7 @@ export default function Footer() {
         <div className="footer-content">
           <div className="footer-brand">
             <img
-              src="/img/logoFCwhite.png"
+              src="/img/LogoWhite_sinFondo.png"
               alt="FactCloud"
               className="footer-logo"
             />

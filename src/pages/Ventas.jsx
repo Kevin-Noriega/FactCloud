@@ -5,7 +5,6 @@ import DocumentosVenta from "../components/ventas/DocumentosVenta";
 function Ventas() {
   const [activeTab, setActiveTab] = useState("documentos");
 
-  // NOMBRES LITERALES COMO SIIGO
   const tabs = [
     { id: "documentos", label: "Documentos de venta" },
     { id: "recaudos", label: "Recaudos" },
@@ -23,7 +22,7 @@ function Ventas() {
 
       case "recaudos":
         return (
-          <div className="tab-content p-4">
+          <div className="tab-content p-4" style={{ height: "100%" }}>
             <h4>Recaudos</h4>
             <p>Gestiona los pagos recibidos y pendientes.</p>
           </div>
@@ -31,7 +30,7 @@ function Ventas() {
 
       case "impresion":
         return (
-          <div className="tab-content p-4">
+          <div className="tab-content p-4" style={{ height: "100%" }}>
             <h4>Impresión y envío masivo de comprobantes</h4>
             <p>Selecciona los documentos que deseas imprimir o enviar.</p>
           </div>

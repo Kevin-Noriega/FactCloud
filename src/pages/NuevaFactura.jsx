@@ -6,6 +6,8 @@ import {
   PlusCircle,
   CheckCircleFill,
   XCircleFill,
+  PlusCircleFill,
+  FileEarmarkText,
 } from "react-bootstrap-icons";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
@@ -40,7 +42,6 @@ function TooltipInfo({ texto }) {
   );
 }
 
-/* ── NoOptions ────────────────────────────────────── */
 const NoOptionsCliente = ({ inputValue, onCrear }) => (
   <div>
     {inputValue && <div className="doc-select-empty">No se encontró "{inputValue}"</div>}
@@ -180,12 +181,38 @@ localStorage.setItem("usuario", JSON.stringify(u));
     }));
 
   return (
-    <div className="doc-container">
-      {/* ── Título ── */}
-      <div className="doc-titulo-row">
-        <h4 className="doc-titulo">Nueva factura de venta</h4>
-      </div>
+     <div className="page-crear">
+      <div className="page-crear-header">
+              {/* Botón FUERA del banner */}
+              <button
+                className="btn btn-volver btn-sm mb-3"
+                onClick={() => navigate(-1)}
+              >
+                ← Volver
+              </button>
+      
+              {/* Banner */}
+              <div className="page-crear-banner">
+                <div className="page-crear-banner-content">
+                  <div className="page-crear-banner-text">
+                    <h2 className="page-crear-banner-title">
+                      Nueva factura de venta
+                    </h2>
+                    <p className="page-crear-banner-subtitle">
+                       Completa el formulario para crear una factura
+                    </p>
+                  </div>
+                  <div className="page-crear-banner-icon">
+                      <FileEarmarkText size={70} />
+                    
+                  </div>
+                </div>
+              </div>
+              </div>
 
+    
+      <div className="page-crear-wrapper">
+        <div className="page-crear-body">
       {/* ── Banner uso ── */}
       {facturasUsadas.limite > 0 && (() => {
         const pct       = Math.round((facturasUsadas.usadas / facturasUsadas.limite) * 100);
@@ -208,7 +235,7 @@ localStorage.setItem("usuario", JSON.stringify(u));
       <form onSubmit={(e) => { setSubmitIntentado(true); handleSubmit(e); }}>
 
         {/* ══ Información básica ══ */}
-        <h6 className="doc-section-title">Información básica</h6>
+        <h6 className="section-title-primary">Información básica</h6>
         <div className="doc-header-grid" style={{ marginTop: 12 }}>
           {/* Columna izquierda */}
           <div className="doc-col">
@@ -364,7 +391,7 @@ localStorage.setItem("usuario", JSON.stringify(u));
         {/* ══ Tabla de productos ══ */}
         <div style={{ marginBottom: 28 }}>
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <h6 className="doc-section-title mb-0">Detalle de productos</h6>
+            <h6 className="section-title-primary">Detalle de productos</h6>
             <button
               type="button"
               className="btn btn-sm btn-primary"
@@ -484,7 +511,7 @@ localStorage.setItem("usuario", JSON.stringify(u));
         <div className="doc-pago-totales">
           {/* Formas de pago */}
           <div>
-            <h6 className="doc-section-title">Formas de pago</h6>
+            <h6 className="section-title-primary">Formas de pago</h6>
             <div className="doc-hr" />
 
             {formasPago.map((fp, idx) => (
@@ -590,7 +617,7 @@ localStorage.setItem("usuario", JSON.stringify(u));
 
         {/* ══ Observaciones ══ */}
         <div className="doc-observaciones">
-          <h6 className="doc-section-title">Observaciones</h6>
+          <h6 className="section-title-primary">Observaciones</h6>
           <textarea
             className="form-control doc-textarea"
             rows={4}
@@ -610,14 +637,16 @@ localStorage.setItem("usuario", JSON.stringify(u));
           </label>
         </div>
 
-        {/* ══ Footer sticky ══ */}
-        <div className="doc-footer">
+        {/* ══  sticky ══ */}
+        <div className="page-crear-footer">
+          <div className="footer-acciones">
           <button type="button" className="doc-btn-cancelar" onClick={() => navigate("/ventas")}>
             Cancelar
           </button>
           <button type="submit" className="doc-btn-guardar-enviar">
             Guardar y crear factura
           </button>
+        </div>
         </div>
       </form>
 
@@ -645,6 +674,10 @@ localStorage.setItem("usuario", JSON.stringify(u));
           onSuccess={(p) => { agregarProductoLocal(p); setMostrarModalProducto(false); }}
         />
       )}
-    </div>
+    
+      </div>
+      </div>
+      </div>
+
   );
 }

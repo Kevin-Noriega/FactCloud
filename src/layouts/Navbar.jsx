@@ -36,7 +36,7 @@ export default function NavBar() {
       <div className="nav-content">
         <Link to="/">
           <img
-            src="/img/LogoFC.png"
+            src="/img/LogoBlue_sinFondo.png"
             alt="FactCloud"
             className="logo"
             style={{ cursor: "pointer" }}
