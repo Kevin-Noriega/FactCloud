@@ -462,12 +462,12 @@ export default function Checkout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           // Datos del usuario (usar 'user' en lugar de 'registroData')
-          nombre: user.nombre, // ✅
-          telefono: user.telefono, // ✅
-          correo: user.email, // ✅
-          password: user.password, // ✅
-          tipoIdentificacion: user.tipoIdentificacion, // ✅
-          numeroIdentificacion: user.numeroIdentificacion, // ✅
+          nombre: user.nombre, 
+          telefono: user.telefono, 
+          correo: user.email, 
+          password: user.password, 
+          tipoIdentificacion: user.tipoIdentificacion, 
+          numeroIdentificacion: user.numeroIdentificacion, 
           pais: "CO",
 
           // Datos del negocio
