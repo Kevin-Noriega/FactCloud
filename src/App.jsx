@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import { SignalRProvider } from "./contexts/SignalRContext";
 import ScrollToHash from "./components/ScrollToHash";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
@@ -48,6 +49,12 @@ const NotFound = () => (
   </div>
 );
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 5 * 60 * 1000, retry: 2 }
+  }
+});
+
 function App() {
   const { loading } = useAuth();
 
@@ -76,6 +83,7 @@ function App() {
 
   return (
     <SignalRProvider>
+      <QueryClientProvider client={queryClient}>
       <ScrollToHash />
       <Routes>
         <Route element={<PublicLayout />}>
@@ -131,6 +139,7 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </QueryClientProvider>
     </SignalRProvider>
   );
 }

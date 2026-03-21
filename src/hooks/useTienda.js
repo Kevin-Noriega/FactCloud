@@ -1,121 +1,92 @@
-// hooks/useTienda.js
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosClient from "../api/axiosClient";
 
 export const useTienda = (options = {}) => {
   const queryClient = useQueryClient();
 
-  // ===========================
-  // 📊 QUERY GET - Datos de la tienda
-  // ===========================
   const query = useQuery({
     queryKey: ["tienda"],
     queryFn: async () => {
-      try {
-        console.log("🔍 Cargando datos de la tienda...");
+      const [planActualRes, planesRes, addonsRes, estadisticasRes] =
+        await Promise.allSettled([
+          axiosClient.get("/planes/actual"),
+          axiosClient.get("/planes"),
+          axiosClient.get("/addons"),
+          axiosClient.get("/planes/estadisticas"),
+        ]);
 
-        // Peticiones paralelas con manejo de errores individual
-        const [planActualRes, planesRes, addonsRes, estadisticasRes] =
-          await Promise.allSettled([
-            axiosClient.get("/planes/actual"),
-            axiosClient.get("/planes"),
-            axiosClient.get("/addons"),
-            axiosClient.get("/planes/estadisticas"),
-          ]);
+      const planesDisponibles = planesRes.status === "fulfilled"
+        ? planesRes.value.data : [];
 
-        // Planes disponibles (siempre debe funcionar)
-        const planesDisponibles = planesRes.status === "fulfilled" 
-          ? planesRes.value.data 
-          : [];
+      const addonsDisponibles = addonsRes.status === "fulfilled"
+        ? addonsRes.value.data : [];
 
-        // Addons disponibles
-        const addonsDisponibles = addonsRes.status === "fulfilled" 
-          ? addonsRes.value.data 
-          : [];
+      const planActual = planActualRes.status === "fulfilled"
+        ? planActualRes.value.data : null;
 
-        // Plan actual (puede fallar si no tiene plan)
-        const planActual = planActualRes.status === "fulfilled" 
-          ? planActualRes.value.data 
-          : null;
+      const estadisticas = estadisticasRes.status === "fulfilled"
+        ? estadisticasRes.value.data : null;
 
-        // Estadísticas (puede fallar si no tiene plan)
-        const estadisticas = estadisticasRes.status === "fulfilled" 
-          ? estadisticasRes.value.data 
-          : null;
-
-        console.log("✅ Datos cargados:", {
-          planActual,
-          totalPlanes: planesDisponibles.length,
-          totalAddons: addonsDisponibles.length,
-          estadisticas
-        });
-
-        // Calcular días restantes
-        let diasRestantes = 0;
-        if (estadisticas?.fechaFin) {
-          diasRestantes = Math.floor(
-            (new Date(estadisticas.fechaFin).getTime() - Date.now()) /
-              (1000 * 60 * 60 * 24)
-          );
-        }
-
-        return {
-          planActual,
-          planesDisponibles,
-          addonsDisponibles,
-          estadisticas,
-          tienePlanActivo: planActual !== null,
-          puedeActualizarPlan: planesDisponibles.length > 0,
-          necesitaRenovacion: diasRestantes < 7 && diasRestantes > 0,
-          diasRestantes: Math.max(0, diasRestantes),
-        };
-      } catch (error) {
-        console.error("❌ Error al cargar datos de la tienda:", error);
-        throw error;
+      let diasRestantes = 0;
+      if (estadisticas?.fechaFin) {
+        diasRestantes = Math.floor(
+          (new Date(estadisticas.fechaFin).getTime() - Date.now()) /
+            (1000 * 60 * 60 * 24)
+        );
       }
+
+      return {
+        planActual,
+        planesDisponibles,
+        addonsDisponibles,
+        estadisticas,
+        tienePlanActivo:    planActual !== null,
+        puedeActualizarPlan: planesDisponibles.length > 0,
+        necesitaRenovacion: diasRestantes < 7 && diasRestantes > 0,
+        diasRestantes:      Math.max(0, diasRestantes),
+      };
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    gcTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false, // ⚠️ NO recargar automáticamente al montar
-    retry: 1, // Solo 1 reintento
+
+    // ── Corrección principal ──────────────────────────────────────
+    // staleTime: 0 → los datos se consideran desactualizados siempre,
+    // así refetch() trae números reales cada vez.
+    staleTime: 0,
+
+    // Recargar cuando el usuario vuelve a la pestaña/ventana —
+    // esto actualiza el conteo si creó docs en otra página.
+    refetchOnWindowFocus: true,
+
+    // Recargar al montar el componente — necesario para que al
+    // navegar de vuelta a /tienda los números estén frescos.
+    refetchOnMount: true,
+
+    gcTime:  10 * 60 * 1000,
+    retry:   1,
     retryDelay: 1000,
-    enabled: true, // ⚠️ DESHABILITADO POR DEFECTO
-    ...options, // Permitir override
+    ...options,
   });
 
-  // ===========================
-  // 🔄 MUTATION - Cambiar Plan
-  // ===========================
+  // ── Mutation: cambiar plan ────────────────────────────────────────
   const cambiarPlanMutation = useMutation({
     mutationFn: async ({ planId, periodoAnual }) => {
-      const response = await axiosClient.post("/planes/actualizar", {
-        planId,
-        periodoAnual,
-      });
-      return response.data;
+      const res = await axiosClient.post("/planes/actualizar", { planId, periodoAnual });
+      return res.data;
     },
-    onSuccess: (data) => {
-      console.log("✅ Plan cambiado:", data);
+    onSuccess: () => {
+      // Invalida y recarga inmediatamente con datos frescos
       queryClient.invalidateQueries({ queryKey: ["tienda"] });
     },
-    onError: (error) => {
-      console.error("❌ Error cambiar plan:", error.response?.data);
+    onError: (err) => {
+      console.error("Error cambiar plan:", err.response?.data);
     },
   });
 
-  // ===========================
-  // ➕ MUTATION - Agregar Addons
-  // ===========================
+  // ── Mutation: agregar addons ──────────────────────────────────────
   const agregarAddonsMutation = useMutation({
     mutationFn: async (addonsIds) => {
-      if (!addonsIds || addonsIds.length === 0) {
-        throw new Error("Debe seleccionar al menos un addon");
-      }
-      const response = await axiosClient.post("/addons/agregar", {
-        addons: addonsIds,
-      });
-      return response.data;
+      if (!addonsIds?.length) throw new Error("Debe seleccionar al menos un addon");
+      const res = await axiosClient.post("/addons/agregar", { addons: addonsIds });
+      return res.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tienda"] });
@@ -123,27 +94,21 @@ export const useTienda = (options = {}) => {
   });
 
   return {
-    // Query data
     ...query,
-    planActual: query.data?.planActual ?? null,
-    planesDisponibles: query.data?.planesDisponibles ?? [],
-    addonsDisponibles: query.data?.addonsDisponibles ?? [],
-    estadisticas: query.data?.estadisticas ?? null,
-    
-    // Computed
-    tienePlanActivo: query.data?.tienePlanActivo ?? false,
+    planActual:          query.data?.planActual          ?? null,
+    planesDisponibles:   query.data?.planesDisponibles   ?? [],
+    addonsDisponibles:   query.data?.addonsDisponibles   ?? [],
+    estadisticas:        query.data?.estadisticas        ?? null,
+    tienePlanActivo:     query.data?.tienePlanActivo     ?? false,
     puedeActualizarPlan: query.data?.puedeActualizarPlan ?? false,
-    necesitaRenovacion: query.data?.necesitaRenovacion ?? false,
-    diasRestantes: query.data?.diasRestantes ?? 0,
+    necesitaRenovacion:  query.data?.necesitaRenovacion  ?? false,
+    diasRestantes:       query.data?.diasRestantes        ?? 0,
 
-    // Mutations
-    cambiarPlan: cambiarPlanMutation.mutateAsync,
-    cambiarPlanLoading: cambiarPlanMutation.isPending,
-    
-    agregarAddons: agregarAddonsMutation.mutateAsync,
+    cambiarPlan:         cambiarPlanMutation.mutateAsync,
+    cambiarPlanLoading:  cambiarPlanMutation.isPending,
+    agregarAddons:       agregarAddonsMutation.mutateAsync,
     agregarAddonsLoading: agregarAddonsMutation.isPending,
 
-    // Helpers
-    cargarDatos: query.refetch, // ⚠️ Método manual para cargar datos
+    cargarDatos: query.refetch,
   };
 };

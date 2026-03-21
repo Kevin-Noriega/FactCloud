@@ -18,30 +18,20 @@ function Tienda() {
     cambiarPlanLoading,
     agregarAddons,
     agregarAddonsLoading,
-    cargarDatos
+    cargarDatos,
   } = useTienda();
 
-  const [mostrarFormularioPlan, setMostrarFormularioPlan] = useState(false);
+  const [mostrarFormularioPlan,   setMostrarFormularioPlan]   = useState(false);
   const [mostrarFormularioAddons, setMostrarFormularioAddons] = useState(false);
-  const [planSeleccionado, setPlanSeleccionado] = useState(null);
-  const [addonsSeleccionados, setAddonsSeleccionados] = useState([]);
-  const [mensajeExito, setMensajeExito] = useState("");
-  const [periodoAnual, setPeriodoAnual] = useState(true);
+  const [planSeleccionado,        setPlanSeleccionado]        = useState(null);
+  const [addonsSeleccionados,     setAddonsSeleccionados]     = useState([]);
+  const [mensajeExito,            setMensajeExito]            = useState("");
+  const [periodoAnual,            setPeriodoAnual]            = useState(true);
 
   const toggleFormularioPlan = () => {
-    if (mostrarFormularioPlan) {
-      setPlanSeleccionado(null);
-    }
-    setMostrarFormularioPlan(!mostrarFormularioPlan);
+    if (mostrarFormularioPlan) setPlanSeleccionado(null);
+    setMostrarFormularioPlan((v) => !v);
     setMostrarFormularioAddons(false);
-  };
-
-  const toggleFormularioAddons = () => {
-    if (mostrarFormularioAddons) {
-      setAddonsSeleccionados([]);
-    }
-    setMostrarFormularioAddons(!mostrarFormularioAddons);
-    setMostrarFormularioPlan(false);
   };
 
   const handleSeleccionarPlan = (plan) => {
@@ -50,109 +40,101 @@ function Tienda() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleToggleAddon = (addonId) => {
-    setAddonsSeleccionados((prev) =>
-      prev.includes(addonId)
-        ? prev.filter((id) => id !== addonId)
-        : [...prev, addonId]
-    );
-  };
-
   const handleCambiarPlan = async (e) => {
     e.preventDefault();
-
-    if (!planSeleccionado) {
-      alert("Debes seleccionar un plan");
-      return;
-    }
-
+    if (!planSeleccionado) { alert("Debes seleccionar un plan"); return; }
     try {
       await cambiarPlan({ planId: planSeleccionado.id, periodoAnual });
-      setMensajeExito("✅ Plan actualizado exitosamente");
+      setMensajeExito("Plan actualizado exitosamente");
       setTimeout(() => setMensajeExito(""), 3000);
       setMostrarFormularioPlan(false);
       setPlanSeleccionado(null);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al cambiar el plan: " + (error.message || "Error desconocido"));
+    } catch (err) {
+      alert("Error al cambiar el plan: " + (err.message || "Error desconocido"));
     }
   };
- React.useEffect(() => {
-    cargarDatos();
-  }, [cargarDatos]);
+
+  // ── Helpers addons ────────────────────────────────────────────────
+  const toggleFormularioAddons = () => {
+    if (mostrarFormularioAddons) setAddonsSeleccionados([]);
+    setMostrarFormularioAddons((v) => !v);
+    setMostrarFormularioPlan(false);
+  };
+
+  const handleToggleAddon = (addonId) =>
+    setAddonsSeleccionados((prev) =>
+      prev.includes(addonId) ? prev.filter((id) => id !== addonId) : [...prev, addonId]
+    );
+
   const handleAgregarAddons = async (e) => {
     e.preventDefault();
-
-    if (addonsSeleccionados.length === 0) {
-      alert("Debes seleccionar al menos un complemento");
-      return;
-    }
-
+    if (!addonsSeleccionados.length) { alert("Debes seleccionar al menos un complemento"); return; }
     try {
       await agregarAddons(addonsSeleccionados);
-      setMensajeExito("✅ Complementos agregados exitosamente");
+      setMensajeExito("Complementos agregados exitosamente");
       setTimeout(() => setMensajeExito(""), 3000);
       setMostrarFormularioAddons(false);
       setAddonsSeleccionados([]);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al agregar complementos: " + (error.message || "Error desconocido"));
+    } catch (err) {
+      alert("Error al agregar complementos: " + (err.message || "Error desconocido"));
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="container mt-5">
-        <div className="loading-container">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Cargando...</span>
-          </div>
-          <p className="mt-3">Cargando tienda...</p>
-        </div>
-      </div>
-    );
-  }
+  const calcularPrecio = (plan) => periodoAnual ? plan.precioAnual : plan.precioMensual;
 
-  if (error) {
-    return (
-      <div className="container mt-5">
-        <div className="alert alert-danger">
-          <h5>❌ Error al cargar la tienda</h5>
-          <p>{error.message || "Error desconocido"}</p>
-        </div>
-      </div>
+  // Porcentaje seguro — evita NaN/Infinity cuando límite es -1
+  const pctUso = (() => {
+    if (!estadisticas || estadisticas.documentosLimite === -1) return 0;
+    return Math.min(
+      Math.round((estadisticas.documentosUsados / estadisticas.documentosLimite) * 100),
+      100
     );
-  }
+  })();
 
-  const calcularPrecio = (plan) => {
-    return periodoAnual ? plan.precioAnual : plan.precioMensual;
-  };
+  // ── Estados de carga / error ──────────────────────────────────────
+  if (isLoading) return (
+    <div className="container mt-5">
+      <div className="loading-container">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-3">Cargando tienda...</p>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="container mt-5">
+      <div className="alert alert-danger">
+        <h5>Error al cargar la tienda</h5>
+        <p>{error.message || "Error desconocido"}</p>
+        <button className="btn btn-primary btn-sm mt-2" onClick={cargarDatos}>
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="container-fluid px-4 tienda-container">
-      {/* HEADER */}
+
+      {/* ── Header ── */}
       <div className="header-card mb-3 px-4">
         <div className="header-content">
-            <h2 className="header-title">Tienda FactCloud</h2>
-          <div className="header-icon">
-            <Shop size={70} />
-          </div>
+          <h2 className="header-title">Tienda FactCloud</h2>
+          <div className="header-icon"><Shop size={70} /></div>
         </div>
       </div>
 
-      {/* MENSAJE DE ÉXITO */}
+      {/* ── Alerta éxito ── */}
       {mensajeExito && (
         <div className="alert alert-success alert-dismissible fade show">
           <span>{mensajeExito}</span>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setMensajeExito("")}
-          />
+          <button type="button" className="btn-close" onClick={() => setMensajeExito("")} />
         </div>
       )}
 
-      {/* PLAN ACTUAL */}
+      {/* ── Plan actual ── */}
       {planActual && (
         <div className="plan-actual-card mb-4">
           <div className="plan-actual-header">
@@ -179,15 +161,12 @@ function Tienda() {
                 <div className="plan-info-item">
                   <span className="plan-info-label">Facturas/mes:</span>
                   <span className="plan-info-value">
-                    {planActual.facturasMensuales === -1
-                      ? "Ilimitadas"
-                      : planActual.facturasMensuales}
+                    {planActual.facturasMensuales === -1 ? "Ilimitadas" : planActual.facturasMensuales}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* ESTADÍSTICAS */}
             {estadisticas && (
               <div className="estadisticas-uso mt-4">
                 <div className="row">
@@ -196,25 +175,23 @@ function Tienda() {
                       <span className="stat-label">Documentos usados:</span>
                       <span className="stat-value">
                         {estadisticas.documentosUsados} /{" "}
-                        {estadisticas.documentosLimite === -1
-                          ? "∞"
-                          : estadisticas.documentosLimite}
+                        {estadisticas.documentosLimite === -1 ? "∞" : estadisticas.documentosLimite}
                       </span>
                     </div>
                     {estadisticas.documentosLimite !== -1 && (
                       <div className="progress mt-2">
                         <div
                           className={`progress-bar ${
-                            estadisticas.porcentajeUso >= 80
-                              ? "bg-danger"
-                              : estadisticas.porcentajeUso >= 60
-                              ? "bg-warning"
-                              : "bg-success"
+                            pctUso >= 80 ? "bg-danger" :
+                            pctUso >= 60 ? "bg-warning" : "bg-success"
                           }`}
                           role="progressbar"
-                          style={{ width: `${estadisticas.porcentajeUso}%` }}
+                          style={{ width: `${pctUso}%` }}
+                          aria-valuenow={pctUso}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
                         >
-                          {estadisticas.porcentajeUso.toFixed(0)}%
+                          {pctUso}%
                         </div>
                       </div>
                     )}
@@ -222,32 +199,39 @@ function Tienda() {
                   <div className="col-md-6">
                     <div className="stat-item">
                       <span className="stat-label">Días restantes:</span>
-                      <span className="stat-value">
-                        {estadisticas.diasRestantes} días
-                      </span>
+                      <span className="stat-value">{estadisticas.diasRestantes} días</span>
                     </div>
                     {estadisticas.fechaFin && (
                       <small className="text-muted d-block mt-1">
-                        Vence:{" "}
-                        {new Date(estadisticas.fechaFin).toLocaleDateString("es-CO")}
+                        Vence: {new Date(estadisticas.fechaFin).toLocaleDateString("es-CO")}
                       </small>
                     )}
                   </div>
                 </div>
 
-                {estadisticas.porcentajeUso >= 80 && (
+                {pctUso >= 80 && (
                   <div className="alert alert-warning mt-3 mb-0">
-                    <strong>⚠️ Advertencia:</strong> Has usado más del 80% de tus
-                    documentos disponibles. Considera actualizar tu plan.
+                    <strong>Advertencia:</strong> Has usado más del 80% de tus documentos
+                    disponibles. Considera actualizar tu plan.
                   </div>
                 )}
               </div>
             )}
+
+            <div className="mt-3 text-end">
+              <button
+                type="button"
+                className="btn btn-outline-secondary btn-sm"
+                onClick={cargarDatos}
+              >
+                ↻ Actualizar estadísticas
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* TOGGLE DE PERIODO */}
+      {/* ── Toggle período ── */}
       <div className="periodo-toggle-container mb-4">
         <div className="periodo-toggle">
           <button
@@ -266,24 +250,16 @@ function Tienda() {
         </div>
       </div>
 
-      {/* BOTONES DE ACCIÓN */}
+      {/* ── Botones de acción ── */}
       <div className="acciones-header mb-4">
         <button
           className={`btn-tienda ${mostrarFormularioPlan ? "active" : ""}`}
           onClick={toggleFormularioPlan}
           type="button"
         >
-          {mostrarFormularioPlan ? (
-            <>
-              <ChevronUp size={20} className="me-2" />
-              Ocultar Planes
-            </>
-          ) : (
-            <>
-              <ChevronDown size={20} className="me-2" />
-              Ver Todos los Planes
-            </>
-          )}
+          {mostrarFormularioPlan
+            ? <><ChevronUp size={20} className="me-2" />Ocultar Planes</>
+            : <><ChevronDown size={20} className="me-2" />Ver Todos los Planes</>}
         </button>
 
         <button
@@ -291,21 +267,13 @@ function Tienda() {
           onClick={toggleFormularioAddons}
           type="button"
         >
-          {mostrarFormularioAddons ? (
-            <>
-              <ChevronUp size={20} className="me-2" />
-              Ocultar Complementos
-            </>
-          ) : (
-            <>
-              <ChevronDown size={20} className="me-2" />
-              Ver Complementos
-            </>
-          )}
+          {mostrarFormularioAddons
+            ? <><ChevronUp size={20} className="me-2" />Ocultar Complementos</>
+            : <><ChevronDown size={20} className="me-2" />Ver Complementos</>}
         </button>
       </div>
 
-      {/* FORMULARIO DE CONFIRMACIÓN DE PLAN */}
+      {/* ── Formulario confirmación de plan ── */}
       {mostrarFormularioPlan && planSeleccionado && (
         <div className="formulario-tienda-collapse mb-4">
           <FormularioTienda
@@ -313,16 +281,13 @@ function Tienda() {
             periodoAnual={periodoAnual}
             setPeriodoAnual={setPeriodoAnual}
             onSubmit={handleCambiarPlan}
-            onCancel={() => {
-              setMostrarFormularioPlan(false);
-              setPlanSeleccionado(null);
-            }}
+            onCancel={() => { setMostrarFormularioPlan(false); setPlanSeleccionado(null); }}
             isLoading={cambiarPlanLoading}
           />
         </div>
       )}
 
-      {/* GRID DE PLANES */}
+      {/* ── Grid de planes ── */}
       {mostrarFormularioPlan && (
         <div className="planes-grid mb-4">
           {planesDisponibles.map((plan) => (
@@ -338,13 +303,12 @@ function Tienda() {
         </div>
       )}
 
-      {/* FORMULARIO DE ADDONS */}
+      {/* ── Formulario addons ── */}
       {mostrarFormularioAddons && (
         <div className="formulario-tienda-collapse mb-4">
           <div className="formulario-tienda-container">
             <form onSubmit={handleAgregarAddons}>
               <h5 className="mb-4">Complementos Disponibles</h5>
-
               <div className="addons-grid mb-4">
                 {addonsDisponibles.map((addon) => (
                   <TarjetaAddon
@@ -364,8 +328,7 @@ function Tienda() {
                       const addon = addonsDisponibles.find((a) => a.id === id);
                       return (
                         <li key={id}>
-                          {addon.nombre} - ${addon.precio.toLocaleString("es-CO")}{" "}
-                          {addon.unidad}
+                          {addon.nombre} — ${addon.precio.toLocaleString("es-CO")} {addon.unidad}
                         </li>
                       );
                     })}
@@ -373,8 +336,7 @@ function Tienda() {
                   <div className="total-addons">
                     <strong>Total adicional:</strong>
                     <span>
-                      $
-                      {addonsSeleccionados
+                      ${addonsSeleccionados
                         .reduce((total, id) => {
                           const addon = addonsDisponibles.find((a) => a.id === id);
                           return total + addon.precio;
@@ -386,17 +348,13 @@ function Tienda() {
               )}
 
               <div className="d-flex justify-content-end gap-2">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={toggleFormularioAddons}
-                >
+                <button type="button" className="btn btn-secondary" onClick={toggleFormularioAddons}>
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={addonsSeleccionados.length === 0 || agregarAddonsLoading}
+                  disabled={!addonsSeleccionados.length || agregarAddonsLoading}
                 >
                   {agregarAddonsLoading ? "Agregando..." : "Agregar Complementos"}
                 </button>
@@ -406,33 +364,29 @@ function Tienda() {
         </div>
       )}
 
-      {/* INFORMACIÓN ADICIONAL */}
+      {/* ── Info adicional ── */}
       <div className="info-tienda-card mt-4">
         <h5>¿Necesitas ayuda?</h5>
         <p>
-          Si tienes dudas sobre qué plan es mejor para ti o necesitas un plan
-          personalizado, contáctanos en{" "}
+          Si tienes dudas sobre qué plan es mejor para ti o necesitas un plan personalizado,
+          contáctanos en{" "}
           <a href="mailto:soporte@factcloud.com">soporte@factcloud.com</a>
         </p>
         <div className="features-list">
-          <div className="feature-item">
-            <span className="feature-icon">✓</span>
-            <span>Todos los planes incluyen soporte técnico</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">✓</span>
-            <span>Facturación electrónica validada por la DIAN</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">✓</span>
-            <span>Actualización y cancelación en cualquier momento</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">✓</span>
-            <span>Respaldo automático de tus datos</span>
-          </div>
+          {[
+            "Todos los planes incluyen soporte técnico",
+            "Facturación electrónica validada por la DIAN",
+            "Actualización y cancelación en cualquier momento",
+            "Respaldo automático de tus datos",
+          ].map((f) => (
+            <div className="feature-item" key={f}>
+              <span className="feature-icon">✓</span>
+              <span>{f}</span>
+            </div>
+          ))}
         </div>
       </div>
+
     </div>
   );
 }
