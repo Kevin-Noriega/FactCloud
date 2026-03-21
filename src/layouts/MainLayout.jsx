@@ -1,21 +1,29 @@
-import { useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   BellFill,
   GearFill,
   Plus,
   QuestionCircleFill,
   Search,
+  ArrowRightShort,
+  FileEarmarkTextFill,
+  PersonFill,
+  BoxSeam,
+  PlusCircleFill,
+  FileText
 } from "react-bootstrap-icons";
-import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../layouts/Sidebar";
+
 import ModalCrear from "../components/modals/ModalCrear";
 import ModalConfiguracion from "../components/modals/ModalConfiguracion";
 import ModalNotificaciones from "../components/modals/ModalNotificaciones";
 import ModalAyuda from "../components/modals/ModalAyuda";
 import UserMenu from "../components/dashboard/UserMenu";
+
 import { useUsuarios } from "../hooks/useUsuarios";
 import { useNotificacionesNoLeidas } from "../hooks/useNotificaciones";
+
 import "../styles/MainLayout.css";
 
 function MainLayout() {
@@ -23,70 +31,189 @@ function MainLayout() {
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
   const [mostrarConfiguracion, setMostrarConfiguracion] = useState(false);
   const [mostrarAyuda, setMostrarAyuda] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+
   const notifButtonRef = useRef(null);
-  
+  const containerRef = useRef(null);
+  const debounceRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    if (searchQuery.trim().length < 2) {
+      setResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        setLoading(true);
+        setShowResults(true);
+
+        const res = await fetch(
+          `/api/search/global?query=${encodeURIComponent(searchQuery)}`
+        );
+
+        const data = await res.json();
+        setResults(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+  }, [searchQuery]);
+
+  const handleSelect = (item) => {
+    setSearchQuery("");
+    setShowResults(false);
+    navigate(item.route);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const { data: usuarios, isLoading, isError, error } = useUsuarios();
   const { data: noLeidas = 0 } = useNotificacionesNoLeidas();
 
-  if (isLoading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        Cargando...
-      </div>
-    );
-  }
+  if (isLoading) return <div className="vh-100 d-flex align-items-center justify-content-center">Cargando...</div>;
+  if (isError) return <div className="alert alert-danger m-4">{error?.message}</div>;
 
-  if (isError) {
-    return (
-      <div className="alert alert-danger m-4">Error: {error?.message}</div>
-    );
-  }
+  const nombreCompleto =
+    `${usuarios?.nombre || ""} ${usuarios?.apellido || ""}`.trim() || "Usuario";
 
-  const nombreCompleto = `${usuarios?.nombre || ""} ${usuarios?.apellido || ""}`.trim() || "Usuario";
+  const grouped = results.reduce((acc, item) => {
+    if (!acc[item.type]) acc[item.type] = [];
+    acc[item.type].push(item);
+    return acc;
+  }, {});
+
+  const labels = {
+    factura: " Facturas",
+    cliente: "Clientes",
+    producto: "Productos",
+    pagina: "Accesos rápidos",
+  };
+
+const iconByType = {
+  factura: <FileEarmarkTextFill size={16} />,
+  cliente: <PersonFill size={16} />,
+  producto: <BoxSeam size={16} />,
+  pagina: <FileText size={16} />,
+  accion: <PlusCircleFill size={16} />,
+  modal: <GearFill size={16} />,
+};
+
 
   return (
     <div className="d-flex layout-wrapper">
       <Sidebar />
 
       <div className="content-wrapper">
-        <header className="navbarFact navbar-light bg-white shadow-sm header-fixed px-4 py-3 border-bottom">
-          <div className="container-fluid d-flex align-items-center justify-content-between">
+        <header className="navbarFact bg-white shadow-sm px-4 py-3 border-bottom">
+          <div className="d-flex justify-content-between align-items-center">
 
-            <div className="d-flex align-items-center flex-shrink-0">
-              <img
-                src="/img/IconoBlue_sinFondo.png"
-                alt="FactCloud Logo"
-                className="fc-logo"
-              />
-              <h5 className="mb-0 fw-bold d-none d-lg-block" style={{color:"var(--primary-dark)"}}>
+            {/* LOGO */}
+            <div className="d-flex align-items-center gap-2">
+              <img src="/img/IconoBlue_sinFondo.png" className="fc-logo" />
+              <h5 className="fw-bold d-none d-lg-block">
                 {usuarios?.nombreNegocio || "FactCloud"}
               </h5>
             </div>
 
-            <div className="d-flex align-items-center gap-2 flex-shrink-0">
-              <div className="d-none d-md-block" style={{ width: "300px" }}>
+            {/* SEARCH */}
+            <div className="d-flex align-items-center gap-2">
+
+              <div
+                ref={containerRef}
+                className="position-relative d-none d-md-block"
+                style={{ width: "300px" }}
+              >
                 <div className="search-bar-container">
-                  <Search size={18} className="search-icon" />
+                  <Search size={16} className="search-icon" />
+
                   <input
                     type="text"
-                    placeholder="Buscar en FactCloud"
+                    placeholder="Buscar..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => results.length > 0 && setShowResults(true)}
                     className="search-input"
                   />
+
                   {searchQuery && (
                     <button
                       className="search-clear"
                       onClick={() => setSearchQuery("")}
-                      type="button"
                     >
                       ×
                     </button>
                   )}
                 </div>
+
+                {showResults && (
+                  <div className="search-results">
+
+                    {loading && <div className="search-state">Buscando...</div>}
+
+                    {!loading && results.length === 0 && (
+                      <div className="search-state">Sin resultados</div>
+                    )}
+
+                    {!loading &&
+                      Object.keys(grouped).map((group) => (
+                        <div key={group}>
+                          <div className="search-group-title">
+                            {labels[group]}
+                          </div>
+
+                          {grouped[group].map((item, i) => (
+                            <div
+                              key={i}
+                              className="search-item"
+                              onClick={() => handleSelect(item)}
+                            >
+                              <div className="search-icon-box">
+                                {iconByType[item.type]}
+                              </div>
+
+                              <div className="search-text">
+                                <div className="search-title">
+                                  {item.title}
+                                </div>
+                                <div className="search-sub">
+                                  {item.subtitle}
+                                </div>
+                              </div>
+
+                              <div className="search-go">
+                                <ArrowRightShort/>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+
+                  </div>
+                )}
               </div>
 
+              {/* BOTONES */}
               <div className="notif-container-wrapper">
                 <button 
                   ref={notifButtonRef}
@@ -107,33 +234,25 @@ function MainLayout() {
                 />
               </div>
 
-              <button 
-                className="fcButton" 
-                title="Configuración"
-                onClick={() => setMostrarConfiguracion(true)}
-              >
-                <GearFill size={18} />
+              <button className="fcButton" onClick={() => setMostrarConfiguracion(true)}>
+                <GearFill size ={18}/>
               </button>
 
-              <button 
-                className="fcButton" 
-                title="Ayuda"
-                onClick={() => setMostrarAyuda(true)}
-              >
-                <QuestionCircleFill size={18} />
+              <button className="fcButton" onClick={() => setMostrarAyuda(true)}>
+                <QuestionCircleFill size ={18}/>
               </button>
 
               <button
                 onClick={() => setMostrarCrear(true)}
-                className="fcButton fc-btn-primary d-none d-sm-flex"
+                className="fcButton fc-btn-primary"
               >
-                <Plus size={20} />
+                <Plus size = {18}/>
                 <span>Crear</span>
               </button>
 
               <UserMenu
                 userName={nombreCompleto}
-                userEmail={usuarios?.correo || "hola@gmail.com"}
+                userEmail={usuarios?.correo}
                 userAvatar={usuarios?.logoNegocio}
               />
             </div>
@@ -143,26 +262,13 @@ function MainLayout() {
         <main className="main-content-area">
           <Outlet />
         </main>
-
-        <footer className="bg-light text-center py-3 border-top mt-auto">
-          <small className="text-muted">
-            © {new Date().getFullYear()} FactCloud - Sistema de Facturación Electrónica
-          </small>
-        </footer>
-
-        <ModalCrear
-          open={mostrarCrear}
-          onClose={() => setMostrarCrear(false)}
-        />
-
-        <ModalConfiguracion
-          isOpen={mostrarConfiguracion}
-          onClose={() => setMostrarConfiguracion(false)}
-        />
-
-        <ModalAyuda
-          isOpen={mostrarAyuda}
-          onClose={() => setMostrarAyuda(false)}
+        <ModalCrear open={mostrarCrear} onClose={() => setMostrarCrear(false)} />
+        <ModalConfiguracion isOpen={mostrarConfiguracion} onClose={() => setMostrarConfiguracion(false)} />
+        <ModalAyuda isOpen={mostrarAyuda} onClose={() => setMostrarAyuda(false)} />
+        <ModalNotificaciones
+          isOpen={mostrarNotificaciones}
+          onClose={() => setMostrarNotificaciones(false)}
+          buttonRef={notifButtonRef}
         />
       </div>
     </div>

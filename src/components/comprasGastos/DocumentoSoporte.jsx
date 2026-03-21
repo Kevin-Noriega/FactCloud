@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { API_URL } from "../../api/config";
 import ModalDocumentoSoporte from "../modals/ModalDocumentoSoporte";
 import {
@@ -14,20 +14,26 @@ import {
   TIPOS_TRANSACCION,
   OPCIONES_DIAN,
 } from "../../constants/documentoSoporte";
+import { useDocumentoSoporte } from "../../hooks/useDocumentoSoporte";
 import { calcularFechasPorPeriodo } from "../../utils/calcularFechas";
 import "../../styles/ComprasGastos/DocumentoSoporte.css";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function DocumentosSoporte() {
-  const [documentos, setDocumentos]               = useState([]);
-  const [loading, setLoading]                     = useState(true);
-  const [error, setError]                         = useState(null);
-  const [mensajeExito, setMensajeExito]           = useState("");
-  const [mostrarModal, setMostrarModal]           = useState(false);
-  const [documentoEditando, setDocumentoEditando] = useState(null);
+  const {
+    documentos,        // ← ahora sí viene del hook
+    loading,
+    error,
+    eliminarDocumento,
+    recargarDatos,
+  } = useDocumentoSoporte();
+
+  const [mensajeExito, setMensajeExito]             = useState("");
+  const [mostrarModal, setMostrarModal]             = useState(false);
+  const [documentoEditando, setDocumentoEditando]   = useState(null);
   const [documentoAEliminar, setDocumentoAEliminar] = useState(null);
-  const [documentoVer, setDocumentoVer]           = useState(null);
-  const [filtrosVisibles, setFiltrosVisibles]     = useState(true);
+  const [documentoVer, setDocumentoVer]             = useState(null);
+  const [filtrosVisibles, setFiltrosVisibles]       = useState(true);
   const navigate = useNavigate();
 
   // ── Estado de filtros ─────────────────────────────────────────
@@ -50,7 +56,6 @@ function DocumentosSoporte() {
   const handleFiltroChange = (campo, valor) => {
     setFiltros((prev) => {
       const nuevo = { ...prev, [campo]: valor };
-
       if (
         (campo === "periodo" && valor !== "rango") ||
         (campo === "ano" && prev.periodo !== "rango")
@@ -63,7 +68,6 @@ function DocumentosSoporte() {
           nuevo.fechaHasta = fechas.hasta;
         }
       }
-
       return nuevo;
     });
   };
@@ -80,67 +84,13 @@ function DocumentosSoporte() {
     });
   };
 
-  // ── Fetch documentos con filtros ──────────────────────────────
-  const fetchDocumentos = async () => {
-    setLoading(true);
-    try {
-      const token  = localStorage.getItem("token");
-      const params = new URLSearchParams();
-
-      if (filtros.proveedor)        params.append("proveedor",        filtros.proveedor);
-      if (filtros.tipoTransaccion)  params.append("tipoTransaccion",  filtros.tipoTransaccion);
-      if (filtros.facturaProveedor) params.append("facturaProveedor", filtros.facturaProveedor);
-      if (filtros.creadoPor)        params.append("creadoPor",        filtros.creadoPor);
-      if (filtros.envioDian)        params.append("envioDian",        filtros.envioDian);
-      if (filtros.fechaDesde)       params.append("fechaDesde",       filtros.fechaDesde);
-      if (filtros.fechaHasta)       params.append("fechaHasta",       filtros.fechaHasta);
-
-      const res = await fetch(`${API_URL}/DocumentosSoporte?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-      setDocumentos(await res.json());
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => { fetchDocumentos(); }, []);
-
-  const handleBuscar = (e) => {
-    e.preventDefault();
-    fetchDocumentos();
-  };
-
   // ── Guardado exitoso ──────────────────────────────────────────
   const handleGuardadoExitoso = (mensaje) => {
     setMensajeExito(mensaje);
     setTimeout(() => setMensajeExito(""), 3000);
-    fetchDocumentos();
     setMostrarModal(false);
+    recargarDatos();
     setDocumentoEditando(null);
-  };
-
-  // ── Eliminar ──────────────────────────────────────────────────
-  const eliminarDocumento = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${API_URL}/DocumentosSoporte/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error(await res.text());
-      setMensajeExito("Documento soporte eliminado con éxito.");
-      setTimeout(() => setMensajeExito(""), 3000);
-      fetchDocumentos();
-    } catch (err) {
-      alert("Error al eliminar: " + err.message);
-    }
-    setDocumentoAEliminar(null);
   };
 
   // ── Descargas / Email ─────────────────────────────────────────
@@ -163,14 +113,32 @@ function DocumentosSoporte() {
     }
   };
 
+  const handleBuscar = (e) => {
+    e.preventDefault();
+    recargarDatos();
+  };
+
+  const handleEliminar = async (id) => {
+    try {
+      await eliminarDocumento(id);
+      setMensajeExito("Documento soporte eliminado con éxito.");
+      setTimeout(() => setMensajeExito(""), 3000);
+    } catch (err) {
+      alert(err.message);
+    }
+    setDocumentoAEliminar(null);
+  };
+
   // ── Error de carga ────────────────────────────────────────────
   if (error) {
     return (
       <div className="container mt-5">
-        <div className="alert alert-danger">
-          <h5>Error al cargar documentos soporte</h5>
-          <p>{error}</p>
-          <button className="btn btn-primary mt-2" onClick={fetchDocumentos}>
+        <div className="alert alert-danger d-flex align-items-start gap-3">
+          <div className="flex-grow-1">
+            <h5 className="mb-1">Error al cargar documentos soporte</h5>
+            <p className="mb-0">{error}</p>
+          </div>
+          <button className="btn btn-primary btn-sm" onClick={recargarDatos}>
             Reintentar
           </button>
         </div>
@@ -195,7 +163,7 @@ function DocumentosSoporte() {
         className="ds-toggle-filtros"
         onClick={() => setFiltrosVisibles((v) => !v)}
       >
-      {filtrosVisibles ? "Ocultar" : "Mostrar"} criterios de búsqueda
+        {filtrosVisibles ? "Ocultar" : "Mostrar"} criterios de búsqueda
       </button>
 
       {/* ── Panel filtros ── */}
@@ -205,47 +173,31 @@ function DocumentosSoporte() {
 
             {/* ── Columna izquierda ── */}
             <div className="ds-filtros-col">
-
-              {/* Proveedor */}
               <div className="ds-filtro-fila">
                 <label className="ds-filtro-label">Proveedor</label>
                 <div className="ds-input-icono">
-                  <input
-                    type="text"
-                    className="form-control form-control-sm"
-                    placeholder="Buscar"
-                    value={filtros.proveedor}
-                    onChange={(e) => handleFiltroChange("proveedor", e.target.value)}
-                  />
+                  <input type="text" className="form-control form-control-sm"
+                    placeholder="Buscar" value={filtros.proveedor}
+                    onChange={(e) => handleFiltroChange("proveedor", e.target.value)} />
                   <Search size={14} className="ds-icono-buscar" />
                 </div>
               </div>
-
-              {/* Tipo de transacción */}
               <div className="ds-filtro-fila">
                 <label className="ds-filtro-label">Tipo de transacción</label>
-                <select
-                  className="form-select form-select-sm"
+                <select className="form-select form-select-sm"
                   value={filtros.tipoTransaccion}
-                  onChange={(e) => handleFiltroChange("tipoTransaccion", e.target.value)}
-                >
+                  onChange={(e) => handleFiltroChange("tipoTransaccion", e.target.value)}>
                   {TIPOS_TRANSACCION.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
                   ))}
                 </select>
               </div>
-
-              {/* Factura proveedor */}
               <div className="ds-filtro-fila">
                 <label className="ds-filtro-label">Factura proveedor</label>
                 <div className="ds-input-icono">
-                  <input
-                    type="text"
-                    className="form-control form-control-sm"
-                    placeholder="Buscar"
-                    value={filtros.facturaProveedor}
-                    onChange={(e) => handleFiltroChange("facturaProveedor", e.target.value)}
-                  />
+                  <input type="text" className="form-control form-control-sm"
+                    placeholder="Buscar" value={filtros.facturaProveedor}
+                    onChange={(e) => handleFiltroChange("facturaProveedor", e.target.value)} />
                   <Search size={14} className="ds-icono-buscar" />
                 </div>
               </div>
@@ -253,102 +205,63 @@ function DocumentosSoporte() {
 
             {/* ── Columna derecha ── */}
             <div className="ds-filtros-col">
-
-              {/* Fecha elaboración */}
               <div className="ds-filtro-fila ds-filtro-fecha">
                 <label className="ds-filtro-label">Fecha elaboración</label>
                 <div className="ds-fecha-controles">
-                  <select
-                    className="form-select form-select-sm ds-select-ano"
+                  <select className="form-select form-select-sm ds-select-ano"
                     value={filtros.ano}
-                    onChange={(e) => handleFiltroChange("ano", Number(e.target.value))}
-                  >
-                    {ANOS.map((a) => (
-                      <option key={a} value={a}>{a}</option>
-                    ))}
+                    onChange={(e) => handleFiltroChange("ano", Number(e.target.value))}>
+                    {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
                   </select>
-                  <select
-                    className="form-select form-select-sm ds-select-periodo"
+                  <select className="form-select form-select-sm ds-select-periodo"
                     value={filtros.periodo}
-                    onChange={(e) => handleFiltroChange("periodo", e.target.value)}
-                  >
-                    {PERIODOS.map((p) => (
-                      <option key={p.value} value={p.value}>{p.label}</option>
-                    ))}
+                    onChange={(e) => handleFiltroChange("periodo", e.target.value)}>
+                    {PERIODOS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
                   </select>
                 </div>
                 <div className="ds-fecha-rangos">
                   <div className="ds-fecha-input">
-                    <input
-                      type="date"
-                      className="form-control form-control-sm"
+                    <input type="date" className="form-control form-control-sm"
                       value={filtros.fechaDesde}
-                      onChange={(e) => {
-                        handleFiltroChange("fechaDesde", e.target.value);
-                        handleFiltroChange("periodo", "rango");
-                      }}
-                    />
+                      onChange={(e) => { handleFiltroChange("fechaDesde", e.target.value); handleFiltroChange("periodo", "rango"); }} />
                     <button type="button" className="ds-fecha-clear"
                       onClick={() => handleFiltroChange("fechaDesde", "")}>
                       <XCircle size={13} />
                     </button>
-                    <button type="button" className="ds-fecha-calendar">
-                      <Calendar3 size={13} />
-                    </button>
+                    <button type="button" className="ds-fecha-calendar"><Calendar3 size={13} /></button>
                   </div>
                   <div className="ds-fecha-input">
-                    <input
-                      type="date"
-                      className="form-control form-control-sm"
+                    <input type="date" className="form-control form-control-sm"
                       value={filtros.fechaHasta}
-                      onChange={(e) => {
-                        handleFiltroChange("fechaHasta", e.target.value);
-                        handleFiltroChange("periodo", "rango");
-                      }}
-                    />
+                      onChange={(e) => { handleFiltroChange("fechaHasta", e.target.value); handleFiltroChange("periodo", "rango"); }} />
                     <button type="button" className="ds-fecha-clear"
                       onClick={() => handleFiltroChange("fechaHasta", "")}>
                       <XCircle size={13} />
                     </button>
-                    <button type="button" className="ds-fecha-calendar">
-                      <Calendar3 size={13} />
-                    </button>
+                    <button type="button" className="ds-fecha-calendar"><Calendar3 size={13} /></button>
                   </div>
                 </div>
               </div>
-
-              {/* Creado por */}
               <div className="ds-filtro-fila">
                 <label className="ds-filtro-label">Creado por</label>
                 <div className="ds-input-icono">
-                  <input
-                    type="text"
-                    className="form-control form-control-sm"
-                    placeholder="Buscar"
-                    value={filtros.creadoPor}
-                    onChange={(e) => handleFiltroChange("creadoPor", e.target.value)}
-                  />
+                  <input type="text" className="form-control form-control-sm"
+                    placeholder="Buscar" value={filtros.creadoPor}
+                    onChange={(e) => handleFiltroChange("creadoPor", e.target.value)} />
                   <Search size={14} className="ds-icono-buscar" />
                 </div>
               </div>
-
-              {/* Envío a la DIAN */}
               <div className="ds-filtro-fila">
                 <label className="ds-filtro-label">Envío a la Dian</label>
-                <select
-                  className="form-select form-select-sm"
+                <select className="form-select form-select-sm"
                   value={filtros.envioDian}
-                  onChange={(e) => handleFiltroChange("envioDian", e.target.value)}
-                >
-                  {OPCIONES_DIAN.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
+                  onChange={(e) => handleFiltroChange("envioDian", e.target.value)}>
+                  {OPCIONES_DIAN.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
               </div>
             </div>
           </div>
 
-          {/* Botones filtros */}
           <div className="ds-filtros-acciones">
             <button type="submit" className="ds-btn-buscar">Buscar</button>
             <button type="button" className="ds-btn-limpiar" onClick={limpiarFiltros}>
@@ -360,15 +273,11 @@ function DocumentosSoporte() {
 
       {/* ── Tabla ── */}
       <div className="ds-tabla-wrapper">
-
-        {/* Barra top: botón nuevo + exportar */}
         <div className="ds-tabla-topbar">
-          
           <button className="ds-btn-excel" onClick={exportarExcel} title="Exportar a Excel">
             <FileEarmarkExcel size={18} />
           </button>
-          <button className="btn-crear"
-            onClick={() => navigate('/nuevo-documento-soporte')}>
+          <button className="btn-crear" onClick={() => navigate('/nuevo-documento-soporte')}>
             Nuevo Documento Soporte
           </button>
         </div>
@@ -520,8 +429,7 @@ function DocumentosSoporte() {
               </table>
             </div>
             <div className="ds-modal-footer">
-              <button className="btn btn-sm btn-outline-secondary"
-                onClick={() => setDocumentoVer(null)}>
+              <button className="btn btn-sm btn-outline-secondary" onClick={() => setDocumentoVer(null)}>
                 Cerrar
               </button>
             </div>
@@ -544,7 +452,7 @@ function DocumentosSoporte() {
                 Cancelar
               </button>
               <button className="btn btn-sm btn-danger"
-                onClick={() => eliminarDocumento(documentoAEliminar.id)}>
+                onClick={() => handleEliminar(documentoAEliminar.id)}>
                 <Trash size={14} className="me-1" /> Eliminar
               </button>
             </div>
