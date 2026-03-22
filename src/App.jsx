@@ -12,7 +12,7 @@ import PublicLayout from "./layouts/PublicLayout";
 import RegisterLayout from "./layouts/registerLayout";
 
 import Home from "./pages/Home";
-import Planes from "./pages/Planes";
+import Planes from "./pages/PlanesPage";
 import SobreNosotros from "./pages/SobreNosotros";
 import ComoFunciona from "./pages/ComoFunciona";
 import DIAN from "./pages/DIAN";
@@ -37,6 +37,8 @@ import ImportarProductosExcel from "./components/ProductosServicios/ImportarProd
 import Tienda from "./pages/Tienda";
 import Checkout from "./pages/Checkout";
 import NuevoCliente from "./pages/NuevoCliente";
+import Terminos from "./pages/Terminos";
+import Privacidad from "./pages/Privacidad";
 import { ProtectedLayout } from "./components/ProtectedLayout";
 
 const NotFound = () => (
@@ -84,61 +86,63 @@ function App() {
   return (
     <SignalRProvider>
       <QueryClientProvider client={queryClient}>
-      <ScrollToHash />
-      <Routes>
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/planes" element={<Planes />} />
-          <Route path="/sobreNosotros" element={<SobreNosotros />} />
-          <Route path="/comoFunciona" element={<ComoFunciona />} />
-          <Route path="/dian" element={<DIAN />} />
-          <Route path="/soporte" element={<Soporte />} />
-        </Route>
-
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-        </Route>
-
-        <Route element={<RegisterLayout />}>
-          <Route path="/registro" element={<Registro />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Route>
-
-        <Route element={<ProtectedLayout />}>
-          <Route element={<MainLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/clientes" element={<Clientes />} />
-            <Route path="/productos" element={<Productos />} />
-            <Route path="/crearProducto" element={<NuevoProducto_Servicio />} />
-            <Route
-              path="/crearProducto/editar/:id"
-              element={<NuevoProducto_Servicio />}
-            />
-            <Route
-              path="/productos/importar-excel"
-              element={<ImportarProductosExcel />}
-            />
-            <Route path="/ventas" element={<Ventas />} />
-            <Route path="/nueva-factura" element={<NuevaFactura />} />
-            <Route
-              path="/nuevo-documento-soporte"
-              element={<NuevoDocumentoSoporte />}
-            />
-            <Route path="/nueva-nota-credito" element={<NuevaNotaCredito />} />
-            <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
-            <Route path="/nuevo-cliente" element={<NuevoCliente />} />
-            <Route path="/compras-gastos" element={<ComprasGastos />} />
-            <Route path="/facturas" element={<Facturas />} />
-            <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
-            <Route path="/reportes" element={<Reportes />} />
-            <Route path="/perfil" element={<Perfil />} />
-            <Route path="/tienda" element={<Tienda />} />
-            <Route path="/tienda/:categoria" element={<Tienda />} />
+        <ScrollToHash />
+        <Routes>
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/planes" element={<Planes />} />
+            <Route path="/sobreNosotros" element={<SobreNosotros />} />
+            <Route path="/comoFunciona" element={<ComoFunciona />} />
+            <Route path="/dian" element={<DIAN />} />
+            <Route path="/soporte" element={<Soporte />} />
+            <Route path="/terminos" element={<Terminos />} />
+            <Route path="/privacidad" element={<Privacidad />} />
           </Route>
-        </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+          </Route>
+
+          <Route element={<RegisterLayout />}>
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/checkout" element={<Checkout />} />
+          </Route>
+
+          <Route element={<ProtectedLayout />}>
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/clientes" element={<Clientes />} />
+              <Route path="/productos" element={<Productos />} />
+              <Route path="/crearProducto" element={<NuevoProducto_Servicio />} />
+              <Route
+                path="/crearProducto/editar/:id"
+                element={<NuevoProducto_Servicio />}
+              />
+              <Route
+                path="/productos/importar-excel"
+                element={<ImportarProductosExcel />}
+              />
+              <Route path="/ventas" element={<Ventas />} />
+              <Route path="/nueva-factura" element={<NuevaFactura />} />
+              <Route
+                path="/nuevo-documento-soporte"
+                element={<NuevoDocumentoSoporte />}
+              />
+              <Route path="/nueva-nota-credito" element={<NuevaNotaCredito />} />
+              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
+              <Route path="/nuevo-cliente" element={<NuevoCliente />} />
+              <Route path="/compras-gastos" element={<ComprasGastos />} />
+              <Route path="/facturas" element={<Facturas />} />
+              <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
+              <Route path="/reportes" element={<Reportes />} />
+              <Route path="/perfil" element={<Perfil />} />
+              <Route path="/tienda" element={<Tienda />} />
+              <Route path="/tienda/:categoria" element={<Tienda />} />
+            </Route>
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </QueryClientProvider>
     </SignalRProvider>
   );

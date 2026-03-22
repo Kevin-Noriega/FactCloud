@@ -1,17 +1,17 @@
-import { 
-  Bullseye, 
-  Rocket, 
-  LightningChargeFill, 
-  Gem, 
-  StarFill, 
-  ShieldFillCheck, 
-  HandThumbsUpFill, 
+import {
+  Bullseye,
+  Rocket,
+  LightningChargeFill,
+  Gem,
+  StarFill,
+  ShieldFillCheck,
+  HandThumbsUpFill,
   Stars,
   CheckCircleFill,
   ClockHistory,
   Calendar3
 } from "react-bootstrap-icons";
-import{ useEffect } from "react";
+import { useEffect } from "react";
 import ventajas from "../utils/ComoFunciona/Ventajas"
 import { corporateInfo } from "../utils/CorporateInfo";
 import "../styles/SobreNosotros.css";
@@ -31,18 +31,18 @@ function SobreNosotros() {
   return (
     <div className="sobre-nosotros-page">
       <section className="hero-section">
-      <img 
-    src="/img/img_hero_sobreNosotros.webp"
-    alt="Empresario usando FactCloud" 
-    className="hero-image"
-  />
+        <img
+          src="/img/img_hero_sobreNosotros.webp"
+          alt="Empresario usando FactCloud"
+          className="hero-image"
+        />
         <div className="container">
-                      <span className="hero-badge">Quiénes Somos</span>
+          <span className="hero-badge">Quiénes Somos</span>
 
           <h1>Sobre FactCloud</h1>
           <p className="hero-description">
-              Simplificando la facturación electrónica <br />
-      para empresas y profesionales en Colombia.
+            Simplificando la facturación electrónica <br />
+            para empresas y profesionales en Colombia.
           </p>
         </div>
       </section>
@@ -135,7 +135,7 @@ function SobreNosotros() {
         </div>
       </section>
 
-       <section className="ventajas-section">
+      <section className="ventajas-section">
         <div className="container">
           <h2>Por qué elegir FactCloud</h2>
           <div className="ventajas-grid">

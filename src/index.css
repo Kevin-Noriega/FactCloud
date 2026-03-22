@@ -52,19 +52,42 @@ html, body {
   background: var(--bg-dark);
   color: var(--text);
   font-family: 'Inter', -apple-system, sans-serif;
-    overflow-x: hidden;
+  overflow-x: hidden;
   width: 100%;
 }
+
+/* Global Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 6px;
+  border: 3px solid var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
 .hero-section {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
-  padding: 100px 20px 80px;
-  text-align: center;
-  margin-top: 120px;
+  padding: 80px 20px 80px;
+  text-align: left;          
+  margin-top: 108px;        
   position: relative;
-  overflow: visible;
+  overflow: hidden;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
 }
-
 .hero-image {
     position: absolute;
   top: 0;
@@ -108,40 +131,42 @@ html, body {
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  z-index: 3;
+  z-index: 2;
 }
 
 .hero-section h1 {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 800;
-  margin: 0 0 24px 0;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  font-weight: 900;
+  margin: 0 0 1rem;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: #fff;
 }
 
 .hero-badge {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 8px 20px;
-  border-radius: 24px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 24px;
-  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  padding: 5px 18px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  animation: fadeInDown 0.6s ease 0.1s backwards;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.12em;
+  margin-bottom: 1.1rem;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .hero-description {
-  font-size: clamp(16px, 2vw, 20px);
-  margin: 0 auto;
-  max-width: 800px;
-  font-weight: 400;
-  opacity: 0.95;
-  line-height: 1.6;
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  max-width: 580px;
+  opacity: 0.92;
+  line-height: 1.7;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.93);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes fadeInUp {
@@ -168,62 +193,20 @@ html, body {
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: 80px 20px 60px;
-    margin-top: 80px;
-  }
-
-  .hero-section h1 {
-    font-size: 32px;
-    margin-bottom: 20px;
-  }
-
-  .hero-badge {
-    font-size: 13px;
-    padding: 6px 16px;
-    margin-bottom: 20px;
-  }
-
-  .hero-description {
-    font-size: 16px;
-  }
-
-  .hero-image {
-    width: 60%;
-    opacity: 0.25;
+    margin-top: 100px;   /* topbar(40) + navbar(60) */
+    min-height: 360px;
+    padding: 60px 20px;
   }
 }
-
+ 
 @media (max-width: 480px) {
   .hero-section {
-    padding: 60px 16px 40px;
-    margin-top: 70px;
-  }
-
-  .hero-section h1 {
-    font-size: 28px;
-    margin-bottom: 16px;
-  }
-
-  .hero-badge {
-    font-size: 12px;
-    padding: 5px 14px;
-    margin-bottom: 16px;
-  }
-
-  .hero-description {
-    font-size: 15px;
-  }
-
-  .hero-image {
-    width: 70%;
-    opacity: 0.2;
+    margin-top: 56px;    /* topbar oculta + navbar(56) */
+    min-height: 300px;
+    padding: 50px 16px;
   }
 }
 
-/*paginas sidebar*/
-
-
-/* Modales Crear*/
 .modal-crearNuevo-overlay {
   position: fixed;
   top: 0;
@@ -293,3 +276,37 @@ html, body {
 .modal-crearNuevo-body::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Desktop: topbar(40) + navbar(68) = 108px */
+.page-offset {
+  padding-top: 108px;
+}
+
+/* Con CountdownBanner: 108 + banner(38) = 146px */
+.page-offset-banner {
+  padding-top: 146px;
+}
+
+@media (max-width: 768px) {
+  /* topbar(40) + navbar(60) = 100px */
+  .page-offset        { padding-top: 100px; }
+  /* con banner: 100 + 38 = 138px */
+  .page-offset-banner { padding-top: 138px; }
+}
+
+@media (max-width: 480px) {
+  /* topbar oculta + navbar(56) = 56px */
+  .page-offset        { padding-top: 56px; }
+  /* con banner: 56 + 38 = 94px */
+  .page-offset-banner { padding-top: 94px; }
+}
+
+/* ── HeroShared: el hero necesita offset para no
+   quedar tapado por topbar+navbar ── */
+.page-hero {
+  /* el padding-top del inner ya maneja esto */
+  margin-top: 108px;
+}
+
+@media (max-width: 768px) { .page-hero { margin-top: 100px; } }
+@media (max-width: 480px) { .page-hero { margin-top:  56px; } }

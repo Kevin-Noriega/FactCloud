@@ -1,315 +1,306 @@
+/* ═══════════════════════════════════════════════════════════════
+   PlanCard.css
+   Fuente única de estilos para PlanCard.
+   Importado SOLO en PlanCard.jsx.
+   No duplicar .plan-card en ningún otro CSS del proyecto.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Grids que contienen las cards ── */
+.planes-grid,
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+/* ── Card base ── */
 .plan-card {
-  background: var(--bg-card);
-  border: 2px solid var(--border);
-  padding: 50px;
-  border-radius: 24px;
-  transition: all 0.3s;
+  background: #ffffff;
+  border: 1.5px solid #e8eaed;
+  border-radius: 16px;
+  padding: 2rem 1.75rem 1.75rem;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  overflow: visible !important;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .plan-card:hover {
-  box-shadow: 0 10px 20px var(--primary-light);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(26, 115, 232, 0.1);
+  border-color: #b5d4f4;
 }
 
+/* ══════════════════════════════════════════════
+   ★ CONTORNOS — no sobreescribir en otros CSS ★
+══════════════════════════════════════════════ */
+
+/* Más popular — contorno azul */
 .plan-card.featured {
-  border-color: var(--success);
-  box-shadow: 0 10px 30px var(--success-light);
-}
-.plan-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 16px;
-  font-weight: 700;
+  border: 2.5px solid #1a73e8 !important;
+  background: #fafcff;
+  box-shadow: 0 8px 32px rgba(26, 115, 232, 0.13);
 }
 
-.popular-tag {
+.plan-card.featured:hover {
+  box-shadow: 0 14px 48px rgba(26, 115, 232, 0.22);
+  transform: translateY(-4px);
+}
+
+/* Plan actual — contorno verde */
+.plan-card.es-actual {
+  border: 2.5px solid #0f6e56 !important;
+  background: #f6fdf9;
+}
+
+.plan-card.es-actual:hover {
+  box-shadow: 0 10px 32px rgba(15, 110, 86, 0.12);
+  border-color: #0f6e56 !important;
+}
+
+/* ── Badges ── */
+.plan-card-badge {
   position: absolute;
-  top: -12px;
+  top: -13px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--success), var(--success-dark));
-  color: white;
-  padding: 6px 20px;
-  border-radius: 999px;
-  font-size: 12px;
+  font-size: 0.63rem;
   font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  padding: 4px 16px;
+  border-radius: 999px;
+  white-space: nowrap;
+  z-index: 1;
 }
 
+.plan-card-badge.popular {
+  background: #1a73e8;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.32);
+}
+
+.plan-card-badge.actual {
+  background: #0f6e56;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(15, 110, 86, 0.3);
+}
+
+/* ── Nombre ── */
+.plan-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+/* ── Descripción ── */
 .plan-description {
-  color: var(--text-muted);
-  font-size: 15px;
-  margin-bottom: 24px;
-  min-height: 48px;
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin: 0 0 1.25rem;
+  line-height: 1.55;
+  min-height: 36px;
 }
 
-.price-display {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-
-  text-align: center;
-  margin: 20px 0;
-  height: 250px;
-}
-
+/* ── Bloque precio ── */
+.price-display { margin-bottom: 0.25rem; }
 
 .price-main {
   display: flex;
-  align-items: baseline;
-  justify-content: center;
-}
-
-.price-main .currency {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #334155;
-}
-
-.price-main .amount {
-  font-size: 60px;
-  font-weight: 900;
-  color: #1e293b;
+  align-items: flex-end;
+  gap: 1px;
+  margin-bottom: 4px;
   line-height: 1;
-  letter-spacing: -0.02em;
 }
 
-.price-main .period {
-  font-size: 1.5rem;
-  color: #64748b;
-  font-weight: 500;
-  margin-left: 4px;
+.currency {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a73e8;
+  margin-bottom: 6px;
+}
+
+.amount {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1a73e8;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.period {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 5px;
+  margin-left: 3px;
 }
 
 .price-annual {
-  font-size: 1.2rem;
-  color: #475569;
-  font-weight: 600;
-  margin: 5px 0; 
+  font-size: 0.72rem;
+  color: #9ca3af;
+  margin-bottom: 6px;
 }
 
 .discount-badge {
-  display:inline-block;
-  background: var(--success);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e6f4f0;
+  color: #0a6647;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 4px;
 }
 
 .price-before {
+  font-size: 0.7rem;
+  color: #b0b8c4;
   text-decoration: line-through;
-  color: #94a3b8;
-  font-size: 1rem;
-  font-weight: 500;
-  margin: 5px 0; 
+  margin-bottom: 10px;
 }
 
-.price-features {
-  list-style: none;
-  margin-bottom: 32px;
-}
-
-.price-features li {
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 15px;
-}
-
-.price-features li:last-child {
-  border-bottom: none;
-}
-
+/* ── Botón CTA ── */
 .btn-price {
   width: 100%;
-  padding: 16px 32px;
-  background: var(--primary);
-  box-shadow: 0 10px 30px var(--primary-light);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 700;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #d1d9e0;
+  font-size: 0.86rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
-  text-transform: none;
-  margin-bottom: 12px;
-  transition: background 0.2s ease, transform 0.2s ease;
+  margin: 0.9rem 0 0.5rem;
+  background: #fff;
+  color: #1a73e8;
+  transition: all 0.15s;
 }
 
 .btn-price:hover {
-  background: var(--primary-dark);
-
+  background: #f0f4ff;
+  border-color: #1a73e8;
 }
 
 .btn-price.featured {
-  background: var(--success);
-  border: none;
-}
-.btn-price.featured:hover{
-    background: var(--success-dark);
-      box-shadow: 0 10px 30px var(--success);
+  background: #1a73e8;
+  color: #fff;
+  border-color: #1a73e8;
+  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.28);
 }
 
+.btn-price.featured:hover {
+  background: #1557b0;
+  border-color: #1557b0;
+}
+
+.btn-price.es-actual {
+  background: #f0fdf6;
+  color: #0f6e56;
+  border-color: #0f6e56;
+  cursor: default;
+}
+
+/* ── Nota de pago ── */
 .payment-note {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.67rem;
+  color: #b0b8c4;
   text-align: center;
-  margin-bottom: 24px;
-  font-style: italic;
-}
-.feature-item-tooltip {
-  position: relative;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
+  margin: 0 0 1rem;
+  line-height: 1.4;
 }
 
-.feature-item-tooltip:last-child {
-  border-bottom: none;
+/* ── Divisor ── */
+.plan-divider {
+  border: none;
+  border-top: 1px solid #f1f3f4;
+  margin: 0 0 1rem;
 }
+
+/* ── Lista de características ── */
+.price-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+}
+
+.feature-item-tooltip { position: relative; }
 
 .feature-content {
   display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.feature-content span {
-  flex: 1;
-  font-size: 15px;
-  color: var(--text);
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.78rem;
+  color: #374151;
+  line-height: 1.45;
 }
 
 .check-icon {
-  width: 24px;
-  height: 24px;
-  color: #10b981;
+  width: 14px;
+  height: 14px;
+  color: #1a73e8;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
-.check-icon-v2 {
-  width: 24px;
-  height: 24px;
-  color: #7ed321;
-  flex-shrink: 0;
-}
-/* ICONO DE INFORMACIÓN */
 .info-icon-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  background: none;
   border: none;
-  background: rgba(59,130,246,0.1);
-  color: #3b82f6;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+  padding: 0;
+  cursor: help;
+  color: #c4cdd6;
+  line-height: 1;
   flex-shrink: 0;
-  position: relative;
-  z-index: 10;
+  transition: color 0.12s;
 }
 
 .info-icon-btn:hover,
-.info-icon-btn.active {
-  background: rgba(59,130,246,0.2);
-  transform: scale(1.1);
-}
+.info-icon-btn.active { color: #1a73e8; }
 
+/* ── Tooltip ── */
 .tooltip-popup {
   position: absolute;
-  bottom: calc(100% + 16px); 
-  left: 50%;
-  transform: translateX(-50%);
-  background: #2c3e50;
-  color: white;
-  padding: 16px 20px;
-  border-radius: 12px;
-  min-width: 280px;
-  max-width: 320px;
-  z-index: 1000; 
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-  animation: tooltipFadeInTop 0.2s ease;
-  font-size: 14px;
-  line-height: 1.6;
-  white-space: normal;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 0.71rem;
+  border-radius: 8px;
+  padding: 9px 13px;
+  z-index: 30;
+  line-height: 1.55;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-.tooltip-popup p {
-  margin: 0;
-  color: rgba(255,255,255,0.95);
+.tooltip-arrow {
+  position: absolute;
+  bottom: -5px;
+  left: 18px;
+  width: 10px;
+  height: 10px;
+  background: #1a1a2e;
+  transform: rotate(45deg);
+  border-radius: 2px;
 }
 
-@media (max-width: 1024px) {
-  .discount-badge {
-    right: -12%;
-    font-size: 18px;
-    padding: 4px 12px;
-  }
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .planes-grid,
+  .pricing-cards { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 768px) {
-  .pricing-cards {
-    grid-template-columns: 1fr;
-  }
-  
-  .discount-badge {
-    right: 5%;
-    font-size: 16px;
-  }
-  
-  .price-card {
-    padding: 32px 24px;
-  }
-  
-  .price-main .amount {
-    font-size: 48px;
-  }
-  
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-  
-  .contact-form {
-    padding: 32px 24px;
-  }
-  
-  .pricing-footer-content {
-    flex-direction: column;  
-    gap: 15px;
-  }
-
-  .btn-contact-sales {
-    width: 100%;
-    max-width: 300px;
-  }
-  
-  .pricing-hero {
-    padding: 100px 20px 20px;
-  }
-  
-  .pricing-hero h1 {
-    font-size: 32px;
-  }
-}
-
-@media (max-width: 480px) {
-
-  .price-card {
-    padding: 24px 16px;
-  }
-  
-  .price-main .amount {
-    font-size: 40px;
-  }
-  
-  .btn-price {
-    font-size: 16px;
-    padding: 14px 24px;
-  }
-
+@media (max-width: 560px) {
+  .planes-grid,
+  .pricing-cards { grid-template-columns: 1fr; }
+  .plan-card     { padding: 1.75rem 1.25rem 1.5rem; }
+  .amount        { font-size: 1.9rem; }
 }
