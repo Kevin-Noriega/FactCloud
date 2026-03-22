@@ -46,16 +46,17 @@
 }
 
 .login-visual-title {
-  font-size: 60px;
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
   font-weight: 800;
   margin-bottom: 16px;
-  line-height: 1.2;
+  line-height: 1.15;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.02em;
 }
 
 .login-visual-subtitle {
-  font-size: 20px;
-  line-height: 1.6;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.7;
   opacity: 0.95;
   margin-bottom: 40px;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
@@ -85,10 +86,12 @@
 }
 
 .login-title {
-  font-size: 1.875rem;
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
   font-weight: 800;
   color: #0f172a;
   margin-bottom: 8px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
 .login-subtitle {
@@ -116,6 +119,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -369,11 +373,4 @@
     max-width: 100%;
   }
 
-  .login-title {
-    font-size: 1.5rem;
-  }
-
-  .login-visual-title {
-    font-size: 2rem;
-  }
 }

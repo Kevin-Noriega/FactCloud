@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import faqsHome from "../../utils/FAQS"
+import "../../styles/Faq.css";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 export const Faq = () => {
 
   const [openFAQ, setOpenFAQ] = useState(null);
-    const faqs = faqsHome.filter(faq => faq.seccion === 'home')
+  const faqs = faqsHome.filter(faq => faq.seccion === 'home')
   return (
     <div className="faq-section">
       <div className="container">
-        <h2>Preguntas frecuentes</h2>
+        <h2 className="faq-title">Preguntas frecuentes</h2>
         <div className="faq-lista">
           {faqs.map((faq, idx) => (
             <div
@@ -20,9 +22,7 @@ export const Faq = () => {
                 onClick={() => setOpenFAQ(openFAQ === idx ? null : idx)}
               >
                 <span className="faq-text">{faq.pregunta}</span>
-                <span className="faq-toggle">
-                  {openFAQ === idx ? "−" : "+"}
-                </span>
+                <span className="faq-toggle">{openFAQ === idx ? <FiChevronUp /> : <FiChevronDown />}</span>
               </button>
               {openFAQ === idx && (
                 <div className="faq-answer">

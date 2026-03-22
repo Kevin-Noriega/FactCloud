@@ -9,7 +9,7 @@ import {
 import { Faq } from "../components/homePage/Faq";
 import {Contact} from "../components/homePage/Contact";
 import {HeroBanner} from "../components/homePage/HeroBanner";
-  import {Planes} from "../components/homePage/Planes";
+  import {PlanesPreview} from "../components/homePage/PlanesPreview";
 
 export default function Home() {
 
@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <div className="landing-wrapper">
       <HeroBanner />
-      <Planes />
+      <PlanesPreview />
 
       
 
