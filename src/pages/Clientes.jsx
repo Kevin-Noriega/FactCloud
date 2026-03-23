@@ -4,6 +4,7 @@ import { API_URL } from "../api/config";
 import { obtenerSiglas } from "../utils/Helpers";
 import ModalCliente from "../components/modals/ModalCrearCliente";
 import { People } from "react-bootstrap-icons";
+import { toArray } from "../utils/Helpers";
 import "../styles/sharedPage.css";
 import axiosClient from "../api/axiosClient";
 
@@ -43,7 +44,7 @@ function Clientes() {
   async function fetchClientes() {
     try {
       const res = await axiosClient.get("/Clientes");
-      setClientes(res.data);
+      setClientes(toArray(res));
       setError(null);
     } catch (error) {
       const respuesta =
@@ -117,11 +118,11 @@ function Clientes() {
 
   return (
     <div className="container-fluid px-4">
-      <div className="header-card mb-3 px-5">
-        <div className="header-content">
+      <div className="header-card mb-3 px-4">
+        <div className="header-content d-flex justify-content-between align-items-center">
           <h2 className="header-title">Gestión de Clientes</h2>
           <div className="header-icon">
-            <People size={60} />
+            <People size={50} />
           </div>
         </div>
       </div>
@@ -239,14 +240,14 @@ function Clientes() {
         </div>
       )}
 
-      <div className="card mt-3">
+      <div className="card">
         <div className="card-body">
           {filtrados.length === 0 ? (
             <div className="alert alert-info">No hay clientes registrados.</div>
           ) : (
             <div className="table-responsive">
-              <table className="table table-hover table-bordered">
-                <thead className="table-header">
+              <table className="table table-hover facturas-table">
+                <thead className="facturas-table-header">
                   <tr>
                     <th>ID</th>
                     <th>Nombre</th>

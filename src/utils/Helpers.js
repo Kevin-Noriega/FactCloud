@@ -122,3 +122,14 @@ export function numeroALetras(valor) {
 
   return (letrasPesos + letrasCentavos).trim();
 }
+
+/**
+ * Garantiza que el valor sea un array, buscando en data, items, value o devolviendo []
+ */
+export const toArray = (res) => {
+  if (Array.isArray(res)) return res;
+  if (Array.isArray(res?.data)) return res.data;
+  if (Array.isArray(res?.items)) return res.items;
+  if (Array.isArray(res?.value)) return res.value;
+  return [];
+};

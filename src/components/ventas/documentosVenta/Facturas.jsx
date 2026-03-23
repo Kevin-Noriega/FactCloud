@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import axiosClient from "../../../api/axiosClient.js";
 import { useNavigate } from "react-router-dom";
 import { FunnelFill } from "react-bootstrap-icons";
+import { toArray } from "../../../utils/Helpers.js";
 
 function Facturas() {
   const [facturas, setFacturas] = useState([]);
@@ -77,7 +78,7 @@ function Facturas() {
 
   const sugerenciasFiltradas = Array.from(
     new Map(
-      clientes.map((cliente) => {
+      toArray(clientes).map((cliente) => {
         const nombreCompleto = obtenerNombreCliente(cliente);
         const nit = obtenerNitCliente(cliente);
 
@@ -208,9 +209,10 @@ function Facturas() {
         axiosClient.get("/Productos"),
       ]);
 
-      setFacturas(facturasRes.data);
-      setClientes(clientesRes.data);
-      setProductos(productosRes.data);
+
+      setFacturas(toArray(facturasRes));
+      setClientes(toArray(clientesRes));
+      setProductos(toArray(productosRes));
       setError(null);
     } catch (error) {
       console.error("Error al cargar datos:", error);
@@ -488,7 +490,7 @@ function Facturas() {
         <div className="card-body">
           <div className="table-responsive">
             <table className="table table-hover facturas-table">
-              <thead className="table-header">
+              <thead className="facturas-table-header">
                 <tr>
                   <th>Fecha</th>
                   <th>Comprobante</th>
