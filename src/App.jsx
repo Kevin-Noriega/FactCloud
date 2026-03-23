@@ -35,8 +35,10 @@ import NuevoProducto_Servicio from "./pages/NuevoProducto_Servicio";
 import ImportarProductosExcel from "./components/ProductosServicios/ImportarProductoExcel";
 import Tienda from "./pages/Tienda";
 import Checkout from "./pages/Checkout";
-import NuevoCliente from "./pages/NuevoCliente";
 import { ProtectedLayout } from "./components/ProtectedLayout";
+import HabilitacionDian from "./components/dashboard/Habilitacion/HabilitacionDian";
+import NuevoClienteEmpresa from "./components/Clientes/NuevoClienteEmpresa";
+import HabilitacionDSE from "./components/dashboard/Habilitacion/HabilitacionDSE";
 
 const NotFound = () => (
   <div className="text-center py-5">
@@ -118,7 +120,10 @@ function App() {
             />
             <Route path="/nueva-nota-credito" element={<NuevaNotaCredito />} />
             <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
-            <Route path="/nuevo-cliente" element={<NuevoCliente />} />
+
+            <Route path="/nuevo-clientee" element={<NuevoClienteEmpresa />} />
+            <Route path="/habilitacion-dian" element={<HabilitacionDian />} />
+            <Route path="/habilitacionDSE" element={<HabilitacionDSE />} />
             <Route path="/compras-gastos" element={<ComprasGastos />} />
             <Route path="/facturas" element={<Facturas />} />
             <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
