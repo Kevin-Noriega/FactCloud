@@ -313,7 +313,7 @@
   background-color: var(--primary);
 }
 
-.table-header th {
+.facturas-table-header th {
   color: #fff;
   font-weight: 600;
   font-size: 0.9rem;

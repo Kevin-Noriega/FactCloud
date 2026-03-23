@@ -91,7 +91,7 @@ function NotaCredito() {
         <div className="card-body">
           <div className="table-responsive">
             <table className="table table-bordered">
-              <thead className="table-header">
+              <thead className="facturas-table-header">
                 <tr>
                   <th>Número</th>
                   <th>Factura</th>

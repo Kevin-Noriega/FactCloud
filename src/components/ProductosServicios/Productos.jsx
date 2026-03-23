@@ -5,9 +5,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import exportarProductosExcel from "./exportarProductosExcel";
 import "./Productos.css";
 import { FunnelFill, FileEarmarkExcelFill } from "react-bootstrap-icons";
+import { toArray } from "../../utils/Helpers";
 
 function Productos() {
-  const [activeTab, setActiveTab] = useState("productosServicios");
+  const [activeTab, setActiveTab] = useState("productos");
 
   const location = useLocation();
   const [productos, setProductos] = useState([]);
@@ -158,11 +159,10 @@ function Productos() {
       console.error("Error al cargar negocio:", error);
     }
   };
-
   const fetchProductos = async () => {
     try {
       const response = await axiosClient.get("/Productos");
-      setProductos(response.data);
+      setProductos(toArray(response));
       setError(null);
     } catch (error) {
       const mensaje =
@@ -193,15 +193,18 @@ function Productos() {
   }, [location.state]);
   // NOMBRES LITERALES COMO SIIGO
   const tabs = [
-    { id: "productosServicios", label: "Gestión de productos / servicios" },
+    { id: "productos", label: "Productos" },
+    { id: "servicios", label: "Servicios" },
   ];
 
   const renderContent = () => {
-    switch (activeTab) {
-      case "productosServicios":
-        return (
-          <div className="tab-content p-4">
-            <div className="container-fluid mt-4 px-4">
+    const dataFiltrada = filtrados.filter(p => 
+      activeTab === "productos" ? !p.esServicio : p.esServicio
+    );
+
+    return (
+      <div className="tab-content p-4" style={{ height: "100%" }}>
+        <div className="container-fluid px-2">
               {mensajeExito && (
                 <div className="alert alert-success alert-dismissible fade show">
                   <span>{mensajeExito}</span>
@@ -475,16 +478,16 @@ function Productos() {
                 </div>
               )}
 
-              <div className="card mt-3">
+              <div className="card">
                 <div className="card-body">
-                  {filtrados.length === 0 ? (
+                  {dataFiltrada.length === 0 ? (
                     <div className="alert alert-info">
-                      No hay productos registrados.
+                      No hay {activeTab} registrados.
                     </div>
                   ) : (
                     <div className="table-responsive">
-                      <table className="table table-hover table-bordered">
-                        <thead className="table-header">
+                      <table className="table table-hover facturas-table">
+                        <thead className="facturas-table-header">
                           <tr>
                             <th>Tipo</th>
                             <th>Nombre</th>
@@ -497,7 +500,7 @@ function Productos() {
                           </tr>
                         </thead>
                         <tbody>
-                          {filtrados.map((prod) => (
+                          {dataFiltrada.map((prod) => (
                             <tr key={prod.id}>
                               <td>
                                 <span
@@ -612,15 +615,11 @@ function Productos() {
                       </table>
                     </div>
                   )}
-                </div>
-              </div>
             </div>
           </div>
-        );
-
-      default:
-        return null;
-    }
+        </div>
+      </div>
+    );
   };
 
   const handleNuevoProducto = () => {
@@ -675,12 +674,15 @@ function Productos() {
   }
 
   return (
-    <div className="container-fluid px-4">
-      <div className="page-crear-producto__banner">
-        <div className="page-crear-producto__banner-content">
-          <div className="page-crear-producto__banner-text">
-            <h2>Inventario de Productos/Servicios </h2>
-          </div>
+    <div
+      className="container-fluid d-flex flex-column"
+      style={{ minHeight: "100vh" }}
+    >
+      {/* HEADER */}
+      <div className="header-card mb-3 px-4">
+        <div className="header-content d-flex justify-content-between align-items-center">
+          <h2 className="header-title">Productos y servicios</h2>
+
           <div className="header-icon">
             <BoxSeam size={50} />
           </div>
@@ -701,7 +703,7 @@ function Productos() {
       </div>
 
       {/* CONTENIDO */}
-      {renderContent()}
+      <div style={{ flex: 1 }}>{renderContent()}</div>
     </div>
   );
 }
