@@ -55,8 +55,11 @@ export const useFactura = () => {
           axiosClient.get("/Productos"),
           axiosClient.get("/Planes/estadisticas"),
         ]);
-        setClientes(resClientes.data);
-        setProductos(resProductos.data);
+
+    // Protección: garantiza que siempre sea array
+    setClientes(Array.isArray(resClientes.data) ? resClientes.data : resClientes.data?.data ?? resClientes.data?.items ?? []);
+    setProductos(Array.isArray(resProductos.data) ? resProductos.data : resProductos.data?.data ?? resProductos.data?.items ?? []);
+
         setFacturasUsadas({
           usadas: resStats.data.documentosUsados,
           limite: resStats.data.documentosLimite,

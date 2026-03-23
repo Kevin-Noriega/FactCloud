@@ -10,182 +10,79 @@ import ModalCrearCliente   from "../modals/ModalCrearCliente";
 import ModalCrearProducto  from "../modals/ModalCrearProducto";
 import ModalDocumentoSoporte from "../modals/ModalDocumentoSoporte";
 
+/* ── Ítem reutilizable ── */
+function Item({label, onClick }) {
+  return (
+    <button className="mc-item" onClick={onClick} type="button">
+      <span className="mc-item-text">{label}</span>
+    </button>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   COMPONENTE PRINCIPAL
+═══════════════════════════════════════════════ */
 function ModalCrear({ open, onClose }) {
   const navigate = useNavigate();
   const [modalActivo, setModalActivo] = useState(null);
 
-  // Bloquear scroll del body
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
     if (!open) setModalActivo(null);
     return () => { document.body.style.overflow = "auto"; };
   }, [open]);
 
-  const abrirModal = (tipo) => setModalActivo(tipo);
-
-  const navegar = (ruta) => {
-    onClose();          
-    navigate(ruta);
-  };
-
-  const cerrarSubModal = () => setModalActivo(null);
-
-  const subModalExitoso = (ruta) => {
-    setModalActivo(null);
-    onClose();
-    if (ruta) navigate(ruta);
-  };
-
-  /** Click en el overlay: cierra todo */
-  const handleOverlayClick = () => {
-    setModalActivo(null);
-    onClose();
-  };
-
   if (!open) return null;
+
+  const navegar = (ruta) => { onClose(); navigate(ruta); };
+  const cerrar  = ()     => setModalActivo(null);
+  const exito   = (ruta) => { setModalActivo(null); onClose(); if (ruta) navigate(ruta); };
 
   return (
     <>
-      {/* ── Overlay — cierra todo al hacer click ── */}
-      <div className="modal-overlay-crear" onClick={handleOverlayClick} />
+      <div className="mc-overlay" onClick={() => { cerrar(); onClose(); }}>
+        <div className="mc-panel" onClick={(e) => e.stopPropagation()}>
 
-      {/* ── Modal principal ── */}
-      <div className="modal-container-crear" onClick={handleOverlayClick} >
-        
-        <div
-          className="modal-content-crear"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="modal-header-crear">
-            <h5>¿Qué deseas crear?</h5>
-            <button
-              className="btn-close btn-close-crear"
-              onClick={onClose}
-              aria-label="Cerrar"
-            />
+          {/* ── Header ── */}
+          <div className="mc-header">
+            <div className="mc-header-left">
+              <span className="mc-header-accent" />
+              <div>
+                <p className="mc-title">¿Qué deseas crear?</p>
+                <p className="mc-subtitle">Selecciona el tipo de documento o registro</p>
+              </div>
+            </div>
+            <button className="mc-btn-close" onClick={onClose} aria-label="Cerrar">✕</button>
           </div>
 
-          <div className="modal-body-crear">
-            <div className="row g-4">
+          {/* ── Grid de categorías ── */}
+          <div className="mc-body">
 
-              {/* ── Clientes ── */}
-              <div className="col-12 col-md-6 col-lg-3">
-                <div className="category-section-crear clientes-section-crear">
-                  <strong className="category-title-crear">Clientes</strong>
-                  <ul className="menu-list-crear">
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => abrirModal("factura")}
-                      >
-                        <FileEarmarkText className="menu-icon-crear" />
-                        <span>Factura de venta</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => navegar("/nuevo-cliente")} 
-                      >
-                        <People className="menu-icon-crear" />
-                        <span>Cliente</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => navegar("/nueva-nota-credito")}  
-                      >
-                        <FileText className="menu-icon-crear" />
-                        <span>Nota crédito</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => navegar("/nueva-nota-debito")}   // ✅ cierra y navega
-                      >
-                        <FileText className="menu-icon-crear" />
-                        <span>Nota débito</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* ── Proveedores ── */}
-              <div className="col-12 col-md-6 col-lg-3">
-                <div className="category-section-crear proveedores-section-crear">
-                  <strong className="category-title-crear">Proveedores</strong>
-                  <ul className="menu-list-crear">
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => navegar("/nuevo-documento-soporte")} // ✅ cierra y navega
-                      >
-                        <FileText className="menu-icon-crear" />
-                        <span>Documento soporte</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => navegar("/nuevo-cliente")}
-                      >
-                        <Truck className="menu-icon-crear" />
-                        <span>Proveedor</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* ── Usuarios ── */}
-              <div className="col-12 col-md-6 col-lg-3">
-                <div className="category-section-crear usuarios-section-crear">
-                  <strong className="category-title-crear">Usuarios</strong>
-                  <ul className="menu-list-crear">
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => navegar("/usuarios")}
-                      >
-                        <Person className="menu-icon-crear" />
-                        <span>Usuario</span>
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => navegar("/invitar-contador")}
-                      >
-                        <PersonPlus className="menu-icon-crear" />
-                        <span>Invitar contador</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* ── Otros ── */}
-              <div className="col-12 col-md-6 col-lg-3">
-                <div className="category-section-crear otros-section-crear">
-                  <strong className="category-title-crear">Otros</strong>
-                  <ul className="menu-list-crear">
-                    <li>
-                      <button
-                        className="menu-item-crear"
-                        onClick={() => abrirModal("producto")}
-                      >
-                        <Box className="menu-icon-crear" />
-                        <span>Producto / Servicio</span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
+            <div className="mc-category">
+              <span className="mc-category-label">Clientes</span>
+              <Item label="Factura de venta"  onClick={() => navegar("/nueva-factura")} />
+              <Item label="Cliente"            onClick={() => navegar("/nuevo-cliente")} />
+              <Item label="Nota crédito"       onClick={() => navegar("/nueva-nota-credito")} />
+              <Item label="Nota débito"        onClick={() => navegar("/nueva-nota-debito")} />
             </div>
+
+            <div className="mc-category">
+              <span className="mc-category-label">Proveedores</span>
+              <Item  label="Documento soporte" onClick={() => navegar("/nuevo-documento-soporte")} />
+              <Item label="Proveedor"          onClick={() => navegar("/nuevo-cliente")} />
+            </div>
+
+            <div className="mc-category">
+              <span className="mc-category-label">Usuarios</span>
+              <Item label="Usuario"          onClick={() => navegar("/usuarios")} />
+              <Item label="Invitar contador" onClick={() => navegar("/invitar-contador")} />
+            </div>
+
+            <div className="mc-category">
+              <span className="mc-category-label">Otros</span>
+              <Item label="Producto / Servicio" onClick={() => navegar("/Crearproducto")} />
+            </div>
+
           </div>
         </div>
       </div>
@@ -194,33 +91,30 @@ function ModalCrear({ open, onClose }) {
       {modalActivo === "factura" && (
         <ModalCrearFactura
           facturaEditando={null}
-          onClose={cerrarSubModal}
-          onGuardadoExitoso={() => subModalExitoso("/facturas")}
+          onClose={cerrar}
+          onGuardadoExitoso={() => exito("/facturas")}
         />
       )}
-
       {modalActivo === "cliente" && (
         <ModalCrearCliente
           clienteEditando={null}
-          onClose={cerrarSubModal}
-          onGuardadoExitoso={() => subModalExitoso("/clientes")}
+          onClose={cerrar}
+          onGuardadoExitoso={() => exito("/clientes")}
         />
       )}
-
       {modalActivo === "producto" && (
         <ModalCrearProducto
           productoEditando={null}
-          onClose={cerrarSubModal}
-          onGuardadoExitoso={() => subModalExitoso("/productos")}
+          onClose={cerrar}
+          onGuardadoExitoso={() => exito("/productos")}
         />
       )}
-
       {modalActivo === "documentoSoporte" && (
         <ModalDocumentoSoporte
           isOpen={true}
           documentoEditar={null}
-          onClose={cerrarSubModal}
-          onSuccess={() => subModalExitoso("/compras/documentos-soporte")}
+          onClose={cerrar}
+          onSuccess={() => exito("/compras/documentos-soporte")}
         />
       )}
     </>

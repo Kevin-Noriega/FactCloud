@@ -1,10 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Search, XCircle, PlusCircle } from "react-bootstrap-icons";
 
-/**
- * Dropdown de búsqueda reutilizable.
- * "Crear nuevo" aparece SIEMPRE al final, después de resultados o "sin resultados".
- */
 export default function SearchDrop({
   value,
   onChange,
@@ -47,9 +43,9 @@ export default function SearchDrop({
 
       {value && onClear
         ? <button type="button" className="doc-icon-btn"
-            onClick={() => { onClear(); setOpen(false); }}>
-            <XCircle size={13} />
-          </button>
+          onClick={() => { onClear(); setOpen(false); }}>
+          <XCircle size={13} />
+        </button>
         : <Search size={13} className="doc-search-icon" />
       }
 

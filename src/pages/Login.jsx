@@ -4,7 +4,7 @@ import "../styles/Login.css";
 import { Eye, EyeSlash, EnvelopeFill, LockFill } from "react-bootstrap-icons";
 import { useAuth } from "../hooks/useAuth";
 
-export default function Login() {
+export default function login() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [mostrarContrasena, setMostrarContrasena] = useState(false);

@@ -1,0 +1,188 @@
+
+.planes-page { min-height: 100vh; }
+
+/* ── Hero ── */
+.planes-page-hero {
+  margin-top: 120px;
+  padding:100px 20px 56px;
+  text-align: center;
+}
+
+.planes-page-hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  margin: 0 0 14px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.planes-page-hero p {
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  opacity: 0.88;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* h1 override removed — clamp() handles it */
+
+/* ── Sección principal ── */
+.planes-page-section {
+  padding: 80px 20px 100px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Label ── */
+.section-label {
+  display: inline-block;
+  padding: 5px 16px;
+  border: 1.5px solid #1a73e8;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #1a73e8;
+  margin-bottom: 14px;
+}
+
+/* ── Grid completo ── */
+.planes-page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin: 40px 0 60px;
+}
+
+@media (max-width: 580px) {
+  .planes-page-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Footer CTA ── */
+.planes-page-footer {
+  background: linear-gradient(135deg, #e8f0fe 0%, #dbeafe 100%);
+  border-radius: 14px;
+  padding: 36px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 60px;
+}
+
+.planes-page-footer h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 6px;
+}
+
+.planes-page-footer p {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.btn-contact-sales {
+  display: inline-block;
+  background: #1a73e8;
+  color: #fff;
+  padding: 12px 26px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.btn-contact-sales:hover { background: #1250a8; color: #fff; }
+
+/* ── FAQ ── */
+.planes-faq-section {
+  padding: 0 20px 100px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.planes-faq-section h2 {
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+  text-align: center;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.planes-faq-intro {
+  text-align: center;
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin-bottom: 28px;
+}
+
+.faq-lista { display: flex; flex-direction: column; gap: 8px; }
+
+.faq-item {
+  border: 1px solid #e2e6ea;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.faq-item.open { border-color: #b5d4f4; }
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  gap: 12px;
+}
+
+.faq-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  flex: 1;
+}
+
+.faq-toggle {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #1a73e8;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.faq-answer {
+  padding: 0 18px 14px;
+  border-top: 1px solid #f1f3f4;
+}
+
+.faq-answer p {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin: 10px 0 0;
+  line-height: 1.7;
+}
+
+/* ── Loading / Error ── */
+.planes-page-loading,
+.planes-page-error {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+.planes-page-error { color: #dc3545; }
