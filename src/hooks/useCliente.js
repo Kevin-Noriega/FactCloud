@@ -2,46 +2,65 @@ import { useState, useEffect } from "react";
 import axiosClient from "../api/axiosClient";
 
 const CONTACTO_VACIO = {
-  nombre: "", apellido: "", correo: "", cargo: "", indicativo: "", telefono: "",
+  nombre: "",
+  apellido: "",
+  correo: "",
+  cargo: "",
+  indicativo: "",
+  telefono: "",
 };
 
 const ESTADO_INICIAL = {
-  nombre:               "",
-  apellido:             "",
-  tipoIdentificacion:   "CC",
+  tipoPersona: "Natural",
+  tipoIdentificacion: "",
   numeroIdentificacion: "",
-  digitoVerificacion:   "",
-  tipoPersona:          "persona",
-  correo:               "",
-  telefono:             "",
-  departamento:         "",
-  ciudad:               "",
-  direccion:            "",
-  codigoPostal:         "",
-  nombreComercial:      "",
+  digitoVerificacion: "",
+  codigoSucursal: "0",
+  nombre: "",
+  apellido: "",
+  nombreComercial: "", // ✅ string vacío
+  departamento: "",
+  departamentoCodigo: "",
+  ciudad: "",
+  ciudadCodigo: "",
+  direccion: "",
+  codigoPostal: "",
+  regimenTributario: "",
+  correo: "", // ✅ string vacío
+  nombreContactoFacturacion: "",
+  apellidoContactoFacturacion: "",
+  indicativoFacturacion: "",
+  telefonoFacturacion: "",
+  granContribuyente: false,
+  autoretenedorRenta: false,
+  retenedorIVA: false,
+  regimenSimple: false,
+  noAplica: false,
+  telefonos: [{ indicativo: "", numero: "", extension: "" }],
+  contactos: [{ ...CONTACTO_VACIO }],
 };
 
 export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
-  const [cliente,   setCliente]   = useState(ESTADO_INICIAL);
+  const [cliente, setCliente] = useState(ESTADO_INICIAL);
   const [guardando, setGuardando] = useState(false);
 
   useEffect(() => {
     if (clienteEditando) {
       setCliente({
-        nombre:               clienteEditando.nombre               || "",
-        apellido:             clienteEditando.apellido             || "",
-        tipoIdentificacion:   clienteEditando.tipoIdentificacion   || "CC",
+        nombre: clienteEditando.nombre || "",
+        apellido: clienteEditando.apellido || "",
+        tipoIdentificacion: clienteEditando.tipoIdentificacion || "CC",
         numeroIdentificacion: clienteEditando.numeroIdentificacion || "",
-        digitoVerificacion:   clienteEditando.digitoVerificacion   || "",
-        tipoPersona:          clienteEditando.tipoPersona          || "persona",
-        regimenTributario:    clienteEditando.regimenTributario    || "",
-        nombreComercial:      clienteEditando.nombreComercial      || "",
-        correo:               clienteEditando.correo               || "",
-        telefono:             clienteEditando.telefono             || "",
-        departamento:         clienteEditando.departamento         || "",
-        ciudad:               clienteEditando.ciudad               || "",
-        direccion:            clienteEditando.direccion            || "",
-        codigoPostal:         clienteEditando.codigoPostal         || "",
+        digitoVerificacion: clienteEditando.digitoVerificacion || "",
+        tipoPersona: clienteEditando.tipoPersona || "persona",
+        regimenTributario: clienteEditando.regimenTributario || "",
+        nombreComercial: clienteEditando.nombreComercial || "",
+        correo: clienteEditando.correo || "",
+        telefono: clienteEditando.telefono || "",
+        departamento: clienteEditando.departamento || "",
+        ciudad: clienteEditando.ciudad || "",
+        direccion: clienteEditando.direccion || "",
+        codigoPostal: clienteEditando.codigoPostal || "",
         contactos: clienteEditando.contactos?.length
           ? clienteEditando.contactos
           : [{ ...CONTACTO_VACIO }],
@@ -59,22 +78,22 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
     }));
   };
 
-  const handleSelectChange    = (campo, valor) =>
+  const handleSelectChange = (campo, valor) =>
     setCliente((prev) => ({ ...prev, [campo]: valor }));
 
   const handleDepartamentoChange = (opt) =>
     setCliente((prev) => ({
       ...prev,
-      departamento:       opt?.label || "",
+      departamento: opt?.label || "",
       departamentoCodigo: opt?.value || "",
-      ciudad:             "",
-      ciudadCodigo:       "",
+      ciudad: "",
+      ciudadCodigo: "",
     }));
 
   const handleCiudadChange = (opt) =>
     setCliente((prev) => ({
       ...prev,
-      ciudad:      opt?.label || "",
+      ciudad: opt?.label || "",
       ciudadCodigo: opt?.value || "",
     }));
 
@@ -97,45 +116,59 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       contactos: prev.contactos.filter((_, i) => i !== index),
     }));
 
-  const limpiarFormulario   = () => setCliente(ESTADO_INICIAL);
-  const handleClose         = () => { limpiarFormulario(); onClose(); };
-  const handleOverlayClick  = (e) => { if (e.target === e.currentTarget) handleClose(); };
+  const limpiarFormulario = () => setCliente(ESTADO_INICIAL);
+  const handleClose = () => {
+    limpiarFormulario();
+    onClose();
+  };
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) handleClose();
+  };
 
   // ── Submit ─────────────────────────────────────────────────────
   const handleSubmit = async (extraData = {}) => {
-    setGuardando(true);
+    // ... setGuardando(true)
 
     const payload = {
-      tipoPersona:                 cliente.tipoPersona          || "persona",
-      tipoIdentificacion:          cliente.tipoIdentificacion   || "CC",
-      numeroIdentificacion:        cliente.numeroIdentificacion,
-      dv:                          cliente.digitoVerificacion   || null,
-      codigoSucursal:              extraData.codigoSucursal     || "0",
-      nombre:                      cliente.nombre,
-      apellido:                    cliente.apellido             || "",
-      nombreComercial:             cliente.nombreComercial      || "",
-      departamento:                cliente.departamento         || "",
-      ciudad:                      cliente.ciudad               || "",
-      direccion:                   cliente.direccion            || "",
-      codigoPostal:                extraData.codigoPostal       || cliente.codigoPostal || "",
-      correo:                      cliente.correo               || "",
-      nombreContactoFacturacion:   extraData.nombreContactoFact   || "",
-      apellidoContactoFacturacion: extraData.apellidoContactoFact || "",
-      correoFacturacion:           extraData.correoFact           || cliente.correo || "",
-      regimenTributario:           extraData.RegimenTributario    || "",  // ✅ fix typo
-      indicativoFacturacion:       extraData.indicativoFact       || "",
-      telefonoFacturacion:         extraData.telefonoFact         || cliente.telefono || "",
-      esCliente:                   extraData.esCliente   ?? true,
-      esProveedor:                 extraData.esProveedor ?? false,
-      esEmpleado:                  extraData.esEmpleado  ?? false,
-      responsabilidades:           extraData.responsabilidades || ["R-99-PN"],
-      telefonos:                   extraData.telefonos         || [],
-      contactos:                   extraData.contactos         || [],
+      tipoPersona: cliente.tipoPersona || "Natural",
+      tipoIdentificacion: cliente.tipoIdentificacion || "CC",
+      numeroIdentificacion: cliente.numeroIdentificacion || "",
+      dv: cliente.digitoVerificacion || "", // Cambia a "" en vez de null
+      codigoSucursal: cliente.codigoSucursal || "0",
+      nombre: cliente.nombre || "",
+      apellido: cliente.apellido || "",
+      nombreComercial: cliente.nombreComercial || "",
+      departamento: cliente.departamento || "",
+      departamentoCodigo: cliente.departamentoCodigo || "", // Añade del estado
+      ciudad: cliente.ciudad || "",
+      ciudadCodigo: cliente.ciudadCodigo || "", // Añade del estado
+      direccion: cliente.direccion || "",
+      codigoPostal: cliente.codigoPostal || "",
+      correo: cliente.correo || "",
+      regimenTributario: cliente.regimenTributario || "",
+      nombreContactoFacturacion: cliente.nombreContactoFacturacion || "",
+      apellidoContactoFacturacion: cliente.apellidoContactoFacturacion || "",
+      indicativoFacturacion: cliente.indicativoFacturacion || "",
+      telefonoFacturacion: cliente.telefonoFacturacion || "",
+      granContribuyente: cliente.granContribuyente || false, // Añade checkboxes
+      autoretenedorRenta: cliente.autoretenedorRenta || false,
+      retenedorIVA: cliente.retenedorIVA || false,
+      regimenSimple: cliente.regimenSimple || false,
+      noAplica: cliente.noAplica || false,
+      // Añade faltantes del backend si existen en estado
+      telefonos: cliente.telefonos || [],
+      contactos: cliente.contactos || [],
+      esCliente: true,
+      esProveedor: false,
+      esEmpleado: false,
+      responsabilidades: ["R-99-PN"], // Por defecto como indica el form
     };
-
     try {
       if (clienteEditando) {
-        const { data } = await axiosClient.put(`/Clientes/${clienteEditando.id}`, payload);
+        const { data } = await axiosClient.put(
+          `/Clientes/${clienteEditando.id}`,
+          payload,
+        );
         onSuccess(data, "Cliente modificado con éxito.");
       } else {
         const { data } = await axiosClient.post("/Clientes", payload);
@@ -144,6 +177,9 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       limpiarFormulario();
       onClose();
     } catch (error) {
+      if (error.response?.status === 409 || error.response?.status === 500) {
+        alert("Ya existe un cliente con esa identificación.");
+      }
       if (error.response?.status === 409) {
         alert("Ya existe un cliente con esa identificación.");
       } else if (error.response?.status === 400) {
@@ -157,19 +193,31 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
           alert("Error 400: " + JSON.stringify(error.response?.data));
         }
       } else {
-        alert("Error al guardar: " + (error.response?.data?.mensaje || error.message));
+        alert(
+          "Error al guardar: " +
+            (error.response?.data?.mensaje || error.message),
+        );
         console.error(error);
       }
     } finally {
       setGuardando(false);
     }
+
+    // ... resto del try/catch
   };
 
   return {
-    cliente, guardando,
-    handleChange, handleSelectChange,
-    handleDepartamentoChange, handleCiudadChange,
-    handleSubmit, handleClose, handleOverlayClick,
-    agregarContacto, handleContactoChange, eliminarContacto,
+    cliente,
+    guardando,
+    handleChange,
+    handleSelectChange,
+    handleDepartamentoChange,
+    handleCiudadChange,
+    handleSubmit,
+    handleClose,
+    handleOverlayClick,
+    agregarContacto,
+    handleContactoChange,
+    eliminarContacto,
   };
 };

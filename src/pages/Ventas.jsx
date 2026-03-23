@@ -15,7 +15,7 @@ function Ventas() {
     switch (activeTab) {
       case "documentos":
         return (
-          <div className="tab-content p-4">
+          <div className="tab-content p-4" style={{ height: "100%" }}>
             <DocumentosVenta />
           </div>
         );
@@ -42,14 +42,14 @@ function Ventas() {
   };
 
   return (
-    <div className="container-fluid px-4">
+    <div
+      className="container-fluid d-flex flex-column"
+      style={{ minHeight: "100vh" }}
+    >
       {/* HEADER */}
-
-      <div className="page-crear-producto__banner">
-        <div className="page-crear-producto__banner-content">
-          <div className="page-crear-producto__banner-text">
-            <h2>Gestion de ventas </h2>
-          </div>
+      <div className="header-card mb-3 px-4">
+        <div className="header-content d-flex justify-content-between align-items-center">
+          <h2 className="header-title">Ventas</h2>
 
           <div className="header-icon">
             <FileEarmarkText size={50} />
@@ -71,7 +71,7 @@ function Ventas() {
       </div>
 
       {/* CONTENIDO */}
-      {renderContent()}
+      <div style={{ flex: 1 }}>{renderContent()}</div>
     </div>
   );
 }

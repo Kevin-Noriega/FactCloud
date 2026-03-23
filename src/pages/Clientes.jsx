@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../api/config";
 import { obtenerSiglas } from "../utils/Helpers";
 import ModalCliente from "../components/modals/ModalCrearCliente";
@@ -8,6 +9,7 @@ import axiosClient from "../api/axiosClient";
 
 function Clientes() {
   const [clientes, setClientes] = useState([]);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
@@ -82,7 +84,8 @@ function Clientes() {
       setTimeout(() => setMensajeExito(""), 3000);
       fetchClientes();
     } catch (error) {
-      const mensaje = error.response?.data?.message || error.message || "Error desconocido";
+      const mensaje =
+        error.response?.data?.message || error.message || "Error desconocido";
       alert(mensaje);
       console.error("error al eliminar un cliente:", error);
     }
@@ -116,7 +119,7 @@ function Clientes() {
     <div className="container-fluid px-4">
       <div className="header-card mb-3 px-5">
         <div className="header-content">
-            <h2 className="header-title">Gestión de Clientes</h2>
+          <h2 className="header-title">Gestión de Clientes</h2>
           <div className="header-icon">
             <People size={60} />
           </div>
@@ -187,7 +190,10 @@ function Clientes() {
       )}
 
       <div className="opcions-header">
-        <button className="btn-crear" onClick={abrirModalNuevo}>
+        <button
+          className="btn-crear"
+          onClick={() => navigate("/nuevo-clientee") }
+        >
           Nuevo Cliente
         </button>
         <div className="filters">

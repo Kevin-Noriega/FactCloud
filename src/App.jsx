@@ -36,10 +36,10 @@ import NuevoProducto_Servicio from "./pages/NuevoProducto_Servicio";
 import ImportarProductosExcel from "./components/ProductosServicios/ImportarProductoExcel";
 import Tienda from "./pages/Tienda";
 import Checkout from "./pages/Checkout";
-import NuevoCliente from "./pages/NuevoCliente";
-import Terminos from "./pages/Terminos";
-import Privacidad from "./pages/Privacidad";
 import { ProtectedLayout } from "./components/ProtectedLayout";
+import HabilitacionDian from "./components/dashboard/Habilitacion/HabilitacionDian";
+import NuevoClienteEmpresa from "./components/Clientes/NuevoClienteEmpresa";
+import HabilitacionDSE from "./components/dashboard/Habilitacion/HabilitacionDSE";
 
 const NotFound = () => (
   <div className="text-center py-5">
@@ -50,17 +50,17 @@ const NotFound = () => (
     </a>
   </div>
 );
-
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { staleTime: 5 * 60 * 1000, retry: 2 }
-  }
+    queries: { staleTime: 5 * 60 * 1000, retry: 2 },
+  },
 });
+
+
 
 function App() {
   const { loading } = useAuth();
 
-  // ✅ Bloquea TODO el árbol hasta que restaurarSesion() termine
   if (loading) {
     return (
       <div
@@ -84,10 +84,11 @@ function App() {
   }
 
   return (
-    <SignalRProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <SignalRProvider>
         <ScrollToHash />
         <Routes>
+          {/* Rutas Públicas */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/planes" element={<Planes />} />
@@ -95,25 +96,34 @@ function App() {
             <Route path="/comoFunciona" element={<ComoFunciona />} />
             <Route path="/dian" element={<DIAN />} />
             <Route path="/soporte" element={<Soporte />} />
-            <Route path="/terminos" element={<Terminos />} />
-            <Route path="/privacidad" element={<Privacidad />} />
           </Route>
 
+          {/* Rutas de Autenticación (redirige si ya logueado?) */}
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
           </Route>
 
+          {/* Rutas de Registro/Checkout */}
           <Route element={<RegisterLayout />}>
             <Route path="/registro" element={<Registro />} />
             <Route path="/checkout" element={<Checkout />} />
           </Route>
 
+          {/* Rutas Protegidas */}
           <Route element={<ProtectedLayout />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/clientes" element={<Clientes />} />
+              <Route
+                path="/nuevo-cliente"
+                element={<NuevoClienteEmpresa />}
+              />{" "}
+              {/* Corregido path */}
               <Route path="/productos" element={<Productos />} />
-              <Route path="/crearProducto" element={<NuevoProducto_Servicio />} />
+              <Route
+                path="/crearProducto"
+                element={<NuevoProducto_Servicio />}
+              />
               <Route
                 path="/crearProducto/editar/:id"
                 element={<NuevoProducto_Servicio />}
@@ -128,9 +138,14 @@ function App() {
                 path="/nuevo-documento-soporte"
                 element={<NuevoDocumentoSoporte />}
               />
-              <Route path="/nueva-nota-credito" element={<NuevaNotaCredito />} />
-              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
-              <Route path="/nuevo-cliente" element={<NuevoCliente />} />
+              <Route
+                path="/nueva-nota-credito"
+                element={<NuevaNotaCredito />}
+              />
+              <Route path="/nueva-nota-debito" element={<NuevaNotaDebito />} />{" "}
+              {/* Corregido import */}
+              <Route path="/habilitacion-dian" element={<HabilitacionDian />} />
+              <Route path="/habilitacionDSE" element={<HabilitacionDSE />} />
               <Route path="/compras-gastos" element={<ComprasGastos />} />
               <Route path="/facturas" element={<Facturas />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
@@ -141,10 +156,11 @@ function App() {
             </Route>
           </Route>
 
+          {/* 404 Global */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </QueryClientProvider>
-    </SignalRProvider>
+      </SignalRProvider>
+    </QueryClientProvider>
   );
 }
 

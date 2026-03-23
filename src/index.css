@@ -99,7 +99,20 @@ body.modal-open {
   z-index: 2;
 }
 
-
+.doc-btn-borrador {
+  background: #fff;
+  border: 1.5px solid #1a73e8;
+  color: #1a73e8;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.doc-btn-borrador:hover {
+  background: #f0f6ff;
+}
 .btn.btn-filtros {
   display: inline-flex;
   align-items: center;
