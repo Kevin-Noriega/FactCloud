@@ -6,7 +6,7 @@ const navItems = [
   { to: "/Dashboard", label: "Inicio", icon: "HouseFill" }, // Casa para dashboard/inicio
   { to: "/ventas", label: "Ventas", icon: "FileEarmarkTextFill" }, // Recibo/factura cortado para ventas/facturas
   { to: "/compras-gastos", label: "Compras y Gastos", icon: "BagDashFill" }, // Bolsa con guión para compras/gastos
-   { to: "/productos", label: "Productos Y Servicios", icon: "BoxSeamFill" }, // Caja para productos/inventario
+  { to: "/productos", label: "Productos Y Servicios", icon: "BoxSeamFill" }, // Caja para productos/inventario
   { to: "/reportes", label: "Reportes", icon: "ClipboardDataFill" }, // Portapapeles con datos para reportes
   { to: "/tienda", label: "Tienda", icon: "CartFill" }, // Carrito para tienda
 ];
@@ -25,9 +25,8 @@ function Sidebar() {
               <li className="nav-item" key={item.to}>
                 <Link
                   to={item.to}
-                  className={`nav-link ${
-                    location.pathname === item.to ? "active" : ""
-                  }`}
+                  className={`nav-link-sb ${location.pathname === item.to ? "active" : ""
+                    }`}
                   title={item.label}
                 >
                   {Icon && <Icon className="nav-icon" size={20} />}
