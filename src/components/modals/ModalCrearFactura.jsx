@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { API_URL } from "../../api/config";
 import Select from "react-select";
+import { toArray } from "../../utils/Helpers.js";
 import "../../styles/modals/ModalCrearFactura.css";
 
 function ModalCrearFactura({open, onClose, clientes, productos, onSuccess }) {
@@ -46,7 +47,7 @@ function ModalCrearFactura({open, onClose, clientes, productos, onSuccess }) {
     const codigo = codigoBarras.trim();
     if (!codigo) return;
 
-    const producto = productos.find(
+    const producto = toArray(productos).find(
       (p) => String(p.codigoBarras || "").trim() === codigo
     );
 
@@ -337,7 +338,7 @@ function ModalCrearFactura({open, onClose, clientes, productos, onSuccess }) {
                 <label className="form-label">Cliente *</label>
                 <Select
                   name="cliente"
-                  options={clientes.map((cli) => ({
+                  options={toArray(clientes).map((cli) => ({
                     value: cli.id,
                     label: `${cli.nombre} ${cli.apellido} - ${cli.numeroIdentificacion}`,
                   }))}
@@ -481,13 +482,13 @@ function ModalCrearFactura({open, onClose, clientes, productos, onSuccess }) {
                               styles={{
                                 menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                               }}
-                              options={productos.map((pro) => ({
+                              options={toArray(productos).map((pro) => ({
                                 value: pro.id,
                                 label: `${pro.nombre} - $${pro.precioUnitario.toLocaleString("es-CO")}`,
                               }))}
                               value={
                                 item.productoId
-                                  ? productos
+                                  ? toArray(productos)
                                       .map((pro) => ({
                                         value: pro.id,
                                         label: `${pro.nombre} - $${pro.precioUnitario.toLocaleString("es-CO")}`,
