@@ -141,7 +141,7 @@ function App() {
                 path="/nueva-nota-credito"
                 element={<NuevaNotaCredito />}
               />
-              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
+              <Route path="/nueva-nota-debito" element={<NuevaNotaDebito />} />
               <Route path="/habilitacion-dian" element={<HabilitacionDian />} />
               <Route
                 path="/habilitacion-dian/factura-electronica"

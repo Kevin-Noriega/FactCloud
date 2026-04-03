@@ -228,7 +228,7 @@ export default function Checkout() {
         nit: prev.numeroIdentificacion,
         emailFacturacion: prev.email,
         telefonoFacturacion: prev.telefono,
-        departamento: prev.ciudad,
+        departamento: "",
         ciudadFacturacion: prev.ciudad,
         direccionFacturacion: prev.direccion,
       }));
@@ -471,8 +471,8 @@ export default function Checkout() {
           pais: "CO",
 
           // Datos del negocio
-          nombreNegocio: formData.razonSocial,
-          nit: formData.nit,
+          nombreComercial: formData.razonSocial,
+          numeroIdentificacionE: formData.nit,
           dvNit: formData.digitoVerificacion
             ? parseInt(formData.digitoVerificacion)
             : null,
@@ -480,7 +480,7 @@ export default function Checkout() {
           ciudad: formData.ciudadFacturacion,
           departamento: formData.departamento,
           telefonoNegocio: formData.telefonoFacturacion,
-          correoNegocio: formData.emailFacturacion,
+          correoRecepcionDian: formData.emailFacturacion,
 
           // Datos de suscripción
           planFacturacionId: plan.id,
@@ -898,7 +898,7 @@ export default function Checkout() {
                         <input
                           type="text"
                           name="razonSocial"
-                          placeholder="Razón Social *"
+                          placeholder="Nombre Comercial *"
                           value={formData.razonSocial}
                           onChange={handleChange}
                           className={errors.razonSocial ? "input-error" : ""}
@@ -956,7 +956,7 @@ export default function Checkout() {
                           onChange={(opt) =>
                             setFormData((prev) => ({
                               ...prev,
-                              ciudad: opt ? opt.value : "",
+                              ciudadFacturacion: opt ? opt.value : "",
                             }))
                           }
                           isClearable
