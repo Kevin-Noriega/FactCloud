@@ -26,7 +26,7 @@ import Facturas from "./components/ventas/documentosVenta/Facturas";
 import NuevaFactura from "./pages/NuevaFactura";
 import NuevoDocumentoSoporte from "./pages/NuevoDocumentoSoporte";
 import NuevaNotaCredito from "./pages/NuevaNotaCredito";
-import NuevaNotaDedito from "./pages/NuevaNotaDebito";
+import NuevaNotaDebito from "./pages/NuevaNotaDebito";
 import Ventas from "./pages/Ventas";
 import ComprasGastos from "./pages/ComprasGastos";
 import DocumentoSoporte from "./components/comprasGastos/DocumentoSoporte";
@@ -40,6 +40,7 @@ import { ProtectedLayout } from "./components/ProtectedLayout";
 import HabilitacionDian from "./components/dashboard/Habilitacion/HabilitacionDian";
 import NuevoClienteEmpresa from "./components/Clientes/NuevoClienteEmpresa";
 import HabilitacionDSE from "./components/dashboard/Habilitacion/HabilitacionDSE";
+import HabilitacionFacturacionFE from "./components/dashboard/Habilitacion/HabilitacionFacturacionFE";
 
 const NotFound = () => (
   <div className="text-center py-5">
@@ -55,8 +56,6 @@ const queryClient = new QueryClient({
     queries: { staleTime: 5 * 60 * 1000, retry: 2 },
   },
 });
-
-
 
 function App() {
   const { loading } = useAuth();
@@ -115,7 +114,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/clientes" element={<Clientes />} />
               <Route
-                path="/nuevo-cliente"
+                path="/nuevo-clientee"
                 element={<NuevoClienteEmpresa />}
               />{" "}
               {/* Corregido path */}
@@ -142,9 +141,13 @@ function App() {
                 path="/nueva-nota-credito"
                 element={<NuevaNotaCredito />}
               />
-              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
+              <Route path="/nueva-nota-debito" element={<NuevaNotaDebito />} />
               <Route path="/habilitacion-dian" element={<HabilitacionDian />} />
-              <Route path="/habilitacionDSE" element={<HabilitacionDSE />} />
+              <Route
+                path="/habilitacion-dian/factura-electronica"
+                element={<HabilitacionFacturacionFE />}
+              />
+              <Route path="/habilitacion-dian/habilitacionDSE" element={<HabilitacionDSE />} />
               <Route path="/compras-gastos" element={<ComprasGastos />} />
               <Route path="/facturas" element={<Facturas />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
