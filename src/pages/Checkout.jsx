@@ -110,7 +110,7 @@ export default function Checkout() {
         nit: prev.numeroIdentificacion,
         emailFacturacion: prev.email,
         telefonoFacturacion: prev.telefono,
-        departamento: prev.ciudad,
+        departamento: "",
         ciudadFacturacion: prev.ciudad,
         direccionFacturacion: prev.direccion,
       }));

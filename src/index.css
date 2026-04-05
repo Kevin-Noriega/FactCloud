@@ -113,6 +113,16 @@ body.modal-open {
 .doc-btn-borrador:hover {
   background: #f0f6ff;
 }
+.fe-btn.fe-btn-success {
+  background-color: var(--fe-primary, #0d6efd);
+  border-color: var(--fe-primary, #0d6efd);
+  color: #fff;
+}
+
+.fe-btn.fe-btn-success:hover:not(:disabled) {
+  background-color: var(--fe-primary-hover, #0957d0);
+  border-color: var(--fe-primary-hover, #0957d0);
+}
 .btn.btn-filtros {
   display: inline-flex;
   align-items: center;
