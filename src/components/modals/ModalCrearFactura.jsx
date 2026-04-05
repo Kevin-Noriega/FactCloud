@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { API_URL } from "../../api/config";
-import Select from "react-select";
+import Select from "../StyledSelect";
 import { toArray } from "../../utils/Helpers.js";
 import "../../styles/modals/ModalCrearFactura.css";
 

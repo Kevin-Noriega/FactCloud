@@ -1,6 +1,6 @@
 import { useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
-import Select from "react-select";
+import Select from "../components/StyledSelect";
 import {
   Trash, Paperclip, PlusCircle,
   CheckCircleFill, XCircleFill,

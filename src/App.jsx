@@ -18,6 +18,7 @@ import ComoFunciona from "./pages/ComoFunciona";
 import DIAN from "./pages/DIAN";
 import Soporte from "./pages/Soporte";
 import Login from "./pages/Login";
+import PSEResultado from "./pages/PSEResultado";
 import Registro from "./pages/Registro";
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
@@ -106,6 +107,7 @@ function App() {
           <Route element={<RegisterLayout />}>
             <Route path="/registro" element={<Registro />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/pse/resultado" element={<PSEResultado />} />
           </Route>
 
           {/* Rutas Protegidas */}
