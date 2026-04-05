@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Select from "react-select";
+import Select from "../StyledSelect";
 import { API_URL } from "../../api/config";
 import "../../styles/ModalNotaCredito.css";
 

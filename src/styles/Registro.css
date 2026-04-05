@@ -1,9 +1,12 @@
 .registro-page {
   min-height: 100vh;
   background: #f8fafc;
-  padding: 90px 60px 40px;
+  padding: 90px 60px 20px;
 }
-.input-error { border: 1px solid #dc3545; }
+
+.input-error {
+  border: 1px solid #dc3545;
+}
 
 .registro-container {
   max-width: 1400px;
@@ -33,10 +36,9 @@
   line-height: 1.5;
 }
 
-.btn-back {
+.btn-back-register {
   background: none;
-  border: 1px solid var(--primary);
-  border-radius: 12px;
+  border: none;
   padding: 6px 12px;
   color: var(--primary);
   font-size: 16px;
@@ -48,7 +50,7 @@
   transition: all 0.3s ease;
 }
 
-.btn-back:hover {
+.btn-back-register:hover {
   gap: 4px;
 }
 
@@ -61,20 +63,21 @@
 .registro-form-section h1 {
   text-align: center;
   font-size: 30px;
-  font-weight: 900;
+  font-weight: 700;
   color: black;
 }
 
 .registro-subtitle {
   text-align: center;
+  font-size: 16px;
   color: var(--text-muted);
-  margin-bottom: 10px;
+  margin-bottom: 18px;
   line-height: 1.6;
 }
 
 .registro-form {
   background: white;
-  padding: 40px;
+  padding: 40px 40px 10px;
   border-radius: 16px;
 }
 
@@ -88,51 +91,133 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
-.form-group input,
-.codigo-descuento input,
-.form-group select {
-  padding: 10px 14px;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.input-with-icon input,
+.input-with-icon select,
+.input-with-icon .react-select__control {
+  width: 100%;
+  height: 54px;
+  padding: 0 14px;
+  border: 2px solid #d1d9e6;
+  border-radius: 10px;
   font-size: 14px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  background: white;
+  outline: none;
 }
 
-.form-group input:focus,
-.codigo-descuento input:focus,
-.form-group select:focus {
+.input-with-icon label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  padding: 0 4px;
+  color: #94a3b8;
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+
+.input-with-icon.active label,
+.input-with-icon:focus-within label {
+  top: 0;
+  transform: translateY(-50%) scale(0.85); /* Proper centering on the border */
+  left: 10px;
+  font-size: 14px;
+  color: var(--primary);
+  font-weight: 700;
+  background: white;
+}
+
+.input-with-icon.error input,
+.input-with-icon.error .react-select__control {
+  border-color: #ef4444;
+  background: #fffafa;
+}
+
+.input-with-icon input:focus,
+.input-with-icon .react-select__control--is-focused {
   outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: white;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 2px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .form-checkbox {
+  margin: 15px 0;
   display: flex;
-  gap: 12px;
-  margin: 10px 0;
+  flex-direction: column;
 }
 
-.form-checkbox input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+.checkbox-wrapper {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
   cursor: pointer;
 }
 
-.form-checkbox label {
+.checkbox-wrapper label {
   font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.6;
+  color: #64748b;
+  line-height: 1.5;
+  cursor: pointer;
 }
 
-.form-checkbox a {
+.checkbox-wrapper label a {
   color: var(--primary);
+  font-weight: 600;
   text-decoration: none;
 }
 
+.checkbox-wrapper label a:hover {
+  text-decoration: underline;
+}
+
 .btn-crear-cuenta {
-  width: 100%;
-  padding: 16px;
+  display: flex;
+  margin: 0 auto;
+  padding: 8px 12px;
   background: var(--primary);
   color: white;
   border: none;
@@ -219,7 +304,8 @@
 
 .descuento-item,
 .subtotal,
-.impuestos, .cupon {
+.impuestos,
+.cupon {
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
@@ -228,7 +314,8 @@
   color: var(--text-muted);
 }
 
-.descuento-valor, .descuento-cupon {
+.descuento-valor,
+.descuento-cupon {
   color: var(--success);
 }
 
@@ -240,7 +327,8 @@
 
 .codigo-descuento input {
   flex: 1;
-  padding: 10px 14px;
+  height: 54px;
+  padding: 0 14px;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
   font-size: 14px;

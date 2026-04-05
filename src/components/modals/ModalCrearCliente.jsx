@@ -1,6 +1,6 @@
 // src/components/modals/ModalCrearCliente.jsx
 import React from "react";
-import Select from "react-select";
+import Select from "../StyledSelect";
 import ModalBase from "./ModalBase";          // ← nuevo import
 import tipoIdentificacion from "../../utils/TiposDocumentos.json";
 import actividadesCIIU from "../../utils/ActividadesEconomicasCIIU.json";

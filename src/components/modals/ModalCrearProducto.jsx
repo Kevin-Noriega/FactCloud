@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../../api/config";
-import Select from "react-select";
+import Select from "../StyledSelect";
 import unidadesMedidaDIAN from "../../utils/UnidadesMedidas.json";
 import tipoProductoDIAN from "../../utils/TiposProducto.json";
 import "../../styles/modals/ModalCrearProducto.css";
