@@ -44,7 +44,7 @@ function Clientes() {
   async function fetchClientes() {
     try {
       const res = await axiosClient.get("/Clientes");
-      setClientes(toArray(res));
+      setClientes(Array.isArray(res.data?.data) ? res.data.data : []);
       setError(null);
     } catch (error) {
       const respuesta =
@@ -193,7 +193,7 @@ function Clientes() {
       <div className="opcions-header">
         <button
           className="btn-crear"
-          onClick={() => navigate("/nuevo-clientee") }
+          onClick={() => navigate("/nuevo-clientee")}
         >
           Nuevo Cliente
         </button>
