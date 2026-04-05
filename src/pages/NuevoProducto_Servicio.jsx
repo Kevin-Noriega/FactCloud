@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Select from "react-select";
+import Select from "../components/StyledSelect";
 import axiosClient from "../api/axiosClient";
 import unidadesMedidaDIAN from "../utils/UnidadesMedidas.json";
 import "../styles/PageCrear.css";

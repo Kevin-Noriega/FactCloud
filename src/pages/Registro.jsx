@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Stepper from "../components/Stepper";
 import "../styles/Registro.css";
-import Select from "react-select";
+import Select from "../components/StyledSelect";
+import FloatingInput from "../components/FloatingInput";
 import tipoIdentificacion from "../utils/TiposDocumentos.json";
-import { ChevronLeft, CheckCircleFill } from "react-bootstrap-icons";
+import {
+  ChevronLeft,
+  CheckCircleFill,
+  ExclamationCircleFill,
+  ShieldCheck,
+  TagFill,
+  InfoCircleFill,
+  ArrowRight,
+} from "react-bootstrap-icons";
 import { useCupones } from "../hooks/useCupones.JS";
 import { ModalDetalles } from "../components/checkout/ModalDetalles";
+import Stepper from "../components/Stepper";
 
 export default function Registro() {
   const navigate = useNavigate();
@@ -59,38 +68,6 @@ export default function Registro() {
     setLoading(false);
   }, []);
 
-  if (loading) return <div>Cargando...</div>;
-  if (!selectedPlan)
-    return (
-      <div className="no-plan">
-        <h2>No hay plan seleccionado</h2>
-        <button onClick={() => navigate("/planes")}>Ir a Planes</button>
-      </div>
-    );
-
-  const precioOriginal = selectedPlan.descuentoActivo
-    ? Math.round(
-        selectedPlan.precioAnual / (1 - selectedPlan.descuentoPorcentaje / 100),
-      )
-    : selectedPlan.precioAnual;
-
-  // Calcular el monto del descuento del plan
-  const descuentoPlan = selectedPlan.descuentoActivo
-    ? precioOriginal - selectedPlan.precioAnual
-    : 0;
-
-  const subtotal = selectedPlan.precioAnual;
-
-  const descuentoCupon = cupones.coupon
-    ? cupones.coupon.priceAfterDiscount != null
-      ? subtotal - cupones.coupon.priceAfterDiscount
-      : Math.round(subtotal * (cupones.coupon.discountPercent / 100))
-    : 0;
-
-  const totalFinal = cupones.coupon
-    ? (cupones.total ?? subtotal - descuentoCupon)
-    : subtotal;
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -99,6 +76,7 @@ export default function Registro() {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -209,6 +187,28 @@ export default function Registro() {
         password: pass,
       };
 
+      const precioOriginal = selectedPlan.descuentoActivo
+        ? Math.round(
+          selectedPlan.precioAnual / (1 - selectedPlan.descuentoPorcentaje / 100),
+        )
+        : selectedPlan.precioAnual;
+
+      const descuentoPlan = selectedPlan.descuentoActivo
+        ? precioOriginal - selectedPlan.precioAnual
+        : 0;
+
+      const subtotal = selectedPlan.precioAnual;
+
+      const descuentoCupon = cupones.coupon
+        ? cupones.coupon.priceAfterDiscount != null
+          ? subtotal - cupones.coupon.priceAfterDiscount
+          : Math.round(subtotal * (cupones.coupon.discountPercent / 100))
+        : 0;
+
+      const totalFinal = cupones.coupon
+        ? (cupones.total ?? subtotal - descuentoCupon)
+        : subtotal;
+
       const checkoutData = {
         plan: selectedPlan,
         totalFinal: totalFinal,
@@ -226,23 +226,55 @@ export default function Registro() {
     }
   };
 
-  if (loading) {
+  if (loading) return <div>Cargando...</div>;
+  if (!selectedPlan)
     return (
-      <div className="loading-container">
-        <div>Cargando plan seleccionado...</div>
+      <div className="no-plan">
+        <h2>No hay plan seleccionado</h2>
+        <button onClick={() => navigate("/planes")}>Ir a Planes</button>
       </div>
     );
-  }
+
+  const precioOriginal = selectedPlan.descuentoActivo
+    ? Math.round(
+      selectedPlan.precioAnual / (1 - selectedPlan.descuentoPorcentaje / 100),
+    )
+    : selectedPlan.precioAnual;
+
+  const descuentoPlan = selectedPlan.descuentoActivo
+    ? precioOriginal - selectedPlan.precioAnual
+    : 0;
+
+  const subtotal = selectedPlan.precioAnual;
+
+  const descuentoCupon = cupones.coupon
+    ? cupones.coupon.priceAfterDiscount != null
+      ? subtotal - cupones.coupon.priceAfterDiscount
+      : Math.round(subtotal * (cupones.coupon.discountPercent / 100))
+    : 0;
+
+  const totalFinal = cupones.coupon
+    ? (cupones.total ?? subtotal - descuentoCupon)
+    : subtotal;
 
   return (
     <div className="registro-page">
       <Stepper currentStep={2} />
-
       <div className="registro-container">
-        <button onClick={() => navigate("/planes")} className="btn-back">
+        <button onClick={() => navigate("/planes")} className="btn-back-register">
           <ChevronLeft />
           Regresar
         </button>
+        {/* 
+        <div className="plan-banner">
+          <div className="plan-banner-content">
+            <CheckCircleFill />
+            <p className="plan-banner-title">
+              ¡COMPRA HOY! el plan {selectedPlan.nombre}, y te{" "}
+              <strong>regalamos el doble de documento</strong>
+            </p>
+          </div>
+        </div> */}
 
         <div className="registro-content">
           <div className="registro-form-section">
@@ -254,284 +286,175 @@ export default function Registro() {
 
             <form onSubmit={handleSubmit} className="registro-form">
               <div className="form-row">
-                <div className="form-group">
-                  <Select
-                    name="tipoIdentificacion"
-                    options={tipoOptions}
-                    value={
-                      tipoOptions.find(
-                        (o) => o.value === formData.tipoIdentificacion,
-                      ) || null
-                    }
-                    onChange={(opt) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        tipoIdentificacion: opt ? opt.value : "",
-                      }));
+                <Select
+                  label="Tipo de documento *"
+                  name="tipoIdentificacion"
+                  options={tipoOptions}
+                  value={
+                    tipoOptions.find(
+                      (o) => o.value === formData.tipoIdentificacion,
+                    ) || null
+                  }
+                  onChange={(opt) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      tipoIdentificacion: opt ? opt.value : "",
+                    }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      tipoIdentificacion: undefined,
+                    }));
+                  }}
+                  isClearable
+                  placeholder="Seleccionar tipo"
+                  error={errors.tipoIdentificacion}
+                  className="input-with-icon"
+                />
 
-                      // opcional: limpia el error cuando el usuario corrige
-                      setErrors((prev) => ({
-                        ...prev,
-                        tipoIdentificacion: undefined,
-                      }));
-                    }}
-                    isClearable
-                    placeholder="Seleccionar tipo"
-                  />
-
-                  {errors.tipoIdentificacion && (
-                    <p className="text-danger small mt-1">
-                      {errors.tipoIdentificacion}
-                    </p>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    name="numeroIdentificacion"
-                    value={formData.numeroIdentificacion}
-                    onChange={(e) => {
-                      // opcional: filtra para que solo entren dígitos desde el inicio
-                      const onlyNums = e.target.value.replace(/\D/g, "");
-                      setFormData((prev) => ({
-                        ...prev,
-                        numeroIdentificacion: onlyNums,
-                      }));
-                      setErrors((prev) => ({
-                        ...prev,
-                        numeroIdentificacion: undefined,
-                      }));
-                    }}
-                    placeholder="Número de documento *"
-                    inputMode="numeric" // teclado numérico en móvil [web:51]
-                    pattern="^[0-9]+$" // solo dígitos (si no está vacío) [web:63]
-                    maxLength={12} // límite de caracteres [web:56]
-                    className={errors.numeroIdentificacion ? "input-error" : ""}
-                    required
-                  />
-
-                  {errors.numeroIdentificacion && (
-                    <p className="text-danger small mt-1">
-                      {errors.numeroIdentificacion}
-                    </p>
-                  )}
-                </div>
+                <FloatingInput
+                  label="Número de documento *"
+                  name="numeroIdentificacion"
+                  value={formData.numeroIdentificacion}
+                  onChange={(e) => {
+                    const onlyNums = e.target.value.replace(/\D/g, "");
+                    setFormData((prev) => ({
+                      ...prev,
+                      numeroIdentificacion: onlyNums,
+                    }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      numeroIdentificacion: undefined,
+                    }));
+                  }}
+                  error={errors.numeroIdentificacion}
+                  className="input-with-icon"
+                  inputMode="numeric"
+                  maxLength={12}
+                />
               </div>
 
               <div className="form-row">
-                {/* Nombres y apellidos */}
-                <div className="form-group">
-                  <input
-                    type="text"
-                    name="nombreCompleto"
-                    value={formData.nombreCompleto}
-                    onChange={(e) => {
-                      const raw = e.target.value;
+                <FloatingInput
+                  label="Nombres y apellidos *"
+                  name="nombreCompleto"
+                  value={formData.nombreCompleto}
+                  onChange={(e) => {
+                    const value = e.target.value
+                      .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+/g, "")
+                      .replace(/\s{2,}/g, " ");
+                    setFormData((prev) => ({ ...prev, nombreCompleto: value }));
+                    setErrors((prev) => ({ ...prev, nombreCompleto: undefined }));
+                  }}
+                  error={errors.nombreCompleto}
+                  className="input-with-icon"
+                  maxLength={80}
+                />
 
-                      const value = raw
-                        // deja letras A-Z, a-z, tildes típicas y espacios
-                        .replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü ]+/g, "")
-                        .replace(/\s{2,}/g, " ");
-
-                      setFormData((prev) => ({
-                        ...prev,
-                        nombreCompleto: value,
-                      }));
-                      setErrors((prev) => ({
-                        ...prev,
-                        nombreCompleto: undefined,
-                      }));
-                    }}
-                    placeholder="Nombres y apellidos *"
-                    maxLength={80}
-                    className={errors.nombreCompleto ? "input-error" : ""}
-                    required
-                  />
-                  {errors.nombreCompleto && (
-                    <p className="text-danger small mt-1">
-                      {errors.nombreCompleto}
-                    </p>
-                  )}
-                </div>
-
-                {/* Teléfono */}
-                <div className="form-group">
-                  <input
-                    type="tel"
-                    name="telefono"
-                    value={formData.telefono}
-                    onChange={(e) => {
-                      const onlyNums = e.target.value.replace(/\D/g, "");
-                      setFormData((prev) => ({ ...prev, telefono: onlyNums }));
-                      setErrors((prev) => ({ ...prev, telefono: undefined }));
-                    }}
-                    placeholder="Teléfono *"
-                    inputMode="numeric" // teclado numérico en móvil [web:51]
-                    pattern="^[0-9]{10}$" // exactamente 10 dígitos [web:64][web:63]
-                    maxLength={10} // no deja pasar de 10 [web:68]
-                    className={errors.telefono ? "input-error" : ""}
-                    required
-                  />
-                  {errors.telefono && (
-                    <p className="text-danger small mt-1">{errors.telefono}</p>
-                  )}
-                </div>
-              </div>
-              <div className="form-row">
-                {/* Email */}
-                <div className="form-group">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={(e) => {
-                      // email: sin espacios, minúsculas, trim suave
-                      const value = e.target.value
-                        .replace(/\s/g, "")
-                        .toLowerCase();
-                      setFormData((prev) => ({ ...prev, email: value }));
-                      setErrors((prev) => ({
-                        ...prev,
-                        email: undefined,
-                        confirmEmail: undefined,
-                      }));
-                    }}
-                    placeholder="E-mail *"
-                    autoComplete="email" // hint al navegador para autocompletar [web:83]
-                    maxLength={254} // límite típico razonable
-                    className={errors.email ? "input-error" : ""}
-                    required
-                  />
-                  {errors.email && (
-                    <p className="text-danger small mt-1">{errors.email}</p>
-                  )}
-                </div>
-
-                {/* Confirmar Email */}
-                <div className="form-group">
-                  <input
-                    type="email"
-                    name="confirmEmail"
-                    value={formData.confirmEmail}
-                    onChange={(e) => {
-                      const value = e.target.value
-                        .replace(/\s/g, "")
-                        .toLowerCase();
-                      setFormData((prev) => ({ ...prev, confirmEmail: value }));
-                      setErrors((prev) => ({
-                        ...prev,
-                        confirmEmail: undefined,
-                      }));
-                    }}
-                    placeholder="Confirmar E-mail *"
-                    autoComplete="email" // también puede ser "email" [web:83]
-                    maxLength={254}
-                    className={errors.confirmEmail ? "input-error" : ""}
-                    required
-                  />
-                  {errors.confirmEmail && (
-                    <p className="text-danger small mt-1">
-                      {errors.confirmEmail}
-                    </p>
-                  )}
-                </div>
+                <FloatingInput
+                  label="Teléfono (Ej: 3001234567) *"
+                  type="tel"
+                  name="telefono"
+                  value={formData.telefono}
+                  onChange={(e) => {
+                    const onlyNums = e.target.value.replace(/\D/g, "");
+                    setFormData((prev) => ({ ...prev, telefono: onlyNums }));
+                    setErrors((prev) => ({ ...prev, telefono: undefined }));
+                  }}
+                  error={errors.telefono}
+                  className="input-with-icon"
+                  inputMode="numeric"
+                  maxLength={10}
+                />
               </div>
 
               <div className="form-row">
-                {/* Contraseña */}
-                <div className="form-group">
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={(e) => {
-                      handleChange(e);
-                      setErrors((prev) => ({
-                        ...prev,
-                        password: undefined,
-                        confirmPassword: undefined,
-                      }));
-                    }}
-                    placeholder="Contraseña *"
-                    autoComplete="new-password"
-                    minLength={8}
-                    maxLength={64}
-                    className={errors.password ? "input-error" : ""}
-                    required
-                  />
-                  {errors.password && (
-                    <p className="text-danger small mt-1">{errors.password}</p>
-                  )}
-                </div>
+                <FloatingInput
+                  label="Correo electrónico *"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\s/g, "").toLowerCase();
+                    setFormData((prev) => ({ ...prev, email: value }));
+                    setErrors((prev) => ({ ...prev, email: undefined, confirmEmail: undefined }));
+                  }}
+                  error={errors.email}
+                  className="input-with-icon"
+                  autoComplete="email"
+                />
 
-                {/* Confirmar contraseña */}
-                <div className="form-group">
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={(e) => {
-                      handleChange(e);
-                      setErrors((prev) => ({
-                        ...prev,
-                        confirmPassword: undefined,
-                      }));
-                    }}
-                    placeholder="Confirmar contraseña *"
-                    autoComplete="new-password"
-                    minLength={8}
-                    maxLength={64}
-                    className={errors.confirmPassword ? "input-error" : ""}
-                    required
-                  />
+                <FloatingInput
+                  label="Confirmar correo electrónico *"
+                  type="email"
+                  name="confirmEmail"
+                  value={formData.confirmEmail}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\s/g, "").toLowerCase();
+                    setFormData((prev) => ({ ...prev, confirmEmail: value }));
+                    setErrors((prev) => ({ ...prev, confirmEmail: undefined }));
+                  }}
+                  error={errors.confirmEmail}
+                  className="input-with-icon"
+                />
+              </div>
 
-                  {errors.confirmPassword && (
-                    <p className="text-danger small mt-1">
-                      {errors.confirmPassword}
-                    </p>
-                  )}
-                </div>
+              <div className="form-row">
+                <FloatingInput
+                  label="Crear contraseña *"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrors((prev) => ({ ...prev, password: undefined, confirmPassword: undefined }));
+                  }}
+                  error={errors.password}
+                  className="input-with-icon"
+                  autoComplete="new-password"
+                />
+
+                <FloatingInput
+                  label="Confirmar contraseña *"
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
+                  }}
+                  error={errors.confirmPassword}
+                  className="input-with-icon"
+                />
               </div>
 
               <div className="form-checkbox">
-                <input
-                  type="checkbox"
-                  id="terminos"
-                  name="aceptaTerminos"
-                  checked={formData.aceptaTerminos}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setErrors((prev) => ({
-                      ...prev,
-                      aceptaTerminos: undefined,
-                    }));
-                  }}
-                  required
-                />
-                <label htmlFor="terminos">
-                  Al hacer clic, autorizo a que Factcloud trate mis datos
-                  conforme a lo descrito en la{" "}
-                  <a
-                    href="/politica-privacidad"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Política de Privacidad
-                  </a>
-                  , cree una cuenta con mis datos en www.factcloud.com y me
-                  ofrezca servicios propios y/o de terceros.
-                </label>
-
+                <div className="checkbox-wrapper">
+                  <input
+                    type="checkbox"
+                    id="terminos"
+                    name="aceptaTerminos"
+                    checked={formData.aceptaTerminos}
+                    onChange={(e) => {
+                      handleChange(e);
+                      setErrors((prev) => ({ ...prev, aceptaTerminos: undefined }));
+                    }}
+                  />
+                  <label htmlFor="terminos">
+                    Autorizo el tratamiento de mis datos personales según la{" "}
+                    <a href="/politica-privacidad" target="_blank">Política de Privacidad</a> y
+                    acepto los términos y condiciones de FactCloud.
+                  </label>
+                </div>
                 {errors.aceptaTerminos && (
-                  <p className="text-danger small mt-1">
-                    {errors.aceptaTerminos}
-                  </p>
+                  <div className="error-message" style={{ marginTop: "4px" }}>
+                    <ExclamationCircleFill size={14} />
+                    <span>{errors.aceptaTerminos}</span>
+                  </div>
                 )}
               </div>
 
               <button type="submit" className="btn-crear-cuenta">
-                Continuar al pago
+                Crear cuenta
               </button>
 
               <p className="login-link">
@@ -542,15 +465,7 @@ export default function Registro() {
 
           {selectedPlan && (
             <div>
-              <div className="plan-banner">
-                <div className="plan-banner-content">
-                  <CheckCircleFill />
-                  <p className="plan-banner-title">
-                    ¡COMPRA HOY! el plan {selectedPlan.nombre}, y te{" "}
-                    <strong>regalamos el doble de documento</strong>
-                  </p>
-                </div>
-              </div>
+
               <div className="resumen-compra">
                 <h2>Resumen de compra</h2>
 
@@ -561,6 +476,7 @@ export default function Registro() {
                       <span className="producto-nombre">
                         Plan {selectedPlan.nombre}
                       </span>
+
 
                       <button
                         className="ver-detalle"
@@ -574,12 +490,12 @@ export default function Registro() {
                       $
                       {selectedPlan.descuentoActivo
                         ? Math.round(
-                            selectedPlan.precioAnual /
-                              (1 - selectedPlan.descuentoPorcentaje / 100),
-                          ).toLocaleString("es-CO")
+                          selectedPlan.precioAnual /
+                          (1 - selectedPlan.descuentoPorcentaje / 100),
+                        ).toLocaleString("es-CO")
                         : (selectedPlan.precioAnual ?? 0).toLocaleString(
-                            "es-CO",
-                          )}
+                          "es-CO",
+                        )}
                     </span>
                   </div>
 
@@ -617,18 +533,19 @@ export default function Registro() {
                   </div>
 
                   <div className="codigo-descuento">
-                    <input
-                      type="text"
-                      placeholder="Código de descuento"
+                    <FloatingInput
+                      label="Código de descuento"
+                      name="couponCode"
                       value={cupones.couponCode}
                       onChange={(e) => {
                         const value = e.target.value.toUpperCase();
                         cupones.setCouponCode(value);
-
                         if (!value.trim()) {
                           cupones.clearCoupon();
                         }
                       }}
+                      className="pago-input-group"
+                      style={{ marginTop: 0, flex: 1 }}
                     />
                     <button
                       className="btn-validar"

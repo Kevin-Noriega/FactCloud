@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { API_URL } from "../../api/config";
 import bancos from "../../utils/Bancos.json";
-import Select from "react-select";
+import Select from "../StyledSelect";
 
 function ModalPago({ factura, onSuccess, onClose,setMensajeExito }) {
   const generarReferenciaUnica = () => {

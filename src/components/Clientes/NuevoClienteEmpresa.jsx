@@ -1,8 +1,7 @@
-// src/pages/NuevoClienteEmpresa.jsx
 import React from "react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Select from "react-select";
+import Select from "../StyledSelect";
 import { PersonPlus, PencilSquare } from "react-bootstrap-icons";
 import tipoIdentificacion from "../../utils/TiposDocumentos.json";
 import regimenTributarioDIAN from "../../utils/RegimenTributario.json";

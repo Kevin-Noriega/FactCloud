@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Select from "react-select";
+import Select from "../components/StyledSelect";
 import {
   Trash,
   Paperclip,
