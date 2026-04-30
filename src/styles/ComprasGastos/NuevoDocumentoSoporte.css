@@ -3,7 +3,7 @@
    =========================== */
 .nds-container {
   padding: 28px 32px 100px;   /* bottom: espacio para footer sticky */
-  max-width: 1400px;
+  max-width: 1300px;
   margin: 0 auto;
   font-family: 'Segoe UI', Roboto, sans-serif;
   box-sizing: border-box;

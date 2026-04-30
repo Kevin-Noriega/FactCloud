@@ -1,0 +1,166 @@
+/* styles/Impuestos/BuscadorCuenta.css */
+
+.bc-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Campo */
+.bc-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid #e0e0e0;
+  padding: 4px 0;
+  min-height: 32px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.bc-field:hover {
+  border-bottom-color: #00b5ad;
+}
+.bc-value {
+  font-size: 0.78rem;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+.bc-placeholder {
+  font-size: 0.78rem;
+  color: #bdbdbd;
+}
+.bc-arrow {
+  font-size: 0.6rem;
+  color: #9e9e9e;
+  flex-shrink: 0;
+}
+
+/* Dropdown */
+.bc-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  z-index: 1100;
+  width: 460px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.13);
+  overflow: hidden;
+}
+
+/* Buscador */
+.bc-search-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.bc-search-input {
+  flex: 1;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  outline: none;
+}
+.bc-search-input:focus {
+  border-color: #00b5ad;
+}
+.bc-search-btn {
+  background: #00b5ad;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bc-search-btn:hover {
+  background: #009990;
+}
+
+/* Header tabla */
+.bc-list-header {
+  display: grid;
+  grid-template-columns: 100px 1fr 110px;
+  gap: 6px;
+  padding: 5px 10px;
+  background: #f5f6fa;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #757575;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Lista */
+.bc-list {
+  max-height: 220px;
+  overflow-y: auto;
+}
+.bc-msg {
+  padding: 12px 10px;
+  font-size: 0.82rem;
+  color: #9e9e9e;
+  text-align: center;
+}
+.bc-item {
+  display: grid;
+  grid-template-columns: 100px 1fr 110px;
+  gap: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.1s;
+}
+.bc-item:hover {
+  background: #f0fafa;
+}
+.bc-item-active {
+  background: #e0f7f6;
+}
+.bc-item-codigo {
+  font-size: 0.78rem;
+  color: #757575;
+}
+.bc-item-nombre {
+  font-size: 0.82rem;
+  color: #222;
+}
+.bc-item-cat {
+  font-size: 0.75rem;
+  color: #9e9e9e;
+}
+
+/* Footer */
+.bc-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+.bc-btn-crear {
+  background: none;
+  border: none;
+  color: #00b5ad;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bc-btn-crear:hover {
+  text-decoration: underline;
+}
+.bc-btn-ver {
+  background: none;
+  border: none;
+  color: #1a56b0;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.bc-btn-ver:hover {
+  text-decoration: underline;
+}

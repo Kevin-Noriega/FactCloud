@@ -13,7 +13,7 @@ import {
   Props:
   ─ estadoConsulta : "idle" | "loading" | "success" | "sin_prefijos" | "error"
   ─ prefijosResult : [{ prefijo: "FDS", resolucion: "1256226398" }]
-  ─ onConsultar    : () => void   — llama a la API de FactCloud
+  ─ onConsultar    : () => void   — llama a la API de Nubee
 */
 export default function Step5Prefijos({
   estadoConsulta = "idle",
@@ -70,7 +70,7 @@ export default function Step5Prefijos({
                 <strong>Rangos de Numeración</strong>.
               </li>
               <li>
-                Selecciona <strong>FactCloud S.A.S.</strong> como tu proveedor,
+                Selecciona <strong>Nubee S.A.S.</strong> como tu proveedor,
                 elige la resolución de facturación habilitada y haz clic en{" "}
                 <strong>Agregar</strong>.
               </li>
@@ -81,7 +81,7 @@ export default function Step5Prefijos({
               <li>
                 En la parte inferior de la pantalla, verás la{" "}
                 <strong>resolución asociada</strong>, incluyendo los datos del
-                proveedor (FactCloud), el prefijo y el rango de numeración
+                proveedor (Nubee), el prefijo y el rango de numeración
                 asignado.
               </li>
             </ol>
@@ -93,7 +93,7 @@ export default function Step5Prefijos({
           <h4>Consultar estado de prefijos</h4>
           <p className="fe-subtitle">
             Una vez estén asociados los prefijos en la DIAN, consulta su estado
-            de sincronización con FactCloud:
+            de sincronización con Nubee:
           </p>
 
           {/* Panel de estado */}

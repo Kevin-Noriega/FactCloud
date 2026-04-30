@@ -442,7 +442,7 @@ export default function Registro() {
                   <label htmlFor="terminos">
                     Autorizo el tratamiento de mis datos personales según la{" "}
                     <a href="/politica-privacidad" target="_blank">Política de Privacidad</a> y
-                    acepto los términos y condiciones de FactCloud.
+                    acepto los términos y condiciones de Nubee.
                   </label>
                 </div>
                 {errors.aceptaTerminos && (

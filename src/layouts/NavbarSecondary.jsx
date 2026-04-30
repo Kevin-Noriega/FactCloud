@@ -17,7 +17,7 @@ export default function NavBarSecondary() {
         <Link to="/">
           <img
             src="/img/LogoBlue_sinFondo.png"
-            alt="FactCloud"
+            alt="Nubee"
             className="logo-navsec"
             style={{ cursor: "pointer" }}
           />

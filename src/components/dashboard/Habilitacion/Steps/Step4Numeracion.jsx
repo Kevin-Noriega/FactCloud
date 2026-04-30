@@ -99,7 +99,7 @@ export default function Step4Numeracion() {
             <div className="fe-tip-numero">2</div>
             <p>
               Es importante que el{" "}
-              <strong>prefijo no termine en número</strong> para que FactCloud
+              <strong>prefijo no termine en número</strong> para que Nubee
               pueda traer correctamente tus resoluciones.
             </p>
           </div>

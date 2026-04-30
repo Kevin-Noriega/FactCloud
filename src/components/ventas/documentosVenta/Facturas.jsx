@@ -530,9 +530,9 @@ function Facturas() {
                           <button
                             type="button"
                             className="link-button factura-link"
-                            onClick={() => navigate(`/facturas/${fact.id}`)}
+                            onClick={() => window.open(`/facturas/${fact.id}`, '_blank')}
                           >
-                            {fact.numeroFactura || `FV-${fact.id}`}
+                            {(fact.prefijo && fact.numeroFactura) ? `${fact.prefijo}${fact.numeroFactura}` : (fact.numeroFactura || `FV-${fact.id}`)}
                           </button>
                           <div className="text-muted small">
                             Factura de venta
@@ -572,7 +572,11 @@ function Facturas() {
                         </td>
 
                         <td>
-                          <span className="estado-dian aprobado">Aprobada</span>
+                          {(fact.cufe || fact.numeroAutorizacion) ? (
+                            <span className="estado-dian aprobado">Aprobada</span>
+                          ) : (
+                            <span className="estado-dian pendiente" style={{ color: '#d97706', backgroundColor: '#fef3c7', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '500' }}>Pendiente</span>
+                          )}
                         </td>
 
                         <td>
@@ -584,7 +588,7 @@ function Facturas() {
                         <td>
                           <button
                             className="btn btn-ver-documento"
-                            onClick={() => navigate(`/facturas/${fact.id}`)}
+                            onClick={() => window.open(`/facturas/${fact.id}`, '_blank')}
                           >
                             Ver documento
                           </button>

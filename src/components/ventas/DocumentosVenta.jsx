@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import Facturas from './documentosVenta/Facturas';
 import NotaCredito from './documentosVenta/NotaCredito';
 import NotaDebito from './documentosVenta/NotaDebito';
+import DocumentoEquivalentePOS from './documentosVenta/DocumentoEquivalentePOS';
 
 function DocumentosVenta() {
   const [activeTab, setActiveTab] = useState('factura');
 
   const tabs = [
     { id: 'factura', label: 'Factura de ventas' },
+    { id: 'pos', label: 'Documento Equivalente (POS)' },
     { id: 'notaCredito', label: 'Nota crédito' },
     { id: 'notaDebito', label: 'Nota dédito' }
   ];
@@ -25,6 +27,10 @@ function DocumentosVenta() {
       case 'notaDebito':
         return <div className="item-content pt-5">
             <NotaDebito/>
+        </div>;
+      case 'pos':
+        return <div className="item-content pt-5">
+            <DocumentoEquivalentePOS/>
         </div>;
       default:
         return null;

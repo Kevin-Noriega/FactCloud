@@ -28,7 +28,7 @@ export default function Privacidad() {
                 <span className="legal-hero-badge">Documento legal</span>
                 <h1>Política de Privacidad</h1>
                 <p className="legal-hero-meta">
-                    Última actualización: 1 de enero de 2025 · FactCloud S.A.S. · Colombia
+                    Última actualización: 1 de enero de 2025 · Nubee S.A.S. · Colombia
                 </p>
             </div>
 
@@ -48,7 +48,7 @@ export default function Privacidad() {
                 <main className="legal-content">
 
                     <div className="legal-info-box">
-                        <strong>Tu privacidad importa:</strong> En FactCloud tratamos tus datos personales con
+                        <strong>Tu privacidad importa:</strong> En Nubee tratamos tus datos personales con
                         total transparencia y cumpliendo la Ley 1581 de 2012 (Habeas Data) y sus decretos
                         reglamentarios. Esta política explica qué datos recopilamos, por qué y cómo los
                         protegemos.
@@ -61,14 +61,14 @@ export default function Privacidad() {
                             <h2>Responsable del tratamiento</h2>
                         </div>
                         <p>
-                            El responsable del tratamiento de datos personales es <strong>FactCloud S.A.S.</strong>,
+                            El responsable del tratamiento de datos personales es <strong>Nubee S.A.S.</strong>,
                             identificada con NIT [●], con domicilio en Bogotá D.C., Colombia.
                         </p>
                         <p>
                             Para ejercer tus derechos o realizar consultas sobre privacidad, puedes contactarnos en:
                         </p>
                         <ul>
-                            <li>Correo electrónico: <strong>privacidad@factcloud.co</strong></li>
+                            <li>Correo electrónico: <strong>privacidad@Nubee.co</strong></li>
                             <li>Dirección: Bogotá D.C., Colombia</li>
                             <li>Teléfono: (605) 123 4567</li>
                         </ul>
@@ -106,7 +106,7 @@ export default function Privacidad() {
 
                         <p><strong>Datos de pago:</strong></p>
                         <ul>
-                            <li>FactCloud no almacena datos de tarjetas de crédito directamente</li>
+                            <li>Nubee no almacena datos de tarjetas de crédito directamente</li>
                             <li>Los pagos son procesados por pasarelas certificadas (Wompi / PSE)</li>
                         </ul>
                     </section>
@@ -167,7 +167,7 @@ export default function Privacidad() {
                             <li><strong>Autoridades competentes:</strong> cuando sea requerido por orden judicial o legal</li>
                         </ul>
                         <div className="legal-info-box">
-                            Todos los terceros que acceden a datos en nombre de FactCloud están sujetos a
+                            Todos los terceros que acceden a datos en nombre de Nubee están sujetos a
                             acuerdos de procesamiento de datos que les obligan a proteger tu información.
                         </div>
                     </section>
@@ -224,7 +224,7 @@ export default function Privacidad() {
                         </ul>
                         <p>
                             Para ejercer cualquiera de estos derechos, envía tu solicitud a{" "}
-                            <strong>privacidad@factcloud.co</strong> indicando tu nombre, NIT y el derecho
+                            <strong>privacidad@Nubee.co</strong> indicando tu nombre, NIT y el derecho
                             que deseas ejercer. Responderemos en un plazo máximo de 15 días hábiles.
                         </p>
                     </section>
@@ -235,7 +235,7 @@ export default function Privacidad() {
                             <span className="legal-section-num">9</span>
                             <h2>Cookies y tecnologías similares</h2>
                         </div>
-                        <p>FactCloud utiliza cookies para:</p>
+                        <p>Nubee utiliza cookies para:</p>
                         <ul>
                             <li><strong>Cookies esenciales:</strong> necesarias para el funcionamiento del sistema (sesión, autenticación)</li>
                             <li><strong>Cookies funcionales:</strong> para recordar tus preferencias de interfaz</li>
@@ -278,7 +278,7 @@ export default function Privacidad() {
                             <h2>Menores de edad</h2>
                         </div>
                         <p>
-                            FactCloud no está dirigido a menores de 18 años. No recopilamos intencionadamente
+                            Nubee no está dirigido a menores de 18 años. No recopilamos intencionadamente
                             datos personales de menores. Si detectas que un menor ha proporcionado datos sin
                             consentimiento parental, contáctanos para eliminarlos de inmediato.
                         </p>
@@ -297,7 +297,7 @@ export default function Privacidad() {
                         </p>
                         <p>
                             La versión más reciente siempre estará disponible en{" "}
-                            <strong>factcloud.co/privacidad</strong>. El uso continuado del servicio implica
+                            <strong>Nubee.co/privacidad</strong>. El uso continuado del servicio implica
                             aceptación de la política vigente.
                         </p>
                     </section>
@@ -307,7 +307,7 @@ export default function Privacidad() {
                         <h3>Contacto de privacidad</h3>
                         <p>Para ejercer tus derechos o consultas sobre el tratamiento de datos:</p>
                         <p>
-                            <a href="mailto:privacidad@factcloud.co">privacidad@factcloud.co</a>
+                            <a href="mailto:privacidad@Nubee.co">privacidad@Nubee.co</a>
                             {" · "}
                             <a href="https://www.sic.gov.co" target="_blank" rel="noopener noreferrer">
                                 Superintendencia de Industria y Comercio

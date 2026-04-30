@@ -26,7 +26,7 @@ const DIAN = () => {
       <section className="hero-section">
         <img
           src="/img/img_hero_DIAN.webp"
-          alt="FactCloud - Facturación electrónica Colombia"
+          alt="Nubee - Facturación electrónica Colombia"
           className="hero-image"
         />
         <div className="container">
@@ -81,7 +81,7 @@ const DIAN = () => {
                 <div className="info-alert">
                   <div className="alert-icon-wrapper"><FiCheckCircle /></div>
                   <div className="alert-content">
-                    <strong>Consejo FactCloud:</strong> Aunque no estés obligado todavía,
+                    <strong>Consejo Nubee:</strong> Aunque no estés obligado todavía,
                     implementar facturación electrónica de forma voluntaria te permite adelantarte y automatizar procesos.
                   </div>
                 </div>
@@ -192,7 +192,7 @@ const DIAN = () => {
       {/* Cumplimiento */}
       <section className="cumplimiento-section">
         <div className="container">
-          <h2>FactCloud cumple todos los requisitos DIAN</h2>
+          <h2>Nubee cumple todos los requisitos DIAN</h2>
           <p className="cumplimiento-intro">Nuestra plataforma está 100% alineada con la normativa vigente.</p>
           <div className="cumplimiento-grid">
             {cumplimiento.map((item, idx) => (
@@ -204,7 +204,7 @@ const DIAN = () => {
             ))}
           </div>
           <div className="cumplimiento-cta">
-            <Link to="/planes" className="btn-primary-large">Comenzar a facturar con FactCloud</Link>
+            <Link to="/planes" className="btn-primary-large">Comenzar a facturar con Nubee</Link>
           </div>
         </div>
       </section>

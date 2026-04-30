@@ -57,7 +57,7 @@ export default function login() {
           <div className="login-visual-content">
             <img
               src="/img/LogoWhite_sinFondo.png"
-              alt="FactCloud"
+              alt="Nubee"
               className="login-visual-logo"
             />
 

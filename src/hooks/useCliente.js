@@ -81,7 +81,7 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
   const handleSelectChange = (campo, valor) =>
     setCliente((prev) => ({ ...prev, [campo]: valor }));
 
-  const handleDepartamentoChange = (opt) =>
+  const handleDepartamentoChange = (opt) => {
     setCliente((prev) => ({
       ...prev,
       departamento: opt?.label || "",
@@ -89,13 +89,15 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       ciudad: "",
       ciudadCodigo: "",
     }));
+  };
 
-  const handleCiudadChange = (opt) =>
+  const handleCiudadChange = (opt) => {
     setCliente((prev) => ({
       ...prev,
       ciudad: opt?.label || "",
       ciudadCodigo: opt?.value || "",
     }));
+  };
 
   const agregarContacto = () =>
     setCliente((prev) => ({
@@ -139,9 +141,9 @@ export const useCliente = ({ clienteEditando, open, onSuccess, onClose }) => {
       apellido: cliente.apellido || "",
       nombreComercial: cliente.nombreComercial || "",
       departamento: cliente.departamento || "",
-      departamentoCodigo: cliente.departamentoCodigo || "", // Añade del estado
+      departamentoCodigo: cliente.departamentoCodigo || "",
       ciudad: cliente.ciudad || "",
-      ciudadCodigo: cliente.ciudadCodigo || "", // Añade del estado
+      ciudadCodigo: cliente.ciudadCodigo || "",
       direccion: cliente.direccion || "",
       codigoPostal: cliente.codigoPostal || "",
       correo: cliente.correo || "",

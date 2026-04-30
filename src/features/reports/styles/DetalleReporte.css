@@ -1,0 +1,188 @@
+/* 
+  ESTILOS DETALLE REPORTE NUBEE S.A.S 
+*/
+
+.detalle-reporte-container {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  padding: 24px 32px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.reporte-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btn-volver {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #64748b;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-volver:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.reporte-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.reporte-title-section h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.reporte-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-report-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #334155;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-report-action:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.btn-report-primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+}
+
+.btn-report-primary:hover {
+  background: #1d4ed8;
+}
+
+/* Panel de Filtros */
+.filtros-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 24px;
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-column: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.filter-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filter-control:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Tabla de Resultados */
+.tabla-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.nubee-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.nubee-table th {
+  background: #f8fafc;
+  padding: 16px 20px;
+  text-align: left;
+  font-weight: 600;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.nubee-table td {
+  padding: 16px 20px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.nubee-table tr:hover td {
+  background: #f8fafc;
+}
+
+.nubee-table tr.total-row td {
+  background: #f1f5f9;
+  font-weight: 700;
+  color: #0f172a;
+  border-top: 2px solid #e2e8f0;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.badge-nubee {
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-success {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge-pending {
+  background: #fef9c3;
+  color: #a16207;
+}

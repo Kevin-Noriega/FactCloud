@@ -2,7 +2,7 @@
 import "../Habilitaciones.css";
 
 export default function Step2CertificadoDigital({ form, actualizarCampo }) {
-  const opcion = form.certificado.opcion; // "propio" | "factcloud"
+  const opcion = form.certificado.opcion; // "propio" | "Nubee"
 
   return (
     <div className="fe-grid one">
@@ -58,17 +58,17 @@ export default function Step2CertificadoDigital({ form, actualizarCampo }) {
             </div>
           </label>
 
-          {/* Opción B: certificado de FactCloud */}
+          {/* Opción B: certificado de Nubee */}
           <label
-            className={`fe-opcion-card ${opcion === "factcloud" ? "activa" : ""}`}
+            className={`fe-opcion-card ${opcion === "Nubee" ? "activa" : ""}`}
           >
             <input
               type="radio"
               name="opcionCertificado"
-              value="factcloud"
-              checked={opcion === "factcloud"}
+              value="Nubee"
+              checked={opcion === "Nubee"}
               onChange={() =>
-                actualizarCampo("certificado", "opcion", "factcloud")
+                actualizarCampo("certificado", "opcion", "Nubee")
               }
             />
             <div className="fe-opcion-icono fe-icono-shield">
@@ -87,12 +87,12 @@ export default function Step2CertificadoDigital({ form, actualizarCampo }) {
             </div>
             <div className="fe-opcion-content">
               <div className="fe-opcion-radio-dot">
-                {opcion === "factcloud" && <span />}
+                {opcion === "Nubee" && <span />}
               </div>
               <div>
-                <strong>Usar el certificado de FactCloud</strong>
+                <strong>Usar el certificado de Nubee</strong>
                 <p>
-                  FactCloud firmará tus documentos usando su certificado como
+                  Nubee firmará tus documentos usando su certificado como
                   proveedor tecnológico habilitado por la DIAN, por 1 año.
                   Requiere aceptar la carta de exoneración.
                 </p>
@@ -184,14 +184,14 @@ export default function Step2CertificadoDigital({ form, actualizarCampo }) {
               <line x1="12" y1="8" x2="12.01" y2="8" />
             </svg>
             Tu certificado se almacena de forma cifrada y solo se usa para
-            firmar documentos electrónicos. FactCloud no comparte esta
+            firmar documentos electrónicos. Nubee no comparte esta
             información.
           </div>
         </div>
       )}
 
       {/* ── PANEL: carta de exoneración ── */}
-      {opcion === "factcloud" && (
+      {opcion === "Nubee" && (
         <div className="fe-card">
           <div className="fe-carta-header">
             <div className="fe-carta-icono">
@@ -221,7 +221,7 @@ export default function Step2CertificadoDigital({ form, actualizarCampo }) {
 
           {/* Carta renderizada dinámicamente con datos del negocio */}
           <div className="fe-carta-exoneracion">
-            <p className="fe-carta-empresa">FACTCLOUD S.A.S.</p>
+            <p className="fe-carta-empresa">Nubee S.A.S.</p>
             <p className="fe-carta-titulo">
               CARTA DE EXONERACIÓN DE RESPONSABILIDAD
             </p>
@@ -234,24 +234,24 @@ export default function Step2CertificadoDigital({ form, actualizarCampo }) {
               calidad de representante legal de{" "}
               <strong>{form.perfil.razonSocial}</strong> (en adelante el
               "Usuario"), por medio de la presente carta que hace parte
-              integrante del Contrato firmado con FactCloud S.A.S. (en adelante,
-              "FactCloud")
+              integrante del Contrato firmado con Nubee S.A.S. (en adelante,
+              "Nubee")
             </p>
 
             <p className="fe-carta-seccion">MANIFIESTO</p>
 
             <p>
-              Que FactCloud, en su calidad de proveedor tecnológico de
+              Que Nubee, en su calidad de proveedor tecnológico de
               facturación electrónica habilitado por la DIAN, permite el uso de
               su Certificado de Firma Digital para la firma de Documentos del
               Ecosistema de Factura Electrónica expedidos por el Usuario a
-              través del Software FactCloud, durante un (1) año contado a partir
+              través del Software Nubee, durante un (1) año contado a partir
               de la aceptación de la presente carta.
             </p>
 
             <p>
               Que el Usuario{" "}
-              <strong>exonera expresamente a FactCloud S.A.S.</strong> de
+              <strong>exonera expresamente a Nubee S.A.S.</strong> de
               cualquier responsabilidad civil, penal, fiscal o administrativa
               que pueda derivarse del uso del Certificado Digital en la firma de
               los documentos electrónicos expedidos en nombre del Usuario.
@@ -300,7 +300,7 @@ export default function Step2CertificadoDigital({ form, actualizarCampo }) {
             <div className="fe-check-texto">
               He leído y acepto la carta de exoneración de responsabilidad
               <span>
-                Al marcar esta casilla autorizas a FactCloud a firmar en nombre
+                Al marcar esta casilla autorizas a Nubee a firmar en nombre
                 de tu empresa.
               </span>
             </div>
@@ -322,7 +322,7 @@ export default function Step2CertificadoDigital({ form, actualizarCampo }) {
               <line x1="12" y1="8" x2="12.01" y2="8" />
             </svg>
             <p>
-              Puedes usar el certificado de FactCloud por <strong>1 año</strong>
+              Puedes usar el certificado de Nubee por <strong>1 año</strong>
               . Para usar el tuyo, selecciona la opción anterior.
             </p>
           </div>

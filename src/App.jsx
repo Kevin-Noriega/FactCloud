@@ -24,6 +24,7 @@ import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Productos from "./components/ProductosServicios/Productos";
 import Facturas from "./components/ventas/documentosVenta/Facturas";
+import FacturaDetalle from "./components/ventas/documentosVenta/FacturaDetalle";
 import NuevaFactura from "./pages/NuevaFactura";
 import NuevoDocumentoSoporte from "./pages/NuevoDocumentoSoporte";
 import NuevaNotaCredito from "./pages/NuevaNotaCredito";
@@ -41,14 +42,16 @@ import { ProtectedLayout } from "./components/ProtectedLayout";
 import HabilitacionDian from "./components/dashboard/Habilitacion/HabilitacionDian";
 import NuevoClienteEmpresa from "./components/Clientes/NuevoClienteEmpresa";
 import HabilitacionDSE from "./components/dashboard/Habilitacion/HabilitacionDSE";
-
-// Nuevos Reportes
 import ReportsDashboard from "./features/reports/pages/ReportsDashboard";
 import VentasPorClientePage from "./features/reports/pages/VentasPorClientePage";
 import VentasPorVendedorPage from "./features/reports/pages/VentasPorVendedorPage";
 import VentasPorProductoPage from "./features/reports/pages/VentasPorProductoPage";
 import ComparativoVentasMesPage from "./features/reports/pages/ComparativoVentasMesPage";
-
+import HabilitacionFacturacionFE from "./components/dashboard/Habilitacion/HabilitacionFacturacionFE";
+import Impuestos from "./pages/Impuestos";
+import PerfilCliente from "./pages/PerfilCliente";
+import CuentasContables from "./pages/CuentasContables";
+import NominaElectronica from "./pages/NominaElectronica";
 const NotFound = () => (
   <div className="text-center py-5">
     <h1 className="display-1 text-danger">404</h1>
@@ -154,8 +157,15 @@ function App() {
               <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
               <Route path="/habilitacion-dian" element={<HabilitacionDian />} />
               <Route path="/habilitacionDSE" element={<HabilitacionDSE />} />
+              <Route
+                path="/habilitacion-dian/factura-electronica"
+                element={<HabilitacionFacturacionFE />}
+              />
+              <Route path="/habilitacion-dian/habilitacionDSE" element={<HabilitacionDSE />} />
               <Route path="/compras-gastos" element={<ComprasGastos />} />
+              <Route path="/nomina" element={<NominaElectronica />} />
               <Route path="/facturas" element={<Facturas />} />
+              <Route path="/facturas/:id" element={<FacturaDetalle />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
               <Route path="/reportes" element={<ReportsDashboard />} />
               <Route path="/reportes/ventas-cliente" element={<VentasPorClientePage />} />
@@ -168,6 +178,9 @@ function App() {
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/tienda" element={<Tienda />} />
               <Route path="/tienda/:categoria" element={<Tienda />} />
+              <Route path="/impuestos" element={<Impuestos />} />
+              <Route path="/perfil-cliente/:id" element={<PerfilCliente />} />
+              <Route path="/cuentas-contables" element={<CuentasContables />} />
             </Route>
           </Route>
 

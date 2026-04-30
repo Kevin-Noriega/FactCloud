@@ -157,7 +157,7 @@ function Tienda() {
       <div className="header-card mb-4">
         <div className="header-content">
           <div>
-            <h2 className="header-title">Tienda FactCloud</h2>
+            <h2 className="header-title">Tienda Nubee</h2>
             <p style={{ margin: 0, fontSize: "0.85rem", opacity: 0.8 }}>
               Gestiona tu plan y complementos
             </p>
@@ -504,7 +504,7 @@ function Tienda() {
         <h5>¿Necesitas ayuda?</h5>
         <p>
           Contáctanos en{" "}
-          <a href="mailto:soporte@factcloud.com">soporte@factcloud.com</a>{" "}
+          <a href="mailto:soporte@Nubee.com">soporte@Nubee.com</a>{" "}
           para planes personalizados o dudas sobre tu suscripción.
         </p>
        

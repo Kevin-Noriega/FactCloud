@@ -368,7 +368,7 @@ export default function HabilitacionDian() {
                     <input
                       type="text"
                       className="form-control form-control-sm"
-                      placeholder="Ej. FactCloud v1.0"
+                      placeholder="Ej. Nubee v1.0"
                       value={software.nombreSoftware}
                       onChange={(e) =>
                         setSoftware((s) => ({

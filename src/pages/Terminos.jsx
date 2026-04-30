@@ -26,7 +26,7 @@ export default function Terminos() {
                 <span className="legal-hero-badge">Documento legal</span>
                 <h1>Términos y Condiciones</h1>
                 <p className="legal-hero-meta">
-                    Última actualización: 1 de enero de 2025 · FactCloud S.A.S. · Colombia
+                    Última actualización: 1 de enero de 2025 · Nubee S.A.S. · Colombia
                 </p>
             </div>
 
@@ -46,7 +46,7 @@ export default function Terminos() {
                 <main className="legal-content">
 
                     <div className="legal-info-box">
-                        <strong>Importante:</strong> Al acceder o usar FactCloud, aceptas estos Términos y
+                        <strong>Importante:</strong> Al acceder o usar Nubee, aceptas estos Términos y
                         Condiciones en su totalidad. Si no estás de acuerdo con alguna parte, no debes usar
                         el servicio.
                     </div>
@@ -59,11 +59,11 @@ export default function Terminos() {
                         </div>
                         <p>
                             Estos Términos y Condiciones ("Términos") constituyen un acuerdo legalmente
-                            vinculante entre usted ("Usuario") y <strong>FactCloud S.A.S.</strong>, empresa
+                            vinculante entre usted ("Usuario") y <strong>Nubee S.A.S.</strong>, empresa
                             constituida bajo las leyes de la República de Colombia, con domicilio en Bogotá D.C.
                         </p>
                         <p>
-                            Al crear una cuenta, acceder o utilizar cualquier función de la plataforma FactCloud,
+                            Al crear una cuenta, acceder o utilizar cualquier función de la plataforma Nubee,
                             usted declara tener capacidad legal para celebrar contratos y acepta cumplir con estos
                             Términos, nuestra Política de Privacidad y cualquier directriz adicional publicada en
                             la plataforma.
@@ -81,7 +81,7 @@ export default function Terminos() {
                             <h2>Descripción del servicio</h2>
                         </div>
                         <p>
-                            FactCloud es una plataforma SaaS (Software como Servicio) de facturación electrónica
+                            Nubee es una plataforma SaaS (Software como Servicio) de facturación electrónica
                             y gestión empresarial diseñada para cumplir con los requisitos establecidos por la
                             Dirección de Impuestos y Aduanas Nacionales (DIAN) de Colombia.
                         </p>
@@ -95,7 +95,7 @@ export default function Terminos() {
                             <li>Almacenamiento de documentos en la nube</li>
                         </ul>
                         <p>
-                            FactCloud se reserva el derecho de modificar, suspender o discontinuar cualquier
+                            Nubee se reserva el derecho de modificar, suspender o discontinuar cualquier
                             aspecto del servicio con previo aviso de 30 días, salvo en casos de emergencia técnica
                             o cumplimiento normativo.
                         </p>
@@ -114,11 +114,11 @@ export default function Terminos() {
                         <ul>
                             <li>Mantener la confidencialidad de sus credenciales de acceso</li>
                             <li>Todas las actividades realizadas bajo su cuenta</li>
-                            <li>Notificar a FactCloud inmediatamente ante cualquier uso no autorizado</li>
+                            <li>Notificar a Nubee inmediatamente ante cualquier uso no autorizado</li>
                             <li>Mantener actualizados los datos de su perfil y negocio</li>
                         </ul>
                         <p>
-                            FactCloud no será responsable de pérdidas causadas por el uso no autorizado de su
+                            Nubee no será responsable de pérdidas causadas por el uso no autorizado de su
                             cuenta cuando dicho uso resulte de su incumplimiento de las obligaciones de seguridad.
                         </p>
                         <div className="legal-info-box">
@@ -135,9 +135,9 @@ export default function Terminos() {
                             <h2>Planes y facturación</h2>
                         </div>
                         <p>
-                            FactCloud ofrece diferentes planes de suscripción con distintas capacidades de
+                            Nubee ofrece diferentes planes de suscripción con distintas capacidades de
                             documentos electrónicos anuales y funcionalidades. Los precios vigentes se
-                            encuentran publicados en <strong>factcloud.co/planes</strong>.
+                            encuentran publicados en <strong>Nubee.co/planes</strong>.
                         </p>
                         <ul>
                             <li>Los pagos se procesan en pesos colombianos (COP)</li>
@@ -164,7 +164,7 @@ export default function Terminos() {
                             <h2>Uso aceptable</h2>
                         </div>
                         <p>
-                            El uso de FactCloud debe ajustarse a la legislación colombiana e internacional
+                            El uso de Nubee debe ajustarse a la legislación colombiana e internacional
                             aplicable. Está expresamente prohibido:
                         </p>
                         <ul>
@@ -190,7 +190,7 @@ export default function Terminos() {
                         </div>
                         <p>
                             Todo el software, código fuente, diseños, logotipos, textos y demás elementos de
-                            FactCloud son propiedad exclusiva de FactCloud S.A.S. o sus licenciantes, protegidos
+                            Nubee son propiedad exclusiva de Nubee S.A.S. o sus licenciantes, protegidos
                             por las leyes de propiedad intelectual de Colombia y tratados internacionales.
                         </p>
                         <p>
@@ -199,7 +199,7 @@ export default function Terminos() {
                         </p>
                         <p>
                             Usted conserva la propiedad de todos los datos e información que ingrese en la
-                            plataforma. FactCloud obtiene una licencia limitada para procesar dichos datos
+                            plataforma. Nubee obtiene una licencia limitada para procesar dichos datos
                             únicamente con el fin de prestar el servicio.
                         </p>
                     </section>
@@ -211,7 +211,7 @@ export default function Terminos() {
                             <h2>Limitación de responsabilidad</h2>
                         </div>
                         <p>
-                            En la máxima medida permitida por la ley, FactCloud no será responsable por:
+                            En la máxima medida permitida por la ley, Nubee no será responsable por:
                         </p>
                         <ul>
                             <li>Daños indirectos, incidentales o consecuentes</li>
@@ -221,7 +221,7 @@ export default function Terminos() {
                             <li>Cambios normativos de la DIAN no reflejados aún en el sistema</li>
                         </ul>
                         <p>
-                            La responsabilidad total máxima de FactCloud en ningún caso superará el monto
+                            La responsabilidad total máxima de Nubee en ningún caso superará el monto
                             pagado por el usuario en los últimos 12 meses por el uso del servicio.
                         </p>
                     </section>
@@ -233,7 +233,7 @@ export default function Terminos() {
                             <h2>Modificaciones</h2>
                         </div>
                         <p>
-                            FactCloud puede actualizar estos Términos en cualquier momento. Los cambios
+                            Nubee puede actualizar estos Términos en cualquier momento. Los cambios
                             significativos serán notificados por correo electrónico con al menos 15 días de
                             anticipación.
                         </p>
@@ -253,10 +253,10 @@ export default function Terminos() {
                         <p>
                             Cualquiera de las partes puede terminar el contrato en cualquier momento.
                             El usuario puede cancelar su cuenta desde el panel de configuración.
-                            FactCloud puede suspender o terminar cuentas por incumplimiento de estos Términos.
+                            Nubee puede suspender o terminar cuentas por incumplimiento de estos Términos.
                         </p>
                         <p>
-                            Tras la terminación, FactCloud conservará sus datos por 90 días durante los cuales
+                            Tras la terminación, Nubee conservará sus datos por 90 días durante los cuales
                             podrá solicitar su exportación. Transcurrido este plazo, los datos serán eliminados
                             de forma permanente.
                         </p>
@@ -285,7 +285,7 @@ export default function Terminos() {
                         <h3>¿Tienes preguntas sobre estos términos?</h3>
                         <p>Nuestro equipo legal está disponible para aclarar cualquier duda.</p>
                         <p>
-                            <a href="mailto:legal@factcloud.co">legal@factcloud.co</a>
+                            <a href="mailto:legal@Nubee.co">legal@Nubee.co</a>
                             {" · "}
                             <a href="/soporte">Centro de soporte</a>
                         </p>

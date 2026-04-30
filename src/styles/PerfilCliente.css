@@ -1,0 +1,345 @@
+/* ═══════════════════════════════════════════
+   PerfilCliente.css
+═══════════════════════════════════════════ */
+
+:root {
+  --pc-blue: #1a56b0;
+  --pc-green: #28a745;
+  --pc-border: #dee2e6;
+  --pc-bg: #f4f6fb;
+  --pc-card: #ffffff;
+  --pc-text: #212529;
+  --pc-muted: #6c757d;
+  --pc-label: #1a56b0;
+  --pc-radius: 8px;
+}
+
+/* ── Página ── */
+.pc-page {
+  background: var(--pc-bg);
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+/* ── Título ── */
+.pc-page-title {
+  padding: 16px 28px 4px;
+}
+.pc-page-title h5 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--pc-text);
+  margin: 0;
+}
+
+/* ── Tabs ── */
+.pc-tabs {
+  display: flex;
+  padding: 0 28px;
+  border-bottom: 2px solid var(--pc-border);
+  margin-bottom: 0;
+}
+.pc-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--pc-muted);
+  cursor: pointer;
+  margin-bottom: -2px;
+}
+.pc-tab-active {
+  color: var(--pc-blue);
+  border-bottom-color: var(--pc-blue);
+}
+
+/* ── Sub-header ── */
+.pc-subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: var(--pc-card);
+  border-bottom: 1px solid var(--pc-border);
+}
+.pc-subheader-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--pc-blue);
+}
+.pc-btn-edit {
+  background: var(--pc-green);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 22px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.15s;
+}
+.pc-btn-edit:hover {
+  background: #1e7e34;
+}
+
+/* ── Hero ── */
+.pc-hero {
+  background: var(--pc-card);
+  padding: 20px 28px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pc-hero-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.pc-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pc-hero-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+.pc-hero-info strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.pc-hero-info span {
+  font-size: 0.82rem;
+  color: var(--pc-muted);
+}
+.pc-estado-activo {
+  color: var(--pc-green);
+  font-style: normal;
+  font-weight: 600;
+}
+.pc-estado-inactivo {
+  color: #dc3545;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.pc-hero-right {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: var(--pc-muted);
+  padding: 4px 0;
+}
+
+.pc-hero-meta {
+  display: flex;
+  gap: 40px;
+  font-size: 0.78rem;
+  padding-top: 6px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 4px;
+}
+.pc-meta-label {
+  color: var(--pc-muted);
+  display: block;
+}
+.pc-meta-value {
+  color: var(--pc-text);
+  font-weight: 500;
+}
+
+/* ── Divisor ── */
+.pc-divider {
+  height: 1px;
+  background: var(--pc-border);
+  margin: 0 28px;
+}
+
+/* ── Cards generales ── */
+.pc-card {
+  background: var(--pc-card);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  margin: 16px 28px 0;
+  overflow: hidden;
+}
+.pc-card-header-simple {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--pc-text);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--pc-border);
+  background: #fff;
+}
+
+/* ── Tipo de tercero ── */
+.pc-tipo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 16px 20px;
+  gap: 0;
+}
+.pc-tipo-item {
+  padding: 0 16px;
+  border-right: 1px solid var(--pc-border);
+}
+.pc-tipo-item:first-child {
+  padding-left: 0;
+}
+.pc-tipo-item:last-child {
+  border-right: none;
+}
+.pc-tipo-item p {
+  font-size: 0.78rem;
+  color: var(--pc-muted);
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+.pc-tipo-active span {
+  font-weight: 600;
+}
+.pc-tipo-disabled {
+  color: var(--pc-muted) !important;
+  font-size: 0.875rem;
+}
+
+/* ── Row de 2 cards ── */
+.pc-cards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 28px 0;
+}
+.pc-card-half {
+  margin: 0;
+}
+
+/* ── Grid de datos dentro del card ── */
+.pc-data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 16px 20px;
+  gap: 0;
+}
+.pc-data-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px;
+}
+.pc-data-col:first-child {
+  padding-left: 0;
+  border-right: 1px solid var(--pc-border);
+  padding-right: 20px;
+}
+.pc-data-col:last-child {
+  padding-right: 0;
+}
+
+/* ── Campo ── */
+.pc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pc-field-label {
+  font-size: 0.75rem;
+  color: var(--pc-label);
+  font-weight: 500;
+}
+.pc-field-value {
+  font-size: 0.875rem;
+  color: var(--pc-text);
+  font-weight: 400;
+}
+.pc-empty {
+  font-size: 0.875rem;
+  color: var(--pc-muted);
+}
+
+/* ── Fila teléfono ── */
+.pc-tel-row {
+  display: flex;
+  gap: 24px;
+}
+.pc-tel-row .pc-field-value {
+  min-width: 60px;
+}
+
+/* ── Responsabilidad fiscal ── */
+.pc-label-rf {
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ── Links ── */
+.pc-link {
+  color: var(--pc-blue);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.pc-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Loading / Error ── */
+.pc-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+}
+.pc-error {
+  text-align: center;
+  color: #dc3545;
+  padding: 40px;
+  font-size: 0.95rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .pc-cards-row {
+    grid-template-columns: 1fr;
+  }
+  .pc-tipo-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .pc-tipo-item {
+    border-right: none;
+    border-bottom: 1px solid var(--pc-border);
+    padding: 0 0 12px;
+  }
+  .pc-data-grid {
+    grid-template-columns: 1fr;
+  }
+  .pc-data-col:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--pc-border);
+    padding-bottom: 12px;
+  }
+  .pc-card,
+  .pc-cards-row {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+}

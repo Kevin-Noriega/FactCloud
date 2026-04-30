@@ -26,12 +26,12 @@ const ComoFunciona = () => {
       <section className="hero-section">
         <img
           src="/img/img_hero_comoFunciona.webp"
-          alt="Empresario usando FactCloud"
+          alt="Empresario usando Nubee"
           className="hero-image"
         />
         <div className="container">
           <span className="hero-badge">Aprende cómo funciona</span>
-          <h1>¿Cómo funciona FactCloud?</h1>
+          <h1>¿Cómo funciona Nubee?</h1>
           <p className="hero-description">
             Desde el registro hasta tu primera factura electrónica validada por
             DIAN en solo 10 minutos. Sin complicaciones técnicas ni configuraciones complejas.
@@ -121,7 +121,7 @@ const ComoFunciona = () => {
       {/* Tecnología */}
       <section id="tecnologias" className="tecnologia-section">
         <div className="tecnologia-container">
-          <h2>Tecnología detrás de FactCloud</h2>
+          <h2>Tecnología detrás de Nubee</h2>
           <p className="section-intro">
             Plataforma construida con las mejores prácticas de desarrollo y tecnologías enterprise probadas en producción.
           </p>

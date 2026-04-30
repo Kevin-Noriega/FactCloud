@@ -1,207 +1,153 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowLeft, FiSearch, FiCalendar } from "react-icons/fi";
-import { FaFileExcel, FaStar } from "react-icons/fa";
+import Select from "react-select";
+import { FiSearch, FiChevronDown } from "react-icons/fi";
+import { FaStar, FaRegStar } from "react-icons/fa";
+import { PersonBadge } from "react-bootstrap-icons";
+import { toast } from "react-toastify";
 import axiosClient from "../../../api/axiosClient";
+import DataTable from "../../../components/shared/DataTable";
 import "../../../styles/Reportes.css";
+import "../../../styles/SharedPage.css";
+
+const fmt = (v) =>
+  v != null ? v.toLocaleString("es-CO", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00";
+
+const YEAR_OPTIONS = [{ value: "2026", label: "2026" }, { value: "2025", label: "2025" }, { value: "2024", label: "2024" }];
+const PERIODO_OPTIONS = [{ value: "mes", label: "Este mes" }, { value: "anterior", label: "Mes anterior" }, { value: "anual", label: "Todo el año" }];
+const NOTA_CREDITO_OPTIONS = [{ value: "si", label: "Si" }, { value: "no", label: "No" }];
 
 export default function VentasPorVendedorPage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
-
-  // Filters
+  const [isFav, setIsFav] = useState(false);
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [vendedor, setVendedor] = useState("");
   const [tercero, setTercero] = useState("");
+  const [yearSel, setYearSel] = useState(YEAR_OPTIONS[0]);
+  const [periodoSel, setPeriodoSel] = useState(PERIODO_OPTIONS[0]);
 
-  const fetchData = async () => {
+  useEffect(() => {
+    const favs = JSON.parse(localStorage.getItem("reportes-favoritos") || "[]");
+    setIsFav(favs.includes("ventas-vendedor"));
+  }, []);
+
+  const toggleFav = () => {
+    const favs = JSON.parse(localStorage.getItem("reportes-favoritos") || "[]");
+    const next = isFav ? favs.filter(id => id !== "ventas-vendedor") : [...favs, "ventas-vendedor"];
+    localStorage.setItem("reportes-favoritos", JSON.stringify(next));
+    setIsFav(!isFav);
+  };
+
+  useEffect(() => {
+    const now = new Date(); const y = parseInt(yearSel.value); let start, end;
+    if (periodoSel.value === "mes") { start = new Date(y, now.getMonth(), 1); end = new Date(y, now.getMonth() + 1, 0); }
+    else if (periodoSel.value === "anterior") { start = new Date(y, now.getMonth() - 1, 1); end = new Date(y, now.getMonth(), 0); }
+    else { start = new Date(y, 0, 1); end = new Date(y, 11, 31); }
+    setFechaInicio(start.toISOString().split("T")[0]);
+    setFechaFin(end.toISOString().split("T")[0]);
+  }, [yearSel, periodoSel]);
+
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (fechaInicio) params.append("fechaInicio", fechaInicio);
       if (fechaFin) params.append("fechaFin", fechaFin);
       if (tercero) params.append("tercero", tercero);
-      
-      const res = await axiosClient.get(`/Reportes/ventas-por-vendedor?${params.toString()}`);
-      let filteredData = res.data;
-
+      const res = await axiosClient.get(`/Reportes/ventas-por-vendedor?${params}`);
+      let filtered = res.data;
       if (vendedor) {
-        const lowerV = vendedor.toLowerCase();
-        filteredData = filteredData.filter(d => 
-          d.nombreVendedor.toLowerCase().includes(lowerV) || 
-          d.identificacion.includes(lowerV)
-        );
+        const lv = vendedor.toLowerCase();
+        filtered = filtered.filter(d => d.nombreVendedor?.toLowerCase().includes(lv) || d.identificacion?.includes(lv));
       }
+      setData(filtered);
+    } catch { toast.error("Error al cargar el reporte de vendedores."); }
+    finally { setLoading(false); }
+  }, [fechaInicio, fechaFin, vendedor, tercero]);
 
-      setData(filteredData);
-    } catch (error) {
-      console.error("Error fetching report:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => { fetchData(); }, []);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const handleClear = () => { setVendedor(""); setTercero(""); setYearSel(YEAR_OPTIONS[0]); setPeriodoSel(PERIODO_OPTIONS[0]); };
 
-  const handleClearFilters = () => {
-    setFechaInicio("");
-    setFechaFin("");
-    setVendedor("");
-    setTercero("");
-    setTimeout(fetchData, 100);
-  };
-
-  const totals = data.reduce((acc, row) => ({
-    bruto: acc.bruto + (row.bruto || 0),
-    descuentos: acc.descuentos + (row.descuentos || 0),
-    subtotal: acc.subtotal + (row.subtotal || 0),
-    impuestoCargo: acc.impuestoCargo + (row.impuestoCargo || 0),
-    retenciones: acc.retenciones + (row.retenciones || 0),
-    total: acc.total + (row.total || 0),
+  const totals = data.reduce((acc, r) => ({
+    bruto: acc.bruto + (r.bruto || 0), descuentos: acc.descuentos + (r.descuentos || 0),
+    subtotal: acc.subtotal + (r.subtotal || 0), impuestoCargo: acc.impuestoCargo + (r.impuestoCargo || 0),
+    retenciones: acc.retenciones + (r.retenciones || 0), total: acc.total + (r.total || 0),
   }), { bruto: 0, descuentos: 0, subtotal: 0, impuestoCargo: 0, retenciones: 0, total: 0 });
 
+  const columns = [
+    { key: "identificacion", label: "Identificacion" },
+    { key: "nombreVendedor", label: "Nombre vendedor", highlight: true },
+    { key: "comprobantes", label: "N. comprobantes", align: "center" },
+    { key: "bruto", label: "Valor bruto", align: "right", bold: true, render: (r) => fmt(r.bruto) },
+    { key: "descuentos", label: "Descuento", align: "right", render: (r) => fmt(r.descuentos) },
+    { key: "subtotal", label: "Subtotal", align: "right", bold: true, render: (r) => fmt(r.subtotal) },
+    { key: "impuestoCargo", label: "Imp. cargo", align: "right", render: (r) => fmt(r.impuestoCargo) },
+    { key: "retenciones", label: "Imp. retencion", align: "right", render: (r) => fmt(r.retenciones) },
+    { key: "total", label: "Total", align: "right", bold: true, cellStyle: { fontWeight: 800 }, render: (r) => fmt(r.total) },
+  ];
+
   return (
-    <div className="reportes-page p-4 bg-white min-vh-100">
-      <div className="d-flex align-items-center mb-3">
-        <Link to="/reportes" className="text-primary me-3 text-decoration-none">
-          <FiArrowLeft size={24} />
-        </Link>
-        <h2 className="text-primary m-0 fw-bold d-flex align-items-center">
-          Ventas por vendedor <FaStar className="text-secondary ms-2 fs-5" />
-        </h2>
+    <div className="container-fluid px-4">
+      <div className="header-card mb-3 px-4">
+        <div className="header-content">
+          <div>
+            <h2 className="header-title" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              Ventas por vendedor
+              <button onClick={toggleFav} style={{ background: "none", border: "none", color: isFav ? "#f5a623" : "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: "1.1rem" }}>
+                {isFav ? <FaStar /> : <FaRegStar />}
+              </button>
+            </h2>
+            <p style={{ color: "rgba(255,255,255,0.7)", margin: 0, fontSize: "0.9rem" }}>
+              <Link to="/reportes" style={{ color: "rgba(255,255,255,0.7)", textDecoration: "none" }}>Reportes</Link> / Ventas por vendedor
+            </p>
+          </div>
+          <div className="header-icon"><PersonBadge size={50} /></div>
+        </div>
       </div>
 
-      <button 
-        className="btn btn-link text-decoration-none p-0 mb-3 text-muted"
-        onClick={() => setShowFilters(!showFilters)}
-      >
-        {showFilters ? "^ Ocultar criterios de búsqueda" : "v Mostrar criterios de búsqueda"}
+      <button className={`rpt-filters-toggle ${showFilters ? "open" : ""}`} onClick={() => setShowFilters(!showFilters)} style={{ marginBottom: "1rem" }}>
+        <FiChevronDown /> {showFilters ? "Ocultar criterios de busqueda" : "Mostrar criterios de busqueda"}
       </button>
 
       {showFilters && (
-        <div className="bg-light p-3 rounded mb-4 border">
-          <div className="row g-3">
-            <div className="col-md-6">
-              <label className="form-label text-muted small">Vendedor</label>
-              <div className="input-group input-group-sm">
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  placeholder="Buscar" 
-                  value={vendedor}
-                  onChange={e => setVendedor(e.target.value)}
-                />
-                <span className="input-group-text bg-white"><FiSearch /></span>
+        <div className="rpt-filters" style={{ marginBottom: "1.5rem" }}>
+          <div className="rpt-filters-grid">
+            <div>
+              <label className="rpt-filter-label">Vendedor</label>
+              <div className="rpt-input-icon-wrap"><input type="text" className="rpt-filter-input" placeholder="Buscar vendedor..." value={vendedor} onChange={e => setVendedor(e.target.value)} /><FiSearch /></div>
+            </div>
+            <div>
+              <label className="rpt-filter-label">Periodo</label>
+              <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ minWidth: 120 }}><Select options={YEAR_OPTIONS} value={yearSel} onChange={setYearSel} isSearchable={false} /></div>
+                <div style={{ minWidth: 160 }}><Select options={PERIODO_OPTIONS} value={periodoSel} onChange={setPeriodoSel} isSearchable={false} /></div>
               </div>
             </div>
-            
-            <div className="col-md-6">
-              <label className="form-label text-muted small d-block">Fecha de elaboración</label>
-              <div className="d-flex gap-2 align-items-center">
-                <select className="form-select form-select-sm w-auto">
-                  <option>2026</option>
-                  <option>2025</option>
-                </select>
-                <select className="form-select form-select-sm w-auto">
-                  <option>Este mes</option>
-                  <option>Mes anterior</option>
-                </select>
-                <input type="date" className="form-control form-control-sm w-auto" value={fechaInicio} onChange={e => setFechaInicio(e.target.value)} />
-                <input type="date" className="form-control form-control-sm w-auto" value={fechaFin} onChange={e => setFechaFin(e.target.value)} />
-              </div>
+            <div>
+              <label className="rpt-filter-label">Incluye nota credito</label>
+              <Select options={NOTA_CREDITO_OPTIONS} defaultValue={NOTA_CREDITO_OPTIONS[0]} isSearchable={false} />
             </div>
-
-            <div className="col-md-6">
-              <label className="form-label text-muted small">Incluye nota crédito</label>
-              <select className="form-select form-select-sm w-100">
-                <option>Sí</option>
-                <option>No</option>
-              </select>
-            </div>
-
-            <div className="col-md-6">
-              <label className="form-label text-muted small">Tercero</label>
-              <div className="input-group input-group-sm">
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  placeholder="Buscar"
-                  value={tercero}
-                  onChange={e => setTercero(e.target.value)} 
-                />
-                <span className="input-group-text bg-white"><FiSearch /></span>
-              </div>
+            <div>
+              <label className="rpt-filter-label">Tercero</label>
+              <div className="rpt-input-icon-wrap"><input type="text" className="rpt-filter-input" placeholder="Buscar tercero..." value={tercero} onChange={e => setTercero(e.target.value)} /><FiSearch /></div>
             </div>
           </div>
-
-          <div className="mt-3">
-            <button className="btn btn-outline-primary btn-sm px-4 fw-bold me-3" onClick={fetchData}>Buscar</button>
-            <button className="btn btn-link text-primary btn-sm text-decoration-none fw-bold" onClick={handleClearFilters}>Limpiar filtros</button>
+          <div className="rpt-filters-actions" style={{ marginTop: "1rem" }}>
+            <button className="btn btn-filtros" onClick={fetchData}><i className="bi bi-search"></i> Buscar</button>
+            <button className="btn btn-outline-secondary" onClick={handleClear} style={{ borderRadius: 10 }}>Limpiar filtros</button>
           </div>
         </div>
       )}
 
-      <div className="d-flex justify-content-end mb-2">
-        <button className="btn btn-light border btn-sm">
-          <FaFileExcel className="text-dark" />
-        </button>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.75rem" }}>
+        <button className="btn btn-export"><i className="bi bi-file-earmark-excel-fill"></i> Exportar Excel</button>
       </div>
 
-      <div className="table-responsive border rounded">
-        <table className="table table-hover table-sm m-0" style={{fontSize: "0.85rem"}}>
-          <thead className="table-primary" style={{backgroundColor: "#0078D4", color: "white"}}>
-            <tr>
-              <th className="py-2 px-3 text-white" style={{backgroundColor: "#0088D4"}}>Identificación</th>
-              <th className="py-2 px-3 text-white" style={{backgroundColor: "#0088D4"}}>Nombre vendedor</th>
-              <th className="py-2 px-3 text-white" style={{backgroundColor: "#0088D4"}}>Número de comprobantes</th>
-              <th className="py-2 px-3 text-white text-end" style={{backgroundColor: "#0088D4"}}>Valor bruto</th>
-              <th className="py-2 px-3 text-white text-end" style={{backgroundColor: "#0088D4"}}>Descuento</th>
-              <th className="py-2 px-3 text-white text-end" style={{backgroundColor: "#0088D4"}}>Subtotal</th>
-              <th className="py-2 px-3 text-white text-end" style={{backgroundColor: "#0088D4"}}>Impuesto cargo</th>
-              <th className="py-2 px-3 text-white text-end" style={{backgroundColor: "#0088D4"}}>Impuesto retención</th>
-              <th className="py-2 px-3 text-white text-end" style={{backgroundColor: "#0088D4"}}>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="9" className="text-center py-4">Cargando datos...</td></tr>
-            ) : data.length === 0 ? (
-              <tr><td colSpan="9" className="text-center py-4 text-muted">No se encontraron resultados</td></tr>
-            ) : (
-              data.map((row, idx) => (
-                <tr key={idx}>
-                  <td className="py-2 px-3">{row.identificacion}</td>
-                  <td className="py-2 px-3 text-primary">{row.nombreVendedor}</td>
-                  <td className="py-2 px-3">{row.comprobantes}</td>
-                  <td className="py-2 px-3 text-end">{row.bruto?.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                  <td className="py-2 px-3 text-end">{row.descuentos?.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                  <td className="py-2 px-3 text-end">{row.subtotal?.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                  <td className="py-2 px-3 text-end">{row.impuestoCargo?.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                  <td className="py-2 px-3 text-end">{row.retenciones?.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                  <td className="py-2 px-3 text-end fw-bold">{row.total?.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-          {!loading && data.length > 0 && (
-            <tfoot className="table-light fw-bold text-muted">
-              <tr>
-                <td colSpan="3" className="py-2 px-3">Total general</td>
-                <td className="py-2 px-3 text-end">{totals.bruto.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                <td className="py-2 px-3 text-end">{totals.descuentos.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                <td className="py-2 px-3 text-end">{totals.subtotal.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                <td className="py-2 px-3 text-end">{totals.impuestoCargo.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                <td className="py-2 px-3 text-end">{totals.retenciones.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-                <td className="py-2 px-3 text-end text-dark">{totals.total.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
-              </tr>
-            </tfoot>
-          )}
-        </table>
-      </div>
+      <DataTable columns={columns} data={data} loading={loading} totals={{ label: "Total general", values: { bruto: fmt(totals.bruto), descuentos: fmt(totals.descuentos), subtotal: fmt(totals.subtotal), impuestoCargo: fmt(totals.impuestoCargo), retenciones: fmt(totals.retenciones), total: fmt(totals.total) } }} />
     </div>
   );
 }

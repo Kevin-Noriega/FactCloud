@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import "../styles/Soporte.css";
 import canalesAtencion from "../components/CanalesAtencion";
 import slaData from "../utils/Soporte/SlaData";
@@ -191,7 +191,7 @@ const Soporte = () => {
       <section className="hero-section">
         <img
           src="/img/img_hero_Soporte.webp"
-          alt="Empresario usando FactCloud"
+          alt="Empresario usando Nubee"
           className="hero-image"
         />
         <div className="container">

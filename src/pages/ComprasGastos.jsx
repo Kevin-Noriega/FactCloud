@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BagDash} from 'react-bootstrap-icons';
 import DocumentosSoporte from '../components/comprasGastos/DocumentoSoporte';
+import BuzonTributario from '../components/comprasGastos/BuzonTributario';
 
 function ComprasGastos (){
     const [activeTab, setActiveTab] = useState('documento');
@@ -8,7 +9,7 @@ function ComprasGastos (){
   // NOMBRES LITERALES COMO SIIGO
   const tabs = [
     { id: 'documento', label: 'Documento Soporte' },
-    { id: 'registros', label: 'Registro de eventos' },
+    { id: 'buzon', label: 'Recepción y Eventos (RADIAN)' },
   ];
 
   const renderContent = () => {
@@ -20,10 +21,10 @@ function ComprasGastos (){
           </div>
         );
 
-      case 'registros':
+      case 'buzon':
         return (
           <div className="tab-content p-4">
-            <h4>Registro de eventos</h4>
+            <BuzonTributario />
           </div>
         );
 

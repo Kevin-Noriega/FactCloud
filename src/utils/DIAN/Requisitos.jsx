@@ -58,7 +58,7 @@ const Requisitos = [
     descripcion:
       "Sistema que genere XML según estándar UBL 2.1 y anexo técnico vigente",
     pasos: [
-      "Usar software certificado como FactCloud",
+      "Usar software certificado como Nubee",
       "O desarrollar propia solución siguiendo especificaciones",
       "Validar generación correcta de XML y firma digital",
       "Probar envío y recepción de respuestas DIAN",

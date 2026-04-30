@@ -63,8 +63,8 @@ export default function Step3SetPruebas({
           <li>
             En el campo{" "}
             <strong>"Nombre de empresa proveedora y de software"</strong> elige
-            a <strong>FactCloud S.A.S.</strong>, confirma que "Nombre de
-            Software" aparece <strong>FactCloudPT</strong>, seguido haz clic en{" "}
+            a <strong>Nubee S.A.S.</strong>, confirma que "Nombre de
+            Software" aparece <strong>NubeePT</strong>, seguido haz clic en{" "}
             <strong>Asociar</strong>.
           </li>
         </ol>

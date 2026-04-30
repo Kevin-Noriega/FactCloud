@@ -2,13 +2,13 @@ const FAQS = [
   {
     seccion: "home",
     categoria: "General",
-    pregunta: "¿Qué es FactCloud?",
-    respuesta: "FactCloud es una plataforma de facturación electrónica validada por la DIAN que permite a empresas y profesionales en Colombia emitir facturas legalmente válidas de forma rápida y segura. Automatiza todo el proceso desde la generación hasta la validación fiscal."
+    pregunta: "¿Qué es Nubee?",
+    respuesta: "Nubee es una plataforma de facturación electrónica validada por la DIAN que permite a empresas y profesionales en Colombia emitir facturas legalmente válidas de forma rápida y segura. Automatiza todo el proceso desde la generación hasta la validación fiscal."
   },
   {
     seccion: "home",
     categoria: "General",
-    pregunta: "¿Por qué elegir FactCloud?",
+    pregunta: "¿Por qué elegir Nubee?",
     respuesta: "Integración automática con DIAN, interfaz intuitiva sin curva de aprendizaje, soporte técnico en español 24/7, y cumplimiento garantizado con todas las normativas colombianas. Además, planes flexibles desde $29.900/mes sin contratos a largo plazo."
   },
   {
@@ -119,7 +119,7 @@ const FAQS = [
     seccion: "como-funciona",
     categoria: "Configuración inicial",
     pregunta: "¿Cómo obtengo el certificado digital?",
-    respuesta: "Lo solicitas a entidades como Certicámara, GSE o ANDES. Cuesta entre $80.000 y $200.000 con vigencia de 1-2 años. Necesitas documento de identidad del representante legal y RUT. FactCloud acepta formatos .p12, .pfx y .pem."
+    respuesta: "Lo solicitas a entidades como Certicámara, GSE o ANDES. Cuesta entre $80.000 y $200.000 con vigencia de 1-2 años. Necesitas documento de identidad del representante legal y RUT. Nubee acepta formatos .p12, .pfx y .pem."
   },
   {
     seccion: "como-funciona",
@@ -167,7 +167,7 @@ const FAQS = [
   {
     seccion: "dian",
     categoria: "Habilitación DIAN",
-    pregunta: "¿FactCloud me ayuda con la habilitación?",
+    pregunta: "¿Nubee me ayuda con la habilitación?",
     respuesta: "Sí, lo hacemos automáticamente. Solo necesitas tu certificado digital y nosotros gestionamos el registro del software ante DIAN, generamos las facturas de prueba, enviamos el set de habilitación y activamos tu cuenta en producción. Toma 1-2 días hábiles."
   },
   {
@@ -224,7 +224,7 @@ const FAQS = [
   {
     seccion: "tecnico",
     categoria: "Técnico",
-    pregunta: "¿Cómo integro FactCloud con mi sistema actual?",
+    pregunta: "¿Cómo integro Nubee con mi sistema actual?",
     respuesta: "Usa nuestra API REST documentada en OpenAPI 3.0. Tienes endpoints para crear facturas, consultar clientes, productos y webhooks para recibir eventos. También ofrecemos SDKs oficiales en JavaScript y C#. Planes Empresarial incluyen soporte de integración."
   },
   {
@@ -236,20 +236,20 @@ const FAQS = [
   {
   seccion: "cuenta",
   categoria: "Cuenta",
-  pregunta: "¿Cómo crear clientes en FactCloud?",
+  pregunta: "¿Cómo crear clientes en Nubee?",
   respuesta: "Desde el panel de control, accede al módulo de Clientes y selecciona la opción 'Crear cliente'. Ingresa los datos básicos como nombre, tipo de identificación, correo y teléfono. Una vez guardado, el cliente quedará disponible para facturación inmediata."
 },
 {
   seccion: "cuenta",
   categoria: "Cuenta",
   pregunta: "¿Cómo registrar productos o servicios?",
-  respuesta: "Ingresa al módulo de Productos, haz clic en 'Nuevo producto' y define la información como nombre, descripción, precio, impuestos y tipo (producto o servicio). FactCloud guardará el producto para reutilizarlo en futuras facturas."
+  respuesta: "Ingresa al módulo de Productos, haz clic en 'Nuevo producto' y define la información como nombre, descripción, precio, impuestos y tipo (producto o servicio). Nubee guardará el producto para reutilizarlo en futuras facturas."
 },
 {
   seccion: "cuenta",
   categoria: "Cuenta",
   pregunta: "¿Cómo crear una factura electrónica?",
-  respuesta: "Dirígete al módulo de Facturación, selecciona el cliente, agrega los productos o servicios y confirma los valores. FactCloud se encarga automáticamente de validar la factura ante la DIAN y enviarla al cliente."
+  respuesta: "Dirígete al módulo de Facturación, selecciona el cliente, agrega los productos o servicios y confirma los valores. Nubee se encarga automáticamente de validar la factura ante la DIAN y enviarla al cliente."
 },
 {
   seccion: "cuenta",
@@ -266,7 +266,7 @@ const FAQS = [
 {
   seccion: "cuenta",
   categoria: "Cuenta",
-  pregunta: "¿Cómo desactivar mi cuenta en FactCloud?",
+  pregunta: "¿Cómo desactivar mi cuenta en Nubee?",
   respuesta: "Si deseas desactivar tu cuenta, puedes hacerlo desde la configuración del perfil o solicitándolo a nuestro equipo de soporte. La información quedará protegida y podrás reactivar el servicio cuando lo necesites."
 }
 

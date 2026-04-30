@@ -436,7 +436,7 @@ html, body {
                   {new Date().toLocaleString("es-CO")}
                 </div>
                 <div>
-                  Documento válido ante la DIAN | Resolución DIAN {factura.resolucionDIAN || "N/A"} | Generado por <strong style={{ color: "#667eea" }}>FactCloud</strong> 
+                  Documento válido ante la DIAN | Resolución DIAN {factura.resolucionDIAN || "N/A"} | Generado por <strong style={{ color: "#667eea" }}>Nubee</strong> 
                 </div>
               </div>
             </div>

@@ -20,6 +20,7 @@ import {
   validateCheckoutForm,
   getTipoDocCodigo,
 } from "../utils/checkoutUtils";
+import ciudades from "../utils/Ciudades.json";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -104,16 +105,19 @@ export default function Checkout() {
   const handleSameAsOwner = (checked) => {
     setSameAsOwner(checked);
     if (checked) {
-      setFormData((prev) => ({
-        ...prev,
-        razonSocial: `${prev.nombres} ${prev.apellidos}`,
-        nit: prev.numeroIdentificacion,
-        emailFacturacion: prev.email,
-        telefonoFacturacion: prev.telefono,
-        departamento: prev.ciudad,
-        ciudadFacturacion: prev.ciudad,
-        direccionFacturacion: prev.direccion,
-      }));
+      setFormData((prev) => {
+        const ciudadInfo = ciudades.find(c => c.ciudad === prev.ciudad);
+        return {
+          ...prev,
+          razonSocial: `${prev.nombres} ${prev.apellidos}`,
+          nit: prev.numeroIdentificacion,
+          emailFacturacion: prev.email,
+          telefonoFacturacion: prev.telefono,
+          departamento: ciudadInfo ? ciudadInfo.departamento : prev.ciudad,
+          ciudadFacturacion: prev.ciudad,
+          direccionFacturacion: prev.direccion,
+        };
+      });
     }
   };
 
@@ -162,7 +166,7 @@ export default function Checkout() {
   // ── PSE payment flow ──
   const handlePSEPayment = async (tipoDocCodigo) => {
     const amountInCents = Math.round(parseFloat(plan.planPrice) * 100);
-    const reference = `FACTCLOUD-PSE-${Date.now()}`;
+    const reference = `Nubee-PSE-${Date.now()}`;
 
     if (isNaN(amountInCents) || amountInCents <= 0) {
       alert("Error: Monto inválido");
@@ -181,7 +185,7 @@ export default function Checkout() {
         user_legal_id_type: tipoDocCodigo,
         user_legal_id: formData.numeroIdentificacion,
         financial_institution_code: formData.banco,
-        payment_description: `Pago Plan ${plan.nombre} - FactCloud`,
+        payment_description: `Pago Plan ${plan.nombre} - Nubee`,
       },
       customerData: {
         fullName: `${formData.nombres} ${formData.apellidos}`,
@@ -193,6 +197,7 @@ export default function Checkout() {
       },
       datosRegistro: {
         nombre: user.nombre,
+        apellido: user.apellido,
         telefono: user.telefono,
         correo: user.email,
         password: user.password,
@@ -205,7 +210,7 @@ export default function Checkout() {
         dvNit: formData.digitoVerificacion,
         direccion: formData.direccionFacturacion || formData.direccion,
         ciudad: formData.ciudadFacturacion || formData.ciudad,
-        departamento: formData.departamento,
+        departamento: formData.departamento || (ciudades.find(c => c.ciudad === (formData.ciudadFacturacion || formData.ciudad))?.departamento) || "",
         telefonoNegocio: formData.telefonoFacturacion || formData.telefono,
         correoNegocio: formData.emailFacturacion || formData.email,
       },
@@ -242,7 +247,7 @@ export default function Checkout() {
     });
 
     const amountInCents = Math.round(parseFloat(plan.planPrice) * 100);
-    const reference = `FACTCLOUD-${Date.now()}`;
+    const reference = `Nubee-${Date.now()}`;
 
     if (isNaN(amountInCents) || amountInCents <= 0) {
       alert("Error: Monto inválido");
@@ -275,7 +280,7 @@ export default function Checkout() {
       transaction.data.status === "PENDING"
     ) {
       await crearYActivarUsuario(transaction.data.id);
-      alert("¡Pago exitoso! Tu cuenta ha sido creada y activada 🎉");
+      alert("¡Pago exitoso! Tu cuenta ha sido creada y activada ");
       navigate("/dashboard");
     } else {
       alert("Pago rechazado. Verifica los datos e intenta nuevamente.");
@@ -291,6 +296,7 @@ export default function Checkout() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nombre: user.nombre,
+        apellido: user.apellido,
         telefono: user.telefono,
         correo: user.email,
         password: user.password,
@@ -304,7 +310,7 @@ export default function Checkout() {
           : null,
         direccion: formData.direccionFacturacion,
         ciudad: formData.ciudadFacturacion,
-        departamento: formData.departamento,
+        departamento: formData.departamento || (ciudades.find(c => c.ciudad === formData.ciudadFacturacion)?.departamento) || "",
         telefonoNegocio: formData.telefonoFacturacion,
         correoNegocio: formData.emailFacturacion,
         planFacturacionId: plan.id,
@@ -360,7 +366,7 @@ export default function Checkout() {
         <div className="checkout-header">
           <h1 className="checkout-title">Finaliza tu compra</h1>
           <p className="checkout-subtitle">
-            Completa los datos de forma segura y comienza a usar FactCloud
+            Completa los datos de forma segura y comienza a usar Nubee
           </p>
         </div>
 

@@ -222,7 +222,7 @@ export default function HabilitacionDSE() {
               <input
                 type="text"
                 className="form-control form-control-sm"
-                placeholder="Ej. FactCloud DSE v1.0"
+                placeholder="Ej. Nubee DSE v1.0"
                 value={software.nombreSoftware}
                 onChange={(e) => setSoftware(s => ({ ...s, nombreSoftware: e.target.value }))}
               />
