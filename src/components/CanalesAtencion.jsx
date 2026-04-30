@@ -33,11 +33,11 @@ const CanalesAtencion = [
       </svg>
     ),
     titulo: "Email",
-    disponibilidad: "soporte@factcloud.co",
+    disponibilidad: "soporte@Nubee.co",
     descripcion: "Respuesta detallada en tu bandeja de entrada",
     color: "var(--primary)",
     accion: "Enviar correo",
-    href: "mailto:soporte@factcloud.co?subject=Contacto%20desde%20la%20web&body=Hola%2C%20quiero%20información"
+    href: "mailto:soporte@Nubee.co?subject=Contacto%20desde%20la%20web&body=Hola%2C%20quiero%20información"
 
   },
   {

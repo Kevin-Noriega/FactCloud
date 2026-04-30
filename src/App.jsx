@@ -24,10 +24,11 @@ import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Productos from "./components/ProductosServicios/Productos";
 import Facturas from "./components/ventas/documentosVenta/Facturas";
+import FacturaDetalle from "./components/ventas/documentosVenta/FacturaDetalle";
 import NuevaFactura from "./pages/NuevaFactura";
 import NuevoDocumentoSoporte from "./pages/NuevoDocumentoSoporte";
 import NuevaNotaCredito from "./pages/NuevaNotaCredito";
-import NuevaNotaDebito from "./pages/NuevaNotaDebito";
+import NuevaNotaDedito from "./pages/NuevaNotaDebito";
 import Ventas from "./pages/Ventas";
 import ComprasGastos from "./pages/ComprasGastos";
 import DocumentoSoporte from "./components/comprasGastos/DocumentoSoporte";
@@ -41,10 +42,16 @@ import { ProtectedLayout } from "./components/ProtectedLayout";
 import HabilitacionDian from "./components/dashboard/Habilitacion/HabilitacionDian";
 import NuevoClienteEmpresa from "./components/Clientes/NuevoClienteEmpresa";
 import HabilitacionDSE from "./components/dashboard/Habilitacion/HabilitacionDSE";
+import ReportsDashboard from "./features/reports/pages/ReportsDashboard";
+import VentasPorClientePage from "./features/reports/pages/VentasPorClientePage";
+import VentasPorVendedorPage from "./features/reports/pages/VentasPorVendedorPage";
+import VentasPorProductoPage from "./features/reports/pages/VentasPorProductoPage";
+import ComparativoVentasMesPage from "./features/reports/pages/ComparativoVentasMesPage";
 import HabilitacionFacturacionFE from "./components/dashboard/Habilitacion/HabilitacionFacturacionFE";
 import Impuestos from "./pages/Impuestos";
 import PerfilCliente from "./pages/PerfilCliente";
 import CuentasContables from "./pages/CuentasContables";
+import NominaElectronica from "./pages/NominaElectronica";
 const NotFound = () => (
   <div className="text-center py-5">
     <h1 className="display-1 text-danger">404</h1>
@@ -59,6 +66,8 @@ const queryClient = new QueryClient({
     queries: { staleTime: 5 * 60 * 1000, retry: 2 },
   },
 });
+
+
 
 function App() {
   const { loading } = useAuth();
@@ -118,7 +127,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/clientes" element={<Clientes />} />
               <Route
-                path="/nuevo-clientee"
+                path="/nuevo-cliente"
                 element={<NuevoClienteEmpresa />}
               />{" "}
               {/* Corregido path */}
@@ -145,20 +154,27 @@ function App() {
                 path="/nueva-nota-credito"
                 element={<NuevaNotaCredito />}
               />
-              <Route path="/nueva-nota-debito" element={<NuevaNotaDebito />} />
+              <Route path="/nueva-nota-debito" element={<NuevaNotaDedito />} />
               <Route path="/habilitacion-dian" element={<HabilitacionDian />} />
+              <Route path="/habilitacionDSE" element={<HabilitacionDSE />} />
               <Route
                 path="/habilitacion-dian/factura-electronica"
                 element={<HabilitacionFacturacionFE />}
               />
-              <Route
-                path="/habilitacion-dian/habilitacionDSE"
-                element={<HabilitacionDSE />}
-              />
+              <Route path="/habilitacion-dian/habilitacionDSE" element={<HabilitacionDSE />} />
               <Route path="/compras-gastos" element={<ComprasGastos />} />
+              <Route path="/nomina" element={<NominaElectronica />} />
               <Route path="/facturas" element={<Facturas />} />
+              <Route path="/facturas/:id" element={<FacturaDetalle />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
-              <Route path="/reportes" element={<Reportes />} />
+              <Route path="/reportes" element={<ReportsDashboard />} />
+              <Route path="/reportes/ventas-cliente" element={<VentasPorClientePage />} />
+              <Route path="/reportes/ventas-vendedor" element={<VentasPorVendedorPage />} />
+              <Route path="/reportes/ventas-producto" element={<VentasPorProductoPage />} />
+              <Route path="/reportes/comparativo-mensual" element={<ComparativoVentasMesPage />} />
+              {/* Fallbacks for unfinished reports */}
+              <Route path="/reportes/ventas-cliente-producto" element={<ReportsDashboard />} />
+              <Route path="/reportes/ventas-vendedor-producto" element={<ReportsDashboard />} />
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/tienda" element={<Tienda />} />
               <Route path="/tienda/:categoria" element={<Tienda />} />

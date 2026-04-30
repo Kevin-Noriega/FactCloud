@@ -1,10 +1,10 @@
-/* ===========================
-   CONTENEDOR PRINCIPAL
-   =========================== */
+
 .ds-container {
-  padding: 24px 28px;
-  min-height: 100vh;
+    padding: 28px 32px 100px;   /* bottom: espacio para footer sticky */
+  max-width: 1300px;
+  margin: 0 auto;
   font-family: 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
 }
 
 .ds-titulo {
@@ -37,14 +37,15 @@
   background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-  padding: 20px 24px 16px;
+  padding: 20px;
   margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 .ds-filtros-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 40px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .ds-filtros-col {
@@ -55,10 +56,10 @@
 
 /* ── Fila de filtro ── */
 .ds-filtro-fila {
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  align-items: center;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
 }
 
 .ds-filtro-label {

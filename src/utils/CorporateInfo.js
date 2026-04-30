@@ -1,7 +1,7 @@
 export const corporateInfo = {
   company: {
-    name: "FactCloud",
-    legalName: "FactCloud SAS",
+    name: "Nubee",
+    legalName: "Nubee SAS",
     foundedYear: 2024,
     foundedMonth: "Enero",
     location: "Valledupar, Cesar, Colombia",
@@ -66,14 +66,14 @@ export const corporateInfo = {
 
   history: {
     title: "Nuestra Historia",
-    foundation: "FactCloud nace en enero de 2024 en Valledupar, Colombia, fundada por un equipo multidisciplinario de ingenieros de sistemas, desarrolladores full-stack y expertos en contabilidad y normativa tributaria colombiana.",
+    foundation: "Nubee nace en enero de 2024 en Valledupar, Colombia, fundada por un equipo multidisciplinario de ingenieros de sistemas, desarrolladores full-stack y expertos en contabilidad y normativa tributaria colombiana.",
     motivation: "La inspiración surgió al identificar que miles de pequeñas y medianas empresas colombianas enfrentaban enormes desafíos para cumplir con la obligatoriedad de facturación electrónica impuesta por la DIAN. Los sistemas existentes eran costosos, complejos o poco confiables.",
     journey: "Durante nuestro primer año, nos enfocamos en crear una solución intuitiva, potente y 100% conforme con las regulaciones DIAN. Trabajamos directamente con PYMES para entender sus necesidades reales y construir funcionalidades que verdaderamente resolvieran sus problemas.",
-    achievement: "Hoy, FactCloud ayuda a cientos de empresas colombianas a automatizar su facturación, mejorar su flujo de caja y mantener su contabilidad en orden, permitiéndoles enfocarse en lo que realmente importa: hacer crecer su negocio.",
+    achievement: "Hoy, Nubee ayuda a cientos de empresas colombianas a automatizar su facturación, mejorar su flujo de caja y mantener su contabilidad en orden, permitiéndoles enfocarse en lo que realmente importa: hacer crecer su negocio.",
     milestones: [
       {
         date: "Enero 2026",
-        event: "Fundación de FactCloud en Valledupar"
+        event: "Fundación de Nubee en Valledupar"
       },
       {
         date: "Marzo 2026",
@@ -88,7 +88,7 @@ export const corporateInfo = {
 
   team: {
     title: "Nuestro Equipo",
-    description: "FactCloud fue creado y es operado por un equipo apasionado de profesionales colombianos comprometidos con la excelencia y la innovación.",
+    description: "Nubee fue creado y es operado por un equipo apasionado de profesionales colombianos comprometidos con la excelencia y la innovación.",
     departments: [
       {
         name: "Desarrollo",
@@ -111,7 +111,7 @@ export const corporateInfo = {
 
   technology: {
     title: "Tecnología",
-    description: "FactCloud está construido con las tecnologías más modernas y confiables del mercado.",
+    description: "Nubee está construido con las tecnologías más modernas y confiables del mercado.",
     stack: [
       {
         category: "Frontend",
@@ -144,16 +144,16 @@ export const corporateInfo = {
   },
 
   contact: {
-    email: "soporte@factcloud.com",
+    email: "soporte@Nubee.com",
     phone: "+57 300 123 4567",
     address: "Valledupar, Cesar, Colombia",
     hours: "Lunes a Viernes: 8:00 AM - 6:00 PM",
     support247: true,
     socialMedia: {
-      linkedin: "linkedin.com/company/factcloud",
-      twitter: "@factcloud_co",
-      facebook: "facebook.com/factcloud",
-      instagram: "@factcloud.co"
+      linkedin: "linkedin.com/company/Nubee",
+      twitter: "@Nubee_co",
+      facebook: "facebook.com/Nubee",
+      instagram: "@Nubee.co"
     }
   },
 

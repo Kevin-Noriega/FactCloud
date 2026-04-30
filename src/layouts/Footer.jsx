@@ -7,7 +7,7 @@ export default function Footer() {
           <div className="footer-brand">
             <img
               src="/img/LogoWhite_sinFondo.png"
-              alt="FactCloud"
+              alt="Nubee"
               className="footer-logo"
             />
             <p>
@@ -51,7 +51,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <small className="footer-copy">
-            © {new Date().getFullYear()} FACTCLOUD
+            © {new Date().getFullYear()} Nubee
           </small>
         </div>
       </footer>

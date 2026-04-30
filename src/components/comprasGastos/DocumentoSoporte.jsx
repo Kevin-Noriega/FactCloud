@@ -17,6 +17,8 @@ import {
 import { useDocumentoSoporte } from "../../hooks/useDocumentoSoporte";
 import { calcularFechasPorPeriodo } from "../../utils/calcularFechas";
 import "../../styles/ComprasGastos/DocumentoSoporte.css";
+import "../../styles/SharedPage.css";
+import "../../styles/Reportes.css";
 import { useNavigate } from "react-router-dom";
 
 function DocumentosSoporte() {
@@ -160,113 +162,54 @@ function DocumentosSoporte() {
 
       {/* ── Toggle filtros ── */}
       <button
-        className="ds-toggle-filtros"
+        className={`rpt-filters-toggle ${filtrosVisibles ? "open" : ""}`}
         onClick={() => setFiltrosVisibles((v) => !v)}
       >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: 'transform 0.3s', transform: filtrosVisibles ? 'rotate(180deg)' : 'rotate(0)' }}><polyline points="6 9 12 15 18 9"></polyline></svg>
         {filtrosVisibles ? "Ocultar" : "Mostrar"} criterios de búsqueda
       </button>
 
       {/* ── Panel filtros ── */}
       {filtrosVisibles && (
-        <form className="ds-filtros-panel" onSubmit={handleBuscar}>
-          <div className="ds-filtros-grid">
-
-            {/* ── Columna izquierda ── */}
-            <div className="ds-filtros-col">
-              <div className="ds-filtro-fila">
-                <label className="ds-filtro-label">Proveedor</label>
-                <div className="ds-input-icono">
-                  <input type="text" className="form-control form-control-sm"
-                    placeholder="Buscar" value={filtros.proveedor}
-                    onChange={(e) => handleFiltroChange("proveedor", e.target.value)} />
-                  <Search size={14} className="ds-icono-buscar" />
-                </div>
-              </div>
-              <div className="ds-filtro-fila">
-                <label className="ds-filtro-label">Tipo de transacción</label>
-                <select className="form-select form-select-sm"
-                  value={filtros.tipoTransaccion}
-                  onChange={(e) => handleFiltroChange("tipoTransaccion", e.target.value)}>
-                  {TIPOS_TRANSACCION.map((t) => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="ds-filtro-fila">
-                <label className="ds-filtro-label">Factura proveedor</label>
-                <div className="ds-input-icono">
-                  <input type="text" className="form-control form-control-sm"
-                    placeholder="Buscar" value={filtros.facturaProveedor}
-                    onChange={(e) => handleFiltroChange("facturaProveedor", e.target.value)} />
-                  <Search size={14} className="ds-icono-buscar" />
-                </div>
-              </div>
+        <form className="rpt-filters" onSubmit={handleBuscar} style={{ marginBottom: "1.5rem" }}>
+          <div className="rpt-filters-grid">
+            <div>
+              <label className="rpt-filter-label">Proveedor</label>
+              <input type="text" className="rpt-filter-input" placeholder="Buscar proveedor..." value={filtros.proveedor} onChange={(e) => handleFiltroChange("proveedor", e.target.value)} />
             </div>
-
-            {/* ── Columna derecha ── */}
-            <div className="ds-filtros-col">
-              <div className="ds-filtro-fila ds-filtro-fecha">
-                <label className="ds-filtro-label">Fecha elaboración</label>
-                <div className="ds-fecha-controles">
-                  <select className="form-select form-select-sm ds-select-ano"
-                    value={filtros.ano}
-                    onChange={(e) => handleFiltroChange("ano", Number(e.target.value))}>
-                    {ANOS.map((a) => <option key={a} value={a}>{a}</option>)}
-                  </select>
-                  <select className="form-select form-select-sm ds-select-periodo"
-                    value={filtros.periodo}
-                    onChange={(e) => handleFiltroChange("periodo", e.target.value)}>
-                    {PERIODOS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
-                  </select>
-                </div>
-                <div className="ds-fecha-rangos">
-                  <div className="ds-fecha-input">
-                    <input type="date" className="form-control form-control-sm"
-                      value={filtros.fechaDesde}
-                      onChange={(e) => { handleFiltroChange("fechaDesde", e.target.value); handleFiltroChange("periodo", "rango"); }} />
-                    <button type="button" className="ds-fecha-clear"
-                      onClick={() => handleFiltroChange("fechaDesde", "")}>
-                      <XCircle size={13} />
-                    </button>
-                    <button type="button" className="ds-fecha-calendar"><Calendar3 size={13} /></button>
-                  </div>
-                  <div className="ds-fecha-input">
-                    <input type="date" className="form-control form-control-sm"
-                      value={filtros.fechaHasta}
-                      onChange={(e) => { handleFiltroChange("fechaHasta", e.target.value); handleFiltroChange("periodo", "rango"); }} />
-                    <button type="button" className="ds-fecha-clear"
-                      onClick={() => handleFiltroChange("fechaHasta", "")}>
-                      <XCircle size={13} />
-                    </button>
-                    <button type="button" className="ds-fecha-calendar"><Calendar3 size={13} /></button>
-                  </div>
-                </div>
-              </div>
-              <div className="ds-filtro-fila">
-                <label className="ds-filtro-label">Creado por</label>
-                <div className="ds-input-icono">
-                  <input type="text" className="form-control form-control-sm"
-                    placeholder="Buscar" value={filtros.creadoPor}
-                    onChange={(e) => handleFiltroChange("creadoPor", e.target.value)} />
-                  <Search size={14} className="ds-icono-buscar" />
-                </div>
-              </div>
-              <div className="ds-filtro-fila">
-                <label className="ds-filtro-label">Envío a la Dian</label>
-                <select className="form-select form-select-sm"
-                  value={filtros.envioDian}
-                  onChange={(e) => handleFiltroChange("envioDian", e.target.value)}>
-                  {OPCIONES_DIAN.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
-              </div>
+            <div>
+              <label className="rpt-filter-label">Tipo de transacción</label>
+              <select className="rpt-filter-input" style={{ appearance: 'auto' }} value={filtros.tipoTransaccion} onChange={(e) => handleFiltroChange("tipoTransaccion", e.target.value)}>
+                {TIPOS_TRANSACCION.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="rpt-filter-label">Factura proveedor</label>
+              <input type="text" className="rpt-filter-input" placeholder="Buscar factura..." value={filtros.facturaProveedor} onChange={(e) => handleFiltroChange("facturaProveedor", e.target.value)} />
+            </div>
+            <div>
+              <label className="rpt-filter-label">Creado por</label>
+              <input type="text" className="rpt-filter-input" placeholder="Buscar creador..." value={filtros.creadoPor} onChange={(e) => handleFiltroChange("creadoPor", e.target.value)} />
+            </div>
+            <div>
+              <label className="rpt-filter-label">Envío a la Dian</label>
+              <select className="rpt-filter-input" style={{ appearance: 'auto' }} value={filtros.envioDian} onChange={(e) => handleFiltroChange("envioDian", e.target.value)}>
+                {OPCIONES_DIAN.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="rpt-filter-label">Fecha (Desde)</label>
+              <input type="date" className="rpt-filter-input" value={filtros.fechaDesde} onChange={(e) => { handleFiltroChange("fechaDesde", e.target.value); handleFiltroChange("periodo", "rango"); }} />
+            </div>
+            <div>
+              <label className="rpt-filter-label">Fecha (Hasta)</label>
+              <input type="date" className="rpt-filter-input" value={filtros.fechaHasta} onChange={(e) => { handleFiltroChange("fechaHasta", e.target.value); handleFiltroChange("periodo", "rango"); }} />
             </div>
           </div>
 
-          <div className="ds-filtros-acciones">
-            <button type="submit" className="ds-btn-buscar">Buscar</button>
-            <button type="button" className="ds-btn-limpiar" onClick={limpiarFiltros}>
-              Limpiar filtros
-            </button>
+          <div className="rpt-filters-actions" style={{ marginTop: "1rem" }}>
+            <button type="submit" className="btn btn-filtros"><i className="bi bi-search"></i> Buscar</button>
+            <button type="button" className="btn btn-outline-secondary" onClick={limpiarFiltros} style={{ borderRadius: 10 }}>Limpiar filtros</button>
           </div>
         </form>
       )}
@@ -274,10 +217,10 @@ function DocumentosSoporte() {
       {/* ── Tabla ── */}
       <div className="ds-tabla-wrapper">
         <div className="ds-tabla-topbar">
-          <button className="ds-btn-excel" onClick={exportarExcel} title="Exportar a Excel">
-            <FileEarmarkExcel size={18} />
+          <button className="btn btn-export" onClick={exportarExcel} title="Exportar a Excel">
+            <FileEarmarkExcel size={16} /> Exportar Excel
           </button>
-          <button className="btn-crear" onClick={() => navigate('/nuevo-documento-soporte')}>
+          <button className="btn btn-crear" onClick={() => navigate('/nuevo-documento-soporte')}>
             Nuevo Documento Soporte
           </button>
         </div>
@@ -285,7 +228,7 @@ function DocumentosSoporte() {
         <div className="table-responsive">
           <table className="table ds-tabla mb-0">
             <thead>
-              <tr>
+              <tr className="facturas-table-header">
                 <th>Tipo de transacción</th>
                 <th>Comprobante</th>
                 <th>Factura proveedor</th>

@@ -33,13 +33,13 @@ function SobreNosotros() {
       <section className="hero-section">
         <img
           src="/img/img_hero_sobreNosotros.webp"
-          alt="Empresario usando FactCloud"
+          alt="Empresario usando Nubee"
           className="hero-image"
         />
         <div className="container">
           <span className="hero-badge">Quiénes Somos</span>
 
-          <h1>Sobre FactCloud</h1>
+          <h1>Sobre Nubee</h1>
           <p className="hero-description">
             Simplificando la facturación electrónica <br />
             para empresas y profesionales en Colombia.
@@ -137,7 +137,7 @@ function SobreNosotros() {
 
       <section className="ventajas-section">
         <div className="container">
-          <h2>Por qué elegir FactCloud</h2>
+          <h2>Por qué elegir Nubee</h2>
           <div className="ventajas-grid">
             {ventajas.map((ventaja, idx) => (
               <div key={idx} className="ventaja-card">

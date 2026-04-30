@@ -21,9 +21,9 @@
     route: "/habilitacion-dian",
   },
   {
-    title: "Tienda FactCloud",
+    title: "Tienda Nubee",
     icon: "Cart",
-    route: "/tienda-factcloud",
+    route: "/tienda-Nubee",
   },
 ];
 

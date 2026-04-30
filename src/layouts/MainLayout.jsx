@@ -174,7 +174,7 @@ function MainLayout() {
             <div className="d-flex align-items-center gap-2">
               <img src="/img/IconoBlue_sinFondo.png" className="fc-logo" />
               <h5 className="fw-bold d-none d-lg-block">
-                {usuarios?.nombreNegocio || "FactCloud"}
+                {usuarios?.nombreNegocio || "Nubee"}
               </h5>
             </div>
 

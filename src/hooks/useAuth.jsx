@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+﻿import { createContext, useContext, useState, useEffect } from "react";
 import axiosClient, { setAccessToken, clearTokens } from "../api/axiosClient";
 
 const AuthContext = createContext(null);
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
           localStorage.removeItem("usuario");
         }
       }
-      setLoading(false); // ✅ Solo aquí termina el loading
+      setLoading(false); 
     };
     restaurarSesion();
   }, []);
@@ -94,3 +94,4 @@ export const useAuth = () => {
     throw new Error("useAuth debe usarse dentro de un AuthProvider");
   return context;
 };
+

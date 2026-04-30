@@ -37,7 +37,7 @@ export default function NavBar() {
         <Link to="/">
           <img
             src="/img/LogoBlue_sinFondo.png"
-            alt="FactCloud"
+            alt="Nubee"
             className="logo"
             style={{ cursor: "pointer" }}
           />

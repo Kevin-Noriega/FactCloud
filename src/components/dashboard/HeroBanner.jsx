@@ -9,7 +9,7 @@ export const HeroBanner = () => {
      <div className="dashboard-header-card">
           <div className="dashboard-header-content">
             <div className="dashboard-header-text">
-              <h1 className="dashboard-header-title">¡Bienvenido a FactCloud!</h1>
+              <h1 className="dashboard-header-title">¡Bienvenido a Nubee!</h1>
               <p className="dashboard-header-subtitle">
                 Sistema de Facturación Electrónica - Cumplimiento DIAN
               </p>

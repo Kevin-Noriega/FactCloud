@@ -39,7 +39,7 @@ function ModalAyuda({ isOpen, onClose }) {
   const recursos = [
     {
       titulo: "Guía de inicio rápido",
-      descripcion: "Aprende a usar FactCloud en 10 minutos",
+      descripcion: "Aprende a usar Nubee en 10 minutos",
       icono: <Book size={24} />,
       link: "#"
     },
@@ -56,7 +56,7 @@ function ModalAyuda({ isOpen, onClose }) {
       link: "#"
     },
     {
-      titulo: "Blog de FactCloud",
+      titulo: "Blog de Nubee",
       descripcion: "Consejos, trucos y actualizaciones",
       icono: <ChatDots size={24} />,
       link: "#"
@@ -142,10 +142,10 @@ function ModalAyuda({ isOpen, onClose }) {
                     <p>Contacta con nuestro equipo</p>
                   </button>
 
-                  <a href="mailto:soporte@factcloud.com" className="contacto-card">
+                  <a href="mailto:soporte@Nubee.com" className="contacto-card">
                     <Envelope size={28} />
                     <h5>Email</h5>
-                    <p>soporte@factcloud.com</p>
+                    <p>soporte@Nubee.com</p>
                   </a>
 
                   <a href="tel:+573001234567" className="contacto-card">

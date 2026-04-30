@@ -8,6 +8,7 @@ const navItems = [
   { to: "/compras-gastos", label: "Compras y Gastos", icon: "BagDashFill" }, // Bolsa con guión para compras/gastos
   { to: "/productos", label: "Productos Y Servicios", icon: "BoxSeamFill" }, // Caja para productos/inventario
   { to: "/reportes", label: "Reportes", icon: "ClipboardDataFill" }, // Portapapeles con datos para reportes
+  { to: "/nomina", label: "Nómina", icon: "PeopleFill" }, // Nómina electrónica
   { to: "/tienda", label: "Tienda", icon: "CartFill" }, // Carrito para tienda
 ];
 

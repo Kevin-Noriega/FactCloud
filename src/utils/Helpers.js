@@ -16,8 +16,8 @@ export const departamentosOptions = [
     ciudades.map(dep => [dep.codigoDepartamento, dep])
   ).values()
 ].map(dep => ({
-  value: dep.departamento,
-  label: `${dep.codigoDepartamento} - ${dep.departamento}`,
+  value: String(dep.codigoDepartamento),
+  label: dep.departamento,
   departamentoCodigo: String(dep.codigoDepartamento)
 }));
 
@@ -25,8 +25,8 @@ export function ciudadesOptionsPorDepartamento(departamento) {
   return ciudades
     .filter(c => c.departamento === departamento)
     .map(c => ({
-      value: c.ciudad,
-      label: `${c.codigoCiudad} - ${c.ciudad}`,
+      value: String(c.codigoCiudad),
+      label: c.ciudad,
       ciudadCodigo: String(c.codigoCiudad)
     }));
 }

@@ -1,53 +1,67 @@
-import React, { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircleFill,
-  CheckLg,
-  FileEarmarkText,
-  InfoCircle,
-  XLg,
-} from "react-bootstrap-icons";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../../api/axiosClient";
-import "./Habilitaciones.css";
-
-const PASOS_DSE = [
-  { id: 1, label: "Datos del documento soporte" },
-  { id: 2, label: "Numeración DIAN" },
-  { id: 3, label: "Prefijos y resolución" },
-  { id: 4, label: "Sincronización" },
+import "./Habilitaciones.css"; // Comparte CSS con FEV
+import { 
+  ArrowLeft, 
+  ArrowRight, 
+  CircleCheck,  // Reemplaza CheckCircleFill
+  CheckCircle,  // Alternativa más común
+  Clock,        // Reemplaza ClockFill
+  Check, 
+  X,            // Reemplaza XLg (más estándar)
+  CircleCheckBig // Para icono grande si necesitas
+} from 'lucide-react';
+const PASOS = [
+  { id: 1, label: "Datos del software" },
+  { id: 2, label: "Set de pruebas" },
+  { id: 3, label: "Resolución y numeración" },
+  { id: 4, label: "Datos del software" },
+  { id: 5, label: "Set de pruebas" },
+  { id: 6, label: "Resolución y numeración" },
 ];
 
-export default function HabilitacionDocumentoSoporte() {
-  const navigate = useNavigate();
+const BadgeEstado = ({ estado }) => {
+  if (estado === "completado")
+    return (
+      <span className="hab-badge hab-badge-ok">
+        <CheckCircle size={11} /> Completado
+      </span>
+    );
+  if (estado === "en_proceso")
+    return (
+      <span className="hab-badge hab-badge-proceso">
+        <Clock size={11} /> En proceso
+      </span>
+    );
+  return <span className="hab-badge hab-badge-pendiente">Pendiente</span>;
+};
 
+export default function HabilitacionDSE() {
+  const navigate = useNavigate();
+  const tipo = "dse"; // Fijo para DSE
+  const [estado, setEstado] = useState("pendiente");
   const [pasoActual, setPasoActual] = useState(1);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
   const [exito, setExito] = useState("");
 
-  const [form, setForm] = useState({
-    datos: {
-      nitProveedor: "",
-      nombreSoftware: "",
-      codigoSoftware: "",
-      ambiente: "2",
-    },
-    numeracion: {
-      numeroAutorizacion: "",
-      prefijo: "",
-      rangoDesde: "",
-      rangoHasta: "",
-    },
-    resolucion: {
-      fechaInicio: "",
-      fechaFin: "",
-      claveTecnica: "",
-    },
-    sincronizacion: {
-      observacion: "",
-    },
+  const [software, setSoftware] = useState({
+    nitFabricante: "",
+    nombreSoftware: "",
+    codigoSoftware: "",
+    testSetId: "",
+  });
+
+  const [resolucion, setResolucion] = useState({
+    numeroAutorizacion: "",
+    prefijo: "",
+    rangoDesde: "",
+    rangoHasta: "",
+    fechaInicio: "",
+    fechaFin: "",
+    claveTecnica: "",
+    tipoAmbiente: "2",
   });
 
   useEffect(() => {
@@ -56,445 +70,248 @@ export default function HabilitacionDocumentoSoporte() {
 
   const cargarEstado = async () => {
     try {
-      const res = await axiosClient.get(
-        "/Habilitacion/documento-soporte/estado",
-      );
-      if (res.data?.pasoActual) setPasoActual(res.data.pasoActual);
-      if (res.data?.formulario) setForm(res.data.formulario);
+      const res = await axiosClient.get(`/Habilitacion/estado?tipo=${tipo}`);
+      setEstado(res.data.estado ?? "pendiente");
+      if (res.data.software) setSoftware(res.data.software);
+      if (res.data.resolucion) setResolucion(res.data.resolucion);
+      
+      // Reanudar paso
+      if (res.data.estado === "pendiente") setPasoActual(1);
+      else if (!res.data.software?.testSetId) setPasoActual(2);
+      else if (!res.data.resolucion?.numeroAutorizacion) setPasoActual(3);
     } catch {
-      // si aún no existe el endpoint, sigue local
+      // Ignorar si endpoint no existe
     }
   };
 
-  const actualizarCampo = (bloque, campo, valor) => {
-    setForm((prev) => ({
-      ...prev,
-      [bloque]: {
-        ...prev[bloque],
-        [campo]: valor,
-      },
-    }));
-  };
+  const abrirPaso1 = () => setPasoActual(1);
+  const abrirPaso2 = () => setPasoActual(2);
+  const abrirPaso3 = () => setPasoActual(3);
 
-  const siguiente = () => {
+  const guardarSoftware = async () => {
     setError("");
-    if (pasoActual < PASOS_DSE.length) {
-      setPasoActual((prev) => prev + 1);
-    }
-  };
-
-  const atras = () => {
-    setError("");
-    if (pasoActual > 1) {
-      setPasoActual((prev) => prev - 1);
-    }
-  };
-
-  const guardarPaso = async () => {
-    setError("");
-    setExito("");
-
-    if (pasoActual === 1) {
-      if (
-        !form.datos.nitProveedor ||
-        !form.datos.nombreSoftware ||
-        !form.datos.codigoSoftware
-      ) {
-        return setError("Completa todos los campos del paso 1.");
-      }
-    }
-
-    if (pasoActual === 2) {
-      if (!form.numeracion.numeroAutorizacion || !form.numeracion.prefijo) {
-        return setError("Completa los datos de numeración.");
-      }
-    }
-
-    if (pasoActual === 3) {
-      if (
-        !form.numeracion.rangoDesde ||
-        !form.numeracion.rangoHasta ||
-        !form.resolucion.fechaInicio ||
-        !form.resolucion.fechaFin
-      ) {
-        return setError("Completa la resolución y el rango.");
-      }
-    }
-
+    if (!software.nitFabricante || !software.nombreSoftware || !software.codigoSoftware)
+      return setError("Todos los campos del software son obligatorios.");
     setCargando(true);
-
     try {
-      await axiosClient.post("/Habilitacion/documento-soporte/guardar-paso", {
-        pasoActual,
-        form,
-      });
-
-      if (pasoActual < PASOS_DSE.length) {
-        setPasoActual((prev) => prev + 1);
-      } else {
-        setExito("Habilitación de documento soporte guardada correctamente.");
-      }
+      await axiosClient.post(`/Habilitacion/software?tipo=${tipo}`, software);
+      setPasoActual(2);
     } catch (e) {
-      setError(
-        e.response?.data?.mensaje ||
-          "No fue posible guardar la habilitación del documento soporte.",
-      );
+      setError(e.response?.data?.mensaje ?? "Error guardando datos del software.");
     } finally {
       setCargando(false);
     }
   };
 
-  const finalizar = async () => {
+  const guardarTestSetId = async () => {
     setError("");
-    setExito("");
+    if (!software.testSetId) return setError("El identificador del set de pruebas es obligatorio.");
     setCargando(true);
-
     try {
-      await axiosClient.post("/Habilitacion/documento-soporte/finalizar", form);
-      setExito("Proceso finalizado correctamente.");
+      await axiosClient.post(`/Habilitacion/test-set?tipo=${tipo}`, { testSetId: software.testSetId });
+      setEstado("en_proceso");
+      setPasoActual(3);
     } catch (e) {
-      setError(
-        e.response?.data?.mensaje || "No fue posible finalizar el proceso.",
-      );
+      setError(e.response?.data?.mensaje ?? "Error guardando TestSetId.");
     } finally {
       setCargando(false);
     }
   };
 
-  const renderPaso = () => {
-    switch (pasoActual) {
-      case 1:
-        return (
-          <div className="hab-page-card">
-            <h4 className="hab-section-title">Datos del documento soporte</h4>
-            <p className="hab-paso-desc">
-              Registra la información base del software o proveedor con el que
-              vas a operar el documento soporte electrónico.
-            </p>
-
-            <div className="hab-form-grid">
-              <div className="hab-field">
-                <label className="hab-label">
-                  NIT del proveedor / fabricante
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  value={form.datos.nitProveedor}
-                  onChange={(e) =>
-                    actualizarCampo("datos", "nitProveedor", e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="hab-field">
-                <label className="hab-label">Nombre del software</label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  value={form.datos.nombreSoftware}
-                  onChange={(e) =>
-                    actualizarCampo("datos", "nombreSoftware", e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="hab-field hab-field-full">
-                <label className="hab-label">Código del software</label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  value={form.datos.codigoSoftware}
-                  onChange={(e) =>
-                    actualizarCampo("datos", "codigoSoftware", e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="hab-field hab-field-full">
-                <label className="hab-label">Tipo de ambiente</label>
-                <select
-                  className="form-select form-select-sm"
-                  value={form.datos.ambiente}
-                  onChange={(e) =>
-                    actualizarCampo("datos", "ambiente", e.target.value)
-                  }
-                >
-                  <option value="2">2 — Habilitación / Pruebas</option>
-                  <option value="1">1 — Producción</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 2:
-        return (
-          <div className="hab-page-card">
-            <h4 className="hab-section-title">Numeración DIAN</h4>
-            <p className="hab-paso-desc">
-              Registra la numeración asignada para el documento soporte.
-            </p>
-
-            <div className="hab-form-grid">
-              <div className="hab-field hab-field-full">
-                <label className="hab-label">Número de autorización</label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  value={form.numeracion.numeroAutorizacion}
-                  onChange={(e) =>
-                    actualizarCampo(
-                      "numeracion",
-                      "numeroAutorizacion",
-                      e.target.value.replace(/\D/g, ""),
-                    )
-                  }
-                />
-              </div>
-
-              <div className="hab-field">
-                <label className="hab-label">Prefijo</label>
-                <input
-                  type="text"
-                  maxLength={4}
-                  className="form-control form-control-sm text-uppercase"
-                  value={form.numeracion.prefijo}
-                  onChange={(e) =>
-                    actualizarCampo(
-                      "numeracion",
-                      "prefijo",
-                      e.target.value.toUpperCase(),
-                    )
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        );
-
-      case 3:
-        return (
-          <div className="hab-page-card">
-            <h4 className="hab-section-title">Prefijos y resolución</h4>
-            <p className="hab-paso-desc">
-              Define el rango autorizado y la vigencia de la resolución.
-            </p>
-
-            <div className="hab-form-grid">
-              <div className="hab-field">
-                <label className="hab-label">Rango desde</label>
-                <input
-                  type="number"
-                  className="form-control form-control-sm"
-                  value={form.numeracion.rangoDesde}
-                  onChange={(e) =>
-                    actualizarCampo("numeracion", "rangoDesde", e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="hab-field">
-                <label className="hab-label">Rango hasta</label>
-                <input
-                  type="number"
-                  className="form-control form-control-sm"
-                  value={form.numeracion.rangoHasta}
-                  onChange={(e) =>
-                    actualizarCampo("numeracion", "rangoHasta", e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="hab-field">
-                <label className="hab-label">Vigencia desde</label>
-                <input
-                  type="date"
-                  className="form-control form-control-sm"
-                  value={form.resolucion.fechaInicio}
-                  onChange={(e) =>
-                    actualizarCampo("resolucion", "fechaInicio", e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="hab-field">
-                <label className="hab-label">Vigencia hasta</label>
-                <input
-                  type="date"
-                  className="form-control form-control-sm"
-                  value={form.resolucion.fechaFin}
-                  onChange={(e) =>
-                    actualizarCampo("resolucion", "fechaFin", e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="hab-field hab-field-full">
-                <label className="hab-label">Clave técnica</label>
-                <input
-                  type="password"
-                  className="form-control form-control-sm"
-                  value={form.resolucion.claveTecnica}
-                  onChange={(e) =>
-                    actualizarCampo(
-                      "resolucion",
-                      "claveTecnica",
-                      e.target.value,
-                    )
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        );
-
-      case 4:
-        return (
-          <div className="hab-page-card">
-            <h4 className="hab-section-title">Sincronización</h4>
-            <p className="hab-paso-desc">
-              Guarda observaciones finales y sincroniza el estado con tu
-              sistema.
-            </p>
-
-            <div className="hab-form-grid">
-              <div className="hab-field hab-field-full">
-                <label className="hab-label">Observación</label>
-                <textarea
-                  className="form-control form-control-sm"
-                  rows="4"
-                  value={form.sincronizacion.observacion}
-                  onChange={(e) =>
-                    actualizarCampo(
-                      "sincronizacion",
-                      "observacion",
-                      e.target.value,
-                    )
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
+  const guardarResolucion = async () => {
+    setError("");
+    if (resolucion.numeroAutorizacion.length !== 14)
+      return setError("El número de autorización debe tener exactamente 14 dígitos.");
+    if (!resolucion.rangoDesde || !resolucion.rangoHasta || !resolucion.claveTecnica || !resolucion.fechaInicio || !resolucion.fechaFin)
+      return setError("Todos los campos obligatorios.");
+    setCargando(true);
+    try {
+      await axiosClient.post(`/Habilitacion/resolucion?tipo=${tipo}`, resolucion);
+      setEstado("completado");
+      setExito("¡Habilitación DSE completada! Puedes emitir documentos soporte electrónicos.");
+    } catch (e) {
+      setError(e.response?.data?.mensaje ?? "Error guardando la resolución.");
+    } finally {
+      setCargando(false);
     }
   };
+
+  const irAtras = () => {
+    setError("");
+    setPasoActual((p) => Math.max(1, p - 1));
+  };
+
+  if (estado === "completado") {
+    return (
+      <div className="hab-wrapper">
+        <div className="hab-success-final">
+          <CheckCircleFill size={48} className="hab-success-icon" />
+          <h3>¡Habilitación completada!</h3>
+          <p>Ya puedes emitir Documentos Soporte Electrónicos.</p>
+          <button className="hab-btn-primary" onClick={() => navigate("/configuracion/habilitaciones")}>
+            Ver configuraciones
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="hab-wrapper">
-      <div className="header-card hab-header-card mb-3">
-        <div className="hab-header-left">
-          <h2 className="header-title mb-1">
-            Habilitación de documento soporte electrónico
-          </h2>
-          <p className="hab-subtitulo mb-0">
-            Completa el proceso en esta vista independiente.
-          </p>
-        </div>
-
-        <div className="header-icon">
-          <FileEarmarkText size={42} />
+      {/* Header como Siigo */}
+      <div className="hab-header-siigo">
+        <button className="hab-back-btn" onClick={() => navigate("/configuracion/habilitaciones")}>
+          <ArrowLeft size={20} /> Volver
+        </button>
+        <div className="hab-header-content">
+          <h5 className="hab-titulo-siigo">Habilitación Documento Soporte Electrónico</h5>
+          <BadgeEstado estado={estado} />
         </div>
       </div>
 
-      {exito && (
-        <div className="hab-alert hab-alert-ok">
-          <CheckCircleFill size={15} /> {exito}
-          <button className="hab-alert-close" onClick={() => setExito("")}>
-            <XLg size={12} />
-          </button>
+      {/* Progress bar horizontal como Siigo */}
+      <div className="hab-progress-bar">
+        <div className={`hab-progress-step ${pasoActual >= 1 ? 'completo' : ''}`}>
+          <div className="hab-step-number">1</div>
+          <span>Datos software</span>
         </div>
-      )}
+        <div className={`hab-progress-step ${pasoActual >= 2 ? 'completo' : ''}`}>
+          <div className="hab-step-number">2</div>
+          <span>Set pruebas</span>
+        </div>
+        <div className={`hab-progress-step ${pasoActual >= 3 ? 'completo' : ''}`}>
+          <div className="hab-step-number">3</div>
+          <span>Resolución</span>
+        </div>
+      </div>
 
+      {/* Error */}
       {error && (
         <div className="hab-alert hab-alert-err">
-          <XLg size={13} /> {error}
+          <X size={16} /> {error}
         </div>
       )}
 
-      <div className="hab-info-box">
-        <InfoCircle size={20} className="hab-info-icon" />
-        <div>
-          <strong>Proceso en vista separada:</strong>
-          <div>Ahora ya no dependes de modal y puedes guardar por pasos.</div>
-        </div>
-      </div>
+      {/* PASO 1: Datos software (como Siigo) */}
+      {pasoActual === 1 && (
+        <div className="hab-paso-body">
+          <div className="hab-video-section">
+            <div className="hab-video-placeholder">
+              <span>📹 Video tutorial</span>
+            </div>
+          </div>
+          <h6>Registra los datos de tu software ante la DIAN</h6>
+          <p className="hab-paso-desc">
+            Si desarrollaste el software tú mismo, usa tu propio NIT como fabricante (Art. 28, Res. 000165/2023).
+          </p>
+          
+          <div className="hab-form-grid">
+            <div className="hab-field">
+              <label>NIT del fabricante <span className="hab-req">*</span></label>
+              <input
+                type="text"
+                className="form-control form-control-sm"
+                placeholder="Ej. 900123456"
+                value={software.nitFabricante}
+                onChange={(e) => setSoftware(s => ({ ...s, nitFabricante: e.target.value }))}
+              />
+              <small>Sin dígito de verificación</small>
+            </div>
+            <div className="hab-field">
+              <label>Nombre del software <span className="hab-req">*</span></label>
+              <input
+                type="text"
+                className="form-control form-control-sm"
+                placeholder="Ej. Nubee DSE v1.0"
+                value={software.nombreSoftware}
+                onChange={(e) => setSoftware(s => ({ ...s, nombreSoftware: e.target.value }))}
+              />
+            </div>
+            <div className="hab-field hab-field-full">
+              <label>Código del software — GUID DIAN <span className="hab-req">*</span></label>
+              <input
+                type="text"
+                className="form-control form-control-sm"
+                placeholder="ab12cd34-ef56-7890-abcd-ef1234567890"
+                value={software.codigoSoftware}
+                onChange={(e) => setSoftware(s => ({ ...s, codigoSoftware: e.target.value }))}
+              />
+              <small>UUID del portal DIAN → Facturación → Modo operación</small>
+            </div>
+          </div>
 
-      <div className="hab-page">
-        <div className="hab-stepper">
-          {PASOS_DSE.map((p, i) => (
-            <React.Fragment key={p.id}>
-              <div
-                className={`hab-step ${pasoActual === p.id ? "activo" : ""} ${
-                  pasoActual > p.id ? "hecho" : ""
-                }`}
-              >
-                <div className="hab-step-circulo">
-                  {pasoActual > p.id ? <CheckLg size={11} /> : p.id}
-                </div>
-                <span className="hab-step-label">{p.label}</span>
-              </div>
-
-              {i < PASOS_DSE.length - 1 && (
-                <div
-                  className={`hab-step-linea ${
-                    pasoActual > p.id ? "completa" : ""
-                  }`}
-                />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-
-        {renderPaso()}
-
-        <div className="hab-paso-footer">
-          <button className="hab-btn-atras" onClick={() => navigate(-1)}>
-            <ArrowLeft size={13} /> Volver
-          </button>
-
-          <div style={{ display: "flex", gap: "10px" }}>
-            {pasoActual > 1 && (
-              <button className="hab-btn-atras" onClick={atras}>
-                <ArrowLeft size={13} /> Anterior
-              </button>
-            )}
-
-            {pasoActual < PASOS_DSE.length ? (
-              <button
-                className="hab-btn-sig"
-                onClick={guardarPaso}
-                disabled={cargando}
-              >
-                {cargando ? (
-                  "Guardando..."
-                ) : (
-                  <>
-                    Guardar y seguir <ArrowRight size={13} />
-                  </>
-                )}
-              </button>
-            ) : (
-              <button
-                className="hab-btn-sig hab-btn-finalizar"
-                onClick={finalizar}
-                disabled={cargando}
-              >
-                {cargando ? (
-                  "Finalizando..."
-                ) : (
-                  <>
-                    <CheckLg size={13} /> Finalizar habilitación
-                  </>
-                )}
-              </button>
-            )}
+          <div className="hab-paso-footer">
+            <button className="hab-btn-sig" onClick={guardarSoftware} disabled={cargando}>
+              {cargando ? "Guardando..." : <>Siguiente <ArrowRight size={16} /></>}
+            </button>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* PASO 2: Set de pruebas (como imagen) */}
+      {pasoActual === 2 && (
+        <div className="hab-paso-body">
+          <h6>Ingresa el identificador del set de pruebas</h6>
+          <p className="hab-paso-desc">
+            Generado en portal DIAN. Tu sistema enviará documentos prueba vía <code>SendTestSetAsync</code>.
+          </p>
+          
+          <div className="hab-field hab-field-full">
+            <label>Identificador del set de pruebas (TestSetId) <span className="hab-req">*</span></label>
+            <input
+              type="text"
+              className="form-control form-control-lg"
+              placeholder="4de36cb4-9973-4ea4-a156-34e909aa24dc"
+              value={software.testSetId}
+              onChange={(e) => setSoftware(s => ({ ...s, testSetId: e.target.value }))}
+            />
+            <small>UUID 36 caracteres. Portal DIAN → Set de pruebas</small>
+          </div>
+
+          <div className="hab-paso-footer">
+            <button className="hab-btn-atras" onClick={irAtras}>
+              <ArrowLeft size={16} /> Atrás
+            </button>
+            <button className="hab-btn-sig" onClick={guardarTestSetId} disabled={cargando}>
+              {cargando ? "Guardando..." : <>Siguiente <ArrowRight size={16} /></>}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* PASO 3: Resolución (igual FEV) */}
+      {pasoActual === 3 && (
+        <div className="hab-paso-body">
+          <h6>Datos de la resolución de numeración</h6>
+          <p className="hab-paso-desc">
+            Obtenida en portal DIAN → Numeración → Autorización de rangos.
+          </p>
+          
+          {/* Tu form de resolución exacto de FEV */}
+          <div className="hab-form-grid">
+            {/* ... copia tu Paso 3 de FEV aquí ... */}
+          </div>
+
+          <div className="hab-paso-footer">
+            <button className="hab-btn-atras" onClick={irAtras}>
+              <ArrowLeft size={16} /> Atrás
+            </button>
+            <button className="hab-btn-sig hab-btn-finalizar" onClick={guardarResolucion} disabled={cargando}>
+              {cargando ? "Finalizando..." : <>Finalizar habilitación <Check size={16} /></>}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Éxito global */}
+      {exito && (
+        <div className="hab-alert hab-alert-ok">
+          <CheckCircleFill size={16} /> {exito}
+          <button className="hab-alert-close" onClick={() => setExito("")}>
+            <XLg size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

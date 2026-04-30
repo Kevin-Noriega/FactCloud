@@ -48,7 +48,7 @@ function Chatbot() {
       }
     }
 
-    return "Lo siento, no entendí tu pregunta. ¿Podrías reformularla? También puedes contactar a nuestro equipo de soporte en soporte@factcloud.com o llamar al +57 300 123 4567.";
+    return "Lo siento, no entendí tu pregunta. ¿Podrías reformularla? También puedes contactar a nuestro equipo de soporte en soporte@Nubee.com o llamar al +57 300 123 4567.";
   };
 
   const handleSendMessage = (customMessage = null) => {
@@ -108,7 +108,7 @@ function Chatbot() {
                 <Person size={24} />
               </div>
               <div className="chatbot-header-text">
-                <h4>Asistente de FactCloud</h4>
+                <h4>Asistente de Nubee</h4>
               </div>
             </div>
             <button className="chatbot-close-btn" onClick={() => setIsOpen(false)}>
@@ -158,9 +158,9 @@ function Chatbot() {
                 <p className="options-prompt">Deseas recibir información de:</p>
                 <button 
                   className="option-btn"
-                  onClick={() => handleOptionClick("¿Qué es FactCloud?")}
+                  onClick={() => handleOptionClick("¿Qué es Nubee?")}
                 >
-                  Información (Conocer más sobre FactCloud)
+                  Información (Conocer más sobre Nubee)
                 </button>
                 <button 
                   className="option-btn"
