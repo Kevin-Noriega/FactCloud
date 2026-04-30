@@ -42,7 +42,9 @@ import HabilitacionDian from "./components/dashboard/Habilitacion/HabilitacionDi
 import NuevoClienteEmpresa from "./components/Clientes/NuevoClienteEmpresa";
 import HabilitacionDSE from "./components/dashboard/Habilitacion/HabilitacionDSE";
 import HabilitacionFacturacionFE from "./components/dashboard/Habilitacion/HabilitacionFacturacionFE";
-
+import Impuestos from "./pages/Impuestos";
+import PerfilCliente from "./pages/PerfilCliente";
+import CuentasContables from "./pages/CuentasContables";
 const NotFound = () => (
   <div className="text-center py-5">
     <h1 className="display-1 text-danger">404</h1>
@@ -149,7 +151,10 @@ function App() {
                 path="/habilitacion-dian/factura-electronica"
                 element={<HabilitacionFacturacionFE />}
               />
-              <Route path="/habilitacion-dian/habilitacionDSE" element={<HabilitacionDSE />} />
+              <Route
+                path="/habilitacion-dian/habilitacionDSE"
+                element={<HabilitacionDSE />}
+              />
               <Route path="/compras-gastos" element={<ComprasGastos />} />
               <Route path="/facturas" element={<Facturas />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
@@ -157,6 +162,9 @@ function App() {
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/tienda" element={<Tienda />} />
               <Route path="/tienda/:categoria" element={<Tienda />} />
+              <Route path="/impuestos" element={<Impuestos />} />
+              <Route path="/perfil-cliente/:id" element={<PerfilCliente />} />
+              <Route path="/cuentas-contables" element={<CuentasContables />} />
             </Route>
           </Route>
 

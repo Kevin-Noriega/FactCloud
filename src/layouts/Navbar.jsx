@@ -91,9 +91,6 @@ export default function NavBar() {
 
           <div className="nav-divider"></div>
 
-          <Link to="/register" className="btn-cta-nav">
-            Empezar gratis
-          </Link>
 
           <Link to="/login" className="btn-login">
             Ingresar

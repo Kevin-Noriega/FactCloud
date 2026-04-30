@@ -1,0 +1,355 @@
+/* styles/CuentasContables.css */
+
+.cc-page {
+  min-height: 100vh;
+  background: #f5f6fa;
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Header */
+.cc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px 10px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+.cc-titulo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #00b5ad;
+  margin: 0;
+}
+.cc-btn-excel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1.5px solid #00b5ad;
+  color: #00b5ad;
+  border-radius: 4px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cc-btn-excel:hover {
+  background: #e0f7f6;
+}
+.cc-alert {
+  background: #fdecea;
+  color: #c62828;
+  padding: 8px 28px;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Body layout */
+.cc-body {
+  display: grid;
+  grid-template-columns: 660px 1px 1fr;
+  flex: 1;
+  background: #fff;
+  margin: 16px 28px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.cc-divider {
+  background: #e0e0e0;
+  width: 1px;
+}
+
+/* Panel izquierdo */
+.cc-panel-izq {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.cc-link-expandir {
+  background: none;
+  border: none;
+  color: #00b5ad;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: left;
+  padding: 8px 14px 4px;
+  font-weight: 500;
+}
+.cc-link-expandir:hover {
+  text-decoration: underline;
+}
+
+/* Filtros */
+.cc-filtros {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid #e0e0e0;
+}
+.cc-filtro-campo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-right: 1px solid #e0e0e0;
+}
+.cc-filtro-campo:last-child {
+  border-right: none;
+}
+.cc-filtro-ico {
+  font-size: 0.8rem;
+  color: #9e9e9e;
+}
+.cc-filtro-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.82rem;
+  color: #444;
+  background: transparent;
+}
+.cc-filtro-input::placeholder {
+  color: #bdbdbd;
+}
+
+/* Árbol */
+.cc-arbol {
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px 0;
+}
+
+/* Nodos del árbol */
+.cc-nodo {
+  user-select: none;
+}
+.cc-nodo-fila {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background 0.1s;
+  border-bottom: 1px solid #fafafa;
+}
+.cc-nodo-fila:hover {
+  background: #f0fafa;
+}
+.cc-nodo-activo {
+  background: #e0f7f6 !important;
+}
+
+/* Sangría por nivel */
+.cc-nodo-hijos {
+  padding-left: 16px;
+}
+
+.cc-nodo-toggle {
+  width: 12px;
+  font-size: 0.6rem;
+  color: #9e9e9e;
+  flex-shrink: 0;
+}
+.cc-nodo-codigo {
+  min-width: 80px;
+  font-weight: 600;
+  color: #444;
+  font-size: 0.8rem;
+}
+.cc-codigo-inactivo {
+  color: #e53935 !important;
+}
+.cc-nodo-nombre {
+  color: #222;
+  font-size: 0.82rem;
+}
+
+/* Niveles — indentación visual */
+.nivel-0 .cc-nodo-codigo {
+  font-size: 0.85rem;
+  color: #222;
+}
+.nivel-1 .cc-nodo-codigo {
+  padding-left: 8px;
+}
+.nivel-2 .cc-nodo-codigo {
+  padding-left: 16px;
+}
+.nivel-3 .cc-nodo-codigo {
+  padding-left: 24px;
+  color: #e53935;
+}
+.nivel-4 .cc-nodo-codigo {
+  padding-left: 32px;
+}
+
+/* Panel derecho vacío */
+.cc-vacia {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  text-align: center;
+  color: #9e9e9e;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Panel derecho */
+.cc-panel-der {
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+/* Detalle */
+.cc-detalle {
+}
+.cc-detalle-header {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.cc-detalle-codigo-row {
+  display: grid;
+  grid-template-columns: 60px 140px 1fr 120px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.cc-detalle-label-blue {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #00b5ad;
+}
+.cc-detalle-transaccional {
+  text-align: right;
+  color: #00b5ad;
+  font-size: 0.78rem;
+}
+.cc-detalle-vals {
+  align-items: center;
+}
+.cc-detalle-clase {
+  font-size: 0.78rem;
+  color: #757575;
+}
+.cc-detalle-input-codigo {
+  border: none;
+  border-bottom: 1.5px solid #e0e0e0;
+  font-size: 0.875rem;
+  padding: 3px 0;
+  width: 100%;
+  outline: none;
+  background: transparent;
+}
+.cc-detalle-input-nombre {
+  border: none;
+  border-bottom: 1.5px solid #e0e0e0;
+  font-size: 0.875rem;
+  padding: 3px 0;
+  width: 100%;
+  outline: none;
+  background: transparent;
+}
+.cc-detalle-input-nombre:focus,
+.cc-detalle-input-codigo:focus {
+  border-bottom-color: #00b5ad;
+}
+
+.cc-btn-crear-grupo {
+  background: none;
+  border: none;
+  color: #00b5ad;
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 0;
+  display: block;
+  margin-top: 8px;
+}
+.cc-btn-crear-grupo:hover {
+  text-decoration: underline;
+}
+
+/* Sección */
+.cc-detalle-seccion {
+  margin-bottom: 20px;
+}
+.cc-detalle-seccion-titulo {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 14px;
+}
+.cc-detalle-campo {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 0.85rem;
+}
+.cc-detalle-campo label {
+  color: #757575;
+  font-size: 0.82rem;
+}
+.cc-detalle-campo-check {
+  align-items: center;
+}
+.cc-detalle-select {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  outline: none;
+  background: #fff;
+  width: 100%;
+}
+.cc-detalle-select:focus {
+  border-color: #00b5ad;
+}
+.cc-detalle-valor-readonly {
+  font-size: 0.82rem;
+  color: #444;
+}
+.cc-link-ver {
+  color: #00b5ad;
+  font-size: 0.78rem;
+  margin-left: 6px;
+}
+.cc-detalle-nota {
+  font-size: 0.75rem;
+  color: #9e9e9e;
+  margin-top: 10px;
+}
+
+/* Botón guardar */
+.cc-btn-guardar {
+  background: #3aaa35;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 28px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.cc-btn-guardar:hover {
+  background: #2e8829;
+}
+.cc-btn-guardar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.cc-loading {
+  padding: 40px;
+  text-align: center;
+  color: #9e9e9e;
+}
