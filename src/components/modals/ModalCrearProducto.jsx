@@ -1,11 +1,30 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../api/config";
 import Select from "../StyledSelect";
 import unidadesMedidaDIAN from "../../utils/UnidadesMedidas.json";
 import tipoProductoDIAN from "../../utils/TiposProducto.json";
 import "../../styles/modals/ModalCrearProducto.css";
 
+/* Opciones combinadas para "Impuesto cargo" */
+const IMPUESTO_OPCIONES = [
+  { value: "IVA_19",    label: "IVA 19%" },
+  { value: "IVA_5",     label: "IVA 5%"  },
+  { value: "IVA_0",     label: "IVA 0%"  },
+  { value: "INC",       label: "INC (Impoconsumo)" },
+  { value: "EXCLUIDO",  label: "Excluido de IVA"   },
+  { value: "EXENTO",    label: "Exento de IVA"     },
+];
+
+function getImpuestoCargo(p) {
+  if (p.productoExcluido) return "EXCLUIDO";
+  if (p.productoExento)   return "EXENTO";
+  if (p.gravaINC)         return "INC";
+  return `${p.tipoImpuesto}_${p.tarifaIVA}`;
+}
+
 function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
+  const navigate = useNavigate();
   const [producto, setProducto] = useState({
     esServicio: false,
     nombre: "",
@@ -171,6 +190,20 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
     }
   };
 
+  const handleImpuestoCargo = (val) => {
+    setProducto((prev) => ({
+      ...prev,
+      productoExcluido: val === "EXCLUIDO",
+      productoExento:   val === "EXENTO",
+      gravaINC:         val === "INC",
+      tipoImpuesto: val.startsWith("IVA") ? "IVA" : "INC",
+      tarifaIVA:
+        val === "IVA_19" ? 19 :
+        val === "IVA_5"  ? 5  :
+        val === "IVA_0"  ? 0  : prev.tarifaIVA,
+    }));
+  };
+
   const handleTipoChange = (esServicio) => {
     setProducto({
       ...producto,
@@ -265,59 +298,85 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
     }
   };
 
+  const unidadOpts = unidadesMedidaDIAN.map((um) => ({
+    value: um.nombre,
+    label: `${um.codigo} - ${um.nombre}`,
+  }));
+  const tipoProductoOpts = tipoProductoDIAN.map((tp) => ({
+    value: tp.descripcion,
+    label: `${tp.codigo} - ${tp.descripcion}`,
+  }));
+
   return (
     <div className="modal-crearNuevo-overlay" onClick={onClose}>
       <div className="modal-crearNuevo-content" onClick={(e) => e.stopPropagation()}>
+
+        {/* ── Header ── */}
         <div className="modal-crearNuevo-header">
           <h5>
             {productoEditando
-              ? `Editar ${producto.esServicio ? 'Servicio' : 'Producto'}`
-              : `Nuevo ${producto.esServicio ? 'Servicio' : 'Producto'}`}
+              ? `Editar ${producto.esServicio ? "servicio" : "producto"}`
+              : "Crear producto o servicio"}
           </h5>
-          <button className="btn-close" onClick={onClose}></button>
+          <button className="btn-close" type="button" onClick={onClose} aria-label="Cerrar" />
         </div>
 
+        {/* ── Body + Footer dentro del form ── */}
+        <form onSubmit={handleSubmit} style={{ display: "contents" }}>
         <div className="modal-crearNuevo-body">
-          <form onSubmit={handleSubmit}>
+
+            {/* Tipo selector */}
             <div className="tipo-selector">
-              <div className="form-check form-check-inline">
+              <div className="form-check">
                 <input
                   className="form-check-input"
                   type="radio"
                   name="tipoItem"
-                  id="tipoProducto"
+                  id="mpTipoProducto"
                   checked={!producto.esServicio}
                   onChange={() => handleTipoChange(false)}
                 />
-                <label className="form-check-label" htmlFor="tipoProducto">
-                  <strong>Producto</strong> (Bien físico con inventario)
+                <label className="form-check-label" htmlFor="mpTipoProducto">
+                  Producto
                 </label>
               </div>
-              <div className="form-check form-check-inline">
+              <div className="form-check">
                 <input
                   className="form-check-input"
                   type="radio"
                   name="tipoItem"
-                  id="tipoServicio"
+                  id="mpTipoServicio"
                   checked={producto.esServicio}
                   onChange={() => handleTipoChange(true)}
                 />
-                <label className="form-check-label" htmlFor="tipoServicio">
-                  <strong>Servicio</strong> (Intangible sin inventario)
+                <label className="form-check-label" htmlFor="mpTipoServicio">
+                  Servicio
                 </label>
               </div>
             </div>
 
-            <h6 className="section-title-producto-producto">Información Básica</h6>
+            {/* ── Datos básicos ── */}
+            <h6 className="section-title-producto-producto">Datos básicos</h6>
             <div className="row mb-3">
               <div className="col-md-4">
+                <label className="form-label">Código de producto (SKU)*</label>
+                <input
+                  type="text"
+                  name="codigoInterno"
+                  className="form-control"
+                  value={producto.codigoInterno}
+                  onChange={handleChange}
+                  placeholder="Ej: PROD-001"
+                />
+              </div>
+              <div className="col-md-4">
                 <label className="form-label">
-                  Nombre del {producto.esServicio ? 'Servicio' : 'Producto'} *
+                  Nombre del {producto.esServicio ? "servicio" : "producto"}*
                 </label>
                 <input
                   type="text"
                   name="nombre"
-                  className={`form-control ${errores.nombre ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.nombre ? "is-invalid" : ""}`}
                   value={producto.nombre}
                   onChange={handleChange}
                   placeholder={producto.esServicio ? "Ej: Consultoría legal" : "Ej: Laptop HP"}
@@ -325,86 +384,71 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
                 {errores.nombre && <div className="invalid-feedback">{errores.nombre}</div>}
               </div>
               <div className="col-md-4">
-                <label className="form-label">
-                  Descripción {producto.esServicio ? '*' : ''}
-                </label>
-                <input
-                  type="text"
-                  name="descripcion"
-                  className={`form-control ${errores.descripcion ? 'is-invalid' : ''}`}
-                  value={producto.descripcion}
-                  onChange={handleChange}
-                  placeholder={producto.esServicio ? "Describe el servicio en detalle" : "Opcional"}
-                />
-                {errores.descripcion && <div className="invalid-feedback">{errores.descripcion}</div>}
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Tipo Producto/Servicio *</label>
+                <label className="form-label">Unidad de medida DIAN*</label>
                 <Select
-                  name="tipoProducto"
-                  options={tipoProductoDIAN.map((um) => ({
-                    value: um.descripcion,
-                    label: `${um.codigo} - ${um.descripcion}`,
-                  }))}
-                  value={
-                    producto.tipoProducto
-                      ? tipoProductoDIAN
-                          .map((um) => ({
-                            value: um.descripcion,
-                            label: `${um.codigo} - ${um.descripcion}`,
-                          }))
-                          .find((opt) => opt.value === producto.tipoProducto)
-                      : null
-                  }
-                  onChange={(opt) => {
-                    setProducto((prev) => ({
-                      ...prev,
-                      tipoProducto: opt ? opt.value : "",
-                    }));
-                    if (errores.tipoProducto) {
-                      setErrores({ ...errores, tipoProducto: null });
-                    }
-                  }}
+                  options={unidadOpts}
+                  value={unidadOpts.find((o) => o.value === producto.unidadMedida) ?? null}
+                  onChange={(o) => setProducto((p) => ({ ...p, unidadMedida: o ? o.value : "" }))}
                   isClearable
-                  placeholder="Seleccionar tipo"
-                  className={errores.tipoProducto ? 'is-invalid' : ''}
+                  placeholder="Seleccionar"
                 />
-                {errores.tipoProducto && <div className="invalid-feedback d-block">{errores.tipoProducto}</div>}
               </div>
             </div>
 
             <div className="row mb-3">
-              <div className="col-md-4">
-                <label className="form-label">Código Interno</label>
-                <input
-                  type="text"
-                  name="codigoInterno"
-                  className="form-control"
-                  value={producto.codigoInterno}
+              <div className="col-md-12">
+                <label className="form-label">
+                  Descripción larga{producto.esServicio ? " *" : ""}
+                </label>
+                <textarea
+                  name="descripcion"
+                  className={`form-control ${errores.descripcion ? "is-invalid" : ""}`}
+                  value={producto.descripcion}
                   onChange={handleChange}
-                  placeholder="SKU o código interno"
+                  rows={3}
+                  placeholder={producto.esServicio ? "Describe el servicio en detalle (mín. 10 caracteres)" : "Descripción opcional del producto"}
                 />
+                {errores.descripcion && <div className="invalid-feedback">{errores.descripcion}</div>}
+              </div>
+            </div>
+
+            {/* Campos extra básicos */}
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label">Tipo de producto/servicio (DIAN)*</label>
+                <Select
+                  options={tipoProductoOpts}
+                  value={tipoProductoOpts.find((o) => o.value === producto.tipoProducto) ?? null}
+                  onChange={(o) => {
+                    setProducto((p) => ({ ...p, tipoProducto: o ? o.value : "" }));
+                    if (errores.tipoProducto) setErrores((e) => ({ ...e, tipoProducto: null }));
+                  }}
+                  isClearable
+                  placeholder="Seleccionar tipo"
+                  className={errores.tipoProducto ? "is-invalid" : ""}
+                />
+                {errores.tipoProducto && <div className="invalid-feedback d-block">{errores.tipoProducto}</div>}
               </div>
               <div className="col-md-4">
-                <label className="form-label">Código UNSPSC * (DIAN)</label>
+                <label className="form-label">Código UNSPSC* (DIAN — 8 dígitos)</label>
                 <input
                   type="text"
                   name="codigoUNSPSC"
-                  className={`form-control ${errores.codigoUNSPSC ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.codigoUNSPSC ? "is-invalid" : ""}`}
                   value={producto.codigoUNSPSC}
                   onChange={handleChange}
-                  placeholder="8 dígitos"
+                  placeholder="Ej: 43211507"
                   maxLength="8"
                 />
                 {errores.codigoUNSPSC && <div className="invalid-feedback">{errores.codigoUNSPSC}</div>}
               </div>
               {!producto.esServicio && (
                 <div className="col-md-4">
-                  <label className="form-label">Código EAN/Barras *</label>
+                  <label className="form-label">Código EAN / Barras*</label>
                   <input
                     type="text"
                     name="codigoBarras"
-                    className={`form-control ${errores.codigoBarras ? 'is-invalid' : ''}`}
+                    className={`form-control ${errores.codigoBarras ? "is-invalid" : ""}`}
                     value={producto.codigoBarras}
                     onChange={handleChange}
                     placeholder="EAN-13 o código de barras"
@@ -417,11 +461,11 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
             {!producto.esServicio && (
               <div className="row mb-3">
                 <div className="col-md-4">
-                  <label className="form-label">Marca *</label>
+                  <label className="form-label">Marca*</label>
                   <input
                     type="text"
                     name="marca"
-                    className={`form-control ${errores.marca ? 'is-invalid' : ''}`}
+                    className={`form-control ${errores.marca ? "is-invalid" : ""}`}
                     value={producto.marca}
                     onChange={handleChange}
                     placeholder="Ej: Samsung"
@@ -456,27 +500,64 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
             {producto.esServicio && (
               <div className="row mb-3">
                 <div className="col-md-6">
-                  <label className="form-label">Categoría del Servicio</label>
+                  <label className="form-label">Categoría del servicio</label>
                   <input
                     type="text"
                     name="categoria"
                     className="form-control"
                     value={producto.categoria}
                     onChange={handleChange}
-                    placeholder="Ej: Consultoría, Mantenimiento, etc."
+                    placeholder="Ej: Consultoría, Mantenimiento…"
                   />
                 </div>
               </div>
             )}
 
-            <h6 className="section-title-producto-producto">Base Gravable y Retenciones</h6>
+            {/* ── Impuestos ── */}
+            <h6 className="section-title-producto-producto">Impuestos</h6>
+            {errores.impuestos && (
+              <div className="alert alert-danger">{errores.impuestos}</div>
+            )}
+            <div className="row mb-3">
+              <div className="col-md-4">
+                <label className="form-label">Impuesto cargo</label>
+                <select
+                  className="form-select"
+                  value={getImpuestoCargo(producto)}
+                  onChange={(e) => handleImpuestoCargo(e.target.value)}
+                >
+                  {IMPUESTO_OPCIONES.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </div>
+              {getImpuestoCargo(producto) === "INC" && (
+                <div className="col-md-3">
+                  <label className="form-label">Tarifa INC (%)*</label>
+                  <input
+                    type="number"
+                    name="tarifaINC"
+                    className={`form-control ${errores.tarifaINC ? "is-invalid" : ""}`}
+                    value={producto.tarifaINC}
+                    onChange={handleChange}
+                    step="0.01"
+                    min="0"
+                    placeholder="Ej: 8"
+                  />
+                  {errores.tarifaINC && <div className="invalid-feedback">{errores.tarifaINC}</div>}
+                </div>
+              )}
+            </div>
+
+            {/* ── Base Gravable y Retenciones ── */}
+            <h6 className="section-title-producto-producto">Base gravable y retenciones</h6>
             <div className="row mb-3">
               <div className="col-md-3">
-                <label className="form-label">Base Gravable *</label>
+                <label className="form-label">Base gravable*</label>
                 <input
                   type="number"
                   name="baseGravable"
-                  className={`form-control ${errores.baseGravable ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.baseGravable ? "is-invalid" : ""}`}
                   value={producto.baseGravable}
                   onChange={handleChange}
                   step="0.01"
@@ -485,102 +566,86 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
                 {errores.baseGravable && <div className="invalid-feedback">{errores.baseGravable}</div>}
               </div>
               <div className="col-md-3">
-                <label className="form-label">Retención Fuente (%)</label>
+                <label className="form-label">Retención fuente (%)</label>
                 <input
                   type="number"
                   name="retencionFuente"
-                  className={`form-control ${errores.retencionFuente ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.retencionFuente ? "is-invalid" : ""}`}
                   value={producto.retencionFuente}
                   onChange={handleChange}
-                  step="0.01"
-                  min="0"
-                  max="100"
+                  step="0.01" min="0" max="100"
                   placeholder="Ej: 2.5"
                 />
                 {errores.retencionFuente && <div className="invalid-feedback">{errores.retencionFuente}</div>}
-                <small className="text-muted">
-                  Valor: ${valorRetencionFuente.toLocaleString("es-CO")}
-                </small>
+                <small className="text-muted">Valor: ${valorRetencionFuente.toLocaleString("es-CO")}</small>
               </div>
               <div className="col-md-3">
                 <label className="form-label">Retención IVA (%)</label>
                 <input
                   type="number"
                   name="retencionIVA"
-                  className={`form-control ${errores.retencionIVA ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.retencionIVA ? "is-invalid" : ""}`}
                   value={producto.retencionIVA}
                   onChange={handleChange}
-                  step="0.01"
-                  min="0"
-                  max="100"
+                  step="0.01" min="0" max="100"
                   placeholder="Ej: 15"
                 />
                 {errores.retencionIVA && <div className="invalid-feedback">{errores.retencionIVA}</div>}
-                <small className="text-muted">
-                  Valor: ${valorRetencionIVA.toLocaleString("es-CO")}
-                </small>
+                <small className="text-muted">Valor: ${valorRetencionIVA.toLocaleString("es-CO")}</small>
               </div>
               <div className="col-md-3">
                 <label className="form-label">Retención ICA (%)</label>
                 <input
                   type="number"
                   name="retencionICA"
-                  className={`form-control ${errores.retencionICA ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.retencionICA ? "is-invalid" : ""}`}
                   value={producto.retencionICA}
                   onChange={handleChange}
-                  step="0.01"
-                  min="0"
-                  max="100"
+                  step="0.01" min="0" max="100"
                   placeholder="Ej: 6.9"
                 />
                 {errores.retencionICA && <div className="invalid-feedback">{errores.retencionICA}</div>}
-                <small className="text-muted">
-                  Valor: ${valorRetencionICA.toLocaleString("es-CO")}
-                </small>
+                <small className="text-muted">Valor: ${valorRetencionICA.toLocaleString("es-CO")}</small>
               </div>
             </div>
 
-            <h6 className="section-title-producto-producto">Unidad y Precios</h6>
+            {/* ── Lista de precios de venta ── */}
+            <h6 className="section-title-producto-producto">Lista de precios de venta</h6>
             <div className="row mb-3">
+              <div className="col-md-12">
+                <div className="form-check mb-3">
+                  <input
+                    type="checkbox"
+                    id="mpIncluirIVA"
+                    className="form-check-input"
+                    checked={producto.productoExento || false}
+                    readOnly
+                  />
+                  <label className="form-check-label" htmlFor="mpIncluirIVA">
+                    Incluir IVA en el precio de venta
+                  </label>
+                </div>
+              </div>
               <div className="col-md-4">
-                <label className="form-label">Unidad de Medida</label>
-                <Select
-                  name="unidadMedida"
-                  options={unidadesMedidaDIAN.map((um) => ({
-                    value: um.nombre,
-                    label: `${um.codigo} - ${um.nombre}`,
-                  }))}
-                  value={
-                    producto.unidadMedida
-                      ? unidadesMedidaDIAN
-                          .map((um) => ({
-                            value: um.nombre,
-                            label: `${um.codigo} - ${um.nombre}`,
-                          }))
-                          .find((opt) => opt.value === producto.unidadMedida)
-                      : null
-                  }
-                  onChange={(opt) =>
-                    setProducto((prev) => ({
-                      ...prev,
-                      unidadMedida: opt ? opt.value : "",
-                    }))
-                  }
-                  isClearable
-                  placeholder="Seleccionar unidad"
+                <label className="form-label">Lista de precio 1</label>
+                <input
+                  className="form-control"
+                  value="Lista de precio por defecto"
+                  readOnly
+                  style={{ background: "#f5f5f5", color: "#9e9e9e" }}
                 />
               </div>
               <div className="col-md-4">
-                <label className="form-label">Precio Unitario *</label>
+                <label className="form-label">Precio (COP)*</label>
                 <input
                   type="number"
                   name="precioUnitario"
-                  className={`form-control ${errores.precioUnitario ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.precioUnitario ? "is-invalid" : ""}`}
                   value={producto.precioUnitario}
                   onChange={handleChange}
                   step="0.01"
                   min="0"
-                  placeholder="Precio de venta"
+                  placeholder="0.00"
                 />
                 {errores.precioUnitario && <div className="invalid-feedback">{errores.precioUnitario}</div>}
               </div>
@@ -589,7 +654,7 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
                 <input
                   type="number"
                   name="costo"
-                  className={`form-control ${errores.costo ? 'is-invalid' : ''}`}
+                  className={`form-control ${errores.costo ? "is-invalid" : ""}`}
                   value={producto.costo}
                   onChange={handleChange}
                   step="0.01"
@@ -600,102 +665,17 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
               </div>
             </div>
 
-            <h6 className="section-title-producto-producto">Impuestos - Configuración DIAN</h6>
-            {errores.impuestos && (
-              <div className="alert alert-danger py-2">{errores.impuestos}</div>
-            )}
-            <div className="row mb-3">
-              <div className="col-md-3">
-                <label className="form-label">Tipo de Impuesto</label>
-                <select
-                  name="tipoImpuesto"
-                  className="form-select"
-                  value={producto.tipoImpuesto}
-                  onChange={handleChange}
-                >
-                  <option value="IVA">IVA</option>
-                  <option value="INC">INC</option>
-                </select>
-              </div>
-              <div className="col-md-3">
-                <label className="form-label">Tarifa IVA (%)</label>
-                <select
-                  name="tarifaIVA"
-                  className="form-select"
-                  value={producto.tarifaIVA}
-                  onChange={handleChange}
-                >
-                  <option value="0">0%</option>
-                  <option value="5">5%</option>
-                  <option value="19">19%</option>
-                </select>
-              </div>
-              <div className="col-md-3">
-                <div className="form-check mt-4">
-                  <input
-                    type="checkbox"
-                    name="productoExcluido"
-                    className="form-check-input"
-                    checked={producto.productoExcluido}
-                    onChange={handleChange}
-                  />
-                  <label className="form-check-label">Producto Excluido</label>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="form-check mt-4">
-                  <input
-                    type="checkbox"
-                    name="productoExento"
-                    className="form-check-input"
-                    checked={producto.productoExento}
-                    onChange={handleChange}
-                  />
-                  <label className="form-check-label">Producto Exento</label>
-                </div>
-              </div>
-            </div>
-
-            <div className="row mb-3">
-              <div className="col-md-4">
-                <div className="form-check">
-                  <input
-                    type="checkbox"
-                    name="gravaINC"
-                    className="form-check-input"
-                    checked={producto.gravaINC}
-                    onChange={handleChange}
-                  />
-                  <label className="form-check-label">Grava Impuesto al Consumo (INC)</label>
-                </div>
-              </div>
-              {producto.gravaINC && (
-                <div className="col-md-4">
-                  <label className="form-label">Tarifa INC (%) *</label>
-                  <input
-                    type="number"
-                    name="tarifaINC"
-                    className={`form-control ${errores.tarifaINC ? 'is-invalid' : ''}`}
-                    value={producto.tarifaINC}
-                    onChange={handleChange}
-                    step="0.01"
-                    min="0"
-                  />
-                  {errores.tarifaINC && <div className="invalid-feedback">{errores.tarifaINC}</div>}
-                </div>
-              )}
-            </div>
-
+            {/* ── Inventario (solo productos) ── */}
             {!producto.esServicio && (
               <>
                 <h6 className="section-title-producto">Inventario</h6>
                 <div className="row mb-3">
                   <div className="col-md-6">
-                    <label className="form-label">Cantidad Disponible *</label>
+                    <label className="form-label">Cantidad disponible*</label>
                     <input
                       type="number"
                       name="cantidadDisponible"
-                      className={`form-control ${errores.cantidadDisponible ? 'is-invalid' : ''}`}
+                      className={`form-control ${errores.cantidadDisponible ? "is-invalid" : ""}`}
                       value={producto.cantidadDisponible}
                       onChange={handleChange}
                       min="0"
@@ -704,7 +684,7 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
                     {errores.cantidadDisponible && <div className="invalid-feedback">{errores.cantidadDisponible}</div>}
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label">Cantidad Mínima</label>
+                    <label className="form-label">Cantidad mínima</label>
                     <input
                       type="number"
                       name="cantidadMinima"
@@ -719,23 +699,42 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
               </>
             )}
 
-            <div className="modal-producto-footer">
-              <button type="button" className="btn btn-secondary" onClick={onClose} disabled={guardando}>
-                Cancelar
-              </button>
-              <button type="submit" className="btn btn-success" disabled={guardando}>
-                {guardando ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2"></span>
-                    Guardando...
-                  </>
-                ) : (
-                  productoEditando ? `Actualizar ${producto.esServicio ? 'Servicio' : 'Producto'}` : `Guardar ${producto.esServicio ? 'Servicio' : 'Producto'}`
-                )}
-              </button>
-            </div>
-          </form>
         </div>
+
+        {/* ── Footer ── */}
+        <div className="modal-producto-footer">
+          <button
+            type="button"
+            className="btn btn-cancelar-texto"
+            onClick={onClose}
+            disabled={guardando}
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className="btn btn-creacion-completa"
+            onClick={() => { onClose(); navigate("/crearProducto"); }}
+            disabled={guardando}
+          >
+            <span className="mp-icon-external">↗</span> Creación completa
+          </button>
+          <button
+            type="submit"
+            className="btn btn-guardar-primary"
+            disabled={guardando}
+          >
+            {guardando ? (
+              <><span className="spinner-border-sm" /> Guardando...</>
+            ) : (
+              productoEditando
+                ? `Actualizar ${producto.esServicio ? "servicio" : "producto"}`
+                : "Guardar"
+            )}
+          </button>
+        </div>
+
+        </form>
       </div>
     </div>
   );
