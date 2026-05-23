@@ -10,13 +10,14 @@ import {
   InfoCircleFill,
   ArrowRight,
 } from "react-bootstrap-icons";
-import BankList from "../../utils/Bancos.json";
+import FallbackBankList from "../../utils/Bancos.json";
 import tipoIdentificacion from "../../utils/TiposDocumentos.json";
 import ciudades from "../../utils/Ciudades.json";
 
 export default function PSEPayment({
   formData,
   errors,
+  bankList,
   sameAsOwner,
   onFieldChange,
   onSelectChange,
@@ -24,6 +25,8 @@ export default function PSEPayment({
   psePersonType,
   onPersonTypeChange,
 }) {
+  // Usa lista dinámica de la API; si está vacía usa el JSON local como fallback
+  const bancos = bankList && bankList.length > 0 ? bankList : FallbackBankList;
   return (
     <div className="pse-siigo-wrapper">
 
@@ -64,7 +67,7 @@ export default function PSEPayment({
           label="Entidad bancaria *"
           name="banco"
           error={errors.banco}
-          options={(BankList || []).map((b) => ({
+          options={bancos.map((b) => ({
             value: b.codigo,
             label: b.nombre,
           }))}
@@ -83,7 +86,7 @@ export default function PSEPayment({
             formData.banco
               ? {
                 value: formData.banco,
-                label: (BankList || []).find(
+                label: bancos.find(
                   (b) => b.codigo === formData.banco
                 )?.nombre,
               }
@@ -297,7 +300,7 @@ export default function PSEPayment({
             dirigido al portal seguro de{" "}
             <strong>
               {formData.banco
-                ? (BankList || []).find(
+                ? bancos.find(
                   (b) => b.codigo === formData.banco
                 )?.nombre || "tu banco"
                 : "tu banco seleccionado"}

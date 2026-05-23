@@ -1,209 +1,453 @@
-.modal-cliente-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1050;
-  animation: fadeIn 0.2s ease-in-out;
+/* ===== ModalCrearCliente — diseño dos columnas ===== */
+
+/* Override de contenedor para el modal de cliente */
+.modal-crearNuevo-content.mc-modal {
+  max-width: 1250px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.mc-modal .modal-crearNuevo-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 24px;
 }
 
-.modal-cliente-content {
-  background: white;
-  border-radius: 12px;
-  width: 95%;
-  max-width: 1000px;
-  max-height: 90vh;
+.mc-modal .modal-crearNuevo-header h5 {
+  color: #1565c0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.mc-modal .modal-crearNuevo-body {
+  background: #f0f4f8;
+  padding: 16px 20px 0;
+}
+
+/* ─── Formulario ─── */
+.mc-form {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  animation: slideDown 0.3s ease-out;
-  overflow: hidden;
+  gap: 0;
 }
 
-@keyframes slideDown {
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.modal-cliente-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid #e0e0e0;
+/* ─── Fila de dos tarjetas ─── */
+.mc-cards-row {
   display: flex;
-  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* ─── Tarjeta ─── */
+.mc-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 18px 20px 14px;
+  min-width: 0;
+}
+
+.mc-card-header {
+  display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.modal-cliente-header h5 {
-  margin: 0;
-  font-size: 1.25rem;
+  gap: 6px;
+  font-size: 0.92rem;
   font-weight: 600;
-  color: white;
+  color: #212121;
+  margin-bottom: 18px;
 }
 
-.modal-cliente-header .btn-close {
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
+.mc-red-dot {
+  color: #e53935;
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
-.modal-cliente-header .btn-close:hover {
-  opacity: 1;
+.mc-help-circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #1565c0;
+  color: #1565c0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  margin-left: 4px;
+  flex-shrink: 0;
 }
 
-.modal-cliente-body {
-  padding: 24px;
-  overflow-y: auto;
+/* ─── Campo genérico ─── */
+.mc-field {
+  margin-bottom: 14px;
+}
+
+.mc-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #9e9e9e;
+  margin-bottom: 3px;
+  letter-spacing: 0.01em;
+}
+
+.mc-req {
+  color: #e53935;
+  margin-right: 2px;
+}
+
+/* Input estilo subrayado */
+.mc-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #bdbdbd;
+  background: transparent;
+  padding: 4px 0 5px;
+  font-size: 0.88rem;
+  color: #212121;
+  outline: none;
+  transition: border-color 0.18s;
+  border-radius: 0;
+}
+
+.mc-input:focus {
+  border-bottom-color: #1565c0;
+}
+
+.mc-input::placeholder {
+  color: #c5c5c5;
+  font-size: 0.85rem;
+}
+
+/* Select nativo estilo subrayado */
+.mc-native-select {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #bdbdbd;
+  background: transparent;
+  padding: 4px 18px 5px 0;
+  font-size: 0.88rem;
+  color: #212121;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239e9e9e'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  cursor: pointer;
+  transition: border-color 0.18s;
+}
+
+.mc-native-select:focus {
+  border-bottom-color: #1565c0;
+}
+
+/* ─── Fila de 2 columnas ─── */
+.mc-row-2col {
+  display: flex;
+  gap: 16px;
+}
+
+.mc-row-2col .mc-field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ─── Fila de Identificación + DV ─── */
+.mc-row-id-dv {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.mc-field-identificacion {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0 !important;
+}
+
+.mc-field-autocompletar {
+  flex-shrink: 0;
+  margin-bottom: 0 !important;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 6px;
+}
+
+.mc-id-dv-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mc-id-dv-group .mc-input {
   flex: 1;
 }
 
-.modal-cliente-body::-webkit-scrollbar {
-  width: 8px;
+.mc-input-dv {
+  width: 48px !important;
+  flex: 0 0 48px !important;
+  text-align: center;
 }
 
-.modal-cliente-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+.mc-dv-label {
+  font-size: 0.8rem;
+  color: #9e9e9e;
+  flex-shrink: 0;
 }
 
-.modal-cliente-body::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
+.mc-link-autocompletar {
+  font-size: 0.8rem;
+  color: #1976d2;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.modal-cliente-body::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.mc-link-autocompletar:hover {
+  text-decoration: underline;
 }
 
-.section-title-cliente {
-  font-size: 1rem;
+.mc-help-inline {
+  color: #9e9e9e;
+}
+
+/* ─── Filas de teléfono ─── */
+.mc-phone-row {
+  margin-bottom: 10px;
+}
+
+.mc-phone-labels {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.mc-phone-labels .mc-label {
+  flex: 1;
+}
+
+.mc-phone-labels .mc-label:first-child { flex: 0 0 72px; }
+.mc-phone-labels .mc-label:last-child  { flex: 0 0 80px; }
+
+.mc-phone-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mc-indicativo {
+  flex: 0 0 72px !important;
+  width: 72px !important;
+}
+
+.mc-telefono {
+  flex: 1 !important;
+}
+
+.mc-extension {
+  flex: 0 0 80px !important;
+  width: 80px !important;
+}
+
+.mc-phone-row-sm {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.mc-phone-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.mc-phone-field-grow {
+  flex: 1;
+}
+
+/* ─── Botones de contacto ─── */
+.mc-eliminar-btn {
+  background: none;
+  border: none;
+  color: #e53935;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mc-agregar-link {
+  background: none;
+  border: none;
+  color: #1565c0;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 2px 0;
+  text-align: left;
+  margin-top: 2px;
+}
+
+.mc-agregar-link:hover {
+  text-decoration: underline;
+}
+
+/* ─── Tarjeta derecha: layout billing ─── */
+.mc-billing-layout {
+  display: flex;
+  gap: 16px;
+}
+
+.mc-billing-left {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ─── Sección Responsabilidad Fiscal ─── */
+.mc-fiscal {
+  flex: 0 0 210px;
+  min-width: 0;
+}
+
+.mc-fiscal-title {
+  font-size: 0.82rem;
   font-weight: 600;
-  color: #333;
-  border-bottom: 2px solid #667eea;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-  margin-top: 20px;
+  color: #1565c0;
+  margin-bottom: 6px;
 }
 
-.section-title-cliente:first-child {
-  margin-top: 0;
+.mc-fiscal-help {
+  font-size: 0.75rem;
+  color: #757575;
+  line-height: 1.4;
+  margin-bottom: 10px;
 }
 
-.modal-cliente-footer {
+.mc-check-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+}
+
+.mc-checkbox {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: #1565c0;
+  flex-shrink: 0;
+}
+
+.mc-check-item label {
+  font-size: 0.8rem;
+  color: #424242;
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+/* ─── Fila extra (campos adicionales) ─── */
+.mc-extra-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.mc-extra-row .mc-field {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+/* ─── Footer ─── */
+.mc-footer {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
+  padding: 14px 0 16px;
+  background: #f0f4f8;
+  margin-top: 4px;
 }
 
-.modal-cliente-footer .btn {
-  min-width: 100px;
-}
-
-.modal-cliente-body .form-label {
+.mc-btn-cancel {
+  background: none;
+  border: none;
+  color: #1565c0;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: #495057;
-  margin-bottom: 6px;
-  font-size: 0.9rem;
-}
-
-.modal-cliente-body .form-control,
-.modal-cliente-body .form-select {
-  border-radius: 6px;
-  border: 1px solid #ced4da;
-  padding: 8px 12px;
-  font-size: 0.95rem;
-}
-
-.modal-cliente-body .form-control:focus,
-.modal-cliente-body .form-select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-}
-
-.modal-cliente-body .form-check {
-  padding: 8px 0;
-}
-
-.modal-cliente-body .form-check-input {
-  width: 1.2rem;
-  height: 1.2rem;
-  margin-top: 0.15rem;
   cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background 0.15s;
 }
 
-.modal-cliente-body .form-check-input:checked {
-  background-color: #667eea;
-  border-color: #667eea;
+.mc-btn-cancel:hover:not(:disabled) {
+  background: rgba(21, 101, 192, 0.08);
 }
 
-.modal-cliente-body .form-check-label {
-  margin-left: 8px;
-  cursor: pointer;
+.mc-btn-guardar {
+  background: #1976d2;
+  color: #fff;
+  border: none;
   font-size: 0.9rem;
+  font-weight: 500;
+  padding: 8px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
-.modal-cliente-body .row.mb-3 {
-  margin-bottom: 1rem !important;
-}
-@media (max-width: 768px) {
-  .modal-cliente-content {
-    width: 98%;
-    max-height: 95vh;
-  }
-
-  .modal-cliente-header {
-    padding: 16px;
-  }
-
-  .modal-cliente-body {
-    padding: 16px;
-  }
-
-  .modal-cliente-header h5 {
-    font-size: 1.1rem;
-  }
-
-  .section-title-cliente {
-    font-size: 0.95rem;
-  }
+.mc-btn-guardar:hover:not(:disabled) {
+  background: #1565c0;
 }
 
-.modal-cliente-body .css-1pahdxg-control,
-.modal-cliente-body .css-yk16xz-control {
-  border-radius: 6px;
-  border-color: #ced4da;
-  min-height: 38px;
+.mc-btn-guardar:disabled,
+.mc-btn-cancel:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-.modal-cliente-body .css-1pahdxg-control:hover,
-.modal-cliente-body .css-yk16xz-control:hover {
-  border-color: #adb5bd;
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .mc-cards-row {
+    flex-direction: column;
+  }
+
+  .mc-billing-layout {
+    flex-direction: column;
+  }
+
+  .mc-fiscal {
+    flex: none;
+    width: 100%;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  .mc-extra-row {
+    flex-direction: column;
+  }
 }
 
-.modal-cliente-body .css-1pahdxg-control--is-focused,
-.modal-cliente-body .css-yk16xz-control--is-focused {
-  border-color: #667eea !important;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+@media (max-width: 600px) {
+  .mc-modal .modal-crearNuevo-body {
+    padding: 10px 10px 0;
+  }
+
+  .mc-card {
+    padding: 14px;
+  }
+
+  .mc-row-2col {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .mc-row-id-dv {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }

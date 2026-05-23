@@ -189,6 +189,17 @@
 .doc-dropdown-crear:hover { background: #eafaf0 !important; }
 .doc-dropdown-divider { height: 1px; background: var(--doc-border); margin: 0; }
 
+/* Opción "Crear nuevo" dentro de react-select (formatOptionLabel) */
+.doc-option-crear {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #1e7e34;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 2px 0;
+}
+
 /* ── Fecha ────────────────────────────────────────────────── */
 .doc-fecha-wrap { display: flex; align-items: center; gap: 4px; }
 .doc-fecha-wrap .form-control { flex: 1; }
@@ -204,7 +215,6 @@
 /* ── Tabla ────────────────────────────────────────────────── */
 .doc-table-scroll {
   width        : 100%;
-  overflow-x   : auto;
   border-radius: 8px;
   border       : 1.5px solid var(--doc-border);
 }
@@ -212,7 +222,7 @@
   width           : 100%;
   border-collapse : collapse;
   font-size       : 0.85rem;
-  min-width       : 780px;
+  table-layout    : fixed;
 }
 .doc-tabla thead tr  { background: #f4f6f9; }
 .doc-tabla th {
@@ -229,6 +239,7 @@
   padding       : 7px 8px;
   border-bottom : 1px solid #f0f2f5;
   vertical-align: middle;
+  overflow      : hidden;
 }
 .doc-tabla tbody tr:last-child td { border-bottom: none; }
 .doc-tabla tbody tr:hover          { background: #fafbfc; }
@@ -240,8 +251,12 @@
   padding    : 28px 0 !important;
   font-size  : 0.87rem;
 }
-.doc-num-input    { width: 80px !important; min-width: 60px !important; }
-.doc-select-item  { min-width: 100px; }
+.doc-num-input    { width: 100% !important; }
+.doc-select-item  { width: 100%; }
+.doc-tabla .form-control,
+.doc-tabla .form-select,
+.doc-tabla .form-control-sm,
+.doc-tabla .form-select-sm { width: 100%; }
 
 /* ── Botón trash ──────────────────────────────────────────── */
 .doc-btn-trash {
@@ -485,6 +500,63 @@
   background: #c7d2fe;
 }
 
+
+/* ── Inputs nativos (form-control / form-select) ──────────── */
+.page-crear-body .form-control,
+.page-crear-body .form-select,
+.page-crear-body .form-control-sm,
+.page-crear-body .form-select-sm {
+  border       : 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size    : 0.875rem;
+  color        : #212121;
+  background   : #fff;
+  transition   : border-color 0.15s, box-shadow 0.15s;
+  padding      : 6px 10px;
+  line-height  : 1.5;
+}
+
+.page-crear-body .form-control-sm,
+.page-crear-body .form-select-sm {
+  padding      : 4px 8px;
+  font-size    : 0.82rem;
+  border-radius: 5px;
+}
+
+.page-crear-body .form-control:focus,
+.page-crear-body .form-select:focus,
+.page-crear-body .form-control-sm:focus,
+.page-crear-body .form-select-sm:focus {
+  border-color: #1a6fdb;
+  box-shadow  : 0 0 0 3px rgba(26, 111, 219, 0.12);
+  outline     : none;
+}
+
+.page-crear-body .form-control::placeholder {
+  color    : #bdbdbd;
+  font-size: 0.85rem;
+}
+
+.page-crear-body .form-control:disabled,
+.page-crear-body .form-select:disabled,
+.page-crear-body .form-control-sm:disabled,
+.page-crear-body .form-select-sm:disabled {
+  background: #f3f4f6;
+  color     : #9ca3af;
+  cursor    : not-allowed;
+}
+
+.page-crear-body input[type="number"].form-control,
+.page-crear-body input[type="number"].form-control-sm {
+  -moz-appearance: textfield;
+}
+.page-crear-body input[type="number"].form-control::-webkit-outer-spin-button,
+.page-crear-body input[type="number"].form-control::-webkit-inner-spin-button,
+.page-crear-body input[type="number"].form-control-sm::-webkit-outer-spin-button,
+.page-crear-body input[type="number"].form-control-sm::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 960px) {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import PlanCard from "../components/PlanCard";
+import PlanCard from "../components/plans/PlanCard";
 import Stepper from "../components/Stepper";
 import CountdownBanner from "../components/CountdownBanner";
 import { usePlanes } from "../hooks/usePlanes";

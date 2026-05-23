@@ -1,6 +1,14 @@
-
 .header-card {
   background: var(--primary);
+  border-radius: 16px;
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-card-admin {
+  border: 1px solid var(--border-admin-hero);
+  background: transparent;
   border-radius: 16px;
   padding: 10px;
   position: relative;
@@ -19,7 +27,7 @@
 }
 
 .header-content {
-  
+
   color: white;
   display: flex;
   justify-content: space-between;
@@ -39,7 +47,7 @@
   border-bottom: 1px solid var(--primary);
   margin-bottom: 0;
   position: relative;
-  
+
 }
 
 /* Tabs normales */
@@ -117,9 +125,10 @@
   left: 0;
   right: 0;
   height: 3px;
-  background:var(--primary);
+  background: var(--primary);
   border-radius: 2px 2px 0 0;
 }
+
 .item-content {
   background-color: white;
   border-top: none;
@@ -150,7 +159,7 @@
 }
 
 .alert-info {
-   border-radius: 0 8px 0 0;
+  border-radius: 0 8px 0 0;
   background: #dbeafe;
   color: var(--primary-dark);
   border-left: 4px solid var(--primary);
@@ -168,6 +177,7 @@
 .alert .btn-close:hover {
   opacity: 1;
 }
+
 .btn-filtros {
   background: var(--primary);
   color: #ffffff;
@@ -192,8 +202,9 @@
 }
 
 
-.btn-export{
-  background: var(--success); /* Verde Excel */
+.btn-export {
+  background: var(--success);
+  /* Verde Excel */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -205,6 +216,7 @@
   align-items: center;
   gap: 8px;
 }
+
 .btn-export:hover {
   color: white;
   background: var(--success-dark);
@@ -234,6 +246,7 @@
   border: none;
   transition: all 0.2s;
 }
+
 .btn-crear:hover {
   color: white;
   background-color: var(--primary-dark);
@@ -291,16 +304,31 @@
 }
 
 .table-responsive {
-    display: block;      
+  display: block;
   width: 100%;
   overflow-x: auto;
   overflow-y: visible;
   -webkit-overflow-scrolling: touch;
 }
-.table-responsive::-webkit-scrollbar       { height: 6px; }
-.table-responsive::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
-.table-responsive::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
-.table-responsive::-webkit-scrollbar-thumb:hover { background: #999; }
+
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
 .table {
   margin: 0;
   border-collapse: collapse;
@@ -334,9 +362,11 @@
 .table tbody tr:last-child td {
   border-bottom: none;
 }
+
 .btns-group {
   display: flex;
-  gap: 0.5rem; /* Antes era 0.75rem, ahora más separado */
+  gap: 0.5rem;
+  /* Antes era 0.75rem, ahora más separado */
 }
 
 .btn-group-acciones {
@@ -344,9 +374,11 @@
   gap: 0.5rem;
   justify-content: center;
 }
+
 .btn {
   border-radius: 10px;
 }
+
 .btn-ver,
 .btn-editar,
 .btn-eliminar {
@@ -357,6 +389,7 @@
   white-space: nowrap;
   color: white !important;
 }
+
 .btn-ver {
   background: var(--primary);
 }
@@ -381,6 +414,7 @@
 .btn-eliminar:hover {
   background: var(--danger-dark);
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -496,6 +530,7 @@
   background-color: var(--success);
   color: white;
 }
+
 .btn-cobrar:hover {
   background: var(--success-dark);
   color: white;
@@ -505,6 +540,7 @@
   background-color: var(--danger);
   color: white;
 }
+
 .btn-pdf:hover {
   background-color: var(--danger-dark);
   color: white;
@@ -513,6 +549,7 @@
 .btn-xml {
   background-color: var(--warning);
 }
+
 .btn-xml:hover {
   background-color: var(--warning-dark);
 }
@@ -521,6 +558,7 @@
   background: var(--primary);
   color: white;
 }
+
 .btn-email:hover {
   background: var(--primary-dark);
   color: white;
@@ -565,6 +603,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -575,11 +614,13 @@
     opacity: 0;
     transform: translateY(30px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
+
 /*informacion de las notas*/
 
 
@@ -690,13 +731,13 @@
   }
 }
 
-  .nota-info {
-    padding: 1rem;
-  }
+.nota-info {
+  padding: 1rem;
+}
 
-  .nota-info p {
-    font-size: 0.9rem;
-  }
+.nota-info p {
+  font-size: 0.9rem;
+}
 
 
 @media (max-width: 576px) {
@@ -732,7 +773,7 @@
 }
 
 .text-danger {
-  color: var(--danger)!important;
+  color: var(--danger) !important;
 }
 
 .text-muted {

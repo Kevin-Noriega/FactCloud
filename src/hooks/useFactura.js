@@ -22,7 +22,20 @@ export const useFactura = () => {
 
   const [clientes, setClientes] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [productosSeleccionados, setProductosSeleccionados] = useState([]);
+  const FILA_VACIA = {
+    productoId: "",
+    descripcion: "",
+    cantidad: 1,
+    precioUnitario: 0,
+    unidadMedida: "Unidad",
+    porcentajeDescuento: 0,
+    impuestoCargo: "IVA_19",
+    impuestoRetencion: "",
+    tarifaIVA: 0,
+    tarifaINC: 0,
+    tarifaRetencion: 0,
+  };
+  const [productosSeleccionados, setProductosSeleccionados] = useState([{ ...FILA_VACIA }]);
   const [contactos, setContactos] = useState([]);
   const [formasPago, setFormasPago] = useState([{ metodo: "", valor: "" }]);
   const [facturasUsadas, setFacturasUsadas] = useState({

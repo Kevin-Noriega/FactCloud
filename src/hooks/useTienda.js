@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosClient from "../api/axiosClient";
+import { normalizePlan } from "../utils/plans/normalizePlan";
 
 export const useTienda = (options = {}) => {
   const queryClient = useQueryClient();
@@ -18,7 +19,7 @@ export const useTienda = (options = {}) => {
         ]);
 
       const planesDisponibles = planesRes.status === "fulfilled"
-        ? planesRes.value.data : [];
+        ? (planesRes.value.data ?? []).map(normalizePlan) : [];
       const addonsDisponibles = addonsRes.status === "fulfilled"
         ? addonsRes.value.data : [];
       const planActual = planActualRes.status === "fulfilled"
