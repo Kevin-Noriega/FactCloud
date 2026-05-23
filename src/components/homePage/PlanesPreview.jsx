@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import PlanCard from "../PlanCard";
+import PlanCard from "../plans/PlanCard";
 import { usePlanes } from "../../hooks/usePlanes";
 import "../../styles/HomePage/PlanesPreview.css";
 

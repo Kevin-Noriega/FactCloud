@@ -20,8 +20,9 @@ export default function login() {
     setError("");
 
     try {
-      await login(correo, contrasena); 
-      navigate("/dashboard", { replace: true });
+      const data = await login(correo, contrasena);
+      const rol = (data?.usuario?.rol ?? "").toLowerCase();
+      navigate(rol === "admin" ? "/admin" : "/dashboard", { replace: true });
     } catch (err) {
       if (err.response?.status === 423) {
         setError(
@@ -38,44 +39,34 @@ export default function login() {
       setLoading(false);
     }
   };
-  // ... JSX
-
-  const estiloAnimacion = document.createElement("style");
-  estiloAnimacion.innerHTML = `
-@keyframes moverFondo {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-`;
-  document.head.appendChild(estiloAnimacion);
-
   return (
     <main className="login-layout">
       <section className="login-visual">
-        <div className="login-visual-overlay">
-          <div className="login-visual-content">
-            <img
-              src="/img/LogoWhite_sinFondo.png"
-              alt="Nubee"
-              className="login-visual-logo"
-            />
+        <a href="/" className="login-back-link" title="Regresar al inicio" style={{ textDecoration: "none" }}>
+          <div className="login-visual-overlay">
+            <div className="login-visual-content">
+              <img
+                src="/img/LogoWhite_sinFondo.png"
+                alt="Nubee"
+                className="login-visual-logo"
+              />
 
-            <h2 className="login-visual-title">
-              Bienvenido de nuevo
-            </h2>
+              <h2 className="login-visual-title">
+                Bienvenido de nuevo
+              </h2>
 
-            <p className="login-visual-subtitle">
-              Nos alegra verte otra vez. Accede a tu cuenta y continúa
-              gestionando tu facturación de forma segura y sencilla.
-            </p>
+              <p className="login-visual-subtitle">
+                Nos alegra verte otra vez. Accede a tu cuenta y continúa
+                gestionando tu facturación de forma segura y sencilla.
+              </p>
+            </div>
           </div>
-        </div>
-        <img
-          src="/img/img_login.webp"
-          alt="Background"
-          className="login-visual-bg"
-        />
+          <img
+            src="/img/img_login.webp"
+            alt="Background"
+            className="login-visual-bg"
+          />
+        </a>
       </section>
 
       <section className="login-form-section">
@@ -177,7 +168,7 @@ export default function login() {
             Crear cuenta
           </button>
 
-          <footer className="login-footer">
+          <footer className="login-footer" style={{ backgroundColor: "transparent" }}>
             <div className="login-footer-links">
               <a href="/terminos">Términos</a>
               <span>•</span>

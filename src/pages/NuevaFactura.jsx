@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import ReactSelect, { components as RsComponents } from "react-select";
 import Select from "../components/StyledSelect";
 import {
   Trash,
@@ -134,7 +135,6 @@ const TIPOS_FACTURA = [
   //{ value: "03", label: "Factura en Contingencia" },
 ];
 
-// ✅ Medio de pago (cbc:PaymentMeansCode) — separado de la condición
 const OPCIONES_MEDIO_PAGO = [
   { value: "10", label: "Efectivo" },
   { value: "30", label: "Crédito" },
@@ -148,31 +148,118 @@ const OPCIONES_MEDIO_PAGO = [
   { value: "ZZZ", label: "Otros" },
 ];
 
-/* ── Estilos react-select ─────────────────────────── */
 const mkSelectStyles = (invalid = false) => ({
   control: (base, state) => ({
     ...base,
-    minHeight: "34px",
-    height: "34px",
-    borderRadius: "6px",
-    borderColor: invalid ? "#dc3545" : state.isFocused ? "#1a73e8" : "#ced4da",
+    minHeight: 34,
+    height: 34,
+    borderRadius: 6,
+    display: "flex",
+    alignItems: "center",
+
+    borderColor: invalid
+      ? "#dc3545"
+      : state.isFocused
+        ? "#1a73e8"
+        : "#ced4da",
+
     boxShadow: invalid
       ? "0 0 0 0.2rem rgba(220,53,69,0.15)"
       : state.isFocused
         ? "0 0 0 0.2rem rgba(26,115,232,0.15)"
         : "none",
+
+    fontSize: "0.875rem",
+
+    "&:hover": {
+      borderColor: state.isFocused ? "#1a73e8" : "#b5bcc3",
+    },
+  }),
+
+  valueContainer: (base) => ({
+    ...base,
+    height: "100%",
+    padding: "0 8px",
+    display: "flex",
+    alignItems: "center",
+    overflow: "hidden",
+  }),
+
+  singleValue: (base) => ({
+    ...base,
+    margin: 0,
+    display: "flex",
+    alignItems: "center",
+    maxWidth: "100%",
+    top: "50%",
+    transform: "translateY(-50%)",
+    lineHeight: 1.2
+  }),
+
+  placeholder: (base) => ({
+    ...base,
+    margin: 0,
+    color: "#6c757d",
+  }),
+
+  input: (base) => ({
+    ...base,
+    margin: 0,
+    padding: 0,
+  }),
+
+  indicatorsContainer: (base) => ({
+    ...base,
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+  }),
+
+  clearIndicator: (base) => ({
+    ...base,
+    padding: "0 4px",
+  }),
+
+  dropdownIndicator: (base) => ({
+    ...base,
+    padding: "0 6px",
+  }),
+
+  indicatorSeparator: () => ({
+    display: "none",
+  }),
+
+  menu: (base) => ({
+    ...base,
+    zIndex: 9999,
     fontSize: "0.875rem",
   }),
-  valueContainer: (b) => ({ ...b, padding: "0 10px" }),
-  input: (b) => ({ ...b, margin: 0, padding: 0 }),
-  dropdownIndicator: (b) => ({ ...b, padding: "0 6px" }),
-  indicatorSeparator: () => ({ display: "none" }),
-  menu: (b) => ({ ...b, zIndex: 9999, fontSize: "0.875rem" }),
-});
 
-/* ═══════════════════════════════════════════════════
-   COMPONENTE PRINCIPAL
-═══════════════════════════════════════════════════ */
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.data.__isCrear
+      ? state.isFocused
+        ? "#eafaf0"
+        : "#f6fef9"
+      : state.isSelected
+        ? "#1a73e8"
+        : state.isFocused
+          ? "#f0f4ff"
+          : "#fff",
+
+    color: state.data.__isCrear
+      ? "#1e7e34"
+      : state.isSelected
+        ? "#fff"
+        : "#212121",
+
+    borderTop: state.data.__isCrear
+      ? "1.5px solid #e6f4ea"
+      : "none",
+
+    fontWeight: state.data.__isCrear ? 600 : 400,
+  }),
+});
 export default function NuevaFactura() {
   const {
     factura,
@@ -206,8 +293,6 @@ export default function NuevaFactura() {
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
   const [nombreSugeridoCliente, setNombreSugeridoCliente] = useState("");
   const [nombreSugeridoProducto, setNombreSugeridoProducto] = useState("");
-  // ✅ Correcto — sincronizado con el estado del hook
-  // ✅ Ambos tipos muestran impuestos
   const mostrarImpuestos =
     factura.tipoFactura === "01" || factura.tipoFactura === "02";
 
@@ -229,32 +314,38 @@ export default function NuevaFactura() {
   const pagoCoincide = Math.abs(totalFormasPago - totales.totalFactura) <= 0.01;
   const fmt = (n) =>
     (Number(n) || 0).toLocaleString("es-CO", { minimumFractionDigits: 2 });
-  // En consola del navegador — solo para testing
-  //const u = JSON.parse(localStorage.getItem("usuario"));
-  //u.prefijoAutorizadoDIAN = "FACT";
-  //localStorage.setItem("usuario", JSON.stringify(u));
 
-  /* ── Opciones ────────────────────────────────── */
-  const opcionesClientes = clientes.map((c) => ({
-    value: c.id,
-    label: `${c.nombre}${c.apellido ? " " + c.apellido : ""} — ${c.numeroIdentificacion}`,
-  }));
+  const CREAR_CLIENTE_OPT = { value: "__CREAR_CLIENTE__", label: "Crear nuevo cliente", __isCrear: true };
+  const CREAR_PRODUCTO_OPT = { value: "__CREAR_PRODUCTO__", label: "Crear nuevo producto", __isCrear: true };
+
+  const opcionesClientes = useMemo(
+    () => [
+      ...clientes.map((c) => ({
+        value: c.id,
+        label: `${c.nombre}${c.apellido ? " " + c.apellido : ""} — ${c.numeroIdentificacion}`,
+      })),
+      CREAR_CLIENTE_OPT,
+    ],
+    [clientes],
+  );
 
   const opcionesContactos = contactos.map((c) => ({
     value: c.id,
     label: `${c.nombre}${c.cargo ? " — " + c.cargo : ""}`,
   }));
 
-  const opcionesProductos = () =>
-    productos.map((p) => ({
+  const opcionesProductos = () => [
+    ...productos.map((p) => ({
       value: p.id,
-      codigoInterno: p.codigoInterno, // ← campo extra para formatOptionLabel
+      nombre: p.nombre,
+      codigoInterno: p.codigoInterno,
       label: `${p.nombre} — $${(p.precioUnitario || 0).toLocaleString("es-CO")}`,
-    }));
+    })),
+    CREAR_PRODUCTO_OPT,
+  ];
   return (
     <div className="page-crear">
       <div className="page-crear-header">
-        {/* Botón FUERA del banner */}
         <button
           className="btn btn-volver btn-sm mb-3"
           onClick={() => navigate(-1)}
@@ -365,20 +456,31 @@ export default function NuevaFactura() {
                         (o) => o.value === factura.clienteId,
                       ) ?? null
                     }
-                    onChange={(opt) =>
+                    onChange={(opt) => {
+                      if (opt?.value === "__CREAR_CLIENTE__") {
+                        handleCrearCli("");
+                        return;
+                      }
                       setFactura((p) => ({
                         ...p,
                         clienteId: opt?.value ?? "",
                         contactoId: "",
-                      }))
-                    }
+                      }));
+                    }}
                     onBlur={() => marcar("clienteId")}
-                    noOptionsMessage={({ inputValue }) => (
-                      <NoOptionsCliente
-                        inputValue={inputValue}
-                        onCrear={handleCrearCli}
-                      />
-                    )}
+                    noOptionsMessage={() => "No se encontraron clientes"}
+                    filterOption={(option, input) =>
+                      option.data.__isCrear ||
+                      option.label.toLowerCase().includes(input.toLowerCase())
+                    }
+                    formatOptionLabel={(opt) =>
+                      opt.__isCrear ? (
+                        <span className="doc-option-crear">
+                          <PlusCircle size={13} style={{ marginRight: 5 }} />
+                          {opt.label}
+                        </span>
+                      ) : opt.label
+                    }
                     isClearable
                     placeholder="Buscar cliente..."
                   />
@@ -488,29 +590,21 @@ export default function NuevaFactura() {
                 <table className="doc-tabla">
                   <thead>
                     <tr>
-                      <th className="doc-th-num">#</th>
-                      <th style={{ minWidth: 180 }}>Producto</th>
-                      <th style={{ minWidth: 140 }}>Descripción</th>
-                      <th className="text-end" style={{ width: 80 }}>
-                        Cant
-                      </th>
-                      <th className="text-end" style={{ width: 110 }}>
-                        Valor Unitario
-                      </th>
-                      <th className="text-end" style={{ width: 80 }}>
-                        % Desc.
-                      </th>
+                      <th className="doc-th-num" style={{ width: "3%" }}>#</th>
+                      <th style={{ width: mostrarImpuestos ? "20%" : "30%" }}>Producto</th>
+                      <th style={{ width: mostrarImpuestos ? "15%" : "24%" }}>Descripción</th>
+                      <th className="text-end" style={{ width: "6%" }}>Cant</th>
+                      <th className="text-end" style={{ width: "9%" }}>Valor Unitario</th>
+                      <th className="text-end" style={{ width: "6%" }}>% Desc.</th>
                       {/* Solo para electrónica */}
                       {mostrarImpuestos && (
                         <>
-                          <th style={{ minWidth: 180 }}>Impuesto Cargo</th>
-                          <th style={{ minWidth: 180 }}>Impuesto Retención</th>
+                          <th style={{ width: "13%" }}>Impuesto Cargo</th>
+                          <th style={{ width: "13%" }}>Impuesto Retención</th>
                         </>
                       )}
-                      <th className="text-end" style={{ width: 100 }}>
-                        Valor Total
-                      </th>
-                      <th style={{ width: 32 }}></th>
+                      <th className="text-end" style={{ width: "9%" }}>Valor Total</th>
+                      <th style={{ width: "3%" }}></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -533,10 +627,9 @@ export default function NuevaFactura() {
                             {/* # */}
                             <td className="doc-td-num">{idx + 1}</td>
 
-                            {/* Producto */}
                             <td>
                               <Select
-                                menuPortalTarget={document?.body ?? null} // ← seguro
+                                menuPortalTarget={document?.body ?? null}
                                 styles={{
                                   ...mkSelectStyles(),
                                   control: (b, s) => ({
@@ -546,7 +639,7 @@ export default function NuevaFactura() {
                                   menuPortal: (base) => ({
                                     ...base,
                                     zIndex: 9999,
-                                  }), // ← evita que quede detrás
+                                  }),
                                 }}
                                 options={opts}
                                 value={
@@ -556,47 +649,41 @@ export default function NuevaFactura() {
                                       String(item.productoId),
                                   ) ?? null
                                 }
-                                onChange={(opt) =>
-                                  actualizarProducto(
-                                    idx,
-                                    "productoId",
-                                    opt?.value ?? "",
-                                  )
+                                onChange={(opt) => {
+                                  if (opt?.value === "__CREAR_PRODUCTO__") {
+                                    handleCrearPro("");
+                                    return;
+                                  }
+                                  actualizarProducto(idx, "productoId", opt?.value ?? "");
+                                  const prod = productos.find((p) => p.id === opt?.value);
+                                  if (prod) {
+                                    actualizarProducto(idx, "precioUnitario", prod.precioUnitario ?? 0);
+                                    actualizarProducto(idx, "descripcion", prod.descripcion ?? prod.nombre ?? "");
+                                  }
+                                }}
+                                filterOption={(option, input) =>
+                                  option.data.__isCrear ||
+                                  option.label.toLowerCase().includes(input.toLowerCase())
                                 }
-                                formatOptionLabel={(option, { context }) =>
-                                  context === "menu" ? (
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: 1,
-                                      }}
-                                    >
-                                      
-                                      <span>{option.label}</span>
-                                    </div>
-                                  ) : (
-                                    // context === "value" → valor seleccionado en el input
-                                    <span>
-                                      <span
-                                        style={{
-                                          fontSize: 14,
-                                          color: "#000000",
-                                          marginRight: 6,
-                                        }}
-                                      >
-                                        {option.codigoInterno}
+                                formatOptionLabel={(option, { context }) => {
+                                  if (option.__isCrear) {
+                                    return (
+                                      <span className="doc-option-crear">
+                                        <PlusCircle size={13} style={{ marginRight: 5 }} />
+                                        {option.label}
                                       </span>
-                                     
-                                    </span>
-                                  )
-                                }
-                                noOptionsMessage={({ inputValue }) => (
-                                  <NoOptionsProducto
-                                    inputValue={inputValue}
-                                    onCrear={handleCrearPro}
-                                  />
-                                )}
+                                    );
+                                  }
+                                  if (context === "value") {
+                                    return (
+                                      <span style={{ fontSize: "0.85rem", color: "#212121" }}>
+                                        {option.nombre || option.label}
+                                      </span>
+                                    );
+                                  }
+                                  return <span>{option.label}</span>;
+                                }}
+                                noOptionsMessage={() => "No se encontraron productos"}
                                 isClearable
                                 placeholder="Buscar..."
                               />
@@ -609,24 +696,9 @@ export default function NuevaFactura() {
                                 className="form-control form-control-sm"
                                 value={item.descripcion ?? ""}
                                 placeholder="Descripción..."
-                                onChange={(opt) => {
-                                  actualizarProducto(
-                                    idx,
-                                    "productoId",
-                                    opt?.value ?? "",
-                                  );
-                                  // ✅ Auto-poblar descripción con el nombre del producto
-                                  const prod = productos.find(
-                                    (p) => p.id === opt?.value,
-                                  );
-                                  if (prod) {
-                                    actualizarProducto(
-                                      idx,
-                                      "descripcion",
-                                      prod.nombre,
-                                    );
-                                  }
-                                }}
+                                onChange={(e) =>
+                                  actualizarProducto(idx, "descripcion", e.target.value)
+                                }
                               />
                             </td>
 
@@ -1014,11 +1086,9 @@ export default function NuevaFactura() {
           )}
           {mostrarModalProducto && (
             <ModalCrearProducto
-              open
-              nombreSugerido={nombreSugeridoProducto}
               onClose={() => setMostrarModalProducto(false)}
-              onSuccess={(p) => {
-                agregarProductoLocal(p);
+              onGuardadoExitoso={(msg, prod) => {
+                if (prod) agregarProductoLocal(prod);
                 setMostrarModalProducto(false);
               }}
             />

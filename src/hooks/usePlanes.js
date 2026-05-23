@@ -1,14 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosClient from "../api/axiosClient";
+import { normalizePlan } from "../utils/plans/normalizePlan";
 
 export const usePlanes = () => {
   return useQuery({
     queryKey: ["planes"],
     queryFn: async () => {
-      //usar axiosClient, no fetch
-      const response = await axiosClient.get("/planes");
-
-      return response.data;
+      const { data } = await axiosClient.get("/planes");
+      return Array.isArray(data) ? data.map(normalizePlan) : [];
     },
     staleTime: 10 * 60 * 1000,
     retry: false,

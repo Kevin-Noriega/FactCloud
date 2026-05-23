@@ -7,9 +7,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
 import MainLayout from "./layouts/MainLayout";
+import AdminLayout from "./layouts/AdminLayout";
 import AuthLayout from "./layouts/Auth";
 import PublicLayout from "./layouts/PublicLayout";
 import RegisterLayout from "./layouts/registerLayout";
+import { AdminRoute } from "./components/AdminRoute";
+
+// Admin pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsuarios from "./pages/admin/AdminUsuarios";
+import AdminClientes from "./pages/admin/AdminClientes";
+import AdminFacturas from "./pages/admin/AdminFacturas";
+import AdminProductos from "./pages/admin/AdminProductos";
+import AdminConfiguracion from "./pages/admin/AdminConfiguracion";
+import AdminPlanes from "./pages/admin/AdminPlanes";
+import AdminAuditoria from "./pages/admin/AdminAuditoria";
+import AdminSuscripciones from "./pages/admin/AdminSuscripciones";
 
 import Home from "./pages/Home";
 import Planes from "./pages/PlanesPage";
@@ -181,6 +194,21 @@ function App() {
               <Route path="/impuestos" element={<Impuestos />} />
               <Route path="/perfil-cliente/:id" element={<PerfilCliente />} />
               <Route path="/cuentas-contables" element={<CuentasContables />} />
+            </Route>
+          </Route>
+
+          {/* ── Rutas Administrador ── */}
+          <Route element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/usuarios" element={<AdminUsuarios />} />
+              <Route path="/admin/clientes" element={<AdminClientes />} />
+              <Route path="/admin/facturas" element={<AdminFacturas />} />
+              <Route path="/admin/productos" element={<AdminProductos />} />
+              <Route path="/admin/planes" element={<AdminPlanes />} />
+              <Route path="/admin/suscripciones" element={<AdminSuscripciones />} />
+              <Route path="/admin/auditoria" element={<AdminAuditoria />} />
+              <Route path="/admin/configuracion" element={<AdminConfiguracion />} />
             </Route>
           </Route>
 

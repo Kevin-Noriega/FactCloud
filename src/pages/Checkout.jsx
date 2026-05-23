@@ -6,7 +6,6 @@ import Stepper from "../components/Stepper";
 import {
   CreditCard,
   Bank,
-  ShieldCheck,
   CheckCircleFill,
 } from "react-bootstrap-icons";
 import "../styles/Checkout.css";
@@ -143,6 +142,16 @@ export default function Checkout() {
         return;
       }
 
+      // Validar correo y NIT antes de cobrar
+      const params = new URLSearchParams({ correo: formData.email });
+      if (formData.nit) params.append("nit", formData.nit);
+      const validacion = await fetch(`/api/Usuarios/validar-registro?${params}`);
+      if (!validacion.ok) {
+        const { error } = await validacion.json();
+        alert(error);
+        return;
+      }
+
       const tipoDocCodigo = getTipoDocCodigo(formData.tipoIdentificacion);
 
       if (paymentMethod === "PSE") {
@@ -153,8 +162,9 @@ export default function Checkout() {
     } catch (error) {
       console.error("❌ Error completo:", error);
       console.error("❌ Response:", error.response?.data);
+      const errData = error.response?.data;
       alert(
-        error.response?.data?.error ||
+        errData?.detail || errData?.error ||
         error.message ||
         "Error procesando el pago"
       );
@@ -166,10 +176,16 @@ export default function Checkout() {
   // ── PSE payment flow ──
   const handlePSEPayment = async (tipoDocCodigo) => {
     const amountInCents = Math.round(parseFloat(plan.planPrice) * 100);
-    const reference = `Nubee-PSE-${Date.now()}`;
+    // UUID-like reference: no predecible y sin timestamp
+    const reference = `Nubee-PSE-${crypto.randomUUID()}`;
 
     if (isNaN(amountInCents) || amountInCents <= 0) {
       alert("Error: Monto inválido");
+      return;
+    }
+
+    if (!acceptanceToken) {
+      alert("Error: Token de aceptación no disponible. Recarga la página.");
       return;
     }
 
@@ -200,7 +216,6 @@ export default function Checkout() {
         apellido: user.apellido,
         telefono: user.telefono,
         correo: user.email,
-        password: user.password,
         tipoIdentificacion: user.tipoIdentificacion,
         numeroIdentificacion: user.numeroIdentificacion,
       },
@@ -247,7 +262,7 @@ export default function Checkout() {
     });
 
     const amountInCents = Math.round(parseFloat(plan.planPrice) * 100);
-    const reference = `Nubee-${Date.now()}`;
+    const reference = `Nubee-${crypto.randomUUID()}`;
 
     if (isNaN(amountInCents) || amountInCents <= 0) {
       alert("Error: Monto inválido");

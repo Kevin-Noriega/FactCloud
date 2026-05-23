@@ -292,6 +292,83 @@
   border-radius: 2px;
 }
 
+/* ── Plan inactivo (admin) ── */
+.plan-card.inactivo {
+  opacity: 0.65;
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.plan-card-badge.inactivo {
+  background: #94a3b8;
+  color: #fff;
+}
+
+/* ── Acciones admin ── */
+.plan-admin-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f3f4;
+}
+
+.plan-admin-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  border: 1.5px solid transparent;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.13s;
+  white-space: nowrap;
+}
+
+.plan-admin-btn-edit {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+.plan-admin-btn-edit:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+.plan-admin-btn-off {
+  background: #fff7ed;
+  color: #ea580c;
+  border-color: #fed7aa;
+}
+.plan-admin-btn-off:hover {
+  background: #ffedd5;
+  border-color: #fdba74;
+}
+
+.plan-admin-btn-on {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
+.plan-admin-btn-on:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.plan-admin-btn-delete {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+.plan-admin-btn-delete:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .planes-grid,

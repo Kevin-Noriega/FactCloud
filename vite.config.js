@@ -14,7 +14,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://localhost:7149',
+        target: 'http://localhost:5257',
         changeOrigin: true,
         secure: false,
         ws: true, // Para WebSockets (SignalR)

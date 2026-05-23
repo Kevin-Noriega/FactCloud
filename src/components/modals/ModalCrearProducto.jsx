@@ -287,10 +287,13 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
         throw new Error(errorTexto);
       }
 
+      let productoGuardado = null;
+      try { productoGuardado = await respuesta.json(); } catch (_) {}
+
       const mensaje = productoEditando
         ? `${producto.esServicio ? 'Servicio' : 'Producto'} modificado con éxito.`
         : `${producto.esServicio ? 'Servicio' : 'Producto'} agregado con éxito.`;
-      onGuardadoExitoso(mensaje);
+      onGuardadoExitoso(mensaje, productoGuardado);
     } catch (error) {
       alert("Error al guardar: " + error.message);
     } finally {

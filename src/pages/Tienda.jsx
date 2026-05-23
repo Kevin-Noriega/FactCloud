@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Shop, XCircle } from "react-bootstrap-icons";
 import { useTienda } from "../hooks/useTienda";
 import FormularioTienda from "../components/tienda/FormTienda";
-import PlanCard         from "../components/PlanCard";
+import PlanCard         from "../components/plans/PlanCard";
 import TarjetaAddon     from "../components/tienda/TarjetaAddon";
 import "../styles/Tienda.css";
 
@@ -108,8 +108,6 @@ function Tienda() {
       setCancelandoId(null);
     }
   };
-
-  const calcularPrecio = (plan) => periodoAnual ? plan.precioAnual : plan.precioMensual;
 
   const pctUso = (() => {
     if (!estadisticas || estadisticas.documentosLimite === -1) return 0;
@@ -391,7 +389,6 @@ function Tienda() {
               onCheckout={handleSeleccionarPlan}
               esActual={planActual?.id === plan.id}
               periodoAnual={periodoAnual}
-              calcularPrecio={calcularPrecio}
             />
           ))}
         </div>

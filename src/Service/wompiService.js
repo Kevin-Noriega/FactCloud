@@ -1,8 +1,12 @@
 import axios from "axios";
-
 import api from "../api/axios";
 
-const WOMPI_PUBLIC_KEY = "pub_test_9yiStyVoOX7mdDTPZQOBZTK07ICEGAbT";
+const WOMPI_PUBLIC_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY;
+const WOMPI_BASE_URL = import.meta.env.VITE_WOMPI_BASE_URL ?? "https://sandbox.wompi.co/v1";
+
+if (!WOMPI_PUBLIC_KEY) {
+  console.warn("[WompiService] VITE_WOMPI_PUBLIC_KEY no configurada en .env.local");
+}
 
 export const wompiService = {
   async getAcceptanceToken() {
@@ -11,50 +15,27 @@ export const wompiService = {
   },
 
   async tokenizeCard(cardData) {
-    try {
-      console.log("🔵 Tokenizando tarjeta...");
-      const response = await axios.post(
-        "https://sandbox.wompi.co/v1/tokens/cards",
-        {
-          number: cardData.number,
-          cvc: cardData.cvc,
-          exp_month: cardData.expMonth,
-          exp_year: cardData.expYear,
-          card_holder: cardData.cardHolder,
+    const response = await axios.post(
+      `${WOMPI_BASE_URL}/tokens/cards`,
+      {
+        number: cardData.number,
+        cvc: cardData.cvc,
+        exp_month: cardData.expMonth,
+        exp_year: cardData.expYear,
+        card_holder: cardData.cardHolder,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${WOMPI_PUBLIC_KEY}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${WOMPI_PUBLIC_KEY}`,
-          },
-        },
-      );
-      console.log("✅ Token obtenido:", response.data.data.id);
-      return response.data.data.id;
-    } catch (error) {
-      console.error("❌ Error tokenizando:", error.response?.data);
-      throw error;
-    }
+      },
+    );
+    return response.data.data.id;
   },
 
   async createTransaction(transactionData) {
-    try {
-      console.log("🔵 Creando transacción...");
-      console.log(
-        "📤 Datos enviados:",
-        JSON.stringify(transactionData, null, 2),
-      );
-
-      const response = await api.post(
-        "/payment/create-transaction",
-        transactionData,
-      );
-
-      console.log("✅ Transacción creada:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error("❌ Error creando transacción:", error.response?.data);
-      throw error;
-    }
+    const response = await api.post("/payment/create-transaction", transactionData);
+    return response.data;
   },
 
   async getTransaction(transactionId) {
@@ -62,20 +43,18 @@ export const wompiService = {
     return response.data;
   },
 
-  //pse
-  // Agregar al objeto wompiService existente
   async getFinancialInstitutions() {
     const response = await api.get("/payment/pse/bancos");
-    return response.data.data; // array de { financial_institution_code, name }
+    return response.data.data;
   },
 
   async createPSETransaction(datos) {
     const response = await api.post("/payment/pse/crear-transaccion", datos);
-    return response.data; // { transaccionId }
+    return response.data;
   },
 
   async getTransactionStatus(transaccionId) {
     const response = await api.get(`/payment/pse/estado/${transaccionId}`);
-    return response.data; // { status, asyncPaymentUrl }
+    return response.data;
   },
 };

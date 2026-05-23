@@ -57,50 +57,14 @@ function MainLayout() {
         setLoading(true);
         setShowResults(true);
 
-        const res = await fetch(
-          `/api/search/global?query=${encodeURIComponent(searchQuery)}`,
-        );
-
-        const data = await res.json();
-        setResults(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }, 300);
-  }, [searchQuery]);
-
-  const handleSelect = (item) => {
-    setSearchQuery("");
-    setShowResults(false);
-    navigate(item.route);
-  };
-
-  useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-
-    if (searchQuery.trim().length < 2) {
-      setResults([]);
-      setShowResults(false);
-      return;
-    }
-
-    debounceRef.current = setTimeout(async () => {
-      try {
-        setLoading(true);
-        setShowResults(true);
-
         const query = searchQuery.trim().toLowerCase();
 
-        // ── Accesos rápidos locales ──
         const locales = ACCESOS_RAPIDOS.filter(
           (item) =>
             item.title.toLowerCase().includes(query) ||
             item.keywords.some((k) => k.includes(query)),
         );
 
-        // ── Resultados del backend ──
         const res = await fetch(
           `/api/search/global?query=${encodeURIComponent(searchQuery)}`,
         );
@@ -114,6 +78,12 @@ function MainLayout() {
       }
     }, 300);
   }, [searchQuery]);
+
+  const handleSelect = (item) => {
+    setSearchQuery("");
+    setShowResults(false);
+    navigate(item.route);
+  };
 
   // Este se queda igual, no lo toques
   useEffect(() => {

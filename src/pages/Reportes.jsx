@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axiosClient, { getAccessToken } from "../api/axiosClient";
 import { API_URL } from "../api/config";
 import "../styles/Reportes.css";
 import {
@@ -32,29 +33,22 @@ function Reportes() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const token = localStorage.getItem("token");
-
-  // Helper para descargar CSV
-  const descargarCsv = (ruta, nombreArchivo) => {
-    fetch(`${API_URL}${ruta}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.blob())
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = nombreArchivo;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((err) => {
-        console.error("Error CSV:", err);
-        alert("No se pudo descargar el reporte.");
-      });
+  // Helper para descargar CSV usando axiosClient (token en memoria, no localStorage)
+  const descargarCsv = async (ruta, nombreArchivo) => {
+    try {
+      const response = await axiosClient.get(ruta, { responseType: "blob" });
+      const url = window.URL.createObjectURL(response.data);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = nombreArchivo;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error CSV:", err);
+      alert("No se pudo descargar el reporte.");
+    }
   };
 
   // Cargar Datos (Simulado o API dependiendo de la sección)
