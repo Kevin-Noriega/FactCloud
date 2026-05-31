@@ -12,6 +12,7 @@ import AuthLayout from "./layouts/Auth";
 import PublicLayout from "./layouts/PublicLayout";
 import RegisterLayout from "./layouts/registerLayout";
 import { AdminRoute } from "./components/AdminRoute";
+import { PosRoutes } from "./routes/PosRoutes";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -65,6 +66,7 @@ import Impuestos from "./pages/Impuestos";
 import PerfilCliente from "./pages/PerfilCliente";
 import CuentasContables from "./pages/CuentasContables";
 import NominaElectronica from "./pages/NominaElectronica";
+import PosLogin from "./pages/pos/PosLogin";
 const NotFound = () => (
   <div className="text-center py-5">
     <h1 className="display-1 text-danger">404</h1>
@@ -74,13 +76,12 @@ const NotFound = () => (
     </a>
   </div>
 );
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: { staleTime: 5 * 60 * 1000, retry: 2 },
   },
 });
-
-
 
 function App() {
   const { loading } = useAuth();
@@ -121,19 +122,16 @@ function App() {
             <Route path="/dian" element={<DIAN />} />
             <Route path="/soporte" element={<Soporte />} />
           </Route>
-
           {/* Rutas de Autenticación (redirige si ya logueado?) */}
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
           </Route>
-
           {/* Rutas de Registro/Checkout */}
           <Route element={<RegisterLayout />}>
             <Route path="/registro" element={<Registro />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/pse/resultado" element={<PSEResultado />} />
           </Route>
-
           {/* Rutas Protegidas */}
           <Route element={<ProtectedLayout />}>
             <Route element={<MainLayout />}>
@@ -174,20 +172,41 @@ function App() {
                 path="/habilitacion-dian/factura-electronica"
                 element={<HabilitacionFacturacionFE />}
               />
-              <Route path="/habilitacion-dian/habilitacionDSE" element={<HabilitacionDSE />} />
+              <Route
+                path="/habilitacion-dian/habilitacionDSE"
+                element={<HabilitacionDSE />}
+              />
               <Route path="/compras-gastos" element={<ComprasGastos />} />
               <Route path="/nomina" element={<NominaElectronica />} />
               <Route path="/facturas" element={<Facturas />} />
               <Route path="/facturas/:id" element={<FacturaDetalle />} />
               <Route path="/documentoSoporte" element={<DocumentoSoporte />} />
               <Route path="/reportes" element={<ReportsDashboard />} />
-              <Route path="/reportes/ventas-cliente" element={<VentasPorClientePage />} />
-              <Route path="/reportes/ventas-vendedor" element={<VentasPorVendedorPage />} />
-              <Route path="/reportes/ventas-producto" element={<VentasPorProductoPage />} />
-              <Route path="/reportes/comparativo-mensual" element={<ComparativoVentasMesPage />} />
+              <Route
+                path="/reportes/ventas-cliente"
+                element={<VentasPorClientePage />}
+              />
+              <Route
+                path="/reportes/ventas-vendedor"
+                element={<VentasPorVendedorPage />}
+              />
+              <Route
+                path="/reportes/ventas-producto"
+                element={<VentasPorProductoPage />}
+              />
+              <Route
+                path="/reportes/comparativo-mensual"
+                element={<ComparativoVentasMesPage />}
+              />
               {/* Fallbacks for unfinished reports */}
-              <Route path="/reportes/ventas-cliente-producto" element={<ReportsDashboard />} />
-              <Route path="/reportes/ventas-vendedor-producto" element={<ReportsDashboard />} />
+              <Route
+                path="/reportes/ventas-cliente-producto"
+                element={<ReportsDashboard />}
+              />
+              <Route
+                path="/reportes/ventas-vendedor-producto"
+                element={<ReportsDashboard />}
+              />
               <Route path="/perfil" element={<Perfil />} />
               <Route path="/tienda" element={<Tienda />} />
               <Route path="/tienda/:categoria" element={<Tienda />} />
@@ -196,7 +215,11 @@ function App() {
               <Route path="/cuentas-contables" element={<CuentasContables />} />
             </Route>
           </Route>
-
+          {/* Ruta POS */}
+          <Route path="/pos-login" element={<PosLogin />} />
+          <Route element={<ProtectedLayout />}>
+            <Route path="/pos/*" element={<PosRoutes />} />
+          </Route>
           {/* ── Rutas Administrador ── */}
           <Route element={<AdminRoute />}>
             <Route element={<AdminLayout />}>
@@ -206,12 +229,17 @@ function App() {
               <Route path="/admin/facturas" element={<AdminFacturas />} />
               <Route path="/admin/productos" element={<AdminProductos />} />
               <Route path="/admin/planes" element={<AdminPlanes />} />
-              <Route path="/admin/suscripciones" element={<AdminSuscripciones />} />
+              <Route
+                path="/admin/suscripciones"
+                element={<AdminSuscripciones />}
+              />
               <Route path="/admin/auditoria" element={<AdminAuditoria />} />
-              <Route path="/admin/configuracion" element={<AdminConfiguracion />} />
+              <Route
+                path="/admin/configuracion"
+                element={<AdminConfiguracion />}
+              />
             </Route>
           </Route>
-
           {/* 404 Global */}
           <Route path="*" element={<NotFound />} />
         </Routes>

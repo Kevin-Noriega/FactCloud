@@ -6,7 +6,7 @@ import {
   TRIBUTOS_OPTIONS,
   RESPONSABILIDADES_OPTIONS,
 } from "../constants";
-
+import "../Habilitaciones.css";
 export default function Step1PerfilEmpresa({
   form,
   actualizarCampo,

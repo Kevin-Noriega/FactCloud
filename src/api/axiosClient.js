@@ -1,24 +1,27 @@
+// src/api/axiosClient.js
 import axios from "axios";
-
-const axiosClient = axios.create({
-  baseURL: "/api",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
 
 let accessToken = null;
 
 export const setAccessToken = (token) => {
   accessToken = token;
 };
+
 export const getAccessToken = () => accessToken;
+
 export const clearTokens = () => {
   accessToken = null;
+  // NO borres usuario aquí; eso lo maneja AuthProvider/handleLogout
 };
 
-// Interceptor REQUEST
+const axiosClient = axios.create({
+  baseURL: "https://localhost:7149/api",
+  withCredentials: true, // importante para enviar cookie refreshToken
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 axiosClient.interceptors.request.use(
   (config) => {
     if (
@@ -33,21 +36,24 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Interceptor RESPONSE
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const url = error.config?.url ?? "";
-    if (
-      error.response?.status === 401 &&
-      !url.includes("/Auth/login") &&
-      !url.includes("/Auth/refresh") &&
-      !accessToken
-    ) {
-      clearTokens();
+    const status = error.response?.status;
 
+    if (
+      status === 401 &&
+      !url.includes("/Auth/login") &&
+      !url.includes("/Auth/refresh")
+    ) {
+      // Sesión inválida → disparar logout global
+  // Sesión inválida → disparar logout global
+      clearTokens();
+      window.dispatchEvent(new Event("auth:logout"));
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   },
 );

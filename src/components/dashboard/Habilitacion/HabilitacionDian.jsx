@@ -244,7 +244,7 @@ export default function HabilitacionDian() {
                   Crear Factura E.
                 </button>
               ) : (
-                <button className="hab-btn-continuar" onClick= {() => Navigate("/habilitacionDSE")}>
+                <button className="hab-btn-continuar" onClick= {() => Navigate("/habilitacion-dian/factura-electronica")}>
                   {estadoFEV === "en_proceso" ? "Continuar" : "Configurar"}
                 </button>
               )}

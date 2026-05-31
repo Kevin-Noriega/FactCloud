@@ -193,7 +193,7 @@ function Clientes() {
       <div className="opcions-header">
         <button
           className="btn-crear"
-          onClick={() => navigate("/nuevo-clientee")}
+          onClick={() => navigate("/nuevo-cliente")}
         >
           Nuevo Cliente
         </button>

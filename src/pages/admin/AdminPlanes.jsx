@@ -19,7 +19,11 @@ import {
 import PlanCard from "../../components/plans/PlanCard";
 
 const fmt = (n) =>
-  new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(n || 0);
+  new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    maximumFractionDigits: 0,
+  }).format(n || 0);
 
 const PLAN_VACIO = {
   codigo: "",
@@ -32,6 +36,7 @@ const PLAN_VACIO = {
   descuentoActivo: false,
   descuentoPorcentaje: null,
   activo: true,
+  incluyePOS: false,
   caracteristicas: [],
 };
 
@@ -65,6 +70,7 @@ export default function AdminPlanes() {
       descuentoActivo: plan.descuentoActivo,
       descuentoPorcentaje: plan.descuentoPorcentaje,
       activo: plan.activo,
+      incluyePOS: plan.incluyePOS ?? false,
       caracteristicas: plan.caracteristicas?.map((c) => c.texto ?? c) ?? [],
     });
     setPlanSel(plan);
@@ -83,7 +89,8 @@ export default function AdminPlanes() {
   };
 
   const set = (k) => (e) => {
-    const val = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    const val =
+      e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setForm((p) => ({ ...p, [k]: val }));
   };
 
@@ -95,14 +102,22 @@ export default function AdminPlanes() {
   };
 
   const quitarCaract = (i) =>
-    setForm((p) => ({ ...p, caracteristicas: p.caracteristicas.filter((_, idx) => idx !== i) }));
+    setForm((p) => ({
+      ...p,
+      caracteristicas: p.caracteristicas.filter((_, idx) => idx !== i),
+    }));
 
   const payload = () => ({
     ...form,
     precioAnual: parseFloat(form.precioAnual) || 0,
-    limiteDocumentosAnuales: form.limiteDocumentosAnuales ? parseInt(form.limiteDocumentosAnuales) : null,
+    limiteDocumentosAnuales: form.limiteDocumentosAnuales
+      ? parseInt(form.limiteDocumentosAnuales)
+      : null,
     limiteUsuarios: parseInt(form.limiteUsuarios) || 1,
-    descuentoPorcentaje: form.descuentoActivo ? parseInt(form.descuentoPorcentaje) || null : null,
+    descuentoPorcentaje: form.descuentoActivo
+      ? parseInt(form.descuentoPorcentaje) || null
+      : null,
+      incluyePOS: !!form.incluyePOS,
   });
 
   const handleGuardar = async () => {
@@ -150,7 +165,6 @@ export default function AdminPlanes() {
         </p>
       </div>
 
-
       {/* Grid de planes */}
       <div className="row g-4">
         {planes.map((plan) => (
@@ -169,57 +183,134 @@ export default function AdminPlanes() {
       {/* ── Modal Crear / Editar ── */}
       {(modal === "crear" || modal === "editar") && (
         <div className="admin-modal-overlay" onClick={cerrar}>
-          <div className="admin-modal" style={{ maxWidth: 580 }} onClick={(e) => e.stopPropagation()}>
+          <div
+            className="admin-modal"
+            style={{ maxWidth: 580 }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="admin-modal-header">
-              <h5 className="admin-modal-title">{modal === "crear" ? "Nuevo plan" : "Editar plan"}</h5>
-              <button className="admin-modal-close" onClick={cerrar}><XLg size={16} /></button>
+              <h5 className="admin-modal-title">
+                {modal === "crear" ? "Nuevo plan" : "Editar plan"}
+              </h5>
+              <button className="admin-modal-close" onClick={cerrar}>
+                <XLg size={16} />
+              </button>
             </div>
             <div className="admin-modal-body">
               <div className="row g-3">
                 <div className="col-6">
                   <label className="admin-form-label">Código *</label>
-                  <input className="admin-form-control" value={form.codigo} onChange={set("codigo")} placeholder="BASICO" />
+                  <input
+                    className="admin-form-control"
+                    value={form.codigo}
+                    onChange={set("codigo")}
+                    placeholder="BASICO"
+                  />
                 </div>
                 <div className="col-6">
                   <label className="admin-form-label">Nombre *</label>
-                  <input className="admin-form-control" value={form.nombre} onChange={set("nombre")} placeholder="Plan Básico" />
+                  <input
+                    className="admin-form-control"
+                    value={form.nombre}
+                    onChange={set("nombre")}
+                    placeholder="Plan Básico"
+                  />
                 </div>
                 <div className="col-12">
                   <label className="admin-form-label">Descripción</label>
-                  <input className="admin-form-control" value={form.descripcion} onChange={set("descripcion")} placeholder="Descripción corta" />
+                  <input
+                    className="admin-form-control"
+                    value={form.descripcion}
+                    onChange={set("descripcion")}
+                    placeholder="Descripción corta"
+                  />
                 </div>
                 <div className="col-6">
-                  <label className="admin-form-label">Precio anual (COP) *</label>
-                  <input type="number" className="admin-form-control" value={form.precioAnual} onChange={set("precioAnual")} min={0} />
+                  <label className="admin-form-label">
+                    Precio anual (COP) *
+                  </label>
+                  <input
+                    type="number"
+                    className="admin-form-control"
+                    value={form.precioAnual}
+                    onChange={set("precioAnual")}
+                    min={0}
+                  />
                 </div>
                 <div className="col-6">
-                  <label className="admin-form-label">Límite de documentos/año</label>
-                  <input type="number" className="admin-form-control" value={form.limiteDocumentosAnuales ?? ""} onChange={set("limiteDocumentosAnuales")} placeholder="Dejar vacío = ilimitado" min={0} />
+                  <label className="admin-form-label">
+                    Límite de documentos/año
+                  </label>
+                  <input
+                    type="number"
+                    className="admin-form-control"
+                    value={form.limiteDocumentosAnuales ?? ""}
+                    onChange={set("limiteDocumentosAnuales")}
+                    placeholder="Dejar vacío = ilimitado"
+                    min={0}
+                  />
                 </div>
                 <div className="col-6">
                   <label className="admin-form-label">Límite de usuarios</label>
-                  <input type="number" className="admin-form-control" value={form.limiteUsuarios ?? ""} onChange={set("limiteUsuarios")} placeholder="Dejar vacío = ilimitado" min={1} />
+                  <input
+                    type="number"
+                    className="admin-form-control"
+                    value={form.limiteUsuarios ?? ""}
+                    onChange={set("limiteUsuarios")}
+                    placeholder="Dejar vacío = ilimitado"
+                    min={1}
+                  />
                 </div>
                 <div className="col-6 d-flex flex-column gap-2 justify-content-end">
                   <label className="d-flex align-items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={form.destacado} onChange={set("destacado")} />
+                    <input
+                      type="checkbox"
+                      checked={form.destacado}
+                      onChange={set("destacado")}
+                    />
                     <span className="admin-form-label mb-0">Destacado</span>
                   </label>
                   <label className="d-flex align-items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={form.activo} onChange={set("activo")} />
+                    <input
+                      type="checkbox"
+                      checked={form.activo}
+                      onChange={set("activo")}
+                    />
                     <span className="admin-form-label mb-0">Activo</span>
+                  </label>
+                  <label className="d-flex align-items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.incluyePOS}
+                      onChange={set("incluyePOS")}
+                    />
+                    <span className="admin-form-label mb-0">Incluye POS</span>
                   </label>
                 </div>
 
                 {/* Descuento */}
                 <div className="col-12">
                   <label className="d-flex align-items-center gap-2 cursor-pointer mb-2">
-                    <input type="checkbox" checked={form.descuentoActivo} onChange={set("descuentoActivo")} />
-                    <span className="admin-form-label mb-0">Activar descuento</span>
+                    <input
+                      type="checkbox"
+                      checked={form.descuentoActivo}
+                      onChange={set("descuentoActivo")}
+                    />
+                    <span className="admin-form-label mb-0">
+                      Activar descuento
+                    </span>
                   </label>
                   {form.descuentoActivo && (
                     <div className="input-group" style={{ maxWidth: 180 }}>
-                      <input type="number" className="admin-form-control" value={form.descuentoPorcentaje ?? ""} onChange={set("descuentoPorcentaje")} placeholder="%" min={1} max={99} />
+                      <input
+                        type="number"
+                        className="admin-form-control"
+                        value={form.descuentoPorcentaje ?? ""}
+                        onChange={set("descuentoPorcentaje")}
+                        placeholder="%"
+                        min={1}
+                        max={99}
+                      />
                       <span className="input-group-text">%</span>
                     </div>
                   )}
@@ -227,25 +318,45 @@ export default function AdminPlanes() {
 
                 {/* Características */}
                 <div className="col-12">
-                  <label className="admin-form-label">Características del plan</label>
+                  <label className="admin-form-label">
+                    Características del plan
+                  </label>
                   <div className="d-flex gap-2 mb-2">
                     <input
                       className="admin-form-control"
                       value={nuevaCaract}
                       onChange={(e) => setNuevaCaract(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), agregarCaract())}
+                      onKeyDown={(e) =>
+                        e.key === "Enter" &&
+                        (e.preventDefault(), agregarCaract())
+                      }
                       placeholder="Ej: Soporte prioritario"
                     />
-                    <button type="button" className="admin-btn admin-btn-secondary" onClick={agregarCaract}>
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-secondary"
+                      onClick={agregarCaract}
+                    >
                       <PlusCircleFill size={14} />
                     </button>
                   </div>
                   <ul className="list-unstyled mb-0 d-flex flex-column gap-1">
                     {form.caracteristicas.map((c, i) => (
-                      <li key={i} className="d-flex align-items-center gap-2 p-2 rounded" style={{ background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+                      <li
+                        key={i}
+                        className="d-flex align-items-center gap-2 p-2 rounded"
+                        style={{
+                          background: "#f8fafc",
+                          border: "1px solid #e2e8f0",
+                        }}
+                      >
                         <CheckLg size={13} className="text-success" />
                         <span className="flex-fill small">{c}</span>
-                        <button type="button" className="btn btn-sm btn-link text-danger p-0" onClick={() => quitarCaract(i)}>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-link text-danger p-0"
+                          onClick={() => quitarCaract(i)}
+                        >
                           <XLg size={12} />
                         </button>
                       </li>
@@ -255,9 +366,24 @@ export default function AdminPlanes() {
               </div>
             </div>
             <div className="admin-modal-footer">
-              <button className="admin-btn admin-btn-secondary" onClick={cerrar}>Cancelar</button>
-              <button className="admin-btn admin-btn-primary" onClick={handleGuardar} disabled={cargando || !form.nombre || !form.codigo}>
-                {cargando ? <span className="spinner-border spinner-border-sm" /> : modal === "crear" ? "Crear plan" : "Guardar cambios"}
+              <button
+                className="admin-btn admin-btn-secondary"
+                onClick={cerrar}
+              >
+                Cancelar
+              </button>
+              <button
+                className="admin-btn admin-btn-primary"
+                onClick={handleGuardar}
+                disabled={cargando || !form.nombre || !form.codigo}
+              >
+                {cargando ? (
+                  <span className="spinner-border spinner-border-sm" />
+                ) : modal === "crear" ? (
+                  "Crear plan"
+                ) : (
+                  "Guardar cambios"
+                )}
               </button>
             </div>
           </div>
@@ -267,19 +393,43 @@ export default function AdminPlanes() {
       {/* ── Modal Confirmar Eliminar ── */}
       {modal === "confirmarEliminar" && (
         <div className="admin-modal-overlay" onClick={cerrar}>
-          <div className="admin-modal" style={{ maxWidth: 400 }} onClick={(e) => e.stopPropagation()}>
+          <div
+            className="admin-modal"
+            style={{ maxWidth: 400 }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="admin-modal-header">
               <h5 className="admin-modal-title">Eliminar plan</h5>
-              <button className="admin-modal-close" onClick={cerrar}><XLg size={16} /></button>
+              <button className="admin-modal-close" onClick={cerrar}>
+                <XLg size={16} />
+              </button>
             </div>
             <div className="admin-modal-body">
-              <p>¿Eliminar el plan <strong>{planSel?.nombre}</strong>?</p>
-              <p className="text-muted small">Esta acción es irreversible. Los usuarios con este plan activo no serán afectados inmediatamente.</p>
+              <p>
+                ¿Eliminar el plan <strong>{planSel?.nombre}</strong>?
+              </p>
+              <p className="text-muted small">
+                Esta acción es irreversible. Los usuarios con este plan activo
+                no serán afectados inmediatamente.
+              </p>
             </div>
             <div className="admin-modal-footer">
-              <button className="admin-btn admin-btn-secondary" onClick={cerrar}>Cancelar</button>
-              <button className="admin-btn admin-btn-danger" onClick={handleEliminar} disabled={eliminarPlan.isPending}>
-                {eliminarPlan.isPending ? <span className="spinner-border spinner-border-sm" /> : "Eliminar"}
+              <button
+                className="admin-btn admin-btn-secondary"
+                onClick={cerrar}
+              >
+                Cancelar
+              </button>
+              <button
+                className="admin-btn admin-btn-danger"
+                onClick={handleEliminar}
+                disabled={eliminarPlan.isPending}
+              >
+                {eliminarPlan.isPending ? (
+                  <span className="spinner-border spinner-border-sm" />
+                ) : (
+                  "Eliminar"
+                )}
               </button>
             </div>
           </div>

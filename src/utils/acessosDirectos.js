@@ -3,17 +3,17 @@
   {
     title: "Crea una Factura Electrónica",
     icon: "FileEarmarkText",
-    route: "/facturas",
+    route: "/nueva-factura",
   },
   {
     title: "Crear Documento Soporte",
     icon: "FileCheck",
-    route: "/DocumentoSoporte",
+    route: "/nuevo-documento-soporte",
   },
   {
     title: "Agregar Tercero",
     icon: "PersonPlus",
-    route: "/clientes",
+    route: "/nuevo-cliente",
   },
   {
     title: "Habilitación DIAN",
@@ -23,7 +23,13 @@
   {
     title: "Tienda Nubee",
     icon: "Cart",
-    route: "/tienda-Nubee",
+    route: "/tienda",
+  },
+   {
+    title: "Entrar al POS",
+    icon: "Cart4",
+    route: "/pos-login",
+    onlyIfPos: true,
   },
 ];
 

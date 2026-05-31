@@ -35,7 +35,9 @@ export const useFactura = () => {
     tarifaINC: 0,
     tarifaRetencion: 0,
   };
-  const [productosSeleccionados, setProductosSeleccionados] = useState([{ ...FILA_VACIA }]);
+  const [productosSeleccionados, setProductosSeleccionados] = useState([
+    { ...FILA_VACIA },
+  ]);
   const [contactos, setContactos] = useState([]);
   const [formasPago, setFormasPago] = useState([{ metodo: "", valor: "" }]);
   const [facturasUsadas, setFacturasUsadas] = useState({
@@ -316,8 +318,6 @@ export const useFactura = () => {
       }
     }
 
-    const prefijo = factura.prefijo?.trim() || "FAC";
-    const numeroGenerado = `${prefijo}-${Date.now()}`;
     const fechaEmision = factura.fechaEmision;
     const horaEmision = new Date().toTimeString().split(" ")[0];
 
@@ -333,8 +333,7 @@ export const useFactura = () => {
       clienteId: parseInt(factura.clienteId),
       contactoId: factura.contactoId || null,
       tipoFactura: factura.tipoFactura,
-      prefijo,
-      numeroFactura: numeroGenerado,
+      prefijo: factura.prefijo?.trim() || null,
       fechaEmision: `${fechaEmision}T${horaEmision}`,
       horaEmision,
       formaPago: factura.formaPago || "1",
@@ -383,14 +382,26 @@ export const useFactura = () => {
         };
       }),
     };
-
     try {
-      await axiosClient.post("/Facturas", payload);
-      alert(
-        estadoOverride === "Borrador"
-          ? "Borrador guardado correctamente"
-          : "Factura creada exitosamente",
+      const { data: nuevaFactura } = await axiosClient.post(
+        "/Facturas",
+        payload,
       );
+
+      if (estadoOverride !== "Borrador") {
+        try {
+          await axiosClient.post(`/Facturas/${nuevaFactura.id}/enviar-dian`);
+          alert("✅ Factura creada y validada por la DIAN");
+        } catch (err) {
+          alert(
+            `⚠️ Factura guardada (ID: ${nuevaFactura.id}) pero no enviada a la DIAN.\n` +
+              (err.response?.data?.mensaje || err.message),
+          );
+        }
+      } else {
+        alert("Borrador guardado correctamente");
+      }
+
       navigate("/ventas");
     } catch (error) {
       alert(
