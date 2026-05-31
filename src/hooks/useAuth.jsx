@@ -1,4 +1,5 @@
-﻿import { createContext, useContext, useState, useEffect } from "react";
+﻿// src/hooks/useAuth.jsx
+import { createContext, useContext, useState, useEffect } from "react";
 import axiosClient, { setAccessToken, clearTokens } from "../api/axiosClient";
 
 const AuthContext = createContext(null);
@@ -14,19 +15,37 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const restaurarSesion = async () => {
       const usuarioGuardado = localStorage.getItem("usuario");
-      if (usuarioGuardado) {
-        try {
-          const { data } = await axiosClient.post("/Auth/refresh");
-          setAccessToken(data.token);
-        } catch (error) {
-          console.error("Sesión expirada:", error);
-          clearTokens();
-          setUsuario(null);
-          localStorage.removeItem("usuario");
-        }
+
+      // No hay usuario guardado → nada que restaurar
+      if (!usuarioGuardado) {
+        setLoading(false);
+        return;
       }
-      setLoading(false); 
+
+      const parsed = JSON.parse(usuarioGuardado);
+      console.log(
+        "AuthProvider.restaurarSesion - usuario localStorage:",
+        parsed
+      );
+
+      try {
+        // Intentar refrescar token usando cookie HttpOnly
+        const { data } = await axiosClient.post("/Auth/refresh");
+        setAccessToken(data.token);
+
+        // Restaurar el mismo usuario que ya teníamos (incluye tienePos)
+        setUsuario(parsed);
+      } catch (error) {
+        console.warn("Refresh token inválido, limpiando sesión");
+        // En producción: sesión inválida → limpiar todo
+        clearTokens();
+        setUsuario(null);
+        localStorage.removeItem("usuario");
+      } finally {
+        setLoading(false);
+      }
     };
+
     restaurarSesion();
   }, []);
 
@@ -45,10 +64,26 @@ export const AuthProvider = ({ children }) => {
       correo,
       contrasena,
     });
+
+    // Enriquecer usuario con flag tienePos a partir del plan del backend
+    const usuarioConPlan = {
+      ...data.usuario,
+      tienePos: !!data.usuario.plan?.incluyePOS,
+    };
+
+    console.log(
+      "AuthProvider.login - guardando usuario:",
+      usuarioConPlan
+    );
+
+    // Guardar access token en memoria
     setAccessToken(data.token);
-    setUsuario(data.usuario);
-    localStorage.setItem("usuario", JSON.stringify(data.usuario));
-    return data;
+
+    // Guardar usuario (incluye plan y si tiene POS)
+    setUsuario(usuarioConPlan);
+    localStorage.setItem("usuario", JSON.stringify(usuarioConPlan));
+
+    return { ...data, usuario: usuarioConPlan };
   };
 
   const logout = async () => {
@@ -63,8 +98,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ SIEMPRE renderiza el Provider — el spinner va en ProtectedLayout
-  // AuthContext.jsx — solo cambia el return
   return (
     <AuthContext.Provider
       value={{ usuario, login, logout, loading, isAuthenticated: !!usuario }}
@@ -79,7 +112,6 @@ export const AuthProvider = ({ children }) => {
           }}
         >
           <span>Cargando sesión...</span>
-          {/* o tu componente de spinner */}
         </div>
       ) : (
         children
@@ -94,4 +126,3 @@ export const useAuth = () => {
     throw new Error("useAuth debe usarse dentro de un AuthProvider");
   return context;
 };
-

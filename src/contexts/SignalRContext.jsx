@@ -9,27 +9,28 @@ import {
 import * as signalR from "@microsoft/signalr";
 import { API_URL } from "../api/config";
 import { useQueryClient } from "@tanstack/react-query";
+import { getAccessToken } from "../api/axiosClient";
 
 const SignalRContext = createContext();
 
 export const useSignalR = () => {
   const context = useContext(SignalRContext);
-  if (!context) throw new Error("useSignalR debe usarse dentro de SignalRProvider");
+  if (!context)
+    throw new Error("useSignalR debe usarse dentro de SignalRProvider");
   return context;
 };
 
 export const SignalRProvider = ({ children }) => {
-  const [connection,   setConnection]   = useState(null);
-  const [isConnected,  setIsConnected]  = useState(false);
+  const [connection, setConnection] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
   const [reconnecting, setReconnecting] = useState(false);
 
-  const queryClient          = useQueryClient();
-  const mountedRef           = useRef(true);   // ✅ detecta desmonte
-  const startingRef          = useRef(false);  // ✅ mutex: evita doble inicio
-  const connectionRef        = useRef(null);   // ✅ referencia estable
-  const reconnectTimeoutRef  = useRef(null);
+  const queryClient = useQueryClient();
+  const mountedRef = useRef(true);
+  const startingRef = useRef(false);
+  const connectionRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
 
-  // ── Mensajes de error esperados en StrictMode ──────────────────
   const ERRORES_IGNORABLES = [
     "stop() was called",
     "hub handshake",
@@ -37,10 +38,12 @@ export const SignalRProvider = ({ children }) => {
     "Failed to start",
     "before stop()",
   ];
-  const esIgnorable = (err) =>
-    ERRORES_IGNORABLES.some(m => err?.message?.toLowerCase().includes(m.toLowerCase()));
 
-  // ── Iniciar conexión (seguro contra race condition) ─────────────
+  const esIgnorable = (err) =>
+    ERRORES_IGNORABLES.some((m) =>
+      err?.message?.toLowerCase().includes(m.toLowerCase()),
+    );
+
   const startConnection = useCallback(async (conn) => {
     if (startingRef.current || !mountedRef.current) return;
     startingRef.current = true;
@@ -48,7 +51,6 @@ export const SignalRProvider = ({ children }) => {
     try {
       await conn.start();
 
-      // ✅ verificar que sigue montado DESPUÉS del await
       if (!mountedRef.current) {
         await conn.stop().catch(() => {});
         return;
@@ -57,38 +59,33 @@ export const SignalRProvider = ({ children }) => {
       setIsConnected(true);
       setReconnecting(false);
       console.log("[SignalR] Conectado exitosamente");
-
     } catch (err) {
-      if (!mountedRef.current) return;  // ✅ ignorar si ya desmontó
-
-      if (esIgnorable(err)) return;     // ✅ ignorar errores de StrictMode
+      if (!mountedRef.current) return;
+      if (esIgnorable(err)) return;
 
       console.error("[SignalR] Error al conectar:", err);
       setIsConnected(false);
 
-      // Reintentar en 5s solo si sigue montado
       reconnectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           startingRef.current = false;
           startConnection(conn);
         }
       }, 5000);
-
     } finally {
       if (mountedRef.current) startingRef.current = false;
     }
   }, []);
 
-  // ── Efecto principal ────────────────────────────────────────────
   useEffect(() => {
     mountedRef.current = true;
 
-    const token = localStorage.getItem("token");
+    const token = getAccessToken();
     if (!token) return;
 
     const conn = new signalR.HubConnectionBuilder()
       .withUrl(`${API_URL}/notificacionesHub`, {
-        accessTokenFactory: () => localStorage.getItem("token") || "",
+        accessTokenFactory: () => getAccessToken() || "",
       })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (ctx) => {
@@ -98,12 +95,11 @@ export const SignalRProvider = ({ children }) => {
           return 30000;
         },
       })
-      .configureLogging(signalR.LogLevel.Warning)  // ✅ menos ruido en consola
+      .configureLogging(signalR.LogLevel.Warning)
       .build();
 
     connectionRef.current = conn;
 
-    // ── Eventos de ciclo de vida ────────────────────────────────
     conn.onreconnecting((err) => {
       if (!mountedRef.current) return;
       console.warn("[SignalR] Reconectando...", err?.message || "");
@@ -127,22 +123,20 @@ export const SignalRProvider = ({ children }) => {
       setReconnecting(false);
     });
 
-    // ── Eventos del Hub ─────────────────────────────────────────
     conn.on("NuevaNotificacion", (notificacion) => {
       if (!mountedRef.current) return;
       console.log("[SignalR] Nueva notificación:", notificacion);
 
-      queryClient.invalidateQueries(["notificaciones"]);
+      queryClient.invalidateQueries({ queryKey: ["notificaciones"] });
 
       if (Notification.permission === "granted") {
         new Notification(notificacion.titulo || "Nueva notificación", {
-          body:  notificacion.mensaje,
-          icon:  "/logo.png",
+          body: notificacion.mensaje,
+          icon: "/logo.png",
           badge: "/logo.png",
         });
       }
 
-      // Sonido (falla silenciosamente si no existe el archivo)
       const audio = new Audio("/notification-sound.mp3");
       audio.volume = 0.3;
       audio.play().catch(() => {});
@@ -156,26 +150,24 @@ export const SignalRProvider = ({ children }) => {
     setConnection(conn);
     startConnection(conn);
 
-    // ── Cleanup ─────────────────────────────────────────────────
     return () => {
-      mountedRef.current = false;  // ✅ marcar desmonte PRIMERO
+      mountedRef.current = false;
 
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
 
-      // Detener solo si la conexión está activa
       const estados = [
         signalR.HubConnectionState.Disconnected,
         signalR.HubConnectionState.Disconnecting,
       ];
+
       if (conn && !estados.includes(conn.state)) {
-        conn.stop().catch(() => {});  // ✅ silenciar errores al desmontar
+        conn.stop().catch(() => {});
       }
     };
   }, [queryClient, startConnection]);
 
-  // ── Pedir permiso de notificaciones cuando conecta ─────────────
   useEffect(() => {
     if (isConnected && Notification.permission === "default") {
       Notification.requestPermission();

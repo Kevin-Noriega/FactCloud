@@ -1,0 +1,406 @@
+/* src/pages/pos/PosLogin.css */
+
+:root {
+  --pos-primary: #1f9cf0;
+  --pos-primary-dark: #167fca;
+  --pos-text: #1f2937;
+  --pos-muted: #6b7280;
+  --pos-border: #e5e7eb;
+  --pos-bg: #f7f9fc;
+  --pos-white: #ffffff;
+  --pos-danger: #dc2626;
+  --pos-shadow: 0 20px 60px rgba(31, 156, 240, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.pos-login-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8fc 100%);
+}
+
+.pos-login-left,
+.pos-login-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.pos-login-left {
+  position: relative;
+  overflow: hidden;
+}
+
+.pos-login-left::before,
+.pos-login-left::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(31, 156, 240, 0.08);
+  z-index: 0;
+}
+
+.pos-login-left::before {
+  width: 180px;
+  height: 180px;
+  bottom: -60px;
+  left: -40px;
+}
+
+.pos-login-left::after {
+  width: 110px;
+  height: 110px;
+  top: 70px;
+  right: 40px;
+}
+
+.pos-login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+  background: transparent;
+}
+
+.pos-login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
+.pos-login-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  display: block;
+}
+
+.pos-login-brand-text {
+  text-align: center;
+}
+
+.pos-login-brand-text h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0799F1;
+  line-height: 1;
+  transform: translateY(4px);
+}
+
+.pos-login-brand-text span {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--pos-primary-dark);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.pos-login-header {
+  margin-bottom: 30px;
+}
+
+.pos-login-header h2 {
+  margin: 16px 0 8px;
+  font-size: 2rem;
+  color: var(--pos-text);
+  font-weight: 700;
+  text-align: center;
+}
+
+.pos-login-header p {
+  margin: 0;
+  color: var(--pos-muted);
+  font-size: 0.96rem;
+}
+
+.pos-login-alert {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fef2f2;
+  color: var(--pos-danger);
+  border: 1px solid #fecaca;
+  font-size: 0.92rem;
+}
+
+.pos-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pos-login-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.pos-login-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pos-login-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1rem;
+  color: #9ca3af;
+}
+
+.pos-login-input-wrap input {
+  width: 100%;
+  height: 54px;
+  border-radius: 14px;
+  border: 1px solid var(--pos-border);
+  background: var(--pos-white);
+  padding: 0 46px 0 42px;
+  font-size: 1rem;
+  color: var(--pos-text);
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.02);
+}
+
+.pos-login-input-wrap input::placeholder {
+  color: #9ca3af;
+}
+
+.pos-login-input-wrap input:focus {
+  border-color: var(--pos-primary);
+  box-shadow: 0 0 0 4px rgba(31, 156, 240, 0.12);
+}
+
+.pos-login-toggle {
+  position: absolute;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--pos-primary);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.pos-login-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -4px;
+}
+
+.pos-login-link {
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.pos-login-link:hover {
+  color: var(--pos-primary);
+}
+
+.pos-login-submit {
+  margin-top: 4px;
+  height: 54px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    var(--pos-primary) 0%,
+    var(--pos-primary-dark) 100%
+  );
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+  box-shadow: 0 12px 24px rgba(31, 156, 240, 0.26);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pos-login-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.pos-login-submit:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.pos-login-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: pos-spin 0.7s linear infinite;
+}
+
+.pos-login-legal {
+  margin: 22px 0 0;
+  color: var(--pos-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.pos-login-legal a {
+  color: var(--pos-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.pos-login-version {
+  margin-top: 34px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.pos-login-right {
+  padding-left: 10px;
+}
+
+.pos-login-visual-card {
+  width: 100%;
+  max-width: 640px;
+  min-height: 540px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--pos-shadow);
+  background: #dbeafe;
+}
+
+.pos-login-visual-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pos-login-visual-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(4, 20, 40, 0.82) 0%,
+    rgba(4, 20, 40, 0.44) 50%,
+    rgba(31, 156, 240, 0.18) 100%
+  );
+}
+
+.pos-login-visual-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: white;
+}
+
+.pos-login-chip {
+  display: inline-flex;
+  align-self: flex-start;
+  margin-bottom: 18px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.85rem;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+
+.pos-login-visual-content h3 {
+  margin: 0 0 14px;
+  font-size: 2.1rem;
+  line-height: 1.08;
+  font-weight: 800;
+  max-width: 420px;
+}
+
+.pos-login-visual-content p {
+  margin: 0 0 24px;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 460px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.pos-login-secondary {
+  align-self: flex-start;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.pos-login-secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+@keyframes pos-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1080px) {
+  .pos-login-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pos-login-right {
+    display: none;
+  }
+
+  .pos-login-left {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .pos-login-header h2 {
+    font-size: 1.65rem;
+  }
+
+  .pos-login-input-wrap input,
+  .pos-login-submit {
+    height: 50px;
+  }
+
+  .pos-login-brand {
+    margin-bottom: 24px;
+  }
+
+  .pos-login-logo {
+    width: 95px;
+  }
+}

@@ -1,8 +1,6 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Select from "../StyledSelect";
-import { PersonPlus, PencilSquare } from "react-bootstrap-icons";
 import tipoIdentificacion from "../../utils/TiposDocumentos.json";
 import regimenTributarioDIAN from "../../utils/RegimenTributario.json";
 import axiosClient from "../../api/axiosClient";
@@ -11,7 +9,10 @@ import {
   ciudadesOptionsPorDepartamento,
 } from "../../utils/Helpers";
 import { useCliente } from "../../hooks/useCliente";
-import "../../styles/NuevoClienteEmpresa.css";
+import FloatingInput from "./FloatingInput"; 
+//import FloatingInput from "../FloatingInput"; // ← importa el nuevo componente
+
+import "../../styles/pages/NuevoClienteEmpresa.css";
 
 const RESPONSABILIDADES_FISCALES = [
   { name: "granContribuyente", codigo: "O-13", label: "Gran contribuyente" },
@@ -88,6 +89,7 @@ function NuevoClienteEmpresa() {
       target: { name: "telefonos", value: nuevos, type: "custom" },
     });
   };
+
   const agregarTelefono = () => {
     const nuevos = [
       ...(cliente.telefonos || []),
@@ -97,6 +99,7 @@ function NuevoClienteEmpresa() {
       target: { name: "telefonos", value: nuevos, type: "custom" },
     });
   };
+
   const eliminarTelefono = (index) => {
     const nuevos = (cliente.telefonos || []).filter((_, i) => i !== index);
     handleChange({
@@ -106,37 +109,56 @@ function NuevoClienteEmpresa() {
 
   const esEmpresa = cliente.tipoPersona === "Juridica";
 
+  /* ── Helper: wrapper de React-Select con label flotante fijo ── */
+  const RSField = ({ label, children }) => (
+    <div className="pc2-rs-wrapper">
+      <span className="pc2-rs-label">{label}</span>
+      {children}
+    </div>
+  );
+
+  /* ── Helper: select nativo con label flotante fijo ── */
+  const NativeSelectField = ({ label, ...props }) => (
+    <div className="fs-wrapper">
+      <label className="fs-label">{label}</label>
+      <select className="fs-select" {...props} />
+    </div>
+  );
+
   return (
     <div className="pc2-root">
       {/* ── Top Bar ── */}
-      <div className="pc2-topbar">
-        <h1 className="pc2-page-title">
-          {clienteEditando ? "Editar cliente" : "Crear cliente"}
-        </h1>
-        <div className="pc2-topbar-actions">
-          <button
-            type="button"
-            className="pc2-btn-cancel"
-            disabled={guardando}
-            onClick={() => navigate("/clientes")}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            form="form-cliente"
-            className="pc2-btn-save"
-            disabled={guardando}
-          >
-            {guardando ? "Guardando..." : "Guardar"}
-          </button>
+      <div className="header-card mb-3 px-4">
+        <div className="header-content d-flex justify-content-between align-items-center">
+          <div>
+            <h2 className="header-title">
+              {clienteEditando ? "Editar cliente" : "Crear cliente"}
+            </h2>
+            <p className="header-subtitle">
+              Todos los campos marcados con * son obligatorios para la creación
+              del tercero
+            </p>
+          </div>
+          <div className="d-flex align-items-center gap-3">
+            <button
+              type="button"
+              className="pc2-btn-cancel"
+              disabled={guardando}
+              onClick={() => navigate("/clientes")}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              form="form-cliente"
+              className="pc2-btn-save"
+              disabled={guardando}
+            >
+              {guardando ? "Guardando..." : "Guardar"}
+            </button>
+          </div>
         </div>
       </div>
-
-      <p className="pc2-required-note">
-        Todos los campos marcados con * son obligatorios para la creación del
-        tercero
-      </p>
 
       <form id="form-cliente" onSubmit={handleSubmit}>
         {/* ── Tipo de tercero ── */}
@@ -170,26 +192,20 @@ function NuevoClienteEmpresa() {
 
             <div className="pc2-grid-2">
               {/* Tipo persona */}
-              <div className="pc2-field">
-                <label className="pc2-label pc2-label-colored">Tipo</label>
-                <select
-                  name="tipoPersona"
-                  className="pc2-select-native"
-                  value={cliente.tipoPersona}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Seleccionar</option>
-                  <option value="Natural">Es persona</option>
-                  <option value="Juridica">Es empresa</option>
-                </select>
-              </div>
+              <NativeSelectField
+                label="Tipo"
+                name="tipoPersona"
+                value={cliente.tipoPersona}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Seleccionar</option>
+                <option value="Natural">Es persona</option>
+                <option value="Juridica">Es empresa</option>
+              </NativeSelectField>
 
               {/* Tipo identificación */}
-              <div className="pc2-field">
-                <label className="pc2-label pc2-label-colored">
-                  * Tipo de identificación
-                </label>
+              <RSField label="* Tipo de identificación">
                 <Select
                   className="pc2-react-select"
                   classNamePrefix="pc2rs"
@@ -213,34 +229,28 @@ function NuevoClienteEmpresa() {
                   isClearable
                   placeholder={esEmpresa ? "NIT" : "Cédula de ciudadanía"}
                 />
-              </div>
+              </RSField>
             </div>
 
             {/* Identificación + Dv */}
             <div className="pc2-grid-id">
-              <div className="pc2-field">
-                <label className="pc2-label">*Identificación</label>
-                <input
-                  type="text"
-                  name="numeroIdentificacion"
-                  className="pc2-input"
-                  value={cliente.numeroIdentificacion}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="pc2-field">
-                <label className="pc2-label">Dv</label>
-                <input
-                  type="number"
-                  name="digitoVerificacion"
-                  className="pc2-input"
-                  value={cliente.digitoVerificacion}
-                  onChange={handleChange}
-                  min="0"
-                  max="9"
-                />
-              </div>
+              <FloatingInput
+                label="* Identificación"
+                type="text"
+                name="numeroIdentificacion"
+                value={cliente.numeroIdentificacion}
+                onChange={handleChange}
+                required
+              />
+              <FloatingInput
+                label="Dv"
+                type="number"
+                name="digitoVerificacion"
+                value={cliente.digitoVerificacion}
+                onChange={handleChange}
+                min="0"
+                max="9"
+              />
             </div>
 
             {/* Autocompletar */}
@@ -255,17 +265,16 @@ function NuevoClienteEmpresa() {
                 <span className="pc2-help-icon">?</span>
               </button>
               {errorAutocompletar && (
-                <span className="pc2-error">{errorAutocompletar}</span>
+                <span className="pc2-error-msg">{errorAutocompletar}</span>
               )}
             </div>
 
             {/* Código sucursal */}
-            <div className="pc2-field" style={{ maxWidth: 180 }}>
-              <label className="pc2-label">Código de la sucursal</label>
-              <input
+            <div style={{ maxWidth: 180, marginTop: 12 }}>
+              <FloatingInput
+                label="Código de la sucursal"
                 type="text"
                 name="codigoSucursal"
-                className="pc2-input"
                 value={cliente.codigoSucursal || "0"}
                 onChange={handleChange}
               />
@@ -274,12 +283,11 @@ function NuevoClienteEmpresa() {
             {/* Nombres / Razón Social + Apellidos */}
             <div className="pc2-grid-2 mt-3">
               {esEmpresa ? (
-                <div className="pc2-field" style={{ gridColumn: "1 / -1" }}>
-                  <label className="pc2-label">* Razón Social</label>
-                  <input
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <FloatingInput
+                    label="* Razón Social"
                     type="text"
                     name="nombre"
-                    className="pc2-input"
                     value={cliente.nombre}
                     onChange={handleChange}
                     required
@@ -287,91 +295,86 @@ function NuevoClienteEmpresa() {
                 </div>
               ) : (
                 <>
-                  <div className="pc2-field">
-                    <label className="pc2-label">* Nombres</label>
-                    <input
-                      type="text"
-                      name="nombre"
-                      className="pc2-input"
-                      value={cliente.nombre}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="pc2-field">
-                    <label className="pc2-label">* Apellidos</label>
-                    <input
-                      type="text"
-                      name="apellido"
-                      className="pc2-input"
-                      value={cliente.apellido}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+                  <FloatingInput
+                    label="* Nombres"
+                    type="text"
+                    name="nombre"
+                    value={cliente.nombre}
+                    onChange={handleChange}
+                    required
+                  />
+                  <FloatingInput
+                    label="* Apellidos"
+                    type="text"
+                    name="apellido"
+                    value={cliente.apellido}
+                    onChange={handleChange}
+                    required
+                  />
                 </>
               )}
             </div>
 
             {/* Nombre Comercial */}
-            <div className="pc2-field mt-3">
-              <label className="pc2-label">Nombre comercial</label>
-              <input
+            <div className="mt-3">
+              <FloatingInput
+                label="Nombre comercial"
                 type="text"
                 name="nombreComercial"
-                className="pc2-input"
                 value={cliente.nombreComercial}
                 onChange={handleChange}
               />
             </div>
 
             {/* Ciudad */}
-            <div className="pc2-field mt-3">
-              <label className="pc2-label pc2-label-colored">Ciudad</label>
-              <Select
-                className="pc2-react-select"
-                classNamePrefix="pc2rs"
-                options={ciudadesOptionsPorDepartamento(cliente.departamento)}
-                value={
-                  ciudadesOptionsPorDepartamento(cliente.departamento).find(
-                    (opt) =>
-                      String(opt.ciudadCodigo) === String(cliente.ciudadCodigo),
-                  ) ?? null
-                }
-                onChange={handleCiudadChange}
-                placeholder="Seleccionar ciudad"
-                isClearable
-                isDisabled={!cliente.departamento}
-              />
+            <div className="mt-3">
+              <RSField label="Ciudad">
+                <Select
+                  className="pc2-react-select"
+                  classNamePrefix="pc2rs"
+                  options={ciudadesOptionsPorDepartamento(cliente.departamento)}
+                  value={
+                    ciudadesOptionsPorDepartamento(cliente.departamento).find(
+                      (opt) =>
+                        String(opt.ciudadCodigo) ===
+                        String(cliente.ciudadCodigo),
+                    ) ?? null
+                  }
+                  onChange={handleCiudadChange}
+                  placeholder="Seleccionar ciudad"
+                  isClearable
+                  isDisabled={!cliente.departamento}
+                />
+              </RSField>
             </div>
 
             {/* Departamento */}
-            <div className="pc2-field mt-3">
-              <label className="pc2-label">Departamento *</label>
-              <Select
-                className="pc2-react-select"
-                classNamePrefix="pc2rs"
-                options={departamentosOptions}
-                value={
-                  departamentosOptions.find(
-                    (opt) =>
-                      String(opt.departamentoCodigo) ===
-                      String(cliente.departamentoCodigo),
-                  ) ?? null
-                }
-                onChange={handleDepartamentoChange}
-                placeholder="Seleccionar departamento"
-                isClearable
-              />
+            <div className="mt-3">
+              <RSField label="Departamento *">
+                <Select
+                  className="pc2-react-select"
+                  classNamePrefix="pc2rs"
+                  options={departamentosOptions}
+                  value={
+                    departamentosOptions.find(
+                      (opt) =>
+                        String(opt.departamentoCodigo) ===
+                        String(cliente.departamentoCodigo),
+                    ) ?? null
+                  }
+                  onChange={handleDepartamentoChange}
+                  placeholder="Seleccionar departamento"
+                  isClearable
+                />
+              </RSField>
             </div>
 
             {/* Dirección */}
-            <div className="pc2-field mt-3">
-              <label className="pc2-label">Dirección</label>
-              <input
+            <div className="mt-3">
+              <FloatingInput
+                label="Dirección"
                 type="text"
                 name="direccion"
-                className="pc2-input"
                 value={cliente.direccion}
                 onChange={handleChange}
                 required
@@ -386,44 +389,33 @@ function NuevoClienteEmpresa() {
                 ]
               ).map((tel, i) => (
                 <div className="pc2-tel-row" key={i}>
-                  <div className="pc2-field pc2-tel-ind">
-                    {i === 0 && <label className="pc2-label">Indicativo</label>}
-                    <input
-                      type="text"
-                      className="pc2-input"
-                      placeholder="605"
-                      value={tel.indicativo}
-                      onChange={(e) =>
-                        handleTelefonoChange(i, "indicativo", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="pc2-field pc2-tel-num">
-                    {i === 0 && (
-                      <label className="pc2-label"># de Teléfono</label>
-                    )}
-                    <input
-                      type="text"
-                      className="pc2-input"
-                      placeholder="Número de teléfono"
-                      value={tel.numero}
-                      onChange={(e) =>
-                        handleTelefonoChange(i, "numero", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="pc2-field pc2-tel-ext">
-                    {i === 0 && <label className="pc2-label">Extensión</label>}
-                    <input
-                      type="text"
-                      className="pc2-input"
-                      placeholder="Extensión"
-                      value={tel.extension}
-                      onChange={(e) =>
-                        handleTelefonoChange(i, "extension", e.target.value)
-                      }
-                    />
-                  </div>
+                  <FloatingInput
+                    label={i === 0 ? "Indicativo" : ""}
+                    type="text"
+                    placeholder="605"
+                    value={tel.indicativo}
+                    onChange={(e) =>
+                      handleTelefonoChange(i, "indicativo", e.target.value)
+                    }
+                  />
+                  <FloatingInput
+                    label={i === 0 ? "# de Teléfono" : ""}
+                    type="text"
+                    placeholder="Número de teléfono"
+                    value={tel.numero}
+                    onChange={(e) =>
+                      handleTelefonoChange(i, "numero", e.target.value)
+                    }
+                  />
+                  <FloatingInput
+                    label={i === 0 ? "Extensión" : ""}
+                    type="text"
+                    placeholder="Ext."
+                    value={tel.extension}
+                    onChange={(e) =>
+                      handleTelefonoChange(i, "extension", e.target.value)
+                    }
+                  />
                   {i > 0 && (
                     <button
                       type="button"
@@ -455,93 +447,88 @@ function NuevoClienteEmpresa() {
             <div className="pc2-grid-billing">
               {/* Left billing */}
               <div>
-                <div className="pc2-field">
-                  <label className="pc2-label">Nombres del contacto</label>
-                  <input
-                    type="text"
-                    name="nombreContactoFacturacion"
-                    className="pc2-input"
-                    value={cliente.nombreContactoFacturacion || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="pc2-field mt-3">
-                  <label className="pc2-label">Apellidos del contacto</label>
-                  <input
+                <FloatingInput
+                  label="Nombres del contacto"
+                  type="text"
+                  name="nombreContactoFacturacion"
+                  value={cliente.nombreContactoFacturacion || ""}
+                  onChange={handleChange}
+                />
+
+                <div className="mt-3">
+                  <FloatingInput
+                    label="Apellidos del contacto"
                     type="text"
                     name="apellidoContactoFacturacion"
-                    className="pc2-input"
                     value={cliente.apellidoContactoFacturacion || ""}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="pc2-field mt-3">
-                  <label className="pc2-label">
-                    Correo electrónico cuando aplique
-                  </label>
-                  <input
+
+                <div className="mt-3">
+                  <FloatingInput
+                    label="Correo electrónico cuando aplique"
                     type="email"
                     name="correo"
-                    className="pc2-input"
                     value={cliente.correo}
                     onChange={handleChange}
                   />
                 </div>
-                <div className="pc2-field mt-3">
-                  <label className="pc2-label">Tipo de régimen IVA</label>
-                  <Select
-                    className="pc2-react-select"
-                    classNamePrefix="pc2rs"
-                    options={regimenTributarioDIAN.map((rt) => ({
-                      value: rt.descripcion,
-                      label: `${rt.codigo} - ${rt.descripcion}`,
-                    }))}
-                    value={
-                      regimenTributarioDIAN
-                        .map((rt) => ({
-                          value: rt.descripcion,
-                          label: `${rt.codigo} - ${rt.descripcion}`,
-                        }))
-                        .find(
-                          (opt) => opt.value === cliente.regimenTributario,
-                        ) ?? null
-                    }
-                    onChange={(opt) =>
-                      handleSelectChange("regimenTributario", opt?.value ?? "")
-                    }
-                    isClearable
-                    placeholder="Seleccionar régimen"
+
+                <div className="mt-3">
+                  <RSField label="Tipo de régimen IVA">
+                    <Select
+                      className="pc2-react-select"
+                      classNamePrefix="pc2rs"
+                      options={regimenTributarioDIAN.map((rt) => ({
+                        value: rt.descripcion,
+                        label: `${rt.codigo} - ${rt.descripcion}`,
+                      }))}
+                      value={
+                        regimenTributarioDIAN
+                          .map((rt) => ({
+                            value: rt.descripcion,
+                            label: `${rt.codigo} - ${rt.descripcion}`,
+                          }))
+                          .find(
+                            (opt) => opt.value === cliente.regimenTributario,
+                          ) ?? null
+                      }
+                      onChange={(opt) =>
+                        handleSelectChange(
+                          "regimenTributario",
+                          opt?.value ?? "",
+                        )
+                      }
+                      isClearable
+                      placeholder="Seleccionar régimen"
+                    />
+                  </RSField>
+                </div>
+
+                <div className="pc2-grid-2 mt-3">
+                  <FloatingInput
+                    label="Indicativo"
+                    type="text"
+                    name="indicativoFacturacion"
+                    placeholder="+57"
+                    value={cliente.indicativoFacturacion || ""}
+                    onChange={handleChange}
+                  />
+                  <FloatingInput
+                    label="# de Teléfono"
+                    type="text"
+                    name="telefonoFacturacion"
+                    value={cliente.telefonoFacturacion || ""}
+                    onChange={handleChange}
                   />
                 </div>
-                <div className="pc2-grid-2 mt-3">
-                  <div className="pc2-field">
-                    <label className="pc2-label">Indicativo</label>
-                    <input
-                      type="text"
-                      name="indicativoFacturacion"
-                      className="pc2-input"
-                      placeholder="+57"
-                      value={cliente.indicativoFacturacion || ""}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="pc2-field">
-                    <label className="pc2-label"># de Teléfono</label>
-                    <input
-                      type="text"
-                      name="telefonoFacturacion"
-                      className="pc2-input"
-                      value={cliente.telefonoFacturacion || ""}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="pc2-field mt-3">
-                  <label className="pc2-label">Código postal</label>
-                  <input
+
+                <div className="mt-3">
+                  <FloatingInput
+                    label="Código postal"
                     type="text"
                     name="codigoPostal"
-                    className="pc2-input"
                     value={cliente.codigoPostal}
                     onChange={handleChange}
                   />
@@ -587,72 +574,49 @@ function NuevoClienteEmpresa() {
             <div className="mt-3">
               {(cliente.contactos || []).map((c, i) => (
                 <div className="pc2-contacto-row" key={i}>
-                  <div className="pc2-field">
-                    <label className="pc2-label">Nombre *</label>
-                    <input
-                      className="pc2-input"
-                      placeholder="Nombre"
-                      value={c.nombre}
-                      onChange={(e) =>
-                        handleContactoChange(i, "nombre", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="pc2-field">
-                    <label className="pc2-label">Apellido</label>
-                    <input
-                      className="pc2-input"
-                      placeholder="Apellido"
-                      value={c.apellido}
-                      onChange={(e) =>
-                        handleContactoChange(i, "apellido", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="pc2-field">
-                    <label className="pc2-label">Correo</label>
-                    <input
-                      className="pc2-input"
-                      placeholder="correo@ejemplo.com"
-                      value={c.correo}
-                      onChange={(e) =>
-                        handleContactoChange(i, "correo", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="pc2-field">
-                    <label className="pc2-label">Cargo</label>
-                    <input
-                      className="pc2-input"
-                      placeholder="Ej: Gerente"
-                      value={c.cargo}
-                      onChange={(e) =>
-                        handleContactoChange(i, "cargo", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="pc2-field">
-                    <label className="pc2-label">Indicativo</label>
-                    <input
-                      className="pc2-input"
-                      placeholder="+57"
-                      value={c.indicativo}
-                      onChange={(e) =>
-                        handleContactoChange(i, "indicativo", e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="pc2-field">
-                    <label className="pc2-label">Teléfono</label>
-                    <input
-                      className="pc2-input"
-                      placeholder="# Tel"
-                      value={c.telefono}
-                      onChange={(e) =>
-                        handleContactoChange(i, "telefono", e.target.value)
-                      }
-                    />
-                  </div>
+                  <FloatingInput
+                    label="Nombre *"
+                    value={c.nombre}
+                    onChange={(e) =>
+                      handleContactoChange(i, "nombre", e.target.value)
+                    }
+                  />
+                  <FloatingInput
+                    label="Apellido"
+                    value={c.apellido}
+                    onChange={(e) =>
+                      handleContactoChange(i, "apellido", e.target.value)
+                    }
+                  />
+                  <FloatingInput
+                    label="Correo"
+                    value={c.correo}
+                    onChange={(e) =>
+                      handleContactoChange(i, "correo", e.target.value)
+                    }
+                  />
+                  <FloatingInput
+                    label="Cargo"
+                    value={c.cargo}
+                    onChange={(e) =>
+                      handleContactoChange(i, "cargo", e.target.value)
+                    }
+                  />
+                  <FloatingInput
+                    label="Indicativo"
+                    placeholder="+57"
+                    value={c.indicativo}
+                    onChange={(e) =>
+                      handleContactoChange(i, "indicativo", e.target.value)
+                    }
+                  />
+                  <FloatingInput
+                    label="Teléfono"
+                    value={c.telefono}
+                    onChange={(e) =>
+                      handleContactoChange(i, "telefono", e.target.value)
+                    }
+                  />
                   {i > 0 && (
                     <button
                       type="button"

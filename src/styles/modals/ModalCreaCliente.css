@@ -1,0 +1,50 @@
+/*
+  ModalCrearCliente.css — solo overrides del modal
+  El grueso del diseño viene de NuevoClienteEmpresa.css
+*/
+
+/* ── El form dentro del modal no necesita el padding de página ── */
+.mc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Dentro del modal el two-col puede ser más estrecho ── */
+.mc-form .pc2-two-col {
+  gap: 12px;
+}
+
+/* ── Las cards dentro del modal sin margen extra ── */
+.mc-form .pc2-card {
+  margin: 0;
+}
+
+/* ── Footer con botones alineados a la derecha ── */
+.mc-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 4px;
+}
+
+/* ── Dentro del modal los botones van sobre fondo blanco, no azul ── */
+.mc-modal-footer .pc2-btn-cancel {
+  border-color: #e55;
+  color: #e55;
+  background: transparent;
+}
+.mc-modal-footer .pc2-btn-cancel:hover {
+  background: #fff0f0;
+}
+
+.mc-modal-footer .pc2-btn-save {
+  background: var(--primary, #2563eb);
+  color: #fff;
+}
+.mc-modal-footer .pc2-btn-save:hover {
+  background: var(--primary-dark, #1d4ed8);
+}
