@@ -7,6 +7,10 @@ import {
   posSalesApi,
   posClientsApi,
   posConfigApi,
+  posCashApi,
+  posLabelsApi,
+  posPrintConfigApi,
+  posReportsApi,
 } from "../../Service/pos/posApi";
 
 // ─── Query keys ───────────────────────────────────────────────────────────────
@@ -70,17 +74,29 @@ export function usePosCategories() {
 
 export function useToggleFavorite() {
   const { dispatch } = usePos();
-  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: posProductsApi.toggleFavorite,
+    // El estado de favoritos vive en el front (localStorage), por eso no se
+    // invalida la query al terminar: el backend siempre devuelve isFavorite:false
+    // y un refetch borraría el cambio. Solo revertimos si la llamada falla.
     onMutate: (productId) => {
       dispatch({ type: "TOGGLE_FAVORITE", payload: productId });
     },
     onError: (_, productId) => {
       dispatch({ type: "TOGGLE_FAVORITE", payload: productId });
     },
-    onSettled: () => {
+  });
+}
+
+// ─── Ajuste de stock ───────────────────────────────────────────────────────────
+
+export function useAddStock() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ productId, cantidad }) =>
+      posProductsApi.addStock(productId, cantidad),
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["pos", "products"] });
     },
   });
@@ -112,7 +128,8 @@ export function useOpenShift() {
   return useMutation({
     mutationFn: (dto) => posShiftsApi.open(dto),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: POS_QUERY_KEYS.shift() });
+      qc.invalidateQueries({ queryKey: ["pos", "shift"] });
+      qc.invalidateQueries({ queryKey: ["pos", "shifts"] });
     },
   });
 }
@@ -122,8 +139,29 @@ export function useCloseShift() {
   return useMutation({
     mutationFn: (dto) => posShiftsApi.close(dto),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: POS_QUERY_KEYS.shift() });
+      qc.invalidateQueries({ queryKey: ["pos", "shift"] });
+      qc.invalidateQueries({ queryKey: ["pos", "shifts"] });
     },
+  });
+}
+
+// Historial de turnos (paginado, con filtros de fecha)
+export function useShiftHistory(params) {
+  return useQuery({
+    queryKey: POS_QUERY_KEYS.shiftHistory(params),
+    queryFn: () => posShiftsApi.getHistory(params),
+    staleTime: 30_000,
+    placeholderData: (prev) => prev,
+  });
+}
+
+// Resumen/arqueo de un turno (para el drawer de cierre/detalle)
+export function useShiftSummary(shiftId) {
+  return useQuery({
+    queryKey: ["pos", "shift", "summary", shiftId],
+    queryFn: () => posShiftsApi.getSummary(shiftId),
+    enabled: !!shiftId,
+    staleTime: 30_000,
   });
 }
 
@@ -135,11 +173,10 @@ export function useCreateSale() {
 
   return useMutation({
     mutationFn: (dto) => posSalesApi.create(dto),
-    onSuccess: (result) => {
-      dispatch({ type: "CLEAR_CART" });
-      dispatch({ type: "TOGGLE_CHARGE_MODAL" });
+    // El cierre del modal y el vaciado del carrito los maneja ChargeModal tras
+    // mostrar la confirmación. Aquí solo refrescamos datos (stock, turnos, caja).
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["pos"] });
-      return result;
     },
   });
 }
@@ -172,6 +209,90 @@ export function usePosConfig() {
     queryKey: POS_QUERY_KEYS.config(),
     queryFn: posConfigApi.get,
     staleTime: 10 * 60_000,
+  });
+}
+
+// ─── Movimientos de caja (ingresos / retiros) ───────────────────────────────────
+
+export function useCashMovements(params) {
+  return useQuery({
+    queryKey: ["pos", "cash-movements", params],
+    queryFn: () => posCashApi.list(params),
+    staleTime: 30_000,
+    placeholderData: (prev) => prev,
+  });
+}
+
+export function useCreateCashMovement() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (dto) => posCashApi.create(dto),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["pos", "cash-movements"] }),
+  });
+}
+
+// ─── Etiquetas ───────────────────────────────────────────────────────────────────
+
+export function useLabels() {
+  return useQuery({
+    queryKey: ["pos", "labels"],
+    queryFn: posLabelsApi.list,
+    staleTime: 60_000,
+  });
+}
+
+export function useCreateLabel() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (dto) => posLabelsApi.create(dto),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["pos", "labels"] }),
+  });
+}
+
+export function useUpdateLabel() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, ...dto }) => posLabelsApi.update(id, dto),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["pos", "labels"] }),
+  });
+}
+
+export function useDeleteLabel() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => posLabelsApi.remove(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["pos", "labels"] }),
+  });
+}
+
+// ─── Config de impresión ─────────────────────────────────────────────────────────
+
+export function usePrintConfig() {
+  return useQuery({
+    queryKey: ["pos", "print-config"],
+    queryFn: posPrintConfigApi.get,
+    staleTime: 5 * 60_000,
+  });
+}
+
+export function useUpdatePrintConfig() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (dto) => posPrintConfigApi.update(dto),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["pos", "print-config"] }),
+  });
+}
+
+// ─── Reportes ────────────────────────────────────────────────────────────────────
+
+export function useDailyReport(params) {
+  return useQuery({
+    queryKey: ["pos", "report", params],
+    queryFn: () => posReportsApi.report(params),
+    staleTime: 30_000,
+    placeholderData: (prev) => prev,
   });
 }
 

@@ -82,26 +82,26 @@ function NuevoProducto_Servicio() {
     }
   }, [productoEditando]);
 
- /* const baseGravable = producto.baseGravable
-    ? parseFloat(producto.baseGravable)
-    : 0;
-  const porcentajeFuente = producto.retencionFuente
-    ? parseFloat(producto.retencionFuente)
-    : 0;
-  const porcentajeIVA = producto.retencionIVA
-    ? parseFloat(producto.retencionIVA)
-    : 0;
-  const porcentajeICA = producto.retencionICA
-    ? parseFloat(producto.retencionICA)
-    : 0;
-
-  const valorRetencionFuente = +(
-    (baseGravable * porcentajeFuente) /
-    100
-  ).toFixed(2);
-  const valorRetencionIVA = +((baseGravable * porcentajeIVA) / 100).toFixed(2);
-  const valorRetencionICA = +((baseGravable * porcentajeICA) / 100).toFixed(2);
-*/
+  /* const baseGravable = producto.baseGravable
+     ? parseFloat(producto.baseGravable)
+     : 0;
+   const porcentajeFuente = producto.retencionFuente
+     ? parseFloat(producto.retencionFuente)
+     : 0;
+   const porcentajeIVA = producto.retencionIVA
+     ? parseFloat(producto.retencionIVA)
+     : 0;
+   const porcentajeICA = producto.retencionICA
+     ? parseFloat(producto.retencionICA)
+     : 0;
+ 
+   const valorRetencionFuente = +(
+     (baseGravable * porcentajeFuente) /
+     100
+   ).toFixed(2);
+   const valorRetencionIVA = +((baseGravable * porcentajeIVA) / 100).toFixed(2);
+   const valorRetencionICA = +((baseGravable * porcentajeICA) / 100).toFixed(2);
+ */
   const validarFormulario = () => {
     const nuevosErrores = {};
 
@@ -131,17 +131,6 @@ function NuevoProducto_Servicio() {
           "La cantidad disponible es obligatoria para productos";
       }
 
-      if (!producto.codigoBarras || producto.codigoBarras.trim() === "") {
-        nuevosErrores.codigoBarras =
-          "El código de barras es obligatorio para productos";
-      } else if (producto.codigoBarras.length < 8) {
-        nuevosErrores.codigoBarras =
-          "El código de barras debe tener al menos 8 caracteres";
-      }
-
-      if (!producto.marca || producto.marca.trim() === "") {
-        nuevosErrores.marca = "La marca es obligatoria para productos";
-      }
     }
 
     if (producto.esServicio) {
@@ -264,7 +253,7 @@ function NuevoProducto_Servicio() {
     modelo: "",
     precioUnitario: "",
     costo: "",
-    impuestoCargo: "", 
+    impuestoCargo: "",
     retencion: "",
     cantidadDisponible: "",
     cantidadMinima: 0,
@@ -494,13 +483,13 @@ function NuevoProducto_Servicio() {
                       value={
                         producto.unidadMedida
                           ? unidadesMedidaDIAN
-                              .map((um) => ({
-                                value: um.nombre,
-                                label: `${um.codigo} - ${um.nombre}`,
-                              }))
-                              .find(
-                                (opt) => opt.value === producto.unidadMedida,
-                              )
+                            .map((um) => ({
+                              value: um.nombre,
+                              label: `${um.codigo} - ${um.nombre}`,
+                            }))
+                            .find(
+                              (opt) => opt.value === producto.unidadMedida,
+                            )
                           : null
                       }
                       onChange={(opt) =>
@@ -531,11 +520,11 @@ function NuevoProducto_Servicio() {
                     value={
                       producto.unidadMedida
                         ? unidadesMedidaDIAN
-                            .map((um) => ({
-                              value: um.nombre,
-                              label: `${um.codigo} - ${um.nombre}`,
-                            }))
-                            .find((opt) => opt.value === producto.unidadMedida)
+                          .map((um) => ({
+                            value: um.nombre,
+                            label: `${um.codigo} - ${um.nombre}`,
+                          }))
+                          .find((opt) => opt.value === producto.unidadMedida)
                         : null
                     }
                     onChange={(opt) =>
@@ -990,7 +979,7 @@ function NuevoProducto_Servicio() {
                   type="button"
                   className="btn btn-footer-secundario"
                   disabled={guardando}
-                  onClick={()=> navigate("/productos/importar-excel")}
+                  onClick={() => navigate("/productos/importar-excel")}
                 >
                   Importar desde Excel
                 </button>

@@ -63,7 +63,7 @@
 
 .dashboard-header-subtitle {
   font-size: 16px;
-  color: var(--text-muted);
+  color: white;
   margin-bottom: 12px;
 }
 
@@ -71,11 +71,11 @@
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: var(--text-muted);
+  color: white;
 }
 
 .dashboard-header-icon {
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.336);
 }
 
 .dashboard-header-actions {

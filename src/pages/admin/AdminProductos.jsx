@@ -392,8 +392,8 @@ export default function AdminProductos() {
                     </td>
                     <td style={{ fontWeight: 700 }}>{fmt(p.precioUnitario)}</td>
                     <td>
-                      <span className={`admin-badge ${p.tarifaIVA > 0 ? "info" : "neutral"}`}>
-                        <TagFill size={10} /> {p.tarifaIVA ?? 0}%
+                      <span className={`admin-badge ${p.impuestoCargo > 0 ? "info" : "neutral"}`}>
+                        <TagFill size={10} /> {p.impuestoCargo ?? 0}%
                       </span>
                     </td>
                     <td style={{ fontSize: "0.85rem" }}>{p.unidadMedida || "—"}</td>

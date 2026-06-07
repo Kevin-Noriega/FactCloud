@@ -27,6 +27,10 @@ export default function PlanesPage() {
 
   const faqs = faqsPlan.filter((faq) => faq.seccion === "planes");
 
+  // Separar planes por categoría: facturación electrónica vs punto de venta (POS)
+  const planesFacturacion = (planes ?? []).filter((p) => p.tipo !== "POS");
+  const planesPOS = (planes ?? []).filter((p) => p.tipo === "POS");
+
   if (isLoading) return (
     <div className="planes-page-loading">
       <div className="spinner-border spinner-border-sm text-primary me-2" role="status" />
@@ -58,14 +62,14 @@ export default function PlanesPage() {
       {/* Stepper */}
       <Stepper currentStep={1} />
 
-      {/* Planes */}
+      {/* Planes de facturación electrónica */}
       <section className="planes-page-section">
         <div style={{ textAlign: "center", marginBottom: 8 }}>
           <span className="section-label">Facturación electrónica</span>
         </div>
 
         <div className="planes-page-grid">
-          {(planes ?? []).map((plan) => (
+          {planesFacturacion.map((plan) => (
             <PlanCard
               key={plan.id}
               plan={plan}
@@ -73,7 +77,33 @@ export default function PlanesPage() {
             />
           ))}
         </div>
+      </section>
 
+      {/* Sistema POS — módulo que se contrata por separado */}
+      {planesPOS.length > 0 && (
+        <section className="planes-page-section planes-page-section-pos">
+          <div style={{ textAlign: "center", marginBottom: 8 }}>
+            <span className="section-label section-label">Sistema POS</span>
+            <p className="planes-pos-subtitle">
+              Agrega el punto de venta a cualquier plan de facturación. Se contrata
+              por separado según las necesidades de tu negocio.
+            </p>
+          </div>
+
+          <div className="planes-page-grid">
+            {planesPOS.map((plan) => (
+              <PlanCard
+                key={plan.id}
+                plan={plan}
+                onCheckout={handleSelectPlan}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Footer de planes */}
+      <section className="planes-page-section-footer">
         <div className="planes-page-footer">
           <div>
             <h3>¿Necesitas un plan personalizado?</h3>

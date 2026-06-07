@@ -135,17 +135,19 @@ const TIPOS_FACTURA = [
   //{ value: "03", label: "Factura en Contingencia" },
 ];
 
+// Medios de pago (payment_method_code) válidos según la tabla DIAN / Factus (UN-ECE 4461).
+// OJO: "medio de pago" ≠ "forma de pago". La forma (contado/crédito) es factura.formaPago
+// ("1"/"2"); aquí solo van medios reales que Factus acepta.
 const OPCIONES_MEDIO_PAGO = [
   { value: "10", label: "Efectivo" },
-  { value: "30", label: "Crédito" },
-  { value: "49", label: "Tarjeta Débito" },
-  { value: "48", label: "Tarjeta Crédito" },
-  { value: "CNA99", label: "Clientes Nacionales" },
-  { value: "CEX99", label: "Clientes Extranjero" },
   { value: "20", label: "Cheque" },
-  { value: "42", label: "Transferencia" },
-  { value: "8", label: "Consignación" },
-  { value: "ZZZ", label: "Otros" },
+  { value: "42", label: "Consignación bancaria" },
+  { value: "47", label: "Transferencia Débito Bancaria" },
+  { value: "48", label: "Tarjeta Crédito" },
+  { value: "49", label: "Tarjeta Débito" },
+  { value: "71", label: "Bonos" },
+  { value: "72", label: "Vales" },
+  { value: "ZZZ", label: "Otro" },
 ];
 
 const mkSelectStyles = (invalid = false) => ({

@@ -1,7 +1,7 @@
-import {ArrowRight,BoxSeamFill,CashStack, CheckCircleFill,ExclamationTriangleFill,FileEarmarkText,GraphUpArrow,People,} from "react-bootstrap-icons";
+import { ArrowRight, BoxSeamFill, CashStack, CheckCircleFill, ExclamationTriangleFill, FileEarmarkText, GraphUpArrow, People, } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useDashboard } from "../../hooks/useDashboard";
-import { LineChart,Line,XAxis, YAxis, Tooltip, CartesianGrid,ResponsiveContainer} from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import "../../styles/Dashboard/Estadisticas.css";
 import { useState } from "react";
 
@@ -95,11 +95,11 @@ export const Estadisticas = () => {
 
           <div className="stat-mensual">
             <div className="stat-card stat-card-mensual">
-            <div className="stat-header">
-              <div className="stat-icon">
-                <CashStack size={22} />
-              </div>
-               <p className="stat-label">Ventas Anuales</p>
+              <div className="stat-header">
+                <div className="stat-icon">
+                  <CashStack size={22} />
+                </div>
+                <p className="stat-label">Ventas Anuales</p>
               </div>
               <div className="stat-content">
                 <h3 className="stat-value">
