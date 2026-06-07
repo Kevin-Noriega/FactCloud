@@ -218,11 +218,9 @@
   height: 54px;
   border: none;
   border-radius: 14px;
-  background: linear-gradient(
-    135deg,
-    var(--pos-primary) 0%,
-    var(--pos-primary-dark) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--pos-primary) 0%,
+      var(--pos-primary-dark) 100%);
   color: white;
   font-size: 1rem;
   font-weight: 700;
@@ -302,12 +300,10 @@
 .pos-login-visual-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(4, 20, 40, 0.82) 0%,
-    rgba(4, 20, 40, 0.44) 50%,
-    rgba(31, 156, 240, 0.18) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(4, 20, 40, 0.82) 0%,
+      rgba(4, 20, 40, 0.44) 50%,
+      rgba(31, 156, 240, 0.18) 100%);
 }
 
 .pos-login-visual-content {

@@ -13,6 +13,14 @@ export const normalizePlan = (raw) => ({
   id: raw.id,
   codigo: raw.codigo ?? "",
   nombre: raw.nombre ?? raw.name ?? "",
+  // tipo: "FACTURACION" | "POS" — el POS es un producto aparte.
+  tipo: (raw.tipo ?? raw.type ?? "FACTURACION").toUpperCase(),
+  // Módulos/capacidades habilitados por el plan
+  incluyePOS: raw.incluyePOS ?? raw.includesPOS ?? false,
+  incluyeInventario: raw.incluyeInventario ?? false,
+  incluyeNomina: raw.incluyeNomina ?? false,
+  incluyeContabilidad: raw.incluyeContabilidad ?? false,
+  incluyeSucursales: raw.incluyeSucursales ?? false,
   descripcion: raw.descripcion ?? raw.description ?? "",
   // precioMensual: always present (computed from annual if missing)
   precioMensual: raw.precioMensual ?? raw.monthlyPrice ?? (raw.precioAnual ?? 0) / 12,

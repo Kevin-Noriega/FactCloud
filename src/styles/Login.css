@@ -103,6 +103,7 @@
 .login-alert-error {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 14px 16px;
   background: #fef2f2;
@@ -112,6 +113,24 @@
   font-size: 0.875rem;
   margin-bottom: 24px;
   animation: login-slideDown 0.3s ease-out;
+}
+
+.login-btn-renovar {
+  margin-left: auto;
+  padding: 8px 16px;
+  background: var(--danger);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.login-btn-renovar:hover {
+  opacity: 0.85;
 }
 
 @keyframes login-slideDown {

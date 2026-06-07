@@ -9,28 +9,28 @@ function DocumentosVenta() {
 
   const tabs = [
     { id: 'factura', label: 'Factura de ventas' },
-    { id: 'pos', label: 'Documento Equivalente (POS)' },
+    // { id: 'pos', label: 'Documento Equivalente (POS)' },
     { id: 'notaCredito', label: 'Nota crédito' },
     { id: 'notaDebito', label: 'Nota dédito' }
   ];
 
   const renderContent = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case 'factura':
         return <div className="item-content pt-5">
-            <Facturas/>
+          <Facturas />
         </div>;
       case 'notaCredito':
         return <div className="item-content pt-5">
-            <NotaCredito/>
+          <NotaCredito />
         </div>;
       case 'notaDebito':
         return <div className="item-content pt-5">
-            <NotaDebito/>
+          <NotaDebito />
         </div>;
       case 'pos':
         return <div className="item-content pt-5">
-            <DocumentoEquivalentePOS/>
+          <DocumentoEquivalentePOS />
         </div>;
       default:
         return null;

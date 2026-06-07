@@ -6,6 +6,10 @@ import { PosLayout } from "../layouts/pos/PosLayouth";
 const PosMainPage = lazy(() => import("../pages/pos/PosMainPage"));
 const PosShiftsPage = lazy(() => import("../pages/pos/PosShiftsPage"));
 const PosReportsPage = lazy(() => import("../pages/pos/PosReportPage"));
+const PosCashMovementsPage = lazy(() => import("../pages/pos/PosCashMovementsPage"));
+const PosLabelsPage = lazy(() => import("../pages/pos/PosLabelsPage"));
+const PosPrintConfigPage = lazy(() => import("../pages/pos/PosPrintConfigPage"));
+const PosHelpPage = lazy(() => import("../pages/pos/PosHelpPage"));
 
 function PosLoadingFallback() {
   return (
@@ -45,6 +49,10 @@ export function PosRoutes() {
             <Route path="ventas" element={<PosMainPage />} />
             <Route path="turnos" element={<PosShiftsPage />} />
             <Route path="reportes" element={<PosReportsPage />} />
+            <Route path="caja" element={<PosCashMovementsPage />} />
+            <Route path="etiquetas" element={<PosLabelsPage />} />
+            <Route path="impresion" element={<PosPrintConfigPage />} />
+            <Route path="ayuda" element={<PosHelpPage />} />
             <Route path="*" element={<Navigate to="ventas" replace />} />
           </Routes>
         </Suspense>

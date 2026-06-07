@@ -1,15 +1,6 @@
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "/api",
-  headers: { "Content-Type": "application/json" },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("factcloud_token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+// Reusa el axiosClient principal: misma baseURL (https://localhost:7149/api),
+// el access token en memoria y el refresh automático con cookie HttpOnly.
+import api from "../../api/axiosClient";
 
 // ─── Product endpoints ────────────────────────────────────────────────────────
 
@@ -30,6 +21,13 @@ export const posProductsApi = {
 
   getByBarcode: async (barcode) => {
     const { data } = await api.get(`/pos/products/barcode/${barcode}`);
+    return data;
+  },
+
+  addStock: async (productId, cantidad) => {
+    const { data } = await api.post(`/pos/products/${productId}/stock`, {
+      cantidad,
+    });
     return data;
   },
 };
@@ -137,11 +135,62 @@ export const posConfigApi = {
   },
 };
 
+// ─── Cash movements (ingresos / retiros) ───────────────────────────────────────
+
+export const posCashApi = {
+  list: async (params) => {
+    const { data } = await api.get("/pos/cash-movements", { params });
+    return data;
+  },
+  create: async (dto) => {
+    const { data } = await api.post("/pos/cash-movements", dto);
+    return data;
+  },
+};
+
+// ─── Labels (etiquetas) ─────────────────────────────────────────────────────────
+
+export const posLabelsApi = {
+  list: async () => {
+    const { data } = await api.get("/pos/labels");
+    return data;
+  },
+  create: async (dto) => {
+    const { data } = await api.post("/pos/labels", dto);
+    return data;
+  },
+  update: async (id, dto) => {
+    const { data } = await api.put(`/pos/labels/${id}`, dto);
+    return data;
+  },
+  remove: async (id) => {
+    await api.delete(`/pos/labels/${id}`);
+  },
+};
+
+// ─── Print config ───────────────────────────────────────────────────────────────
+
+export const posPrintConfigApi = {
+  get: async () => {
+    const { data } = await api.get("/pos/print-config");
+    return data;
+  },
+  update: async (dto) => {
+    const { data } = await api.put("/pos/print-config", dto);
+    return data;
+  },
+};
+
 // ─── Reports endpoints ────────────────────────────────────────────────────────
 
 export const posReportsApi = {
   dailySales: async (date) => {
     const { data } = await api.get("/pos/reports/daily", { params: { date } });
+    return data;
+  },
+
+  report: async (params) => {
+    const { data } = await api.get("/pos/reports/daily", { params });
     return data;
   },
 

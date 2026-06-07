@@ -1,23 +1,23 @@
 import React, { useState } from 'react'
-import { BagDash} from 'react-bootstrap-icons';
+import { BagDash } from 'react-bootstrap-icons';
 import DocumentosSoporte from '../components/comprasGastos/DocumentoSoporte';
 import BuzonTributario from '../components/comprasGastos/BuzonTributario';
 
-function ComprasGastos (){
-    const [activeTab, setActiveTab] = useState('documento');
+function ComprasGastos() {
+  const [activeTab, setActiveTab] = useState('documento');
 
   // NOMBRES LITERALES COMO SIIGO
   const tabs = [
     { id: 'documento', label: 'Documento Soporte' },
-    { id: 'buzon', label: 'Recepción y Eventos (RADIAN)' },
+    // { id: 'buzon', label: 'Recepción y Eventos (RADIAN)' },
   ];
 
   const renderContent = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case 'documento':
         return (
           <div className="tab-content p-4">
-            <DocumentosSoporte/>
+            <DocumentosSoporte />
           </div>
         );
 
@@ -35,14 +35,10 @@ function ComprasGastos (){
 
   return (
     <div className="container-fluid px-4">
-
       {/* HEADER */}
       <div className="header-card mb-3 px-4">
         <div className="header-content d-flex justify-content-between align-items-center">
-
-            <h2 className="header-title">Compras y gastos
-            </h2>
-
+          <h2 className="header-title"> Compras y gastos </h2>
           <div className="header-icon">
             <BagDash size={50} />
           </div>
@@ -66,7 +62,7 @@ function ComprasGastos (){
       </div>
 
       {/* CONTENIDO */}
-      {renderContent()}
+      <div style={{ flex: 1 }}>{renderContent()}</div>
 
     </div>
   )

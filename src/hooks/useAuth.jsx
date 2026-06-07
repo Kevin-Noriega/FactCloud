@@ -65,10 +65,12 @@ export const AuthProvider = ({ children }) => {
       contrasena,
     });
 
-    // Enriquecer usuario con flag tienePos a partir del plan del backend
+    // Enriquecer usuario con flag tienePos.
+    // El backend ya calcula tienePos (cualquier suscripción activa con POS);
+    // como respaldo usamos el flag del plan principal.
     const usuarioConPlan = {
       ...data.usuario,
-      tienePos: !!data.usuario.plan?.incluyePOS,
+      tienePos: data.usuario.tienePos ?? !!data.usuario.plan?.incluyePOS,
     };
 
     console.log(

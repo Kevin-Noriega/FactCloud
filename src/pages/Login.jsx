@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import { Eye, EyeSlash, EnvelopeFill, LockFill } from "react-bootstrap-icons";
@@ -10,21 +10,56 @@ export default function login() {
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [planVencido, setPlanVencido] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // Si la sesión se cortó por plan vencido (al refrescar token), mostrar el aviso.
+  useEffect(() => {
+    const raw = sessionStorage.getItem("authMotivoCierre");
+    if (!raw) return;
+    sessionStorage.removeItem("authMotivoCierre");
+    try {
+      const motivo = JSON.parse(raw);
+      if (motivo?.codigo === "PLAN_VENCIDO" || motivo?.codigo === "SIN_PLAN") {
+        const fecha = motivo.fechaExpiracion
+          ? new Date(motivo.fechaExpiracion).toLocaleDateString("es-CO")
+          : null;
+        setPlanVencido(true);
+        setError(
+          (motivo.message ||
+            "Tu plan ha vencido. Renueva tu suscripción para continuar.") +
+            (fecha ? ` (Venció el ${fecha})` : ""),
+        );
+      }
+    } catch {
+      /* motivo corrupto, ignorar */
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     setLoading(true);
     setError("");
+    setPlanVencido(false);
 
     try {
       const data = await login(correo, contrasena);
       const rol = (data?.usuario?.rol ?? "").toLowerCase();
       navigate(rol === "admin" ? "/admin" : "/dashboard", { replace: true });
     } catch (err) {
-      if (err.response?.status === 423) {
+      if (err.response?.status === 402) {
+        const fecha = err.response.data?.fechaExpiracion
+          ? new Date(err.response.data.fechaExpiracion).toLocaleDateString("es-CO")
+          : null;
+        setPlanVencido(true);
+        setError(
+          (err.response.data?.message ||
+            "Tu plan ha vencido. Renueva tu suscripción para continuar.") +
+            (fecha ? ` (Venció el ${fecha})` : ""),
+        );
+      } else if (err.response?.status === 423) {
         setError(
           `Cuenta desactivada. ${err.response.data.diasRestantes} días para reactivar.`,
         );
@@ -81,6 +116,15 @@ export default function login() {
           {error && (
             <div className="login-alert-error">
               <span>{error}</span>
+              {planVencido && (
+                <button
+                  type="button"
+                  className="login-btn-renovar"
+                  onClick={() => navigate("/planes")}
+                >
+                  Renovar plan
+                </button>
+              )}
             </div>
           )}
 

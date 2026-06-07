@@ -28,6 +28,7 @@ const fmt = (n) =>
 const PLAN_VACIO = {
   codigo: "",
   nombre: "",
+  tipo: "FACTURACION",
   descripcion: "",
   precioAnual: 0,
   limiteDocumentosAnuales: null,
@@ -62,6 +63,7 @@ export default function AdminPlanes() {
     setForm({
       codigo: plan.codigo,
       nombre: plan.nombre,
+      tipo: plan.tipo ?? "FACTURACION",
       descripcion: plan.descripcion ?? "",
       precioAnual: plan.precioAnual,
       limiteDocumentosAnuales: plan.limiteDocumentosAnuales,
@@ -117,7 +119,7 @@ export default function AdminPlanes() {
     descuentoPorcentaje: form.descuentoActivo
       ? parseInt(form.descuentoPorcentaje) || null
       : null,
-      incluyePOS: !!form.incluyePOS,
+    incluyePOS: !!form.incluyePOS,
   });
 
   const handleGuardar = async () => {
@@ -165,20 +167,39 @@ export default function AdminPlanes() {
         </p>
       </div>
 
-      {/* Grid de planes */}
-      <div className="row g-4">
-        {planes.map((plan) => (
-          <div key={plan.id} className="col-12 col-md-6 col-xl-4">
-            <PlanCard
-              plan={plan}
-              adminMode
-              onEditar={() => abrirEditar(plan)}
-              onEliminar={() => abrirEliminar(plan)}
-              onToggle={() => handleToggle(plan)}
-            />
+      {/* Grid de planes agrupado por categoría */}
+      {[
+        { tipo: "FACTURACION", titulo: "Facturación electrónica" },
+        { tipo: "POS", titulo: "Planes POS" },
+      ].map(({ tipo, titulo }) => {
+        const grupo = planes.filter(
+          (p) => (p.tipo ?? "FACTURACION") === tipo
+        );
+        if (grupo.length === 0) return null;
+        return (
+          <div key={tipo} className="mb-4">
+            <h5 className="mb-3 d-flex align-items-center gap-2" style={{ color: "white" }}>
+              {titulo}
+              <span className="badge bg-light text-secondary fw-normal">
+                {grupo.length}
+              </span>
+            </h5>
+            <div className="row g-4">
+              {grupo.map((plan) => (
+                <div key={plan.id} className="col-12 col-md-6 col-xl-4">
+                  <PlanCard
+                    plan={plan}
+                    adminMode
+                    onEditar={() => abrirEditar(plan)}
+                    onEliminar={() => abrirEliminar(plan)}
+                    onToggle={() => handleToggle(plan)}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
+        );
+      })}
 
       {/* ── Modal Crear / Editar ── */}
       {(modal === "crear" || modal === "editar") && (
@@ -215,6 +236,17 @@ export default function AdminPlanes() {
                     onChange={set("nombre")}
                     placeholder="Plan Básico"
                   />
+                </div>
+                <div className="col-12">
+                  <label className="admin-form-label">Tipo de plan *</label>
+                  <select
+                    className="admin-form-control"
+                    value={form.tipo}
+                    onChange={set("tipo")}
+                  >
+                    <option value="FACTURACION">Facturación electrónica</option>
+                    <option value="POS">POS (punto de venta)</option>
+                  </select>
                 </div>
                 <div className="col-12">
                   <label className="admin-form-label">Descripción</label>

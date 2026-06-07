@@ -35,8 +35,10 @@ export function PlanesPreview() {
     </section>
   );
 
-  // Solo los primeros 3 planes
-  const planesVisibles = (planes ?? []).slice(0, 3);
+  // Solo los primeros 3 planes de facturación (los POS tienen su sección en /planes)
+  const planesVisibles = (planes ?? [])
+    .filter((p) => p.tipo !== "POS")
+    .slice(0, 3);
 
   return (
     <section className="planes-preview-section">

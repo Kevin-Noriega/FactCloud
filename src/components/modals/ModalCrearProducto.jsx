@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../../api/config";
+import axiosClient from "../../api/axiosClient";
 import Select from "../StyledSelect";
 import unidadesMedidaDIAN from "../../utils/UnidadesMedidas.json";
 import tipoProductoDIAN from "../../utils/TiposProducto.json";
@@ -113,26 +113,20 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
   const valorRetencionIVA = +((baseGravable * porcentajeIVA) / 100).toFixed(2);
   const valorRetencionICA = +((baseGravable * porcentajeICA) / 100).toFixed(2);
 
+  // Validación del modal RÁPIDO: solo los campos que este modal muestra.
+  // (Los campos avanzados —UNSPSC, marca, código de barras, tipo DIAN, etc.—
+  //  se piden en "Creación completa". El backend los acepta como opcionales.)
   const validarFormulario = () => {
     const nuevosErrores = {};
 
     if (!producto.nombre.trim()) {
       nuevosErrores.nombre = "El nombre es obligatorio";
-    } else if (producto.nombre.length < 3) {
+    } else if (producto.nombre.trim().length < 3) {
       nuevosErrores.nombre = "El nombre debe tener al menos 3 caracteres";
-    }
-
-    if (!producto.tipoProducto) {
-      nuevosErrores.tipoProducto = "Debe seleccionar un tipo de producto";
     }
 
     if (!producto.precioUnitario || parseFloat(producto.precioUnitario) <= 0) {
       nuevosErrores.precioUnitario = "El precio debe ser mayor a 0";
-    }
-
-    if (!producto.baseGravable || parseFloat(producto.baseGravable) <= 0) {
-      nuevosErrores.baseGravable =
-        "La base gravable es obligatoria y debe ser mayor a 0";
     }
 
     if (
@@ -144,78 +138,18 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
 
     if (!producto.esServicio) {
       if (
-        !producto.cantidadDisponible ||
+        producto.cantidadDisponible === "" ||
+        producto.cantidadDisponible === null ||
         parseInt(producto.cantidadDisponible) < 0
       ) {
         nuevosErrores.cantidadDisponible =
           "La cantidad disponible es obligatoria para productos";
       }
-
-      if (!producto.codigoBarras || producto.codigoBarras.trim() === "") {
-        nuevosErrores.codigoBarras =
-          "El código de barras es obligatorio para productos";
-      } else if (producto.codigoBarras.length < 8) {
-        nuevosErrores.codigoBarras =
-          "El código de barras debe tener al menos 8 caracteres";
-      }
-
-      if (!producto.marca || producto.marca.trim() === "") {
-        nuevosErrores.marca = "La marca es obligatoria para productos";
-      }
-    }
-
-    if (producto.esServicio) {
-      if (!producto.descripcion || producto.descripcion.trim() === "") {
-        nuevosErrores.descripcion =
-          "La descripción es obligatoria para servicios";
-      } else if (producto.descripcion.length < 10) {
-        nuevosErrores.descripcion =
-          "La descripción debe tener al menos 10 caracteres";
-      }
-    }
-
-    if (!producto.codigoUNSPSC || producto.codigoUNSPSC.trim() === "") {
-      nuevosErrores.codigoUNSPSC =
-        "El código UNSPSC es obligatorio para facturación electrónica";
-    } else if (!/^\d{8}$/.test(producto.codigoUNSPSC)) {
-      nuevosErrores.codigoUNSPSC =
-        "El código UNSPSC debe tener exactamente 8 dígitos";
     }
 
     if (producto.productoExcluido && producto.productoExento) {
       nuevosErrores.impuestos =
         "Un producto no puede ser excluido y exento al mismo tiempo";
-    }
-
-    if (
-      producto.gravaINC &&
-      (!producto.tarifaINC || parseFloat(producto.tarifaINC) <= 0)
-    ) {
-      nuevosErrores.tarifaINC = "Debe especificar la tarifa INC";
-    }
-
-    if (
-      producto.retencionFuente &&
-      (parseFloat(producto.retencionFuente) < 0 ||
-        parseFloat(producto.retencionFuente) > 100)
-    ) {
-      nuevosErrores.retencionFuente = "La retención debe estar entre 0 y 100%";
-    }
-
-    if (
-      producto.retencionIVA &&
-      (parseFloat(producto.retencionIVA) < 0 ||
-        parseFloat(producto.retencionIVA) > 100)
-    ) {
-      nuevosErrores.retencionIVA = "La retención debe estar entre 0 y 100%";
-    }
-
-    if (
-      producto.retencionICA &&
-      (parseFloat(producto.retencionICA) < 0 ||
-        parseFloat(producto.retencionICA) > 100)
-    ) {
-      nuevosErrores.retencionICA = "La retención debe estar entre 0 y 100%";
     }
 
     setErrores(nuevosErrores);
@@ -277,85 +211,55 @@ function ModalCrearProducto({ productoEditando, onClose, onGuardadoExitoso }) {
     setGuardando(true);
 
     try {
-      const usuarioGuardado = JSON.parse(localStorage.getItem("usuario"));
-      if (!usuarioGuardado) {
-        alert("No se encontró un usuario autenticado.");
-        setGuardando(false);
-        return;
-      }
-
       const payload = {
         ...(productoEditando && { id: productoEditando.id }),
         esServicio: producto.esServicio,
         nombre: producto.nombre.trim(),
-        descripcion: producto.descripcion.trim(),
-        codigoInterno: producto.codigoInterno.trim(),
-        codigoUNSPSC: producto.codigoUNSPSC.trim(),
-        unidadMedida: producto.unidadMedida,
-        marca: producto.esServicio ? null : producto.marca.trim(),
-        modelo: producto.esServicio ? null : producto.modelo.trim(),
+        descripcion: producto.descripcion?.trim() || null,
+        codigoInterno: producto.codigoInterno?.trim() || null,
+        codigoUNSPSC: producto.codigoUNSPSC?.trim() || null,
+        unidadMedida: producto.unidadMedida || "Unidad",
+        marca: producto.esServicio ? null : producto.marca?.trim() || null,
+        modelo: producto.esServicio ? null : producto.modelo?.trim() || null,
         precioUnitario: parseFloat(producto.precioUnitario),
         costo: producto.costo ? parseFloat(producto.costo) : null,
-        tipoImpuesto: producto.tipoImpuesto,
-        tarifaIVA: parseFloat(producto.tarifaIVA),
-        productoExcluido: producto.productoExcluido,
-        productoExento: producto.productoExento,
-        gravaINC: producto.gravaINC,
-        tarifaINC: producto.gravaINC ? parseFloat(producto.tarifaINC) : null,
+        incluyeIVA: !!producto.productoExento,
+        impuestoCargo: getImpuestoCargo(producto),
         cantidadDisponible: producto.esServicio
           ? null
           : parseInt(producto.cantidadDisponible),
         cantidadMinima: producto.esServicio
           ? 0
-          : parseInt(producto.cantidadMinima),
-        categoria: producto.categoria.trim(),
-        codigoBarras: producto.esServicio ? null : producto.codigoBarras.trim(),
-        tipoProducto: producto.tipoProducto,
-        baseGravable: parseFloat(producto.baseGravable),
-        retencionFuente: producto.retencionFuente
-          ? parseFloat(producto.retencionFuente)
-          : 0,
-        retencionIVA: producto.retencionIVA
-          ? parseFloat(producto.retencionIVA)
-          : 0,
-        retencionICA: producto.retencionICA
-          ? parseFloat(producto.retencionICA)
-          : 0,
-        estado: producto.estado,
-        usuarioId: usuarioGuardado.id,
+          : parseInt(producto.cantidadMinima) || 0,
+        categoria: producto.categoria?.trim() || null,
+        codigoBarras: producto.esServicio
+          ? null
+          : producto.codigoBarras?.trim() || null,
+        tipoProducto: producto.tipoProducto || null,
+        // Necesario en edición: ProductoUpdateDto.Activo (si no, lo desactivaría).
+        activo: producto.estado !== false,
       };
 
-      const token = localStorage.getItem("token");
-      const url = productoEditando
-        ? `${API_URL}/Productos/${productoEditando.id}`
-        : `${API_URL}/Productos`;
-      const method = productoEditando ? "PUT" : "POST";
+      // axiosClient ya inyecta el access token (en memoria) y refresca si caduca.
+      const respuesta = productoEditando
+        ? await axiosClient.put(`/Productos/${productoEditando.id}`, payload)
+        : await axiosClient.post(`/Productos`, payload);
 
-      const respuesta = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!respuesta.ok) {
-        const errorTexto = await respuesta.text();
-        throw new Error(errorTexto);
-      }
-
-      let productoGuardado = null;
-      try {
-        productoGuardado = await respuesta.json();
-      } catch (_) {}
+      const productoGuardado = respuesta?.data ?? null;
 
       const mensaje = productoEditando
         ? `${producto.esServicio ? "Servicio" : "Producto"} modificado con éxito.`
         : `${producto.esServicio ? "Servicio" : "Producto"} agregado con éxito.`;
       onGuardadoExitoso(mensaje, productoGuardado);
     } catch (error) {
-      alert("Error al guardar: " + error.message);
+      const data = error?.response?.data;
+      const msg =
+        (typeof data === "string" && data) ||
+        data?.message ||
+        data?.errorReal ||
+        error.message ||
+        "No se pudo guardar el producto";
+      alert("Error al guardar: " + msg);
     } finally {
       setGuardando(false);
     }

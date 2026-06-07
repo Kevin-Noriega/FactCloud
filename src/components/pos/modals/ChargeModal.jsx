@@ -10,7 +10,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { usePos } from "../../../contexts/pos/PosContext";
-import { useCurrency } from "../../../hooks/pos/usePosHooks";
+import { useCurrency, useCreateSale } from "../../../hooks/pos/usePosHooks";
 
 const PAYMENT_METHODS = [
   { value: "CASH", label: "Efectivo", icon: <DollarSign size={18} /> },
@@ -19,17 +19,26 @@ const PAYMENT_METHODS = [
   { value: "CREDIT", label: "Crédito", icon: <Clock size={18} /> },
 ];
 
+// Mapeo de medio de pago del front → desglose que espera el backend.
+const METHOD_MAP = {
+  CASH: "Efectivo",
+  CARD: "Tarjeta",
+  TRANSFER: "PagosLinea",
+  CREDIT: "Credito",
+};
+
 const QUICK_AMOUNTS = [50000, 100000, 200000, 500000];
 
 export function ChargeModal() {
-  const { state, dispatch, cartTotal } = usePos();
+  const { state, dispatch, cartTotal, activeAccount } = usePos();
   const { format } = useCurrency();
+  const createSale = useCreateSale();
 
   const [payments, setPayments] = useState([
     { id: "1", method: "CASH", amount: cartTotal },
   ]);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const isProcessing = createSale.isPending;
 
   const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
   const change = Math.max(0, totalPaid - cartTotal);
@@ -70,14 +79,32 @@ export function ChargeModal() {
   };
 
   const handleCharge = async () => {
-    setIsProcessing(true);
-    await new Promise((r) => setTimeout(r, 1200)); // simulate API
-    setIsProcessing(false);
-    setIsSuccess(true);
-    setTimeout(() => {
-      dispatch({ type: "TOGGLE_CHARGE_MODAL" });
-      dispatch({ type: "CLEAR_CART" });
-    }, 1800);
+    const items = (activeAccount?.items ?? []).map((i) => ({
+      productoId: /^\d+$/.test(i.product.id) ? Number(i.product.id) : null,
+      nombre: i.product.name,
+      cantidad: i.quantity,
+      precioUnitario: i.unitPrice,
+      descuento: i.discount || 0,
+    }));
+    const pagos = payments.map((p) => ({
+      metodo: METHOD_MAP[p.method] || "Otros",
+      monto: p.amount,
+    }));
+
+    try {
+      await createSale.mutateAsync({
+        clienteNombre: state.activeClient?.name || "Consumidor Final",
+        items,
+        pagos,
+      });
+      setIsSuccess(true);
+      setTimeout(() => {
+        dispatch({ type: "TOGGLE_CHARGE_MODAL" });
+        dispatch({ type: "CLEAR_CART" });
+      }, 1600);
+    } catch (err) {
+      alert(err.response?.data?.message || "No se pudo registrar la venta.");
+    }
   };
 
   return (

@@ -5,6 +5,7 @@ import { FaStar } from "react-icons/fa";
 import { BarChartLine } from "react-bootstrap-icons";
 import "../../../styles/Reportes.css";
 import "../../../styles/SharedPage.css";
+import { Estadisticas } from "../../../components/indicadores/Estadisticas";
 
 const REPORTS_LIST = [
   { id: "ventas-cliente", name: "Ventas por cliente", path: "/reportes/ventas-cliente", desc: "Consolidado de ventas agrupado por cliente" },
@@ -49,9 +50,9 @@ export default function ReportsDashboard() {
     : REPORTS_LIST;
 
   const tabs = [
-    { id: "accesos", label: "Accesos directos" },
+    { id: "accesos", label: "Reportes" },
     { id: "indicadores", label: "Indicadores" },
-    { id: "habilitaciones", label: "Habilitaciones electronicas" },
+    // { id: "habilitaciones", label: "Habilitaciones electronicas" },
   ];
 
   const ReportItem = ({ report }) => (
@@ -86,6 +87,7 @@ export default function ReportsDashboard() {
         </div>
       </div>
 
+
       {/* ── Tabs ── */}
       <div className="menu-tabs px-4">
         {tabs.map(tab => (
@@ -101,84 +103,104 @@ export default function ReportsDashboard() {
 
       {/* ── Content ── */}
       <div className="tab-content p-4">
-        <div className="container-fluid mt-2 px-2">
-          {/* Search + Actions bar (same pattern as Productos) */}
-          <div className="opcions-header">
-            <div className="filters">
-              <input
-                type="text"
-                className="form-control search-input"
-                placeholder="Buscar reporte..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-              />
-              <button className="btn btn-filtros">
-                <i className="bi bi-sliders2"></i> Filtros
-              </button>
-            </div>
-            <div className="btns-group">
-              <button className="btn btn-export">
-                <i className="bi bi-file-earmark-excel-fill"></i> Exportar CSV
-              </button>
-            </div>
-          </div>
-
-          {/* Accordion */}
-          <div className="rpt-accordion">
-            {/* FAVORITOS */}
-            <div>
-              <button className="rpt-accordion-header" onClick={() => toggleSection("favoritos")}>
-                <div className={`chevron ${openSections.favoritos ? "open" : ""}`}>
-                  <FiChevronRight />
+        {activeTab === "accesos" && (
+          <>
+            <div className="container-fluid mt-2 px-2">
+              {/* Search + Actions bar (same pattern as Productos) */}
+              <div className="opcions-header">
+                <div className="filters">
+                  <input
+                    type="text"
+                    className="form-control search-input"
+                    placeholder="Buscar reporte..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                  />
+                  <button className="btn btn-filtros">
+                    <i className="bi bi-sliders2"></i> Filtros
+                  </button>
                 </div>
-                <span className="section-name">
-                  <FaStar style={{ color: "#f5a623", marginRight: 8, fontSize: "0.9rem" }} />
-                  Favoritos
-                </span>
-                <span className="section-count">{favoriteReports.length} reportes</span>
-              </button>
+                <div className="btns-group">
+                  <button className="btn btn-export">
+                    <i className="bi bi-file-earmark-excel-fill"></i> Exportar CSV
+                  </button>
+                </div>
+              </div>
 
-              {openSections.favoritos && (
-                <div className="rpt-accordion-body">
-                  {favoriteReports.length === 0 ? (
-                    <div className="rpt-empty-fav">
-                      <FiStar />
-                      Marca reportes como favoritos para acceder rapidamente
+              {/* Accordion */}
+              <div className="rpt-accordion">
+                {/* FAVORITOS */}
+                <div>
+                  <button className="rpt-accordion-header" onClick={() => toggleSection("favoritos")}>
+                    <div className={`chevron ${openSections.favoritos ? "open" : ""}`}>
+                      <FiChevronRight />
                     </div>
-                  ) : (
-                    favoriteReports.map(report => (
-                      <ReportItem key={`fav-${report.id}`} report={report} />
-                    ))
+                    <span className="section-name">
+                      <FaStar style={{ color: "#f5a623", marginRight: 8, fontSize: "0.9rem" }} />
+                      Favoritos
+                    </span>
+                    <span className="section-count">{favoriteReports.length} reportes</span>
+                  </button>
+
+                  {openSections.favoritos && (
+                    <div className="rpt-accordion-body">
+                      {favoriteReports.length === 0 ? (
+                        <div className="rpt-empty-fav">
+                          <FiStar />
+                          Marca reportes como favoritos para acceder rapidamente
+                        </div>
+                      ) : (
+                        favoriteReports.map(report => (
+                          <ReportItem key={`fav-${report.id}`} report={report} />
+                        ))
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
+
+                {/* VENTAS */}
+                <div>
+                  <button className="rpt-accordion-header" onClick={() => toggleSection("ventas")}>
+                    <div className={`chevron ${openSections.ventas ? "open" : ""}`}>
+                      <FiChevronRight />
+                    </div>
+                    <span className="section-name">
+                      <BarChartLine style={{ color: "var(--primary)", marginRight: 8 }} />
+                      Ventas
+                    </span>
+                    <span className="section-count">{filteredReports.length} reportes</span>
+                  </button>
+
+                  {openSections.ventas && (
+                    <div className="rpt-accordion-body">
+                      <div className="rpt-sub-header">Ventas</div>
+                      {filteredReports.map(report => (
+                        <ReportItem key={report.id} report={report} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
+          </>
+        )}
+        {activeTab === "indicadores" && (
+          <>
+            <Estadisticas />
+          </>
+        )}
 
-            {/* VENTAS */}
-            <div>
-              <button className="rpt-accordion-header" onClick={() => toggleSection("ventas")}>
-                <div className={`chevron ${openSections.ventas ? "open" : ""}`}>
-                  <FiChevronRight />
-                </div>
-                <span className="section-name">
-                  <BarChartLine style={{ color: "var(--primary)", marginRight: 8 }} />
-                  Ventas
-                </span>
-                <span className="section-count">{filteredReports.length} reportes</span>
-              </button>
-
-              {openSections.ventas && (
-                <div className="rpt-accordion-body">
-                  <div className="rpt-sub-header">Ventas</div>
-                  {filteredReports.map(report => (
-                    <ReportItem key={report.id} report={report} />
-                  ))}
-                </div>
-              )}
+        {activeTab === "habilitaciones" && (
+          <div className="card">
+            <div className="card-body">
+              <h5>Habilitaciones electrónicas</h5>
+              <p>Estado DIAN</p>
             </div>
           </div>
-        </div>
+        )}
+
       </div>
+
     </div>
   );
 }

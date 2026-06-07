@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 const isAdmin = (usuario) => {
   if (!usuario) return false;
   const rol = (usuario.rol || usuario.role || usuario.Rol || "").toLowerCase();
-  return rol === "admin";
+  return rol === "admin" || rol === "superadmin";
 };
 
 export const AdminRoute = () => {

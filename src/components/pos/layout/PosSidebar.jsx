@@ -227,25 +227,33 @@ export function PosMorePanel({ isOpen, onClose }) {
     {
       icon: <DollarSign size={20} />,
       label: "Ingresos y retiros de efectivo",
-      action: () => {},
+      action: () => navigate("/pos/caja"),
     },
     {
       icon: <Printer size={20} />,
       label: "Configuración de impresión",
-      action: () => {},
+      action: () => navigate("/pos/impresion"),
     },
     {
       icon: <HelpCircle size={20} />,
       label: "Ayuda y soporte",
-      action: () => {},
+      action: () => navigate("/pos/ayuda"),
     },
-    { icon: <Settings size={20} />, label: "Configuración", action: () => {} },
+    {
+      icon: <Settings size={20} />,
+      label: "Etiquetas",
+      action: () => navigate("/pos/etiquetas"),
+    },
     {
       icon: <LayoutGrid size={20} />,
       label: "Módulo administrativo",
       action: () => navigate("/"),
     },
-    { icon: <LogOut size={20} />, label: "Cerrar sesión", action: () => {} },
+    {
+      icon: <LogOut size={20} />,
+      label: "Cerrar sesión",
+      action: () => { navigate("/login") }
+    }
   ];
 
   return (

@@ -5,12 +5,11 @@ import { HeroBanner } from "../components/dashboard/HeroBanner";
 import { useDashboard } from "../hooks/useDashboard";
 import { Tutoriales } from "../components/dashboard/Tutoriales";
 import { NormativasDian } from "../components/dashboard/NormativasDian";
-import { Estadisticas } from "../components/dashboard/estadisticas";
 
 function Dashboard() {
   const { loading } = useDashboard();
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   if (loading) {
     return (
@@ -28,6 +27,7 @@ function Dashboard() {
       <ToastContainer
         position="top-right"
         autoClose={5000}
+
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

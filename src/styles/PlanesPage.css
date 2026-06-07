@@ -1,10 +1,11 @@
-
-.planes-page { min-height: 100vh; }
+.planes-page {
+  min-height: 100vh;
+}
 
 /* ── Hero ── */
 .planes-page-hero {
   margin-top: 120px;
-  padding:100px 20px 56px;
+  padding: 100px 20px 56px;
   text-align: center;
 }
 
@@ -33,6 +34,13 @@
   margin: 0 auto;
 }
 
+.planes-page-section-footer {
+  padding: 0 20px 100px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
 /* ── Label ── */
 .section-label {
   display: inline-block;
@@ -47,6 +55,23 @@
   margin-bottom: 14px;
 }
 
+/* ── Sección POS ── */
+.planes-page-section-pos {
+  padding-top: 0;
+}
+
+.section-label-pos {
+  border-color: #0f9d58;
+  color: #0f9d58;
+  background: rgba(15, 157, 88, 0.06);
+}
+
+.planes-pos-subtitle {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  color: #5f6368;
+}
+
 /* ── Grid completo ── */
 .planes-page-grid {
   display: grid;
@@ -56,7 +81,9 @@
 }
 
 @media (max-width: 580px) {
-  .planes-page-grid { grid-template-columns: 1fr; }
+  .planes-page-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Footer CTA ── */
@@ -99,7 +126,10 @@
   transition: background 0.15s;
 }
 
-.btn-contact-sales:hover { background: #1250a8; color: #fff; }
+.btn-contact-sales:hover {
+  background: #1250a8;
+  color: #fff;
+}
 
 /* ── FAQ ── */
 .planes-faq-section {
@@ -125,7 +155,11 @@
   margin-bottom: 28px;
 }
 
-.faq-lista { display: flex; flex-direction: column; gap: 8px; }
+.faq-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 .faq-item {
   border: 1px solid #e2e6ea;
@@ -135,7 +169,9 @@
   transition: border-color 0.15s;
 }
 
-.faq-item.open { border-color: #b5d4f4; }
+.faq-item.open {
+  border-color: #b5d4f4;
+}
 
 .faq-question {
   width: 100%;
@@ -185,4 +221,7 @@
   color: #6b7280;
   font-size: 0.9rem;
 }
-.planes-page-error { color: #dc3545; }
+
+.planes-page-error {
+  color: #dc3545;
+}

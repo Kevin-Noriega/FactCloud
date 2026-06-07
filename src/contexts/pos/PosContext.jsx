@@ -8,6 +8,27 @@ import React, {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// Los favoritos no se persisten en el backend (ver PosController.MapToPos),
+// así que el front los mantiene en localStorage por usuario/dispositivo.
+const FAVORITES_KEY = "pos_favorite_ids";
+
+function loadFavoriteIds() {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function saveFavoriteIds(ids) {
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify([...ids]));
+  } catch {
+    // localStorage no disponible (modo privado / SSR): se ignora.
+  }
+}
+
 function newPreAccount(index) {
   return {
     id: `pre-${Date.now()}-${index}`,
@@ -53,8 +74,18 @@ function posReducer(state, action) {
   );
 
   switch (action.type) {
-    case "SET_PRODUCTS":
-      return { ...state, products: action.payload };
+    case "SET_PRODUCTS": {
+      // Re-aplicamos los favoritos guardados localmente al refrescar productos,
+      // ya que el backend siempre devuelve isFavorite: false.
+      const favs = loadFavoriteIds();
+      return {
+        ...state,
+        products: action.payload.map((p) => ({
+          ...p,
+          isFavorite: favs.has(p.id),
+        })),
+      };
+    }
 
     case "SET_LOADING_PRODUCTS":
       return { ...state, isLoadingProducts: action.payload };
@@ -81,6 +112,35 @@ function posReducer(state, action) {
             {
               product,
               quantity: 1,
+              unitPrice: product.price,
+              discount: 0,
+              note: "",
+            },
+          ];
+      return updateActiveAccount((acc) => ({
+        ...acc,
+        items: updatedItems,
+        updatedAt: new Date(),
+      }));
+    }
+
+    case "ADD_TO_CART_QTY": {
+      const { product, quantity } = action.payload;
+      const qty = Math.max(1, Math.floor(quantity) || 1);
+      const existing = activeAccount.items.find(
+        (i) => i.product.id === product.id,
+      );
+      const updatedItems = existing
+        ? activeAccount.items.map((i) =>
+            i.product.id === product.id
+              ? { ...i, quantity: i.quantity + qty }
+              : i,
+          )
+        : [
+            ...activeAccount.items,
+            {
+              product,
+              quantity: qty,
               unitPrice: product.price,
               discount: 0,
               note: "",
@@ -213,13 +273,18 @@ function posReducer(state, action) {
     case "TOGGLE_SIDEBAR":
       return { ...state, isSidebarCollapsed: !state.isSidebarCollapsed };
 
-    case "TOGGLE_FAVORITE":
+    case "TOGGLE_FAVORITE": {
+      const favs = loadFavoriteIds();
+      if (favs.has(action.payload)) favs.delete(action.payload);
+      else favs.add(action.payload);
+      saveFavoriteIds(favs);
       return {
         ...state,
         products: state.products.map((p) =>
-          p.id === action.payload ? { ...p, isFavorite: !p.isFavorite } : p,
+          p.id === action.payload ? { ...p, isFavorite: favs.has(p.id) } : p,
         ),
       };
+    }
 
     case "SAVE_PRE_ACCOUNT":
       return state;

@@ -1,5 +1,5 @@
-import { Link} from "react-router-dom";
-import { useEffect} from "react";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import "../styles/NavBarSecondary.css";
 
 export default function NavBarSecondary() {
@@ -10,7 +10,7 @@ export default function NavBarSecondary() {
     };
   }, []);
 
- 
+
   return (
     <nav className="navbarSecondary">
       <div className="navsec-content">
