@@ -1,7 +1,7 @@
 import React from "react";
 import { XLg, Floppy, ArrowCounterclockwise } from "react-bootstrap-icons";
 import BuscadorCuenta from "./BuscadorCuenta";
-import { useImpuestos, TIPOS_IMPUESTO } from "../../hooks/useImpuestos";
+import { useImpuestos, TIPOS_IMPUESTO_OPTIONS } from "../../hooks/useImpuestos";
 
 export default function TablaImpuestos() {
   const {
@@ -234,9 +234,9 @@ function FilaNuevaImpuesto({
           onChange={(e) => onChange("tipoImpuesto", e.target.value)}
         >
           <option value="">Seleccionar...</option>
-          {TIPOS_IMPUESTO.map((t) => (
-            <option key={t} value={t}>
-              {t}
+          {TIPOS_IMPUESTO_OPTIONS.map((t) => (
+            <option key={t.value} value={t.value}>
+              {t.label}
             </option>
           ))}
         </select>
