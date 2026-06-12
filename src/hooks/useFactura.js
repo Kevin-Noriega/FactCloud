@@ -12,6 +12,17 @@ const toArray = (res) => {
   if (Array.isArray(res?.value)) return res.value; // { value: [] } (OData)
   return [];
 };
+const ESTADO_FACTURA = {
+  Emitida:   0,
+  Enviada:   1,
+  Validada:  2,
+  Pagada:    3,
+  Borrador:  4,
+  Anulada:   5,
+  Vencida:   6,
+  Pendiente: 7,
+  Cancelada: 8,
+};
 
 export const useFactura = () => {
   const navigate = useNavigate();
@@ -348,7 +359,7 @@ export const useFactura = () => {
       totalRetenciones: totales.totalRetenciones,
       totalFactura: totales.totalFactura,
       observaciones: factura.observaciones || "",
-      estado: estadoOverride,
+      estado: ESTADO_FACTURA[estadoOverride] ?? 7,
       enviadaDIAN: false,
       moneda: "COP",
       formasPago: formasPago

@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "factcloud-react",
+			"path": "."
+		},
+		{
+			"path": "../SIERCP"
+		},
+		{
+			"path": "../../Downloads/electromagnet_simulator"
+		}
+	],
+	"settings": {}
+}
