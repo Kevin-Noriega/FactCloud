@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
 import ReactSelect, { components as RsComponents } from "react-select";
 import Select from "../components/StyledSelect";
+import axiosClient from "../api/axiosClient";
+
 import {
   Trash,
   Paperclip,
@@ -18,6 +20,7 @@ import ModalCrearCliente from "../components/modals/ModalCrearCliente";
 import ModalCrearProducto from "../components/modals/ModalCrearProducto";
 import "../styles/pages/DocBase.css";
 import { useId } from "react";
+import { useEffect } from "react";
 
 function TooltipInfo({ texto }) {
   const id = useId();
@@ -159,11 +162,7 @@ const mkSelectStyles = (invalid = false) => ({
     display: "flex",
     alignItems: "center",
 
-    borderColor: invalid
-      ? "#dc3545"
-      : state.isFocused
-        ? "#1a73e8"
-        : "#ced4da",
+    borderColor: invalid ? "#dc3545" : state.isFocused ? "#1a73e8" : "#ced4da",
 
     boxShadow: invalid
       ? "0 0 0 0.2rem rgba(220,53,69,0.15)"
@@ -195,7 +194,7 @@ const mkSelectStyles = (invalid = false) => ({
     maxWidth: "100%",
     top: "50%",
     transform: "translateY(-50%)",
-    lineHeight: 1.2
+    lineHeight: 1.2,
   }),
 
   placeholder: (base) => ({
@@ -255,9 +254,7 @@ const mkSelectStyles = (invalid = false) => ({
         ? "#fff"
         : "#212121",
 
-    borderTop: state.data.__isCrear
-      ? "1.5px solid #e6f4ea"
-      : "none",
+    borderTop: state.data.__isCrear ? "1.5px solid #e6f4ea" : "none",
 
     fontWeight: state.data.__isCrear ? 600 : 400,
   }),
@@ -290,6 +287,7 @@ export default function NuevaFactura() {
     navigate,
   } = useFactura();
 
+  const [habilitado, setHabilitado] = useState(null); // null = cargando
   const [mostrarModalContacto, setMostrarModalContacto] = useState(false);
   const [mostrarModalCliente, setMostrarModalCliente] = useState(false);
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
@@ -313,12 +311,49 @@ export default function NuevaFactura() {
     setMostrarModalProducto(true);
   };
 
+  useEffect(() => {
+    axiosClient
+      .get("/Habilitacion/estado")
+      .then((res) => setHabilitado(res.data.habilitado ?? false))
+      .catch(() => setHabilitado(false));
+  }, []);
+
+  if (habilitado === null)
+    return <div className="p-4">Verificando habilitación...</div>;
+
+  // Bloqueado: no está habilitado
+  if (!habilitado)
+    return (
+      <div className="p-4 text-center">
+        <div className="alert alert-warning">
+          <strong>⚠️ No puedes emitir facturas aún.</strong>
+          <p className="mb-2">
+            Debes completar el proceso de habilitación ante la DIAN primero.
+          </p>
+          <button
+            className="btn btn-primary"
+            onClick={() => navigate("/habilitacion-dian/factura-electronica")}
+          >
+            Ir a habilitación
+          </button>
+        </div>
+      </div>
+    );
+
   const pagoCoincide = Math.abs(totalFormasPago - totales.totalFactura) <= 0.01;
   const fmt = (n) =>
     (Number(n) || 0).toLocaleString("es-CO", { minimumFractionDigits: 2 });
 
-  const CREAR_CLIENTE_OPT = { value: "__CREAR_CLIENTE__", label: "Crear nuevo cliente", __isCrear: true };
-  const CREAR_PRODUCTO_OPT = { value: "__CREAR_PRODUCTO__", label: "Crear nuevo producto", __isCrear: true };
+  const CREAR_CLIENTE_OPT = {
+    value: "__CREAR_CLIENTE__",
+    label: "Crear nuevo cliente",
+    __isCrear: true,
+  };
+  const CREAR_PRODUCTO_OPT = {
+    value: "__CREAR_PRODUCTO__",
+    label: "Crear nuevo producto",
+    __isCrear: true,
+  };
 
   const opcionesClientes = useMemo(
     () => [
@@ -481,7 +516,9 @@ export default function NuevaFactura() {
                           <PlusCircle size={13} style={{ marginRight: 5 }} />
                           {opt.label}
                         </span>
-                      ) : opt.label
+                      ) : (
+                        opt.label
+                      )
                     }
                     isClearable
                     placeholder="Buscar cliente..."
@@ -592,12 +629,24 @@ export default function NuevaFactura() {
                 <table className="doc-tabla">
                   <thead>
                     <tr>
-                      <th className="doc-th-num" style={{ width: "3%" }}>#</th>
-                      <th style={{ width: mostrarImpuestos ? "20%" : "30%" }}>Producto</th>
-                      <th style={{ width: mostrarImpuestos ? "15%" : "24%" }}>Descripción</th>
-                      <th className="text-end" style={{ width: "6%" }}>Cant</th>
-                      <th className="text-end" style={{ width: "9%" }}>Valor Unitario</th>
-                      <th className="text-end" style={{ width: "6%" }}>% Desc.</th>
+                      <th className="doc-th-num" style={{ width: "3%" }}>
+                        #
+                      </th>
+                      <th style={{ width: mostrarImpuestos ? "20%" : "30%" }}>
+                        Producto
+                      </th>
+                      <th style={{ width: mostrarImpuestos ? "15%" : "24%" }}>
+                        Descripción
+                      </th>
+                      <th className="text-end" style={{ width: "6%" }}>
+                        Cant
+                      </th>
+                      <th className="text-end" style={{ width: "9%" }}>
+                        Valor Unitario
+                      </th>
+                      <th className="text-end" style={{ width: "6%" }}>
+                        % Desc.
+                      </th>
                       {/* Solo para electrónica */}
                       {mostrarImpuestos && (
                         <>
@@ -605,7 +654,9 @@ export default function NuevaFactura() {
                           <th style={{ width: "13%" }}>Impuesto Retención</th>
                         </>
                       )}
-                      <th className="text-end" style={{ width: "9%" }}>Valor Total</th>
+                      <th className="text-end" style={{ width: "9%" }}>
+                        Valor Total
+                      </th>
                       <th style={{ width: "3%" }}></th>
                     </tr>
                   </thead>
@@ -656,36 +707,62 @@ export default function NuevaFactura() {
                                     handleCrearPro("");
                                     return;
                                   }
-                                  actualizarProducto(idx, "productoId", opt?.value ?? "");
-                                  const prod = productos.find((p) => p.id === opt?.value);
+                                  actualizarProducto(
+                                    idx,
+                                    "productoId",
+                                    opt?.value ?? "",
+                                  );
+                                  const prod = productos.find(
+                                    (p) => p.id === opt?.value,
+                                  );
                                   if (prod) {
-                                    actualizarProducto(idx, "precioUnitario", prod.precioUnitario ?? 0);
-                                    actualizarProducto(idx, "descripcion", prod.descripcion ?? prod.nombre ?? "");
+                                    actualizarProducto(
+                                      idx,
+                                      "precioUnitario",
+                                      prod.precioUnitario ?? 0,
+                                    );
+                                    actualizarProducto(
+                                      idx,
+                                      "descripcion",
+                                      prod.descripcion ?? prod.nombre ?? "",
+                                    );
                                   }
                                 }}
                                 filterOption={(option, input) =>
                                   option.data.__isCrear ||
-                                  option.label.toLowerCase().includes(input.toLowerCase())
+                                  option.label
+                                    .toLowerCase()
+                                    .includes(input.toLowerCase())
                                 }
                                 formatOptionLabel={(option, { context }) => {
                                   if (option.__isCrear) {
                                     return (
                                       <span className="doc-option-crear">
-                                        <PlusCircle size={13} style={{ marginRight: 5 }} />
+                                        <PlusCircle
+                                          size={13}
+                                          style={{ marginRight: 5 }}
+                                        />
                                         {option.label}
                                       </span>
                                     );
                                   }
                                   if (context === "value") {
                                     return (
-                                      <span style={{ fontSize: "0.85rem", color: "#212121" }}>
+                                      <span
+                                        style={{
+                                          fontSize: "0.85rem",
+                                          color: "#212121",
+                                        }}
+                                      >
                                         {option.nombre || option.label}
                                       </span>
                                     );
                                   }
                                   return <span>{option.label}</span>;
                                 }}
-                                noOptionsMessage={() => "No se encontraron productos"}
+                                noOptionsMessage={() =>
+                                  "No se encontraron productos"
+                                }
                                 isClearable
                                 placeholder="Buscar..."
                               />
@@ -699,7 +776,11 @@ export default function NuevaFactura() {
                                 value={item.descripcion ?? ""}
                                 placeholder="Descripción..."
                                 onChange={(e) =>
-                                  actualizarProducto(idx, "descripcion", e.target.value)
+                                  actualizarProducto(
+                                    idx,
+                                    "descripcion",
+                                    e.target.value,
+                                  )
                                 }
                               />
                             </td>

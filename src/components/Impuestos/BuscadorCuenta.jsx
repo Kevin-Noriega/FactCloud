@@ -125,7 +125,7 @@ export default function BuscadorCuenta({
               className="bc-btn-crear"
               onClick={() => {
                 setOpen(false);
-                navigate("/cuentas-contables/nueva");
+                navigate("/cuentas-contables");
               }}
             >
               + Crear nuevo

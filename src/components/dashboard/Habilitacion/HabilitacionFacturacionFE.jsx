@@ -1,9 +1,9 @@
-// ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────
 // HabilitacionFacturacionFE.jsx
-// Componente orquestador del wizard. Solo contiene JSX del
-// layout, el stepper y la navegación.
-// Toda la lógica vive en useHabilitacion.js
-// ─────────────────────────────────────────────────────────────
+// Orquestador del wizard. Solo contiene layout, stepper y navegación.
+// CORRECCIÓN: ahora pasa correctamente todos los props específicos de
+// cada step (onEnviar, enviando, estadoConsulta, etc.) que antes faltaban.
+// ─────────────────────────────────────────────────────────────────────────
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,9 +12,8 @@ import {
   ArrowLeft,
   ArrowRight,
   XLg,
-  ShieldCheck,
-  InfoCircle,
   FileEarmarkText,
+  InfoCircle,
 } from "react-bootstrap-icons";
 import "./Habilitaciones.css";
 
@@ -28,39 +27,49 @@ import Step4Numeracion from "./steps/Step4Numeracion";
 import Step5Prefijos from "./steps/Step5Prefijos";
 import Step6Sincronizar from "./steps/Step6Sincronizar";
 
-// Mapa etapa → componente
-const STEPS_MAP = {
-  1: Step1PerfilEmpresa,
-  2: Step2CertificadoDigital,
-  3: Step3SetPruebas,
-  4: Step4Numeracion,
-  5: Step5Prefijos,
-  6: Step6Sincronizar,
-};
-
 export default function HabilitacionFacturacionFE() {
   const navigate = useNavigate();
 
   const {
+    // Estado del wizard
     etapaActual,
     form,
     cargando,
     error,
     exito,
+
+    // Selects
     opcionesCiudades,
     opcionesActividad,
     valorRegimen,
     valorActividad,
     valorTributos,
     valorResponsabilidades,
+
+    // Step 3
+    enviandoTestSet,
+    onEnviarTestSet,
+
+    // Step 5
+    estadoConsulta,
+    prefijosResult,
+    onConsultarPrefijos,
+
+    // Step 6
+    numeraciones,
+    ultimaActualizacion,
+    cargandoRango,
+    onActualizarRango,
+
+    // Acciones
     actualizarCampo,
     manejarCambioRegimen,
     guardarEtapa,
     volver,
   } = useHabilitacion();
 
-  // Props compartidos que cada step puede necesitar
-  const stepProps = {
+  // Props comunes a todos los steps
+  const commonProps = {
     form,
     actualizarCampo,
     manejarCambioRegimen,
@@ -72,7 +81,56 @@ export default function HabilitacionFacturacionFE() {
     valorResponsabilidades,
   };
 
-  const StepActual = STEPS_MAP[etapaActual] ?? null;
+  // Renderiza el step activo con los props específicos que necesita
+  const renderStep = () => {
+    switch (etapaActual) {
+      case 1:
+        return <Step1PerfilEmpresa {...commonProps} />;
+
+      case 2:
+        return <Step2CertificadoDigital {...commonProps} />;
+
+      case 3:
+        // CORRECCIÓN: Step3 necesita onEnviar y enviando; antes no se pasaban.
+        return (
+          <Step3SetPruebas
+            {...commonProps}
+            onEnviar={onEnviarTestSet}
+            enviando={enviandoTestSet}
+          />
+        );
+
+      case 4:
+        // CORRECCIÓN: Step4 necesita actualizarCampo para el formulario
+        // de resolución que completamos en el hook.
+        return <Step4Numeracion {...commonProps} />;
+
+      case 5:
+        // CORRECCIÓN: Step5 necesita estadoConsulta, prefijosResult y onConsultar.
+        return (
+          <Step5Prefijos
+            estadoConsulta={estadoConsulta}
+            prefijosResult={prefijosResult}
+            onConsultar={onConsultarPrefijos}
+          />
+        );
+
+      case 6:
+        // CORRECCIÓN: Step6 necesita numeraciones, ultimaActualizacion,
+        // onActualizar y cargando.
+        return (
+          <Step6Sincronizar
+            numeraciones={numeraciones}
+            ultimaActualizacion={ultimaActualizacion}
+            onActualizar={onActualizarRango}
+            cargando={cargandoRango}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="fe-wrapper">
@@ -115,7 +173,13 @@ export default function HabilitacionFacturacionFE() {
         {ETAPAS.map((etapa, index) => (
           <React.Fragment key={etapa.id}>
             <div
-              className={`fe-step ${etapaActual === etapa.id ? "activo" : ""} ${etapaActual > etapa.id ? "completado" : ""}`}
+              className={[
+                "fe-step",
+                etapaActual === etapa.id ? "activo" : "",
+                etapaActual > etapa.id ? "completado" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
             >
               <div className="fe-step-circle">
                 {etapaActual > etapa.id ? <CheckLg size={12} /> : etapa.id}
@@ -132,11 +196,7 @@ export default function HabilitacionFacturacionFE() {
       </div>
 
       {/* Contenido del step activo */}
-      <div className="fe-body">
-        <div className="fe-title-box"></div>
-
-        {StepActual && <StepActual {...stepProps} />}
-      </div>
+      <div className="fe-body">{renderStep()}</div>
 
       {/* Footer de navegación */}
       <div className="fe-footer">
@@ -146,7 +206,11 @@ export default function HabilitacionFacturacionFE() {
 
         <div className="fe-footer-actions">
           {etapaActual > 1 && (
-            <button className="fe-btn fe-btn-back" onClick={volver}>
+            <button
+              className="fe-btn fe-btn-back"
+              onClick={volver}
+              disabled={cargando}
+            >
               <ArrowLeft size={14} /> Anterior
             </button>
           )}
@@ -161,8 +225,7 @@ export default function HabilitacionFacturacionFE() {
                 "Guardando..."
               ) : (
                 <>
-                  {" "}
-                  Guardar y continuar <ArrowRight size={14} />{" "}
+                  Guardar y continuar <ArrowRight size={14} />
                 </>
               )}
             </button>

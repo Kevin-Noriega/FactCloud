@@ -1,11 +1,15 @@
 // steps/Step4Numeracion.jsx
+// CORRECCIÓN: el componente original era solo informacional (instrucciones DIAN)
+// y no tenía formulario. Se añade el formulario de captura de la resolución.
 import "../Habilitaciones.css";
 import { PlayCircle, AlertCircle, ExternalLink } from "lucide-react";
 
-export default function Step4Numeracion() {
+export default function Step4Numeracion({ form, actualizarCampo }) {
+  const n = form.numeracion || {};
+
   return (
     <div className="fe-grid-two fe-grid-stretch">
-      {/* Columna izquierda: pasos */}
+      {/* Columna izquierda: instrucciones */}
       <div className="fe-card fe-card-instrucciones">
         <div className="fe-card-instrucciones-inner">
           <h4>Solicitar numeración</h4>
@@ -27,40 +31,19 @@ export default function Step4Numeracion() {
             <li>
               Ingresa a la <strong>página de la DIAN</strong>. Ve a la sección{" "}
               <strong>Transaccional</strong>, selecciona{" "}
-              <strong>Usuario Registrado</strong>. Inicia sesión con los datos
-              solicitados.
+              <strong>Usuario Registrado</strong>.
             </li>
             <li>
-              Una vez dentro, dirígete al <strong>Menú Principal</strong>,
-              selecciona <strong>Numeración de Facturación</strong>.
+              Dirígete al <strong>Menú Principal</strong> → selecciona{" "}
+              <strong>Numeración de Facturación</strong>.
             </li>
             <li>
-              Allí te diriges a la sección de{" "}
-              <strong>Numeración de Facturación</strong> y luego a la opción{" "}
-              <strong>Solicitar Numeración de Facturación</strong>.
+              En <strong>Solicitar Numeración de Facturación</strong> completa
+              los datos y confirma.
             </li>
             <li>
-              Confirma que tienes actualizado el RUT seleccionando{" "}
-              <strong>Aceptar</strong> en la ventana de confirmación.
-            </li>
-            <li>
-              Revisa la información de la empresa y selecciona{" "}
-              <strong>Ingresar</strong>.
-            </li>
-            <li>
-              En la vista <strong>Consultar Numeración de Facturación</strong>,
-              selecciona <strong>Autorizar Rangos</strong>.
-            </li>
-            <li>
-              En la solicitud de autorización de rangos, ingresa los datos y
-              finalmente selecciona <strong>Agregar</strong>.
-              <ul className="fe-subpasos">
-                <li>Prefijo: debe ser alfabético y no terminar en número.</li>
-                <li>
-                  Tipo de facturación: selecciona{" "}
-                  <strong>Factura electrónica de venta</strong>.
-                </li>
-              </ul>
+              Una vez aprobada, ingresa aquí los datos de la resolución que la
+              DIAN te asignó.
             </li>
           </ol>
         </div>
@@ -71,48 +54,170 @@ export default function Step4Numeracion() {
           rel="noopener noreferrer"
           className="fe-dian-btn"
         >
-          Ir al portal de habilitación DIAN
+          Ir al portal DIAN
           <ExternalLink size={13} />
         </a>
       </div>
 
-      {/* Columna derecha: consejos */}
-      <div className="fe-card fe-card-tips">
+      {/* Columna derecha: formulario resolución DIAN */}
+      <div className="fe-card">
         <div className="fe-tips-header">
           <div className="fe-tips-icono">
             <AlertCircle size={18} />
           </div>
-          <h4>Tener en cuenta</h4>
+          <h4>Datos de la resolución DIAN</h4>
         </div>
 
-        <div className="fe-tips-lista">
-          <div className="fe-tip-item">
-            <div className="fe-tip-numero">1</div>
-            <p>
-              Al momento de crear un prefijo te sugerimos que sea un{" "}
-              <strong>código alfabético de hasta 4 caracteres</strong> (por
-              ejemplo, FDS) para identificar tu documento.
-            </p>
+        <p className="fe-subtitle">
+          Ingresa exactamente los datos que te asignó la DIAN en tu resolución
+          de facturación.
+        </p>
+
+        <div className="fe-form-grid">
+          {/* Número de autorización */}
+          <div className="full fe-field-group">
+            <label htmlFor="num-autorizacion">
+              Número de autorización
+              <span className="fe-field-hint">14 dígitos exactos.</span>
+            </label>
+            <input
+              id="num-autorizacion"
+              type="text"
+              maxLength={14}
+              placeholder="Ej. 18764000001234"
+              value={n.numeroAutorizacion || ""}
+              onChange={(e) =>
+                actualizarCampo(
+                  "numeracion",
+                  "numeroAutorizacion",
+                  e.target.value,
+                )
+              }
+            />
           </div>
 
-          <div className="fe-tip-item">
-            <div className="fe-tip-numero">2</div>
-            <p>
-              Es importante que el{" "}
-              <strong>prefijo no termine en número</strong> para que Nubee
-              pueda traer correctamente tus resoluciones.
-            </p>
+          {/* Prefijo */}
+          <div className="fe-field-group">
+            <label htmlFor="num-prefijo">
+              Prefijo
+              <span className="fe-field-hint">
+                Alfabético, máx. 4 caracteres. No debe terminar en número.
+              </span>
+            </label>
+            <input
+              id="num-prefijo"
+              type="text"
+              maxLength={4}
+              placeholder="Ej. FACT"
+              value={n.prefijo || ""}
+              onChange={(e) =>
+                actualizarCampo(
+                  "numeracion",
+                  "prefijo",
+                  e.target.value.toUpperCase(),
+                )
+              }
+            />
+          </div>
+
+          {/* Tipo de ambiente */}
+          <div className="fe-field-group">
+            <label htmlFor="num-ambiente">Tipo de ambiente</label>
+            <select
+              id="num-ambiente"
+              value={n.tipoAmbiente || "1"}
+              onChange={(e) =>
+                actualizarCampo("numeracion", "tipoAmbiente", e.target.value)
+              }
+            >
+              <option value="1">1 — Producción</option>
+              <option value="2">2 — Habilitación / Pruebas</option>
+            </select>
+          </div>
+
+          {/* Rango desde */}
+          <div className="fe-field-group">
+            <label htmlFor="num-desde">Rango desde</label>
+            <input
+              id="num-desde"
+              type="number"
+              min={1}
+              placeholder="Ej. 1"
+              value={n.rangoDesde || ""}
+              onChange={(e) =>
+                actualizarCampo("numeracion", "rangoDesde", e.target.value)
+              }
+            />
+          </div>
+
+          {/* Rango hasta */}
+          <div className="fe-field-group">
+            <label htmlFor="num-hasta">Rango hasta</label>
+            <input
+              id="num-hasta"
+              type="number"
+              min={1}
+              placeholder="Ej. 5000000"
+              value={n.rangoHasta || ""}
+              onChange={(e) =>
+                actualizarCampo("numeracion", "rangoHasta", e.target.value)
+              }
+            />
+          </div>
+
+          {/* Fecha inicio */}
+          <div className="fe-field-group">
+            <label htmlFor="num-fecha-ini">Fecha de inicio de vigencia</label>
+            <input
+              id="num-fecha-ini"
+              type="date"
+              value={n.fechaInicio || ""}
+              onChange={(e) =>
+                actualizarCampo("numeracion", "fechaInicio", e.target.value)
+              }
+            />
+          </div>
+
+          {/* Fecha fin */}
+          <div className="fe-field-group">
+            <label htmlFor="num-fecha-fin">Fecha de fin de vigencia</label>
+            <input
+              id="num-fecha-fin"
+              type="date"
+              value={n.fechaFin || ""}
+              onChange={(e) =>
+                actualizarCampo("numeracion", "fechaFin", e.target.value)
+              }
+            />
+          </div>
+
+          {/* Clave técnica (opcional) */}
+          <div className="full fe-field-group">
+            <label htmlFor="num-clave">
+              Clave técnica
+              <span className="fe-field-hint">
+                Opcional. Proporcionada por la DIAN.
+              </span>
+            </label>
+            <input
+              id="num-clave"
+              type="text"
+              placeholder="Opcional"
+              value={n.claveTecnica || ""}
+              onChange={(e) =>
+                actualizarCampo("numeracion", "claveTecnica", e.target.value)
+              }
+            />
           </div>
         </div>
 
-        <div className="fe-tip-ejemplo">
-          <span className="fe-tip-ejemplo-label">Ejemplos de prefijo</span>
-          <div className="fe-tip-ejemplo-chips">
-            <span className="fe-chip fe-chip-ok">FDS ✓</span>
-            <span className="fe-chip fe-chip-ok">FACT ✓</span>
-            <span className="fe-chip fe-chip-ok">FE ✓</span>
-            <span className="fe-chip fe-chip-err">FDS1 ✗</span>
-            <span className="fe-chip fe-chip-err">A2 ✗</span>
+        <div className="fe-tips-lista" style={{ marginTop: "1rem" }}>
+          <div className="fe-tip-item">
+            <div className="fe-tip-numero">✓</div>
+            <p>
+              Al guardar, Nubee registrará automáticamente el rango en Factus
+              para habilitar la emisión de facturas.
+            </p>
           </div>
         </div>
       </div>
