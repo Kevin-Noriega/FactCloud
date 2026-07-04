@@ -199,12 +199,16 @@ function posReducer(state, action) {
       }));
 
     case "CLEAR_CART":
-      return updateActiveAccount((acc) => ({
-        ...acc,
-        items: [],
-        clientName: "Consumidor Final",
-        updatedAt: new Date(),
-      }));
+      return {
+        ...updateActiveAccount((acc) => ({
+          ...acc,
+          items: [],
+          clientName: "Consumidor Final",
+          clientId: undefined,
+          updatedAt: new Date(),
+        })),
+        activeClient: { name: "Consumidor Final" },
+      };
 
     case "SET_CLIENT":
       return {

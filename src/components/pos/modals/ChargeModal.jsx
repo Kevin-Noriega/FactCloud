@@ -10,7 +10,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { usePos } from "../../../contexts/pos/PosContext";
-import { useCurrency, useCreateSale } from "../../../hooks/pos/usePosHooks";
+import { useCurrency, useCreateSale, useClientSearch } from "../../../hooks/pos/usePosHooks";
+import { posLoyaltyApi } from "../../../Service/pos/posApi";
 
 const PAYMENT_METHODS = [
   { value: "CASH", label: "Efectivo", icon: <DollarSign size={18} /> },
@@ -34,24 +35,41 @@ export function ChargeModal() {
   const { format } = useCurrency();
   const createSale = useCreateSale();
 
+  // ── Fidelización: puntos a redimir como descuento ──────────────────────────
+  const [puntosRedimidos, setPuntosRedimidos] = useState(0);
+  const [valorPunto, setValorPunto] = useState(0);
+  const clienteId = state.activeClient?.id ?? null;
+  const descuentoPuntos = Math.min(
+    Math.round(puntosRedimidos * valorPunto),
+    cartTotal,
+  );
+  const netTotal = Math.max(0, cartTotal - descuentoPuntos);
+
   const [payments, setPayments] = useState([
-    { id: "1", method: "CASH", amount: cartTotal },
+    { id: "1", method: "CASH", amount: netTotal },
   ]);
   const [isSuccess, setIsSuccess] = useState(false);
   const isProcessing = createSale.isPending;
 
   const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
-  const change = Math.max(0, totalPaid - cartTotal);
-  const remaining = Math.max(0, cartTotal - totalPaid);
+  const change = Math.max(0, totalPaid - netTotal);
+  const remaining = Math.max(0, netTotal - totalPaid);
   const canCharge =
-    totalPaid >= cartTotal && payments.every((p) => p.amount > 0);
+    totalPaid >= netTotal && payments.every((p) => p.amount > 0);
 
+  // Al abrir el modal o cambiar el neto, reinicia el pago en efectivo al neto.
   useEffect(() => {
     if (state.isChargeModalOpen) {
-      setPayments([{ id: "1", method: "CASH", amount: cartTotal }]);
+      setPayments([{ id: "1", method: "CASH", amount: netTotal }]);
       setIsSuccess(false);
     }
-  }, [state.isChargeModalOpen, cartTotal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.isChargeModalOpen, netTotal]);
+
+  // Reinicia la redención cuando se cierra el modal o cambia el cliente.
+  useEffect(() => {
+    setPuntosRedimidos(0);
+  }, [clienteId, state.isChargeModalOpen]);
 
   if (!state.isChargeModalOpen) return null;
 
@@ -94,6 +112,8 @@ export function ChargeModal() {
     try {
       await createSale.mutateAsync({
         clienteNombre: state.activeClient?.name || "Consumidor Final",
+        clienteId,
+        puntosRedimidos: puntosRedimidos > 0 ? puntosRedimidos : undefined,
         items,
         pagos,
       });
@@ -188,6 +208,20 @@ export function ChargeModal() {
             </div>
 
             <div style={{ padding: 20 }}>
+              {/* Cliente + fidelización */}
+              <ClientLoyaltyPicker
+                selectedClient={state.activeClient}
+                onSelect={(c) => dispatch({ type: "SET_CLIENT", payload: c })}
+                onClear={() =>
+                  dispatch({ type: "SET_CLIENT", payload: { name: "Consumidor Final" } })
+                }
+                puntos={puntosRedimidos}
+                setPuntos={setPuntosRedimidos}
+                onValorPunto={setValorPunto}
+                maxDescuento={cartTotal}
+                format={format}
+              />
+
               {/* Total */}
               <div
                 style={{
@@ -196,18 +230,38 @@ export function ChargeModal() {
                   padding: "14px 18px",
                   marginBottom: 20,
                   display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  flexDirection: "column",
+                  gap: 4,
                 }}
               >
-                <span style={{ fontSize: 13, color: "#666" }}>
-                  Total a cobrar
-                </span>
-                <span
-                  style={{ fontSize: 24, fontWeight: 800, color: "#1565C0" }}
+                {descuentoPuntos > 0 && (
+                  <>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <span style={{ fontSize: 12, color: "#666" }}>Subtotal</span>
+                      <span style={{ fontSize: 13, color: "#666" }}>{format(cartTotal)}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <span style={{ fontSize: 12, color: "#2e7d32" }}>
+                        Descuento por puntos ({puntosRedimidos})
+                      </span>
+                      <span style={{ fontSize: 13, color: "#2e7d32" }}>
+                        −{format(descuentoPuntos)}
+                      </span>
+                    </div>
+                  </>
+                )}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
                 >
-                  {format(cartTotal)}
-                </span>
+                  <span style={{ fontSize: 13, color: "#666" }}>Total a cobrar</span>
+                  <span style={{ fontSize: 24, fontWeight: 800, color: "#1565C0" }}>
+                    {format(netTotal)}
+                  </span>
+                </div>
               </div>
 
               {/* Payments */}
@@ -230,7 +284,7 @@ export function ChargeModal() {
                     onRemove={() => removePayment(payment.id)}
                     remaining={remaining}
                     isCash={payment.method === "CASH"}
-                    cartTotal={cartTotal}
+                    cartTotal={netTotal}
                   />
                 ))}
               </div>
@@ -282,7 +336,7 @@ export function ChargeModal() {
                     style={{
                       fontSize: 13,
                       fontWeight: 600,
-                      color: totalPaid >= cartTotal ? "#2e7d32" : "#e53935",
+                      color: totalPaid >= netTotal ? "#2e7d32" : "#e53935",
                     }}
                   >
                     {format(totalPaid)}
@@ -360,7 +414,7 @@ export function ChargeModal() {
                     Procesando...
                   </>
                 ) : (
-                  `Cobrar ${format(cartTotal)}`
+                  `Cobrar ${format(netTotal)}`
                 )}
               </button>
             </div>
@@ -526,6 +580,200 @@ function PaymentRow({
               {format(amt)}
             </button>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Selector de cliente + panel de fidelización para el checkout.
+// Permite buscar/seleccionar un cliente real y redimir puntos como descuento.
+function ClientLoyaltyPicker({
+  selectedClient,
+  onSelect,
+  onClear,
+  puntos,
+  setPuntos,
+  onValorPunto,
+  maxDescuento,
+  format,
+}) {
+  const [query, setQuery] = useState("");
+  const { data: resultados = [] } = useClientSearch(query);
+  const [loyalty, setLoyalty] = useState(null);
+
+  const clienteId = selectedClient?.id ?? null;
+
+  useEffect(() => {
+    if (!clienteId) {
+      setLoyalty(null);
+      onValorPunto(0);
+      return;
+    }
+    let activo = true;
+    posLoyaltyApi
+      .getClient(clienteId)
+      .then((res) => {
+        if (!activo) return;
+        setLoyalty(res);
+        onValorPunto(res?.valorPuntoCOP ?? 0);
+      })
+      .catch(() => activo && onValorPunto(0));
+    return () => {
+      activo = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clienteId]);
+
+  const valorPunto = loyalty?.valorPuntoCOP ?? 0;
+  const maxPuntos =
+    valorPunto > 0
+      ? Math.min(loyalty?.puntosAcumulados ?? 0, Math.floor(maxDescuento / valorPunto))
+      : 0;
+
+  const box = {
+    border: "1.5px solid #e0e7ef",
+    borderRadius: 10,
+    padding: "12px 14px",
+    marginBottom: 16,
+  };
+
+  // Sin cliente seleccionado → buscador.
+  if (!clienteId) {
+    return (
+      <div style={box}>
+        <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>
+          Cliente <span style={{ color: "#999" }}>(opcional — para acumular/redimir puntos)</span>
+        </div>
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Buscar por nombre o identificación…"
+          style={{
+            width: "100%",
+            border: "1px solid #e0e7ef",
+            borderRadius: 8,
+            padding: "8px 10px",
+            fontSize: 14,
+            outline: "none",
+          }}
+        />
+        {resultados.length > 0 && (
+          <div style={{ marginTop: 6, maxHeight: 160, overflowY: "auto" }}>
+            {resultados.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => {
+                  onSelect(c);
+                  setQuery("");
+                }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  textAlign: "left",
+                  background: "#fff",
+                  border: "none",
+                  borderBottom: "1px solid #f0f0f0",
+                  padding: "8px 6px",
+                  cursor: "pointer",
+                  fontSize: 13,
+                }}
+              >
+                <span>{c.name}</span>
+                <span style={{ color: "#999" }}>{c.puntos} pts</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Cliente seleccionado → datos de fidelización + redención.
+  return (
+    <div style={{ ...box, background: "#f7faff" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 14, color: "#222" }}>
+            {selectedClient.name}
+            {loyalty?.esFrecuente && (
+              <span
+                style={{
+                  marginLeft: 8,
+                  fontSize: 10,
+                  background: "#2e7d32",
+                  color: "#fff",
+                  borderRadius: 10,
+                  padding: "2px 8px",
+                }}
+              >
+                Frecuente
+              </span>
+            )}
+          </div>
+          {loyalty && (
+            <div style={{ fontSize: 12, color: "#666" }}>
+              {loyalty.puntosAcumulados} puntos · {format(loyalty.saldoEnPesos)}
+            </div>
+          )}
+        </div>
+        <button
+          onClick={() => {
+            setPuntos(0);
+            onClear();
+          }}
+          style={{
+            background: "none",
+            border: "1px solid #cdd7e5",
+            borderRadius: 6,
+            cursor: "pointer",
+            color: "#666",
+            fontSize: 12,
+            padding: "4px 8px",
+          }}
+        >
+          Quitar
+        </button>
+      </div>
+
+      {maxPuntos > 0 && (
+        <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 10 }}>
+          <span style={{ fontSize: 12, color: "#666" }}>Redimir puntos:</span>
+          <input
+            type="number"
+            min={0}
+            max={maxPuntos}
+            value={puntos}
+            onChange={(e) => {
+              let v = parseInt(e.target.value, 10);
+              if (isNaN(v) || v < 0) v = 0;
+              if (v > maxPuntos) v = maxPuntos;
+              setPuntos(v);
+            }}
+            style={{
+              width: 90,
+              border: "1px solid #e0e7ef",
+              borderRadius: 6,
+              padding: "6px 8px",
+              fontSize: 14,
+              outline: "none",
+            }}
+          />
+          <button
+            onClick={() => setPuntos(maxPuntos)}
+            style={{
+              fontSize: 11,
+              padding: "4px 8px",
+              border: "1px solid #e0e7ef",
+              borderRadius: 4,
+              background: "#fff",
+              cursor: "pointer",
+              color: "#555",
+            }}
+          >
+            Máx ({maxPuntos})
+          </button>
         </div>
       )}
     </div>

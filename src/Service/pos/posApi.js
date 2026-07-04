@@ -30,6 +30,12 @@ export const posProductsApi = {
     });
     return data;
   },
+
+  // Kardex: historial de movimientos de inventario de un producto.
+  getKardex: async (productId, params) => {
+    const { data } = await api.get(`/pos/products/${productId}/kardex`, { params });
+    return data;
+  },
 };
 
 // ─── Shift endpoints ──────────────────────────────────────────────────────────
@@ -88,8 +94,17 @@ export const posSalesApi = {
     await api.post(`/pos/sales/${saleId}/void`, { reason });
   },
 
-  return: async (saleId, items) => {
-    await api.post(`/pos/sales/${saleId}/return`, { items });
+  // Líneas devolvibles de una venta (vendida - ya devuelta).
+  getReturnable: async (saleId) => {
+    const { data } = await api.get(`/pos/sales/${saleId}/returnable`);
+    return data;
+  },
+
+  // Registra una devolución total/parcial.
+  // dto: { items: [{ productoId, nombre, cantidad }], motivo?, metodoReembolso? }
+  return: async (saleId, dto) => {
+    const { data } = await api.post(`/pos/sales/${saleId}/return`, dto);
+    return data;
   },
 };
 
@@ -177,6 +192,28 @@ export const posPrintConfigApi = {
   },
   update: async (dto) => {
     const { data } = await api.put("/pos/print-config", dto);
+    return data;
+  },
+};
+
+// ─── Loyalty / fidelización ─────────────────────────────────────────────────────
+
+export const posLoyaltyApi = {
+  getConfig: async () => {
+    const { data } = await api.get("/pos/loyalty/config");
+    return data;
+  },
+  updateConfig: async (dto) => {
+    const { data } = await api.put("/pos/loyalty/config", dto);
+    return data;
+  },
+  // Resumen + historial de puntos de un cliente.
+  getClient: async (clientId) => {
+    const { data } = await api.get(`/pos/clients/${clientId}/loyalty`);
+    return data;
+  },
+  redeem: async (clientId, puntos) => {
+    const { data } = await api.post(`/pos/clients/${clientId}/loyalty/redeem`, { puntos });
     return data;
   },
 };
